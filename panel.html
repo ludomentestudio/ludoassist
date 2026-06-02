@@ -218,35 +218,12 @@ body.dark #lblStatusFirebase{color:#475569;}
 .doc-grupo{color:var(--slate);font-size:.75rem;}
 .doc-pill{font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:10px;}
 .doc-pill-ok{background:#D1FAE5;color:#065F46;}
-.doc-pill-sin{background:#FEE2E2;color:#991B1B;}
 .doc-empty{text-align:center;padding:2rem;color:var(--slate);font-size:.85rem;}
 .doc-refresh{background:rgba(2,132,199,.1);border:1px solid rgba(2,132,199,.3);color:var(--brand-accent);border-radius:6px;padding:.4rem .8rem;font-size:.75rem;font-weight:700;cursor:pointer;float:right;}
 body.dark .hora-bloque{background:#1E293B;}
 body.dark .hora-titulo{background:#0F172A;color:#E2E8F0;}
 body.dark .doc-row{border-bottom-color:#334155;}
 body.dark .doc-nombre{color:#E2E8F0;}
-
-/* ── ALERTAS DE FALTAS ── */
-.alerta-faltas{background:linear-gradient(135deg,#7F1D1D,#991B1B);border-radius:8px;padding:10px 14px;margin-bottom:.5rem;}
-.alerta-titulo{font-size:.78rem;font-weight:700;color:#FEE2E2;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
-.alerta-item{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:.8rem;}
-.alerta-item:last-child{border-bottom:none;}
-.alerta-nombre{color:#FECACA;font-weight:700;}
-.alerta-pct{background:#DC2626;color:white;border-radius:8px;padding:1px 7px;font-size:.68rem;font-weight:700;}
-.alerta-empty{font-size:.78rem;color:rgba(255,255,255,.5);text-align:center;padding:8px 0;}
-
-/* ── REPORTE PDF BOTÓN ── */
-.btn-reporte{background:linear-gradient(135deg,#7C3AED,#6D28D9);color:white;border:none;padding:.7rem 1rem;border-radius:6px;font-weight:700;cursor:pointer;width:100%;text-transform:uppercase;font-size:.82rem;margin-top:8px;transition:all .3s;}
-.btn-reporte:active{transform:scale(.98);}
-
-/* ── EXPORTAR PADRÓN EXCEL ── */
-.btn-export-xlsx{background:linear-gradient(135deg,#065F46,#047857);color:white;border:none;padding:.7rem 1rem;border-radius:6px;font-weight:700;cursor:pointer;width:100%;text-transform:uppercase;font-size:.82rem;margin-top:8px;transition:all .3s;}
-
-/* ── GRÁFICA ── */
-.grafica-wrap{background:var(--white);border-radius:8px;padding:1rem;margin-top:.5rem;border:1px solid var(--border-color);}
-.grafica-titulo{font-size:.78rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.5rem;}
-body.dark .grafica-wrap{background:#1E293B;border-color:#334155;}
-body.dark .grafica-titulo{color:#E2E8F0;}
 
 /* ── MODAL VACIAR CICLO ESCOLAR ── */
 #modal-ciclo{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;
@@ -277,6 +254,41 @@ body.dark .grafica-titulo{color:#E2E8F0;}
 .ciclo-error{font-size:.72rem;color:#EF4444;text-align:center;min-height:16px;margin-bottom:.3rem;}
 .ciclo-lista{background:rgba(0,0,0,.2);border-radius:6px;padding:.6rem .8rem;
   margin-bottom:.8rem;font-size:.75rem;color:rgba(255,200,200,.7);line-height:1.8;}
+
+/* ── SELECTOR DE TURNOS ── */
+.turno-selector-wrap{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;padding:12px;margin-bottom:14px;}
+.turno-selector-title{font-size:.78rem;font-weight:700;color:#1E40AF;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;}
+.turno-selector-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.btn-turno-config{background:#EFF6FF;border:1px solid #BFDBFE;color:#1E40AF;border-radius:6px;
+  padding:.55rem .3rem;font-size:.7rem;font-weight:700;cursor:pointer;text-align:center;
+  transition:all .25s;line-height:1.3;}
+.btn-turno-config.active{background:#1E40AF;color:white;border-color:#1E40AF;}
+body.dark .turno-selector-wrap{background:#0F172A;border-color:#334155;}
+body.dark .turno-selector-title{color:#93C5FD;}
+body.dark .btn-turno-config{background:#1E293B;border-color:#334155;color:#93C5FD;}
+body.dark .btn-turno-config.active{background:#1D4ED8;color:white;}
+
+/* ── ALERTAS DE FALTAS ── */
+.alerta-faltas{background:linear-gradient(135deg,#7F1D1D,#991B1B);border-radius:8px;padding:10px 14px;margin-bottom:.5rem;}
+.alerta-titulo{font-size:.78rem;font-weight:700;color:#FEE2E2;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+.alerta-item{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:.8rem;}
+.alerta-item:last-child{border-bottom:none;}
+.alerta-nombre{color:#FECACA;font-weight:700;}
+.alerta-pct{background:#DC2626;color:white;border-radius:8px;padding:1px 7px;font-size:.68rem;font-weight:700;}
+.alerta-empty{font-size:.78rem;color:rgba(255,255,255,.5);text-align:center;padding:8px 0;}
+
+/* ── REPORTE PDF BOTÓN ── */
+.btn-reporte{background:linear-gradient(135deg,#7C3AED,#6D28D9);color:white;border:none;padding:.7rem 1rem;border-radius:6px;font-weight:700;cursor:pointer;width:100%;text-transform:uppercase;font-size:.82rem;margin-top:8px;transition:all .3s;}
+.btn-reporte:active{transform:scale(.98);}
+
+/* ── EXPORTAR PADRÓN EXCEL ── */
+.btn-export-xlsx{background:linear-gradient(135deg,#065F46,#047857);color:white;border:none;padding:.7rem 1rem;border-radius:6px;font-weight:700;cursor:pointer;width:100%;text-transform:uppercase;font-size:.82rem;margin-top:8px;transition:all .3s;}
+
+/* ── GRÁFICA ── */
+.grafica-wrap{background:var(--white);border-radius:8px;padding:1rem;margin-top:.5rem;border:1px solid var(--border-color);}
+.grafica-titulo{font-size:.78rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.5rem;}
+body.dark .grafica-wrap{background:#1E293B;border-color:#334155;}
+body.dark .grafica-titulo{color:#E2E8F0;}
 
     </style>
 </head>
@@ -544,6 +556,22 @@ body.dark .grafica-titulo{color:#E2E8F0;}
         <div class="section-title">Estructura Escolar Personalizable</div>
         <div class="section-desc">Configure exactamente qué turnos, grados y grupos existen en su plantel. Esta estructura alimenta todo el sistema: monitor, padrón, gafetes y escáner.</div>
 
+        <!-- SELECTOR DE TURNOS -->
+        <div class="turno-selector-wrap">
+            <div class="turno-selector-title">¿Cuantos turnos tiene su escuela?</div>
+            <div class="turno-selector-btns">
+                <button class="btn-turno-config" id="btn-cfg-mat" onclick="window.seleccionarTurnos('mat')">
+                    ☀️<br>Solo<br>Matutino
+                </button>
+                <button class="btn-turno-config" id="btn-cfg-vesp" onclick="window.seleccionarTurnos('vesp')">
+                    🌆<br>Solo<br>Vespertino
+                </button>
+                <button class="btn-turno-config active" id="btn-cfg-ambos" onclick="window.seleccionarTurnos('ambos')">
+                    ☀️🌆<br>Matutino y<br>Vespertino
+                </button>
+            </div>
+        </div>
+
         <div id="estructura-editor">
             <!-- Se genera dinámicamente según el nivel seleccionado -->
         </div>
@@ -702,70 +730,50 @@ body.dark .grafica-titulo{color:#E2E8F0;}
     <div class="ciclo-icon">🎓⚠️</div>
     <div class="ciclo-title">Cierre de Ciclo Escolar</div>
     <div class="ciclo-desc">
-      Esta acción es <strong style="color:#EF4444;">IRREVERSIBLE</strong>.<br>
-      Se eliminarán permanentemente:
+      Esta accion es <strong style="color:#EF4444;">IRREVERSIBLE</strong>.<br>
+      Se eliminaran permanentemente:
     </div>
     <div class="ciclo-lista">
-      🗑️ Padrón completo de alumnos<br>
-      🗑️ Historial de asistencias del escáner<br>
+      🗑️ Padron completo de alumnos<br>
+      🗑️ Historial de asistencias del escaner<br>
       🗑️ Listas de maestros del ciclo<br>
-      ✅ <em>Se conserva:</em> configuración, estructura, perfil y horarios
+      ✅ <em>Se conserva:</em> configuracion, estructura, perfil y horarios
     </div>
-
-    <!-- Paso 1 -->
     <div class="ciclo-step">
-      <div class="ciclo-lbl">Paso 1 — Escribe exactamente: VACIAR CICLO ESCOLAR</div>
+      <div class="ciclo-lbl">Paso 1 - Escribe exactamente: VACIAR CICLO ESCOLAR</div>
       <input class="ciclo-input" id="ciclo-input-frase" placeholder="VACIAR CICLO ESCOLAR" autocomplete="off">
     </div>
-
-    <!-- Paso 2 -->
     <div class="ciclo-step">
-      <div class="ciclo-lbl">Paso 2 — Contraseña directiva</div>
-      <input class="ciclo-input" id="ciclo-input-pin" type="password" placeholder="Tu contraseña de director" autocomplete="off">
+      <div class="ciclo-lbl">Paso 2 - Contrasena directiva</div>
+      <input class="ciclo-input" id="ciclo-input-pin" type="password" placeholder="Tu contrasena de director" autocomplete="off">
     </div>
-
-    <!-- Paso 3 -->
     <div class="ciclo-step">
-      <div class="ciclo-lbl">Paso 3 — Contraseña de administrador LudoAssist</div>
-      <input class="ciclo-input" id="ciclo-input-admin" type="password" placeholder="Contraseña del administrador" autocomplete="off">
+      <div class="ciclo-lbl">Paso 3 - Contrasena de administrador LudoAssist</div>
+      <input class="ciclo-input" id="ciclo-input-admin" type="password" placeholder="Contrasena del administrador" autocomplete="off">
     </div>
-
     <div class="ciclo-error" id="ciclo-error"></div>
     <button class="btn-vaciar" id="btn-vaciar-ciclo">🎓 VACIAR CICLO ESCOLAR</button>
-    <button class="btn-cancel-ciclo" id="btn-cancel-ciclo">Cancelar — Conservar todos los datos</button>
+    <button class="btn-cancel-ciclo" id="btn-cancel-ciclo">Cancelar - Conservar todos los datos</button>
   </div>
 </div>
 
-<!-- ════════════════════════════════════════════════════
-     DOCENTES — LISTAS EN TIEMPO REAL
-════════════════════════════════════════════════════ -->
+<!-- DOCENTES -->
 <main id="view-docentes" class="view-container">
     <div class="docentes-header">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;">
             <div>
-                <div class="docentes-titulo">📋 Listas Docentes — Hoy</div>
-                <div class="docentes-fecha" id="doc-fecha-hoy">—</div>
+                <div class="docentes-titulo">📋 Listas Docentes - Hoy</div>
+                <div class="docentes-fecha" id="doc-fecha-hoy">-</div>
             </div>
             <button class="doc-refresh" onclick="window.cargarListasDocentes()">🔄 Actualizar</button>
         </div>
         <div class="docentes-stats">
-            <div class="doc-stat">
-                <div class="doc-stat-val" id="doc-total-listas" style="color:#67E8F9;">—</div>
-                <div class="doc-stat-lbl">Listas Pasadas</div>
-            </div>
-            <div class="doc-stat">
-                <div class="doc-stat-val" id="doc-total-maestros" style="color:#4ADE80;">—</div>
-                <div class="doc-stat-lbl">Maestros Activos</div>
-            </div>
-            <div class="doc-stat">
-                <div class="doc-stat-val" id="doc-total-alumnos" style="color:#FCD34D;">—</div>
-                <div class="doc-stat-lbl">Alumnos Capturados</div>
-            </div>
+            <div class="doc-stat"><div class="doc-stat-val" id="doc-total-listas" style="color:#67E8F9;">-</div><div class="doc-stat-lbl">Listas Pasadas</div></div>
+            <div class="doc-stat"><div class="doc-stat-val" id="doc-total-maestros" style="color:#4ADE80;">-</div><div class="doc-stat-lbl">Maestros Activos</div></div>
+            <div class="doc-stat"><div class="doc-stat-val" id="doc-total-alumnos" style="color:#FCD34D;">-</div><div class="doc-stat-lbl">Alumnos Capturados</div></div>
         </div>
     </div>
-    <div id="doc-contenido">
-        <div class="doc-empty">Toca 🔄 Actualizar para cargar las listas de hoy.</div>
-    </div>
+    <div id="doc-contenido"><div class="doc-empty">Toca 🔄 Actualizar para cargar las listas de hoy.</div></div>
 </main>
 
 <!-- Modal -->
@@ -1072,11 +1080,11 @@ window.switchTab = async function(view, btn) {
             const snap = await get(seguridadRef);
             const pin  = snap.val();
             if (!pin) {
-                const np = prompt("Primera vez: establezca una contrasena directiva:");
+                const np = prompt("⚙️ Primera vez: establezca una contraseña directiva:");
                 if (np?.trim()) { await set(seguridadRef,np); isConfigUnlocked=true; alert("Contraseña establecida."); }
                 else return;
             } else {
-                const inp = prompt("Contrasena directiva:");
+                const inp = prompt("🔒 Contraseña directiva:");
                 if (inp===pin) { isConfigUnlocked=true; hablar("Bóveda desbloqueada."); }
                 else { alert("Contraseña incorrecta."); return; }
             }
@@ -1089,10 +1097,10 @@ window.switchTab = async function(view, btn) {
 };
 
 window.cambiarPinSeguridad = async function() {
-    const act = prompt("Contrasena ACTUAL:");
+    const act = prompt("Contraseña ACTUAL:");
     const snap = await get(seguridadRef);
     if (act===snap.val()) {
-        const nueva = prompt("NUEVA contrasena:");
+        const nueva = prompt("NUEVA contraseña:");
         if (nueva?.trim()) { await set(seguridadRef,nueva); alert("Contraseña actualizada."); }
     } else alert("Contraseña incorrecta.");
 };
@@ -1158,6 +1166,7 @@ function cargarConfiguracionNube() {
             estructuraActiva = JSON.parse(JSON.stringify(ESTRUCTURAS_DEFAULT[nivel]||ESTRUCTURAS_DEFAULT['Secundaria']));
         }
         // Renderizar todo lo que depende de la estructura
+        sincronizarSelectorTurnos();
         renderizarEditorEstructura();
         poblarSelectoresTurnos();
         iniciarMonitor();
@@ -1214,6 +1223,37 @@ function calcMinEntre(h1, h2) {
 // 9. ESTRUCTURA ESCOLAR PERSONALIZABLE
 // ══════════════════════════════════════════════════════
 
+// ── SELECTOR DE TURNOS ──
+window.seleccionarTurnos = function(opcion) {
+    document.getElementById('btn-cfg-mat').classList.toggle('active', opcion === 'mat');
+    document.getElementById('btn-cfg-vesp').classList.toggle('active', opcion === 'vesp');
+    document.getElementById('btn-cfg-ambos').classList.toggle('active', opcion === 'ambos');
+    const nivel = document.getElementById('conf-nivel').value;
+    const def = ESTRUCTURAS_DEFAULT[nivel] || ESTRUCTURAS_DEFAULT['Secundaria'];
+    if (opcion === 'mat') {
+        estructuraActiva = { Matutino: JSON.parse(JSON.stringify(def.Matutino || def[Object.keys(def)[0]])) };
+    } else if (opcion === 'vesp') {
+        const base = def.Vespertino || def[Object.keys(def)[0]];
+        estructuraActiva = { Vespertino: JSON.parse(JSON.stringify(base)) };
+    } else {
+        estructuraActiva = JSON.parse(JSON.stringify(def));
+        if (!estructuraActiva.Vespertino) estructuraActiva.Vespertino = { '1': ['G'], '2': ['G'], '3': ['G'] };
+    }
+    renderizarEditorEstructura();
+};
+
+function sincronizarSelectorTurnos() {
+    const turnos = Object.keys(estructuraActiva);
+    const tieneMat  = turnos.includes('Matutino');
+    const tieneVesp = turnos.includes('Vespertino');
+    let opcion = 'ambos';
+    if (tieneMat && !tieneVesp)  opcion = 'mat';
+    if (!tieneMat && tieneVesp)  opcion = 'vesp';
+    document.getElementById('btn-cfg-mat')?.classList.toggle('active', opcion === 'mat');
+    document.getElementById('btn-cfg-vesp')?.classList.toggle('active', opcion === 'vesp');
+    document.getElementById('btn-cfg-ambos')?.classList.toggle('active', opcion === 'ambos');
+}
+
 // Cuando el usuario cambia el nivel, precarga la estructura default de ese nivel
 window.onNivelChange = function() {
     const nivel = document.getElementById('conf-nivel').value;
@@ -1241,7 +1281,7 @@ function renderizarEditorEstructura() {
             const grupos = grados[grado];
             const row = document.createElement('div');
             row.className = 'grado-row';
-            row.innerHTML = `<span class="grado-lbl">${grado} Grado</span>`;
+            row.innerHTML = `<span class="grado-lbl">${grado}° Grado</span>`;
 
             const chipsDiv = document.createElement('div');
             chipsDiv.className = 'grupos-chips';
@@ -1274,19 +1314,11 @@ function renderizarEditorEstructura() {
         editor.appendChild(bloqueTurno);
     });
 
-    // Botón añadir turno vespertino (si no existe)
-    if (!estructuraActiva['Vespertino']) {
-        const btnVesp = document.createElement('button');
-        btnVesp.className = 'btn-primary btn-secondary';
-        btnVesp.style.marginTop = '8px';
-        btnVesp.textContent = '+ Añadir Turno Vespertino';
-        btnVesp.onclick = () => window.agregarTurnoVespertino();
-        editor.appendChild(btnVesp);
-    }
+    // El turno vespertino se gestiona desde el selector de arriba
 }
 
 window.agregarGrupo = function(turno, grado) {
-    const nuevo = prompt(`Nombre del nuevo grupo para ${grado} ${turno} (ej. D):`);
+    const nuevo = prompt(`Nombre del nuevo grupo para ${grado}° ${turno} (ej. D):`);
     if (!nuevo?.trim()) return;
     const g = nuevo.trim().toUpperCase();
     if (!estructuraActiva[turno]) estructuraActiva[turno] = {};
@@ -1298,7 +1330,7 @@ window.agregarGrupo = function(turno, grado) {
 };
 
 window.eliminarGrupo = function(turno, grado, grupo) {
-    if (!confirm(`¿Eliminar el grupo ${grupo} del ${grado} ${turno}?`)) return;
+    if (!confirm(`¿Eliminar el grupo ${grupo} del ${grado}° ${turno}?`)) return;
     estructuraActiva[turno][grado] = estructuraActiva[turno][grado].filter(g=>g!==grupo);
     if (estructuraActiva[turno][grado].length===0) delete estructuraActiva[turno][grado];
     renderizarEditorEstructura();
@@ -1322,13 +1354,19 @@ window.agregarTurnoVespertino = function() {
 
 window.guardarEstructura = async function() {
     try {
+        const estructuraLimpia = {};
+        Object.keys(estructuraActiva).forEach(turno => {
+            if (estructuraActiva[turno] && Object.keys(estructuraActiva[turno]).length > 0)
+                estructuraLimpia[turno] = estructuraActiva[turno];
+        });
+        estructuraActiva = estructuraLimpia;
         await set(ref(db,`escuelas/${ID}/configuracion/estructura`), estructuraActiva);
         hablar("Estructura escolar guardada.");
         activarBrilloNeon('estructura-editor');
         // Actualizar todos los selectores del sistema
         poblarSelectoresTurnos();
         iniciarMonitor();
-        alert("Estructura guardada. Todos los modulos se han actualizado.");
+        alert("✅ Estructura guardada. Todos los módulos se han actualizado.");
     } catch(e) { alert("Error al guardar: "+e.message); }
 };
 
@@ -1367,7 +1405,7 @@ function histActualizarGrados() {
     const sel = document.getElementById('selectGradoHist');
     sel.innerHTML = '<option value="Todos">Todos los grados</option>';
     Object.keys(grados).sort((a,b)=>Number(a)-Number(b)).forEach(g=>{
-        const o=document.createElement('option'); o.value=g; o.textContent=`${g} Grado`; sel.appendChild(o);
+        const o=document.createElement('option'); o.value=g; o.textContent=`${g}° Grado`; sel.appendChild(o);
     });
     window.histActualizarGrupos();
 }
@@ -1413,7 +1451,7 @@ window.dirActualizarGrados = function() {
     const sel = document.getElementById('dir-grado');
     sel.innerHTML='';
     Object.keys(grados).sort((a,b)=>Number(a)-Number(b)).forEach(g=>{
-        const o=document.createElement('option'); o.value=g; o.textContent=`${g} Grado`; sel.appendChild(o);
+        const o=document.createElement('option'); o.value=g; o.textContent=`${g}° Grado`; sel.appendChild(o);
     });
     window.dirActualizarGrupos();
 };
@@ -1434,7 +1472,7 @@ window.genActualizarGrados = function() {
     const sel   = document.getElementById('gen-grado');
     sel.innerHTML='';
     Object.keys(grados).sort((a,b)=>Number(a)-Number(b)).forEach(g=>{
-        const o=document.createElement('option'); o.value=g; o.textContent=`${g} Grado`; sel.appendChild(o);
+        const o=document.createElement('option'); o.value=g; o.textContent=`${g}° Grado`; sel.appendChild(o);
     });
     window.genActualizarGrupos();
 };
@@ -1591,7 +1629,7 @@ function renderMonitor() {
             card.innerHTML = `
                 <div class="grupo-header" onclick="this.parentElement.querySelector('.grupo-alumnos').classList.toggle('open')">
                     <div>
-                        <div class="grupo-nombre">${grado} "${grupo}"</div>
+                        <div class="grupo-nombre">${grado}° "${grupo}"</div>
                         <div class="grupo-meta">${metaTexto}</div>
                     </div>
                     <div class="grupo-pct ${clsPct}">${tieneDatos ? pct+'%' : '-'}</div>
@@ -1688,7 +1726,7 @@ document.getElementById('btnConsultar').addEventListener('click', async () => {
                     let gradoReg = '';
                     let grupoReg = '';
 
-                    if (r.grado && r.grupo && !r.grupo.includes('\u00B0')) {
+                    if (r.grado && r.grupo && !r.grupo.includes('°')) {
                         // Formato nuevo: campos separados grado="1", grupo="A"
                         gradoReg = String(r.grado).trim();
                         grupoReg = String(r.grupo).trim().toUpperCase();
@@ -1745,7 +1783,7 @@ document.getElementById('btnConsultar').addEventListener('click', async () => {
             // Contador
             contEl.style.display='block';
             const rangoTexto = `${formatFechaMx(dStart)} al ${formatFechaMx(dEnd)}`;
-            contEl.textContent = `${count} registro${count!==1?'s':''} encontrados - ${sTurno} | ${rangoTexto}`;
+            contEl.textContent = `${count} registro${count!==1?'s':''} encontrados - ${sTurno} · ${rangoTexto}`;
             // Activar botones según filtros seleccionados
             expBtns.style.display='grid';
             const btnInd  = document.getElementById('btn-exp-individual');
@@ -1795,16 +1833,27 @@ function encabezadoPDF(doc, titulo, subtitulo) {
 }
 
 // ── UTILIDAD: pie de página en todas las páginas ──
-function piesPDF(doc) {
+function piesPDF(doc, director) {
     const pw = doc.internal.pageSize.getWidth();
     const ph = doc.internal.pageSize.getHeight();
     const total = doc.internal.getNumberOfPages();
     for (let i=1; i<=total; i++) {
         doc.setPage(i);
-        doc.setDrawColor(203,213,225); doc.line(14, ph-14, pw-14, ph-14);
+        doc.setDrawColor(203,213,225); doc.line(14, ph-22, pw-14, ph-22);
         doc.setFontSize(7); doc.setTextColor(100,116,139);
-        doc.text('A=Asistencia  R=Retardo  F=Falta  SR=Sin Registro  J=Justificado', 14, ph-8);
-        doc.text(`Pág. ${i}/${total}  |  ${new Date().toLocaleDateString('es-MX')}`, pw-14, ph-8, {align:'right'});
+        // Leyenda izquierda
+        doc.text('A=Asistencia  R=Retardo  F=Falta  SR=Sin Registro  J=Justificado', 14, ph-16);
+        // Página derecha
+        doc.text(`Pág. ${i}/${total}  ·  ${new Date().toLocaleDateString('es-MX')}`, pw-14, ph-16, {align:'right'});
+        // Firma director
+        if (director) {
+            doc.setFontSize(8); doc.setTextColor(30,41,59);
+            doc.text('Director(a): ' + director, 14, ph-8);
+            doc.setDrawColor(100,116,139);
+            doc.line(pw-80, ph-10, pw-14, ph-10);
+            doc.setFontSize(7); doc.setTextColor(100,116,139);
+            doc.text('Firma y Sello', pw-47, ph-6, {align:'center'});
+        }
     }
 }
 
@@ -1870,7 +1919,7 @@ window.generarReporteIndividualPDF = async function() {
 
     // Encabezado
     encabezadoPDF(doc, 'REPORTE INDIVIDUAL DE ASISTENCIA',
-        `Turno ${sTurno}  |  Período: ${formatFechaMx(dStart)} al ${formatFechaMx(dEnd)}`);
+        `Turno ${sTurno}  ·  Período: ${formatFechaMx(dStart)} al ${formatFechaMx(dEnd)}`);
 
     // Caja del alumno
     doc.setFillColor(241,245,249); doc.rect(14,34,pw-28,28,'F');
@@ -1879,8 +1928,8 @@ window.generarReporteIndividualPDF = async function() {
     const nombreLimpio = sAlumno.replace(/^\[ [AM] \] /,'').toUpperCase();
     doc.text(nombreLimpio, 18, 42);
     doc.setFontSize(8); doc.setFont('helvetica','normal'); doc.setTextColor(51,65,85);
-    doc.text(`${sGrado} Grado  |  Grupo "${sGrupo}"  |  Turno ${sTurno}`, 18, 49);
-    doc.text(`Período: ${formatFechaMx(dStart)} al ${formatFechaMx(dEnd)}  |  ${totalDias} días hábiles`, 18, 55);
+    doc.text(`${sGrado}° Grado  ·  Grupo "${sGrupo}"  ·  Turno ${sTurno}`, 18, 49);
+    doc.text(`Período: ${formatFechaMx(dStart)} al ${formatFechaMx(dEnd)}  ·  ${totalDias} días hábiles`, 18, 55);
     // Porcentaje en la derecha
     const colPct = pct>=85?[5,150,105]:pct>=70?[146,64,14]:[153,27,27];
     doc.setFillColor(...colPct); doc.circle(pw-22, 47, 10, 'F');
@@ -1937,7 +1986,7 @@ window.generarReporteIndividualPDF = async function() {
     });
 
     // Pie con firma
-    piesPDF(doc);
+    piesPDF(doc, document.getElementById('conf-director')?.value || '');
     doc.save(`Reporte_${nombreLimpio.replace(/\s+/g,'_').substring(0,20)}_${dStart}_${dEnd}.pdf`);
     hablar("Reporte individual generado.");
 };
@@ -1993,7 +2042,7 @@ window.generarReporteGrupoPDF = async function() {
     const pw  = doc.internal.pageSize.getWidth();
 
     encabezadoPDF(doc, `REPORTE DE ASISTENCIA - ${sGrado}° GRADO GRUPO "${sGrupo}"`,
-        `Turno ${sTurno}  |  Período: ${formatFechaMx(dStart)} al ${formatFechaMx(dEnd)}`);
+        `Turno ${sTurno}  ·  Período: ${formatFechaMx(dStart)} al ${formatFechaMx(dEnd)}`);
 
     // Encabezados de columna: Nº, Nombre, [días], Total, %
     const colDias = diasRango.map(iso => iso.slice(8)+'/'+iso.slice(5,7));
@@ -2042,7 +2091,7 @@ window.generarReporteGrupoPDF = async function() {
         margin: { left:10, right:10 }
     });
 
-    piesPDF(doc);
+    piesPDF(doc, document.getElementById('conf-director')?.value || '');
     doc.save(`Reporte_${sGrado}${sGrupo}_${sTurno}_${dStart}_${dEnd}.pdf`);
     hablar("Reporte de grupo generado.");
 };
@@ -2095,7 +2144,7 @@ window.consultarDirectorio = async function() {
     const grado = document.getElementById('dir-grado').value;
     const grupo = document.getElementById('dir-grupo').value;
     const tBody = document.getElementById('tableBodyDirectorio');
-    document.getElementById('tituloDirectorioDinamico').textContent=`PADRÓN: ${grado} "${grupo}" - ${turno.toUpperCase()}`;
+    document.getElementById('tituloDirectorioDinamico').textContent=`PADRÓN: ${grado}° "${grupo}" - ${turno.toUpperCase()}`;
     tBody.innerHTML=`<tr><td colspan="3" style="text-align:center;padding:2rem;">Consultando...</td></tr>`;
 
     const clave = sanitizarClave(`${turno}-${grado}-${grupo}`);
@@ -2173,7 +2222,7 @@ function sanitizarClaveFirebase(s){ return s.replace(/[.#$[\]\/]/g,'_'); }
 function normalizarNombre(r){ return r?String(r).replace(/[\r\n\t]/g,' ').replace(/\s+/g,' ').trim().toUpperCase():''; }
 function esNombreValido(s){ return s && s.length>2 && !/^(no\.|num|nombre|alumno|total|firma|profr|asig|grado|grupo|evaluac|inasis|calific|period|registro)/i.test(s.trim()); }
 function detectarGrado(r){ const n=String(r).replace(/[^0-9]/g,''); return n||''; }
-function detectarGrupo(r){ return String(r).trim().replace(/[^A-Za-z0-9]/g,'').toUpperCase(); }
+function detectarGrupo(r){ return String(r).trim().replace(/['"°\s]/g,'').toUpperCase(); }
 
 // Turno seleccionado por el director antes de subir
 let turnoUploadForzado = '';
@@ -2318,7 +2367,7 @@ window.handleArchivoUniversal = function(input) {
     const file = input.files[0]; if(!file) return;
 
     if (!turnoUploadForzado) {
-        alert('Primero seleccione el turno (Matutino o Vespertino).');
+        alert('⚠️ Primero seleccione el turno en el Paso 1 (Matutino o Vespertino).');
         input.value=''; return;
     }
 
@@ -2481,7 +2530,7 @@ function dibujarTextoGafete(ctx,canvas,nombre,grado,grupo,turno,slug,container){
     ctx.fillText((nombre.length>22?nombre.substring(0,22)+'...':nombre).toUpperCase(),130,260);
     ctx.beginPath(); ctx.setLineDash([5,5]); ctx.moveTo(30,240); ctx.lineTo(230,240); ctx.stroke(); ctx.setLineDash([]);
     ctx.fillStyle='#64748B'; ctx.font='bold 14px Arial';
-    ctx.fillText(`${grado} Grado - Grupo ${grupo}`,130,290);
+    ctx.fillText(`${grado}° Grado - Grupo ${grupo}`,130,290);
     ctx.font='12px Arial'; ctx.fillText(turno,130,315);
     // Logo pequeño esquina superior izquierda del gafete
     if(logoBase64Global){
@@ -2515,15 +2564,23 @@ function generarCanvasCredencial(alumno,turno,grado,grupo){
                 ctx.moveTo(30,285); ctx.lineTo(370,285); ctx.stroke(); ctx.setLineDash([]);
                 ctx.fillStyle='#0A192F'; ctx.font='bold 15px Arial';
                 ctx.fillText((alumno.length>26?alumno.substring(0,24)+'...':alumno).toUpperCase(),200,320);
-                ctx.fillStyle='#334155'; ctx.font='bold 13px Arial'; ctx.fillText(`${grado} Grado - Grupo "${grupo}"`,200,350);
+                ctx.fillStyle='#334155'; ctx.font='bold 13px Arial'; ctx.fillText(`${grado}° Grado - Grupo "${grupo}"`,200,350);
                 ctx.fillStyle='#0284C7'; ctx.font='12px Arial'; ctx.fillText(`Turno ${turno}`,200,375);
                 resolve(canvas);
             };
             if(logoBase64Global){
                 const li=new Image();
                 li.onload=()=>{
-                    // Solo logo en esquina header - NO en centro del QR
+                    // Logo en esquina header
                     ctx.drawImage(li,12,8,55,55);
+                    // Logo centrado en el QR
+                    const cx=200, cy=175, r=28;
+                    ctx.save();
+                    ctx.beginPath(); ctx.arc(cx,cy,r+4,0,Math.PI*2);
+                    ctx.fillStyle='#ffffff'; ctx.fill();
+                    ctx.strokeStyle='#0284C7'; ctx.lineWidth=2; ctx.stroke();
+                    ctx.drawImage(li,cx-r,cy-r,r*2,r*2);
+                    ctx.restore();
                     dibujarResto();
                 };
                 li.src=logoBase64Global;
@@ -2536,7 +2593,7 @@ function generarCanvasCredencial(alumno,turno,grado,grupo){
 async function obtenerListaGrupo(turno,grado,grupo){
     const snap=await get(directorioRef);
     const k=sanitizarClaveFirebase(`${turno}-${grado}-${grupo}`);
-    if(!snap.exists()||!snap.val()[k]){ alert(`Sin alumnos en ${grado} "${grupo}" - ${turno}.`); return null; }
+    if(!snap.exists()||!snap.val()[k]){ alert(`Sin alumnos en ${grado}° "${grupo}" - ${turno}.`); return null; }
     const d=snap.val()[k];
     let l=Array.isArray(d)?d:Object.values(d);
     // Limpiar prefijos [ A ] o [ M ] que pudieran haberse colado
@@ -2561,7 +2618,7 @@ function exportarLoteWord(alumnos,turno,grado,grupo){
     let html=`<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word'><head><meta charset="UTF-8"><style>body{font-family:Arial}.pagina{page-break-after:always}.card{width:280px;border:3px solid #0A192F;border-radius:8px;overflow:hidden;margin:0 auto;text-align:center}.hd{background:#0A192F;color:#10B981;padding:10px;font-size:11px;font-weight:bold;text-transform:uppercase}.bd{padding:15px}.nm{font-size:14px;font-weight:bold;color:#0A192F;text-transform:uppercase;margin:8px 0 4px}.mt{font-size:12px;color:#334155;font-weight:bold}</style></head><body>`;
     alumnos.forEach(a=>{
         const qr=new QRious({value:`${turno}-${grado}-${grupo}-${a.replace(/\s+/g,'_')}`,size:160,level:'H'});
-        html+=`<div class="pagina"><div class="card"><div class="hd">${nombreEscuelaGlobal.toUpperCase()}</div><div class="bd"><img src="${qr.toDataURL()}" width="160" height="160"/><div class="nm">${a}</div><div class="mt">${grado} - Grupo "${grupo}"</div><div style="font-size:11px;color:#0284C7;font-weight:bold">Turno ${turno}</div></div></div></div>`;
+        html+=`<div class="pagina"><div class="card"><div class="hd">${nombreEscuelaGlobal.toUpperCase()}</div><div class="bd"><img src="${qr.toDataURL()}" width="160" height="160"/><div class="nm">${a}</div><div class="mt">${grado}° - Grupo "${grupo}"</div><div style="font-size:11px;color:#0284C7;font-weight:bold">Turno ${turno}</div></div></div></div>`;
     });
     html+=`</body></html>`;
     const blob=new Blob(['\ufeff'+html],{type:'application/msword;charset=utf-8;'});
@@ -2599,10 +2656,10 @@ async function exportarLoteImagenes(alumnos,turno,grado,grupo){
 
 function imprimirLoteHTML(alumnos,turno,grado,grupo){
     const logoTag=logoBase64Global?`<img src="${logoBase64Global}" style="position:absolute;top:8px;left:8px;width:40px;height:40px;object-fit:contain;">`:'';
-    let html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Gafetes ${grado}${grupo}</title><style>body{font-family:Arial;background:#F8FAFC;margin:0;padding:20px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px}.card{position:relative;background:white;border:2px solid #0A192F;border-radius:8px;overflow:hidden;text-align:center;padding-bottom:14px}.hd{background:#0A192F;color:#10B981;padding:12px 12px 12px 48px;font-size:11px;font-weight:bold;text-transform:uppercase}.nm{font-size:13px;font-weight:bold;color:#0A192F;margin:10px 0 4px;text-transform:uppercase;padding:0 8px}.mt{font-size:11px;color:#475569;font-weight:bold}.tl{font-size:10px;color:#0284C7;font-weight:bold;margin-top:4px}.no-print{background:#0284C7;color:white;padding:12px;margin-bottom:18px;border-radius:6px;font-weight:bold;font-size:13px;text-align:center}@media print{.no-print{display:none}body{background:white;padding:4mm}.grid{gap:4mm}}</style></head><body><div class="no-print">🖨️ CTRL+P para imprimir</div><div class="grid">`;
+    let html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Gafetes ${grado}°${grupo}</title><style>body{font-family:Arial;background:#F8FAFC;margin:0;padding:20px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px}.card{position:relative;background:white;border:2px solid #0A192F;border-radius:8px;overflow:hidden;text-align:center;padding-bottom:14px}.hd{background:#0A192F;color:#10B981;padding:12px 12px 12px 48px;font-size:11px;font-weight:bold;text-transform:uppercase}.nm{font-size:13px;font-weight:bold;color:#0A192F;margin:10px 0 4px;text-transform:uppercase;padding:0 8px}.mt{font-size:11px;color:#475569;font-weight:bold}.tl{font-size:10px;color:#0284C7;font-weight:bold;margin-top:4px}.no-print{background:#0284C7;color:white;padding:12px;margin-bottom:18px;border-radius:6px;font-weight:bold;font-size:13px;text-align:center}@media print{.no-print{display:none}body{background:white;padding:4mm}.grid{gap:4mm}}</style></head><body><div class="no-print">🖨️ CTRL+P para imprimir</div><div class="grid">`;
     alumnos.forEach(a=>{
         const qr=new QRious({value:`${turno}-${grado}-${grupo}-${a.replace(/\s+/g,'_')}`,size:140,level:'H'});
-        html+=`<div class="card">${logoTag}<div class="hd">${nombreEscuelaGlobal}</div><div style="padding:10px"><img src="${qr.toDataURL()}" width="128" height="128"></div><div class="nm">${a}</div><div class="mt">${grado} - Grupo ${grupo}</div><div class="tl">Turno ${turno}</div></div>`;
+        html+=`<div class="card">${logoTag}<div class="hd">${nombreEscuelaGlobal}</div><div style="padding:10px"><img src="${qr.toDataURL()}" width="128" height="128"></div><div class="nm">${a}</div><div class="mt">${grado}° - Grupo ${grupo}</div><div class="tl">Turno ${turno}</div></div>`;
     });
     html+=`</div></body></html>`;
     const blob=new Blob([html],{type:'text/html;charset=utf-8;'});
@@ -2732,7 +2789,7 @@ window.generarReportePDF = async function(){
         doc.text('REPORTE SEMANAL DE ASISTENCIA',pw/2,11,{align:'center'});
         doc.setTextColor(255,255,255); doc.setFontSize(9); doc.setFont('helvetica','normal');
         doc.text(nombreEscuelaGlobal.toUpperCase(),pw/2,17,{align:'center'});
-        doc.text(`Turno ${turno}  |  Semana: ${desde} al ${hasta}`,pw/2,22,{align:'center'});
+        doc.text(`Turno ${turno}  ·  Semana: ${desde} al ${hasta}`,pw/2,22,{align:'center'});
         if(logoBase64Global){ try{ doc.addImage(logoBase64Global,'PNG',8,4,18,18); }catch(e){} }
         let yPos=34; let hayDatos=false;
         const grados=estructuraActiva[turno]||{};
@@ -2741,7 +2798,7 @@ window.generarReportePDF = async function(){
                 const clave=`${turno}-${grado}-${grupo}`.replace(/[.#$[\]\/]/g,'_');
                 const listaDir=directorioCache[clave]||[];
                 if(!listaDir.length) continue;
-                const regsGrupo=registros.filter(r=>{ const gRaw=(r.grupo||'').replace(/\u00B0\s*/,'').trim().split(' '); return gRaw[0]===grado&&gRaw[1]===grupo; });
+                const regsGrupo=registros.filter(r=>{ const gRaw=(r.grupo||'').replace(/°\s*/,'').trim().split(' '); return gRaw[0]===grado&&gRaw[1]===grupo; });
                 const dias=[...new Set(regsGrupo.map(r=>r.fecha))].sort();
                 const rows=listaDir.map(alumno=>{
                     const row=[alumno];
@@ -2758,7 +2815,7 @@ window.generarReportePDF = async function(){
                 if(yPos>ph-60){ doc.addPage(); yPos=20; }
                 doc.setFillColor(2,132,199); doc.setTextColor(255,255,255); doc.setFontSize(9); doc.setFont('helvetica','bold');
                 doc.rect(14,yPos-4,pw-28,8,'F');
-                doc.text(`${grado} GRADO - GRUPO "${grupo}"  (${listaDir.length} alumnos)`,16,yPos+1);
+                doc.text(`${grado}° GRADO - GRUPO "${grupo}"  (${listaDir.length} alumnos)`,16,yPos+1);
                 yPos+=8;
                 doc.autoTable({ startY:yPos, head:[['Alumno',...dias.map(d=>d.slice(8)),'Total']], body:rows,
                     styles:{fontSize:7,cellPadding:1.5}, headStyles:{fillColor:[15,23,42],textColor:255,fontStyle:'bold',fontSize:7},
@@ -2771,7 +2828,7 @@ window.generarReportePDF = async function(){
         }
         if(!hayDatos){ doc.setTextColor(100,116,139); doc.setFontSize(10); doc.text('Sin registros esta semana.',pw/2,ph/2,{align:'center'}); }
         const total=doc.internal.getNumberOfPages();
-        for(let i=1;i<=total;i++){ doc.setPage(i); doc.setFontSize(7); doc.setTextColor(148,163,184); doc.text('A=Asistencia  R=Retardo  F=Falta  J=Justificado',14,ph-8); doc.text(`Página ${i}/${total}  |  ${new Date().toLocaleString('es-MX')}`,pw-14,ph-8,{align:'right'}); doc.setDrawColor(203,213,225); doc.line(14,ph-11,pw-14,ph-11); }
+        for(let i=1;i<=total;i++){ doc.setPage(i); doc.setFontSize(7); doc.setTextColor(148,163,184); doc.text('A=Asistencia  R=Retardo  F=Falta  J=Justificado',14,ph-8); doc.text(`Página ${i}/${total}  ·  ${new Date().toLocaleString('es-MX')}`,pw-14,ph-8,{align:'right'}); doc.setDrawColor(203,213,225); doc.line(14,ph-11,pw-14,ph-11); }
         doc.save(`Reporte_${turno}_${desde}.pdf`);
         hablar("Reporte PDF listo. Revise sus descargas.");
     } catch(e){ alert("Error PDF: "+e.message); console.error(e); }
@@ -2794,11 +2851,11 @@ window.exportarPadronExcel = async function(){
                 for(const grupo of grados[grado]){
                     const clave=`${turno}-${grado}-${grupo}`.replace(/[.#$[\]\/]/g,'_');
                     const rawG=data[clave];
-                    if(!rawG){ resumenRows.push([turno,grado+' Grado','Grupo '+grupo,0]); continue; }
+                    if(!rawG){ resumenRows.push([turno,grado+'° Grado','Grupo '+grupo,0]); continue; }
                     const lista=(Array.isArray(rawG)?rawG:Object.values(rawG)).filter(Boolean);
                     totalAlumnos+=lista.length;
-                    resumenRows.push([turno,grado+' Grado','Grupo '+grupo,lista.length]);
-                    const rows=[[`PLANTEL: ${nombreEscuelaGlobal}`],[`${turno}  |  ${grado} GRADO  |  GRUPO "${grupo}"`],[`Total: ${lista.length} alumnos`],[],['#','NOMBRE COMPLETO']];
+                    resumenRows.push([turno,grado+'° Grado','Grupo '+grupo,lista.length]);
+                    const rows=[[`PLANTEL: ${nombreEscuelaGlobal}`],[`${turno}  |  ${grado}° GRADO  |  GRUPO "${grupo}"`],[`Total: ${lista.length} alumnos`],[],['#','NOMBRE COMPLETO']];
                     lista.forEach((n,i)=>rows.push([i+1,n]));
                     const ws=XLSX.utils.aoa_to_sheet(rows);
                     ws['!cols']=[{wch:5},{wch:45}];
@@ -2841,61 +2898,38 @@ document.getElementById('btn-vaciar-ciclo').addEventListener('click', async () =
   const pinAdmin = document.getElementById('ciclo-input-admin').value.trim();
   const errEl    = document.getElementById('ciclo-error');
   errEl.textContent = '';
-
-  // Paso 1: frase exacta
   if (frase !== 'VACIAR CICLO ESCOLAR') {
     errEl.textContent = '❌ Escribe exactamente: VACIAR CICLO ESCOLAR';
     return;
   }
-
-  // Paso 2: contraseña director
   try {
     const snapPin = await get(seguridadRef);
     const pinGuardado = snapPin.val();
     if (pinGuardado && pinDir !== String(pinGuardado)) {
-      errEl.textContent = '❌ Contraseña directiva incorrecta.';
+      errEl.textContent = '❌ Contrasena directiva incorrecta.';
       return;
     }
-  } catch(e) {
-    errEl.textContent = '⚠️ Sin conexión para verificar contraseña directiva.';
-    return;
-  }
-
-  // Paso 3: contraseña admin
+  } catch(e) { errEl.textContent = '⚠️ Sin conexion para verificar contrasena directiva.'; return; }
   try {
     const snapAdmin = await get(ref(db, 'admin/pin'));
     if (pinAdmin !== String(snapAdmin.val())) {
-      errEl.textContent = '❌ Contraseña de administrador incorrecta.';
+      errEl.textContent = '❌ Contrasena de administrador incorrecta.';
       return;
     }
-  } catch(e) {
-    errEl.textContent = '⚠️ Sin conexión para verificar contraseña de administrador.';
-    return;
-  }
-
-  // Proceder a vaciar
+  } catch(e) { errEl.textContent = '⚠️ Sin conexion para verificar contrasena de administrador.'; return; }
   const btn = document.getElementById('btn-vaciar-ciclo');
-  btn.disabled = true;
-  btn.textContent = '⏳ Vaciando ciclo escolar...';
-
+  btn.disabled = true; btn.textContent = '⏳ Vaciando ciclo escolar...';
   try {
-    // Borrar directorio de alumnos
     await remove(directorioRef);
-    // Borrar historial de asistencias del escáner
     await remove(asistenciasRef);
-    // Borrar listas de maestros
     await remove(ref(db, `escuelas/${ID}/listas-maestro`));
-
     document.getElementById('modal-ciclo').classList.remove('show');
-    // Limpiar caches locales
-    directorioCache = {};
-    asistenciasHoyCache = {};
+    directorioCache = {}; asistenciasHoyCache = {};
     renderMonitor();
-        alert('Ciclo escolar vaciado correctamente. Se eliminaron: padron de alumnos, historial de asistencias y listas de maestros. La configuracion se conservo.');
+    alert('Ciclo escolar vaciado. Se eliminaron padron, asistencias y listas. La configuracion se conservo.');
   } catch(e) {
     errEl.textContent = '❌ Error al vaciar: ' + e.message;
-    btn.disabled = false;
-    btn.textContent = '🎓 VACIAR CICLO ESCOLAR';
+    btn.disabled = false; btn.textContent = '🎓 VACIAR CICLO ESCOLAR';
   }
 });
 
@@ -2908,100 +2942,66 @@ document.getElementById('doc-fecha-hoy').textContent =
 window.cargarListasDocentes = async function() {
     const cont = document.getElementById('doc-contenido');
     cont.innerHTML = '<div class="doc-empty">⏳ Cargando listas de hoy...</div>';
-
     const hoy = getFechaHoyLocal();
-
     try {
         const snap = await get(ref(db, `escuelas/${ID}/listas-maestro/${hoy}`));
-
         if (!snap.exists()) {
-            cont.innerHTML = '<div class="doc-empty">📭 Ningún maestro ha pasado lista hoy.</div>';
+            cont.innerHTML = '<div class="doc-empty">📭 Ningun maestro ha pasado lista hoy.</div>';
             document.getElementById('doc-total-listas').textContent = '0';
             document.getElementById('doc-total-maestros').textContent = '0';
             document.getElementById('doc-total-alumnos').textContent = '0';
             return;
         }
-
         const datos = snap.val();
-        // Recolectar todos los registros del día
         let registros = [];
         Object.values(datos).forEach(grupos => {
-            Object.values(grupos).forEach(r => {
-                if (r && r.maestro && r.hora) registros.push(r);
-            });
+            Object.values(grupos).forEach(r => { if (r && r.maestro && r.hora) registros.push(r); });
         });
-
-        // Ordenar por hora
         registros.sort((a, b) => a.hora.localeCompare(b.hora));
-
-        // Stats generales
         const maestrosUnicos = [...new Set(registros.map(r => r.maestro))];
         const totalAlumnos = registros.reduce((s, r) => s + (r.alumnos ? r.alumnos.length : 0), 0);
-
         document.getElementById('doc-total-listas').textContent = registros.length;
         document.getElementById('doc-total-maestros').textContent = maestrosUnicos.length;
         document.getElementById('doc-total-alumnos').textContent = totalAlumnos;
-
-        // Agrupar por hora (bloques de 1 hora)
         const porHora = {};
         registros.forEach(r => {
-            // Extraer hora: "08:15 p.m." → "20" o "08:15 a.m." → "8"
             let horaKey = r.hora || '00';
-            // Formato 12h con a.m./p.m.
             const match12 = horaKey.match(/(\d+):(\d+)\s*(a\.?m\.?|p\.?m\.?)/i);
             if (match12) {
                 let h = parseInt(match12[1]);
-                const min = parseInt(match12[2]);
                 const period = match12[3].toLowerCase().replace(/\./g,'');
                 if (period === 'pm' && h !== 12) h += 12;
                 if (period === 'am' && h === 12) h = 0;
                 horaKey = String(h).padStart(2,'0');
-            } else {
-                // Formato 24h "08:15"
-                horaKey = horaKey.split(':')[0].padStart(2,'0');
-            }
+            } else { horaKey = horaKey.split(':')[0].padStart(2,'0'); }
             if (!porHora[horaKey]) porHora[horaKey] = [];
             porHora[horaKey].push(r);
         });
-
-        // Renderizar bloques por hora
         const horas = Object.keys(porHora).sort();
         let html = '';
         horas.forEach(h => {
             const regsHora = porHora[h];
-            const hLabel = `${parseInt(h)}:00 - ${parseInt(h)+1}:00 hrs`;
-            html += `
-                <div class="hora-bloque">
-                    <div class="hora-titulo">
-                        🕐 ${hLabel}
-                        <span class="hora-badge">${regsHora.length} lista${regsHora.length!==1?'s':''}</span>
-                    </div>`;
+            html += `<div class="hora-bloque"><div class="hora-titulo">🕐 ${parseInt(h)}:00 - ${parseInt(h)+1}:00 hrs<span class="hora-badge">${regsHora.length} lista${regsHora.length!==1?'s':''}</span></div>`;
             regsHora.forEach(r => {
                 const p = r.alumnos ? r.alumnos.filter(a=>a.estatusMaestro==='P').length : 0;
                 const f = r.alumnos ? r.alumnos.filter(a=>a.estatusMaestro==='F').length : 0;
                 const t = r.alumnos ? r.alumnos.filter(a=>a.estatusMaestro==='T').length : 0;
                 const j = r.alumnos ? r.alumnos.filter(a=>a.estatusMaestro==='J').length : 0;
                 const total = r.alumnos ? r.alumnos.length : 0;
-                html += `
-                    <div class="doc-row">
-                        <div>
-                            <div class="doc-nombre">🧑 ${r.maestro || '-'}</div>
-                            <div class="doc-grupo">📚 ${r.grupoDisplay || r.grupo || '-'} | ${r.turno || ''} | ${r.hora || ''}</div>
-                            <div style="display:flex;gap:4px;margin-top:4px;">
-                                <span style="font-size:.65rem;background:#D1FAE5;color:#065F46;padding:1px 6px;border-radius:8px;font-weight:700;">✅${p}</span>
-                                <span style="font-size:.65rem;background:#FEF3C7;color:#92400E;padding:1px 6px;border-radius:8px;font-weight:700;">⏰${t}</span>
-                                <span style="font-size:.65rem;background:#FEE2E2;color:#991B1B;padding:1px 6px;border-radius:8px;font-weight:700;">❌${f}</span>
-                                ${j>0?`<span style="font-size:.65rem;background:#DBEAFE;color:#1E40AF;padding:1px 6px;border-radius:8px;font-weight:700;">📝${j}</span>`:''}
-                            </div>
-                        </div>
-                        <span class="doc-pill doc-pill-ok">${total} alumnos</span>
-                    </div>`;
+                html += `<div class="doc-row"><div>
+                    <div class="doc-nombre">🧑 ${r.maestro || '-'}</div>
+                    <div class="doc-grupo">📚 ${r.grupoDisplay || r.grupo || '-'} | ${r.turno || ''} | ${r.hora || ''}</div>
+                    <div style="display:flex;gap:4px;margin-top:4px;">
+                        <span style="font-size:.65rem;background:#D1FAE5;color:#065F46;padding:1px 6px;border-radius:8px;font-weight:700;">✅${p}</span>
+                        <span style="font-size:.65rem;background:#FEF3C7;color:#92400E;padding:1px 6px;border-radius:8px;font-weight:700;">⏰${t}</span>
+                        <span style="font-size:.65rem;background:#FEE2E2;color:#991B1B;padding:1px 6px;border-radius:8px;font-weight:700;">❌${f}</span>
+                        ${j>0?'<span style="font-size:.65rem;background:#DBEAFE;color:#1E40AF;padding:1px 6px;border-radius:8px;font-weight:700;">📝'+j+'</span>':''}
+                    </div></div>
+                    <span class="doc-pill doc-pill-ok">${total} alumnos</span></div>`;
             });
             html += '</div>';
         });
-
         cont.innerHTML = html || '<div class="doc-empty">Sin registros.</div>';
-
     } catch(e) {
         cont.innerHTML = `<div class="doc-empty" style="color:var(--ruby);">❌ Error: ${e.message}</div>`;
     }

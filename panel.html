@@ -201,6 +201,31 @@ body.dark #lblStatusFirebase{color:#475569;}
 .btn-export-xlsx2{background:#065F46;}
 .btn-export-hist:disabled{opacity:.4;cursor:not-allowed;}
 
+/* ── DOCENTES ── */
+.docentes-header{background:linear-gradient(135deg,var(--navy) 0%,#1E293B 100%);border-radius:10px;padding:1rem;color:var(--white);margin-bottom:.8rem;}
+.docentes-titulo{font-size:1rem;font-weight:700;color:#67E8F9;text-transform:uppercase;margin-bottom:.3rem;}
+.docentes-fecha{font-size:.75rem;opacity:.7;}
+.docentes-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:.8rem;}
+.doc-stat{background:rgba(255,255,255,.07);border-radius:8px;padding:.6rem;text-align:center;}
+.doc-stat-val{font-size:1.5rem;font-weight:700;}
+.doc-stat-lbl{font-size:.6rem;text-transform:uppercase;opacity:.7;}
+.hora-bloque{background:var(--white);border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.1);margin-bottom:.6rem;overflow:hidden;border-left:4px solid var(--brand-accent);}
+.hora-titulo{background:#F1F5F9;padding:.6rem 1rem;font-size:.8rem;font-weight:700;color:var(--navy);display:flex;justify-content:space-between;align-items:center;}
+.hora-badge{font-size:.65rem;background:var(--brand-accent);color:white;border-radius:10px;padding:2px 8px;font-weight:700;}
+.doc-row{display:flex;justify-content:space-between;align-items:center;padding:.5rem 1rem;border-bottom:1px solid #F1F5F9;font-size:.82rem;}
+.doc-row:last-child{border-bottom:none;}
+.doc-nombre{color:var(--navy);font-weight:600;}
+.doc-grupo{color:var(--slate);font-size:.75rem;}
+.doc-pill{font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:10px;}
+.doc-pill-ok{background:#D1FAE5;color:#065F46;}
+.doc-pill-sin{background:#FEE2E2;color:#991B1B;}
+.doc-empty{text-align:center;padding:2rem;color:var(--slate);font-size:.85rem;}
+.doc-refresh{background:rgba(2,132,199,.1);border:1px solid rgba(2,132,199,.3);color:var(--brand-accent);border-radius:6px;padding:.4rem .8rem;font-size:.75rem;font-weight:700;cursor:pointer;float:right;}
+body.dark .hora-bloque{background:#1E293B;}
+body.dark .hora-titulo{background:#0F172A;color:#E2E8F0;}
+body.dark .doc-row{border-bottom-color:#334155;}
+body.dark .doc-nombre{color:#E2E8F0;}
+
 /* ── ALERTAS DE FALTAS ── */
 .alerta-faltas{background:linear-gradient(135deg,#7F1D1D,#991B1B);border-radius:8px;padding:10px 14px;margin-bottom:.5rem;}
 .alerta-titulo{font-size:.78rem;font-weight:700;color:#FEE2E2;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
@@ -629,6 +654,38 @@ body.dark .grafica-titulo{color:#E2E8F0;}
     <div class="ludomente-sello">POWERED BY LUDOMENTE STUDIO © 2026</div>
 </main>
 
+<!-- ════════════════════════════════════════════════════
+     DOCENTES — LISTAS EN TIEMPO REAL
+════════════════════════════════════════════════════ -->
+<main id="view-docentes" class="view-container">
+    <div class="docentes-header">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+            <div>
+                <div class="docentes-titulo">📋 Listas Docentes — Hoy</div>
+                <div class="docentes-fecha" id="doc-fecha-hoy">—</div>
+            </div>
+            <button class="doc-refresh" onclick="window.cargarListasDocentes()">🔄 Actualizar</button>
+        </div>
+        <div class="docentes-stats">
+            <div class="doc-stat">
+                <div class="doc-stat-val" id="doc-total-listas" style="color:#67E8F9;">—</div>
+                <div class="doc-stat-lbl">Listas Pasadas</div>
+            </div>
+            <div class="doc-stat">
+                <div class="doc-stat-val" id="doc-total-maestros" style="color:#4ADE80;">—</div>
+                <div class="doc-stat-lbl">Maestros Activos</div>
+            </div>
+            <div class="doc-stat">
+                <div class="doc-stat-val" id="doc-total-alumnos" style="color:#FCD34D;">—</div>
+                <div class="doc-stat-lbl">Alumnos Capturados</div>
+            </div>
+        </div>
+    </div>
+    <div id="doc-contenido">
+        <div class="doc-empty">Toca 🔄 Actualizar para cargar las listas de hoy.</div>
+    </div>
+</main>
+
 <!-- Modal -->
 <div id="loadingModal" class="loading-modal">
     <div class="modal-content">
@@ -644,8 +701,8 @@ body.dark .grafica-titulo{color:#E2E8F0;}
 <nav>
     <button class="nav-btn active" id="tab-monitor" onclick="window.switchTab('monitor',this)"><span class="nav-icon">📊</span>Monitor</button>
     <button class="nav-btn" id="tab-historial" onclick="window.switchTab('historial',this)"><span class="nav-icon">📋</span>Historial</button>
+    <button class="nav-btn" id="tab-docentes" onclick="window.switchTab('docentes',this);window.cargarListasDocentes()"><span class="nav-icon">👨‍🏫</span>Docentes</button>
     <button class="nav-btn" id="tab-directorio" onclick="window.switchTab('directorio',this)"><span class="nav-icon">👥</span>Padrón</button>
-    <button class="nav-btn" id="tab-credenciales" onclick="window.switchTab('credenciales',this)"><span class="nav-icon">🪪</span>Gafetes</button>
     <button class="nav-btn" id="tab-config" onclick="window.switchTab('config',this)"><span class="nav-icon">⚙️</span>Control</button>
 </nav>
 
@@ -1656,27 +1713,16 @@ function encabezadoPDF(doc, titulo, subtitulo) {
 }
 
 // ── UTILIDAD: pie de página en todas las páginas ──
-function piesPDF(doc, director) {
+function piesPDF(doc) {
     const pw = doc.internal.pageSize.getWidth();
     const ph = doc.internal.pageSize.getHeight();
     const total = doc.internal.getNumberOfPages();
     for (let i=1; i<=total; i++) {
         doc.setPage(i);
-        doc.setDrawColor(203,213,225); doc.line(14, ph-22, pw-14, ph-22);
+        doc.setDrawColor(203,213,225); doc.line(14, ph-14, pw-14, ph-14);
         doc.setFontSize(7); doc.setTextColor(100,116,139);
-        // Leyenda izquierda
-        doc.text('A=Asistencia  R=Retardo  F=Falta  SR=Sin Registro  J=Justificado', 14, ph-16);
-        // Página derecha
-        doc.text(`Pág. ${i}/${total}  ·  ${new Date().toLocaleDateString('es-MX')}`, pw-14, ph-16, {align:'right'});
-        // Firma director
-        if (director) {
-            doc.setFontSize(8); doc.setTextColor(30,41,59);
-            doc.text('Director(a): ' + director, 14, ph-8);
-            doc.setDrawColor(100,116,139);
-            doc.line(pw-80, ph-10, pw-14, ph-10);
-            doc.setFontSize(7); doc.setTextColor(100,116,139);
-            doc.text('Firma y Sello', pw-47, ph-6, {align:'center'});
-        }
+        doc.text('A=Asistencia  R=Retardo  F=Falta  SR=Sin Registro  J=Justificado', 14, ph-8);
+        doc.text(`Pág. ${i}/${total}  ·  ${new Date().toLocaleDateString('es-MX')}`, pw-14, ph-8, {align:'right'});
     }
 }
 
@@ -1809,7 +1855,7 @@ window.generarReporteIndividualPDF = async function() {
     });
 
     // Pie con firma
-    piesPDF(doc, document.getElementById('conf-director')?.value || '');
+    piesPDF(doc);
     doc.save(`Reporte_${nombreLimpio.replace(/\s+/g,'_').substring(0,20)}_${dStart}_${dEnd}.pdf`);
     hablar("Reporte individual generado.");
 };
@@ -1914,7 +1960,7 @@ window.generarReporteGrupoPDF = async function() {
         margin: { left:10, right:10 }
     });
 
-    piesPDF(doc, document.getElementById('conf-director')?.value || '');
+    piesPDF(doc);
     doc.save(`Reporte_${sGrado}${sGrupo}_${sTurno}_${dStart}_${dEnd}.pdf`);
     hablar("Reporte de grupo generado.");
 };
@@ -2394,16 +2440,8 @@ function generarCanvasCredencial(alumno,turno,grado,grupo){
             if(logoBase64Global){
                 const li=new Image();
                 li.onload=()=>{
-                    // Logo en esquina header
+                    // Solo logo en esquina header — NO en centro del QR
                     ctx.drawImage(li,12,8,55,55);
-                    // Logo centrado en el QR
-                    const cx=200, cy=175, r=28;
-                    ctx.save();
-                    ctx.beginPath(); ctx.arc(cx,cy,r+4,0,Math.PI*2);
-                    ctx.fillStyle='#ffffff'; ctx.fill();
-                    ctx.strokeStyle='#0284C7'; ctx.lineWidth=2; ctx.stroke();
-                    ctx.drawImage(li,cx-r,cy-r,r*2,r*2);
-                    ctx.restore();
                     dibujarResto();
                 };
                 li.src=logoBase64Global;
@@ -2697,6 +2735,114 @@ window.exportarPadronExcel = async function(){
 };
 
 // Alertas y gráfica se llaman desde renderMonitor directamente (ver abajo)
+
+// ══════════════════════════════════════════════════════
+// DOCENTES — LISTAS EN TIEMPO REAL
+// ══════════════════════════════════════════════════════
+document.getElementById('doc-fecha-hoy').textContent =
+    new Date().toLocaleDateString('es-MX',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+window.cargarListasDocentes = async function() {
+    const cont = document.getElementById('doc-contenido');
+    cont.innerHTML = '<div class="doc-empty">⏳ Cargando listas de hoy...</div>';
+
+    const hoy = getFechaHoyLocal();
+
+    try {
+        const snap = await get(ref(db, `escuelas/${ID}/listas-maestro/${hoy}`));
+
+        if (!snap.exists()) {
+            cont.innerHTML = '<div class="doc-empty">📭 Ningún maestro ha pasado lista hoy.</div>';
+            document.getElementById('doc-total-listas').textContent = '0';
+            document.getElementById('doc-total-maestros').textContent = '0';
+            document.getElementById('doc-total-alumnos').textContent = '0';
+            return;
+        }
+
+        const datos = snap.val();
+        // Recolectar todos los registros del día
+        let registros = [];
+        Object.values(datos).forEach(grupos => {
+            Object.values(grupos).forEach(r => {
+                if (r && r.maestro && r.hora) registros.push(r);
+            });
+        });
+
+        // Ordenar por hora
+        registros.sort((a, b) => a.hora.localeCompare(b.hora));
+
+        // Stats generales
+        const maestrosUnicos = [...new Set(registros.map(r => r.maestro))];
+        const totalAlumnos = registros.reduce((s, r) => s + (r.alumnos ? r.alumnos.length : 0), 0);
+
+        document.getElementById('doc-total-listas').textContent = registros.length;
+        document.getElementById('doc-total-maestros').textContent = maestrosUnicos.length;
+        document.getElementById('doc-total-alumnos').textContent = totalAlumnos;
+
+        // Agrupar por hora (bloques de 1 hora)
+        const porHora = {};
+        registros.forEach(r => {
+            // Extraer hora: "08:15 p.m." → "20" o "08:15 a.m." → "8"
+            let horaKey = r.hora || '00';
+            // Formato 12h con a.m./p.m.
+            const match12 = horaKey.match(/(\d+):(\d+)\s*(a\.?m\.?|p\.?m\.?)/i);
+            if (match12) {
+                let h = parseInt(match12[1]);
+                const min = parseInt(match12[2]);
+                const period = match12[3].toLowerCase().replace(/\./g,'');
+                if (period === 'pm' && h !== 12) h += 12;
+                if (period === 'am' && h === 12) h = 0;
+                horaKey = String(h).padStart(2,'0');
+            } else {
+                // Formato 24h "08:15"
+                horaKey = horaKey.split(':')[0].padStart(2,'0');
+            }
+            if (!porHora[horaKey]) porHora[horaKey] = [];
+            porHora[horaKey].push(r);
+        });
+
+        // Renderizar bloques por hora
+        const horas = Object.keys(porHora).sort();
+        let html = '';
+        horas.forEach(h => {
+            const regsHora = porHora[h];
+            const hLabel = `${parseInt(h)}:00 — ${parseInt(h)+1}:00 hrs`;
+            html += `
+                <div class="hora-bloque">
+                    <div class="hora-titulo">
+                        🕐 ${hLabel}
+                        <span class="hora-badge">${regsHora.length} lista${regsHora.length!==1?'s':''}</span>
+                    </div>`;
+            regsHora.forEach(r => {
+                const p = r.alumnos ? r.alumnos.filter(a=>a.estatusMaestro==='P').length : 0;
+                const f = r.alumnos ? r.alumnos.filter(a=>a.estatusMaestro==='F').length : 0;
+                const t = r.alumnos ? r.alumnos.filter(a=>a.estatusMaestro==='T').length : 0;
+                const j = r.alumnos ? r.alumnos.filter(a=>a.estatusMaestro==='J').length : 0;
+                const total = r.alumnos ? r.alumnos.length : 0;
+                html += `
+                    <div class="doc-row">
+                        <div>
+                            <div class="doc-nombre">👨‍🏫 ${r.maestro || '—'}</div>
+                            <div class="doc-grupo">📚 ${r.grupoDisplay || r.grupo || '—'} · ${r.turno || ''} · ${r.hora || ''}</div>
+                            <div style="display:flex;gap:4px;margin-top:4px;">
+                                <span style="font-size:.65rem;background:#D1FAE5;color:#065F46;padding:1px 6px;border-radius:8px;font-weight:700;">✅${p}</span>
+                                <span style="font-size:.65rem;background:#FEF3C7;color:#92400E;padding:1px 6px;border-radius:8px;font-weight:700;">⏰${t}</span>
+                                <span style="font-size:.65rem;background:#FEE2E2;color:#991B1B;padding:1px 6px;border-radius:8px;font-weight:700;">❌${f}</span>
+                                ${j>0?`<span style="font-size:.65rem;background:#DBEAFE;color:#1E40AF;padding:1px 6px;border-radius:8px;font-weight:700;">📝${j}</span>`:''}
+                            </div>
+                        </div>
+                        <span class="doc-pill doc-pill-ok">${total} alumnos</span>
+                    </div>`;
+            });
+            html += '</div>';
+        });
+
+        cont.innerHTML = html || '<div class="doc-empty">Sin registros.</div>';
+
+    } catch(e) {
+        cont.innerHTML = `<div class="doc-empty" style="color:var(--ruby);">❌ Error: ${e.message}</div>`;
+    }
+};
 
 // 17. INICIO
 // ══════════════════════════════════════════════════════

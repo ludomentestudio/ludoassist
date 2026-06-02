@@ -157,9 +157,59 @@ main{padding:1rem;}
   opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;}
 #toast.show{opacity:1;}
 
+/* ── ACCESOS ── */
+.accesos-toggle{background:rgba(100,255,218,.06);border:1px solid var(--border);
+  border-radius:6px;padding:.35rem .7rem;font-size:.7rem;color:var(--accent);
+  cursor:pointer;font-weight:700;transition:all .2s;width:100%;text-align:left;margin-top:.5rem;}
+.accesos-toggle:hover{background:rgba(100,255,218,.12);}
+.accesos-panel{display:none;background:rgba(0,0,0,.2);border:1px solid var(--border);
+  border-radius:8px;padding:.8rem;margin-top:.4rem;}
+.accesos-panel.open{display:block;}
+.acceso-row{display:flex;justify-content:space-between;align-items:center;
+  padding:.35rem 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.78rem;}
+.acceso-row:last-child{border-bottom:none;}
+.acceso-lbl{color:var(--slate);}
+.acceso-val{color:var(--accent);font-weight:700;font-family:monospace;letter-spacing:1px;}
+.acceso-val.cargando{color:var(--slate);font-style:italic;font-family:inherit;}
+.cuota-badge{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);
+  color:var(--emerald);border-radius:8px;padding:.2rem .6rem;font-size:.7rem;font-weight:700;}
+
 /* ── VACÍO ── */
 .empty-state{text-align:center;padding:3rem 1rem;color:var(--slate);}
 .empty-icon{font-size:3rem;margin-bottom:.8rem;}
+
+/* ── ELIMINAR ESCUELA ── */
+.btn-eliminar{background:rgba(239,68,68,.1);color:var(--ruby);border:1px solid rgba(239,68,68,.2);
+  border-radius:6px;padding:.35rem .7rem;font-size:.7rem;font-weight:700;cursor:pointer;
+  transition:all .2s;text-transform:uppercase;}
+.btn-eliminar:hover{background:var(--ruby);color:white;}
+
+/* ── MODAL ELIMINAR ── */
+#modal-eliminar{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;
+  align-items:center;justify-content:center;z-index:300;padding:1rem;}
+#modal-eliminar.show{display:flex;}
+.modal-eliminar-box{background:#1a0505;border:1px solid rgba(239,68,68,.4);border-radius:12px;
+  padding:1.5rem;max-width:360px;width:100%;}
+.modal-elim-icon{font-size:2.5rem;text-align:center;margin-bottom:.5rem;}
+.modal-elim-title{font-size:1rem;font-weight:800;color:var(--ruby);text-align:center;
+  margin-bottom:.5rem;text-transform:uppercase;letter-spacing:1px;}
+.modal-elim-desc{font-size:.82rem;color:rgba(255,200,200,.7);text-align:center;
+  line-height:1.6;margin-bottom:1rem;}
+.modal-elim-step{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);
+  border-radius:8px;padding:.8rem;margin-bottom:.7rem;}
+.modal-elim-label{font-size:.68rem;color:var(--ruby);text-transform:uppercase;
+  letter-spacing:1px;margin-bottom:.4rem;font-weight:700;}
+.modal-elim-input{width:100%;background:rgba(0,0,0,.3);border:1px solid rgba(239,68,68,.3);
+  border-radius:6px;padding:.65rem .8rem;color:var(--white);font-size:.85rem;outline:none;}
+.modal-elim-input:focus{border-color:var(--ruby);}
+.modal-elim-input::placeholder{color:rgba(255,200,200,.3);}
+.btn-confirmar-eliminar{width:100%;padding:.8rem;background:var(--ruby);color:white;
+  border:none;border-radius:8px;font-size:.9rem;font-weight:800;cursor:pointer;
+  text-transform:uppercase;letter-spacing:1px;margin-top:.5rem;transition:all .25s;}
+.btn-confirmar-eliminar:disabled{background:rgba(239,68,68,.3);cursor:not-allowed;}
+.btn-cancelar-eliminar{width:100%;padding:.7rem;background:transparent;
+  border:1px solid var(--border);color:var(--slate);border-radius:8px;
+  font-size:.85rem;cursor:pointer;margin-top:.4rem;}
 
 /* ── SPINNER ── */
 .spinner{width:28px;height:28px;border:3px solid rgba(255,255,255,.15);
@@ -179,8 +229,8 @@ main{padding:1rem;}
     <div class="modal-title" id="mc-title">¿Confirmar acción?</div>
     <div class="modal-desc" id="mc-desc">Esta acción no se puede deshacer.</div>
     <div class="modal-btns">
-      <button class="btn-cancel" id="mc-btn-cancel">Cancelar</button>
-      <button id="mc-btn-ok" class="btn-confirm-rojo">Confirmar</button>
+      <button class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
+      <button id="mc-btn-ok" class="btn-confirm-rojo" onclick="ejecutarConfirmado()">Confirmar</button>
     </div>
   </div>
 </div>
@@ -301,9 +351,24 @@ main{padding:1rem;}
         </div>
       </div>
 
+      <div class="form-row-2">
+        <div class="form-row">
+          <label class="form-label">Cuota Mensual (MXN)</label>
+          <input class="form-input" id="f-cuota" type="number" placeholder="0.00" min="0" step="0.01">
+        </div>
+        <div class="form-row">
+          <label class="form-label">Período de pago</label>
+          <select class="form-input" id="f-periodo">
+            <option value="mensual">Mensual</option>
+            <option value="bimestral">Bimestral</option>
+            <option value="trimestral">Trimestral</option>
+            <option value="anual">Anual</option>
+          </select>
+        </div>
+      </div>
       <div class="form-row">
         <label class="form-label">Observaciones</label>
-        <input class="form-input" id="f-obs" type="text" placeholder="Notas internas, precio pactado, etc.">
+        <input class="form-input" id="f-obs" type="text" placeholder="Notas internas, etc.">
       </div>
 
       <!-- Código generado -->
@@ -322,10 +387,40 @@ main{padding:1rem;}
 
 </main>
 
+<!-- MODAL ELIMINAR ESCUELA -->
+<div id="modal-eliminar">
+  <div class="modal-eliminar-box">
+    <div class="modal-elim-icon">⚠️🗑️</div>
+    <div class="modal-elim-title">Eliminar Escuela</div>
+    <div class="modal-elim-desc" id="elim-desc">
+      Esta acción es <strong style="color:var(--ruby)">IRREVERSIBLE</strong>.<br>
+      Se eliminarán todos los datos: alumnos, asistencias, listas y configuración.
+    </div>
+
+    <!-- Paso 1: nombre de la escuela -->
+    <div class="modal-elim-step">
+      <div class="modal-elim-label">Paso 1 — Escribe el nombre exacto de la escuela</div>
+      <div style="font-size:.75rem;color:rgba(255,200,200,.5);margin-bottom:.4rem;" id="elim-nombre-hint">—</div>
+      <input class="modal-elim-input" id="elim-input-nombre" placeholder="Nombre de la escuela..." autocomplete="off">
+    </div>
+
+    <!-- Paso 2: contraseña admin -->
+    <div class="modal-elim-step">
+      <div class="modal-elim-label">Paso 2 — Contraseña de administrador</div>
+      <input class="modal-elim-input" id="elim-input-pin" type="password" placeholder="••••••" autocomplete="off">
+    </div>
+
+    <div style="font-size:.72rem;color:var(--ruby);text-align:center;min-height:16px;margin-bottom:.3rem;" id="elim-error"></div>
+
+    <button class="btn-confirmar-eliminar" id="btn-confirmar-elim">🗑️ ELIMINAR TODO PERMANENTEMENTE</button>
+    <button class="btn-cancelar-eliminar" id="btn-cancelar-elim">Cancelar — Conservar escuela</button>
+  </div>
+</div>
+
 <!-- Firebase -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getDatabase, ref, get, set, onValue, update }
+import { getDatabase, ref, get, set, onValue, update, remove }
   from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
 const firebaseConfig = {
@@ -343,7 +438,7 @@ const db  = getDatabase(app);
 
 // ── ESTADO ──
 let escuelasData = {};
-window.accionPendiente = null;
+let accionPendiente = null;
 
 // ── LOGIN ──
 window.verificarPin = async function() {
@@ -382,19 +477,18 @@ document.getElementById('pin-input').addEventListener('keydown', e => {
 function cargarEscuelas() {
   onValue(ref(db, 'admin/escuelas'), snap => {
     escuelasData = snap.exists() ? snap.val() : {};
-    // Asegurar que est17 siempre aparece con datos base,
-    // pero RESPETAR el valor de activa y fechaVence que venga de Firebase
-    const defaults17 = {
-      nombre: 'Secundaria Técnica No. 17',
-      ciudad: 'Campeche', estado: 'Campeche',
-      director: 'Jesús Rodríguez García',
-      telefono: '9811244870', nivel: 'Secundaria',
-      activa: true, fechaAlta: '2026-05-31',
-      fechaVence: '2027-05-31', codigo: 'est17',
-      observaciones: 'Escuela piloto — administrador del sistema'
-    };
-    // Fusionar: los datos de Firebase tienen prioridad sobre los defaults
-    escuelasData['est17'] = Object.assign({}, defaults17, escuelasData['est17'] || {});
+    // Asegurar que est17 siempre aparece
+    if (!escuelasData['est17']) {
+      escuelasData['est17'] = {
+        nombre: 'Escuela Secundaria Técnica No. 17',
+        ciudad: 'Campeche', estado: 'Campeche',
+        director: 'Jesús Rodríguez García',
+        telefono: '9811244870', nivel: 'Secundaria',
+        activa: true, fechaAlta: '2026-05-31',
+        fechaVence: '2027-05-31', codigo: 'est17',
+        observaciones: 'Escuela piloto — administrador del sistema'
+      };
+    }
     renderDashboard();
   });
 }
@@ -469,6 +563,21 @@ window.filtrarEscuelas = function() {
         }
         <button class="btn-sm btn-editar" onclick="editarVencimiento('${codigo}')">📅 Renovar</button>
       </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.5rem;">
+        ${e.cuota ? `<span class="cuota-badge">💰 $${Number(e.cuota).toLocaleString('es-MX')} ${e.periodo||'mensual'}</span>` : '<span></span>'}
+        <button class="btn-eliminar" onclick="iniciarEliminar('${codigo}')">🗑️ Eliminar</button>
+      </div>
+      <button class="accesos-toggle" onclick="toggleAccesos('${codigo}', this)">🔐 Ver accesos y contraseñas ▼</button>
+      <div class="accesos-panel" id="accesos-${codigo}">
+        <div class="acceso-row">
+          <span class="acceso-lbl">📋 Código licencia</span>
+          <span class="acceso-val">${codigo.toUpperCase()}</span>
+        </div>
+        <div class="acceso-row">
+          <span class="acceso-lbl">🔑 Contraseña director</span>
+          <span class="acceso-val cargando" id="pin-dir-${codigo}">Toca para cargar</span>
+        </div>
+      </div>
     </div>`;
   }).join('');
 }
@@ -520,44 +629,23 @@ window.confirmarActivar = function(codigo) {
 };
 
 async function cambiarActiva(codigo, valor) {
-  toast('⏳ Guardando...');
   let errores = [];
-
-  // 1. Actualizar nodo admin (crear si no existe)
+  // Actualizar nodo admin
   try {
-    const snapAdmin = await get(ref(db, 'admin/escuelas/' + codigo));
-    if (snapAdmin.exists()) {
-      await update(ref(db, 'admin/escuelas/' + codigo), { activa: valor });
-    } else {
-      const datosActuales = { ...(escuelasData[codigo] || {}), activa: valor };
-      await set(ref(db, 'admin/escuelas/' + codigo), datosActuales);
-    }
+    await update(ref(db, 'admin/escuelas/' + codigo), { activa: valor });
   } catch(e) { errores.push('admin: ' + e.message); }
-
-  // 2. Actualizar nodo escuela/configuracion/perfil
+  // Actualizar nodo escuela
   try {
     await update(ref(db, 'escuelas/' + codigo + '/configuracion/perfil'), { activa: valor });
   } catch(e) { errores.push('escuela: ' + e.message); }
 
-  if (errores.length > 0) {
+  if (errores.length === 0) {
+    if (escuelasData[codigo]) escuelasData[codigo].activa = valor;
+    renderDashboard();
+    toast(valor ? '✅ Licencia activada' : '🔒 Licencia bloqueada');
+  } else {
     toast('❌ Error: ' + errores.join(' | '));
-    return;
   }
-
-  // 3. Verificar que Firebase realmente guardó el valor
-  try {
-    const verificacion = await get(ref(db, 'admin/escuelas/' + codigo + '/activa'));
-    const valorReal = verificacion.val();
-    if (valorReal !== valor) {
-      toast('⚠️ No se confirmó el cambio. Intente de nuevo.');
-      return;
-    }
-  } catch(e) { /* sin internet, continuar */ }
-
-  // 4. Actualizar estado local y re-render
-  if (escuelasData[codigo]) escuelasData[codigo].activa = valor;
-  renderDashboard();
-  toast(valor ? '✅ Licencia ACTIVADA correctamente' : '🔒 Licencia BLOQUEADA correctamente');
 }
 
 // ── RENOVAR VENCIMIENTO ──
@@ -565,7 +653,7 @@ window.editarVencimiento = function(codigo) {
   const e     = escuelasData[codigo];
   const nueva = prompt(`Nueva fecha de vencimiento para "${e?.nombre||codigo}":\n(Formato: YYYY-MM-DD, ej: 2027-06-01)`, e?.fechaVence||'');
   if (!nueva) return;
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(nueva)) { toast('⚠️ Formato incorrecto. Use YYYY-MM-DD'); return; }
+  if (!/^d{4}-d{2}-d{2}$/.test(nueva)) { toast('⚠️ Formato incorrecto. Use YYYY-MM-DD'); return; }
   update(ref(db, `admin/escuelas/${codigo}`), { fechaVence: nueva })
     .then(() => { escuelasData[codigo].fechaVence = nueva; renderDashboard(); toast('📅 Vencimiento actualizado'); })
     .catch(() => toast('❌ Error al actualizar'));
@@ -574,13 +662,66 @@ window.editarVencimiento = function(codigo) {
 // ── NUEVA ESCUELA ──
 window.generarCodigo = function() {
   const nombre = (document.getElementById('f-nombre').value||'').trim();
-  let prefijo  = nombre.length >= 3
-    ? nombre.replace(/[aeiouáéíóús]/gi,'').substring(0,3).toUpperCase()
-    : 'ESC';
-  const num    = Math.floor(Math.random()*90+10);
   const letras = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
-  const sufijo = letras[Math.floor(Math.random()*letras.length)] + letras[Math.floor(Math.random()*letras.length)];
-  document.getElementById('codigo-generado').textContent = `${prefijo}${num}${sufijo}`;
+  let prefijo = 'ESC';
+
+  if (nombre.length >= 3) {
+    // Extraer número si existe en el nombre (ej: "Técnica 27" → 27)
+    const numEnNombre = nombre.match(/\d+/);
+    const numStr = numEnNombre ? numEnNombre[0] : '';
+
+    // Extraer iniciales de palabras relevantes (sin artículos)
+    const stopWords = /^(de|del|la|las|los|el|y|e|a|en|secundaria|primaria|preescolar|preparatoria|escuela|colegio|instituto|centro|tecnica|técnica|tecnico|técnico|no|num|núm)$/i;
+    const palabras = nombre.split(/\s+/).filter(p => p.length > 1 && !stopWords.test(p));
+    const iniciales = palabras.map(p => p[0].toUpperCase()).join('').substring(0, 3);
+
+    if (numStr && iniciales) {
+      // Mejor caso: iniciales + número + 1 letra random
+      const sufijo = letras[Math.floor(Math.random()*letras.length)];
+      prefijo = `${iniciales}${numStr}${sufijo}`;
+    } else if (iniciales.length >= 2) {
+      const num = Math.floor(Math.random()*90+10);
+      const sufijo = letras[Math.floor(Math.random()*letras.length)];
+      prefijo = `${iniciales}${num}${sufijo}`;
+    } else {
+      // Fallback: quitar vocales
+      const sinVocales = nombre.replace(/[aeiouáéíóúüAEIOUÁÉÍÓÚÜ\s]/g,'').substring(0,3).toUpperCase();
+      const num = Math.floor(Math.random()*90+10);
+      const sufijo = letras[Math.floor(Math.random()*letras.length)];
+      prefijo = `${sinVocales||'ESC'}${num}${sufijo}`;
+    }
+  } else {
+    const num = Math.floor(Math.random()*90+10);
+    const sufijo = letras[Math.floor(Math.random()*letras.length)] + letras[Math.floor(Math.random()*letras.length)];
+    prefijo = `ESC${num}${sufijo}`;
+  }
+
+  document.getElementById('codigo-generado').textContent = prefijo.toUpperCase();
+};
+
+// ── TOGGLE ACCESOS — carga contraseña director desde Firebase ──
+window.toggleAccesos = async function(codigo, btn) {
+  const panel = document.getElementById('accesos-' + codigo);
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open');
+  btn.textContent = isOpen ? '🔐 Ver accesos y contraseñas ▼' : '🔐 Ocultar accesos ▲';
+
+  if (!isOpen) {
+    const pinEl = document.getElementById('pin-dir-' + codigo);
+    if (pinEl && pinEl.classList.contains('cargando')) {
+      pinEl.textContent = '⏳ Cargando...';
+      try {
+        const snap = await get(ref(db, `escuelas/${codigo}/configuracion/seguridad/pin`));
+        const pin = snap.val();
+        pinEl.textContent = pin || '(sin contraseña aún)';
+        pinEl.classList.remove('cargando');
+        if (!pin) pinEl.style.color = 'var(--slate)';
+      } catch(e) {
+        pinEl.textContent = 'Error al cargar';
+        pinEl.style.color = 'var(--ruby)';
+      }
+    }
+  }
 };
 
 document.getElementById('f-nombre').addEventListener('input', window.generarCodigo);
@@ -603,6 +744,8 @@ window.guardarEscuela = async function() {
   btn.disabled = true; btn.textContent = 'Guardando...';
 
   const alta = document.getElementById('f-alta').value || new Date().toISOString().split('T')[0];
+  const cuota   = document.getElementById('f-cuota')?.value || '';
+  const periodo = document.getElementById('f-periodo')?.value || 'mensual';
   const datos = {
     nombre, ciudad,
     estado:     document.getElementById('f-estado').value.trim() || ciudad,
@@ -613,6 +756,8 @@ window.guardarEscuela = async function() {
     fechaAlta:  alta,
     fechaVence: vence,
     codigo,
+    cuota:      cuota ? parseFloat(cuota) : 0,
+    periodo,
     observaciones: document.getElementById('f-obs').value.trim(),
   };
 
@@ -640,16 +785,76 @@ window.guardarEscuela = async function() {
 };
 
 function limpiarFormulario() {
-  ['f-nombre','f-ciudad','f-estado','f-director','f-tel','f-obs'].forEach(id=>{
-    document.getElementById(id).value='';
+  ['f-nombre','f-ciudad','f-estado','f-director','f-tel','f-obs','f-cuota'].forEach(id=>{
+    const el = document.getElementById(id);
+    if (el) el.value='';
   });
   document.getElementById('f-vence').value='';
   document.getElementById('codigo-generado').textContent='—';
 }
 
-// ── MODAL ──
-let _callbackModal = null;
+// ── ELIMINAR ESCUELA ──
+let _codigoAEliminar = '';
 
+window.iniciarEliminar = function(codigo) {
+  const e = escuelasData[codigo];
+  if (!e) return;
+  _codigoAEliminar = codigo;
+  document.getElementById('elim-nombre-hint').textContent = 'Nombre: "' + (e.nombre||codigo) + '"';
+  document.getElementById('elim-input-nombre').value = '';
+  document.getElementById('elim-input-pin').value = '';
+  document.getElementById('elim-error').textContent = '';
+  document.getElementById('btn-confirmar-elim').disabled = false;
+  document.getElementById('btn-confirmar-elim').textContent = '🗑️ ELIMINAR TODO PERMANENTEMENTE';
+  document.getElementById('modal-eliminar').classList.add('show');
+};
+
+document.getElementById('btn-cancelar-elim').addEventListener('click', () => {
+  document.getElementById('modal-eliminar').classList.remove('show');
+  _codigoAEliminar = '';
+});
+
+document.getElementById('btn-confirmar-elim').addEventListener('click', async () => {
+  const nombreEscrito = document.getElementById('elim-input-nombre').value.trim();
+  const pinEscrito    = document.getElementById('elim-input-pin').value.trim();
+  const errEl         = document.getElementById('elim-error');
+  const e             = escuelasData[_codigoAEliminar];
+  errEl.textContent   = '';
+
+  // Paso 1: nombre exacto
+  if (nombreEscrito !== (e?.nombre || _codigoAEliminar)) {
+    errEl.textContent = '❌ El nombre no coincide exactamente. Cópialo tal como aparece.';
+    return;
+  }
+  // Paso 2: PIN admin
+  try {
+    const snap = await get(ref(db, 'admin/pin'));
+    if (pinEscrito !== String(snap.val())) {
+      errEl.textContent = '❌ Contraseña de administrador incorrecta.';
+      return;
+    }
+  } catch(err) {
+    errEl.textContent = '⚠️ Sin conexión para verificar contraseña.';
+    return;
+  }
+
+  // Eliminar
+  const btn = document.getElementById('btn-confirmar-elim');
+  btn.disabled = true; btn.textContent = '⏳ Eliminando todo...';
+  try {
+    await remove(ref(db, 'admin/escuelas/' + _codigoAEliminar));
+    await remove(ref(db, 'escuelas/' + _codigoAEliminar));
+    document.getElementById('modal-eliminar').classList.remove('show');
+    toast('🗑️ Escuela "' + (e?.nombre||_codigoAEliminar) + '" eliminada permanentemente.');
+    _codigoAEliminar = '';
+  } catch(err) {
+    errEl.textContent = '❌ Error: ' + err.message;
+    btn.disabled = false;
+    btn.textContent = '🗑️ ELIMINAR TODO PERMANENTEMENTE';
+  }
+});
+
+// ── MODAL ──
 function mostrarModal(icono, titulo, desc, tipo, callback) {
   document.getElementById('mc-icon').textContent  = icono;
   document.getElementById('mc-title').textContent = titulo;
@@ -657,23 +862,14 @@ function mostrarModal(icono, titulo, desc, tipo, callback) {
   const btn = document.getElementById('mc-btn-ok');
   btn.className = tipo==='rojo' ? 'btn-confirm-rojo' : 'btn-confirm-verde';
   btn.textContent = tipo==='rojo' ? 'Sí, bloquear' : 'Sí, activar';
-  _callbackModal = callback;
+  accionPendiente = callback;
   document.getElementById('modal-confirm').classList.add('show');
 }
-
-function cerrarModal() {
-  document.getElementById('modal-confirm').classList.remove('show');
-  _callbackModal = null;
-}
-window.cerrarModal = cerrarModal;
-
-// Listeners directos en los botones del modal
-document.getElementById('mc-btn-cancel').addEventListener('click', () => cerrarModal());
-document.getElementById('mc-btn-ok').addEventListener('click', async () => {
-  const cb = _callbackModal;
+window.cerrarModal = () => { document.getElementById('modal-confirm').classList.remove('show'); accionPendiente=null; };
+window.ejecutarConfirmado = async () => {
   cerrarModal();
-  if (cb) await cb();
-});
+  if (accionPendiente) await accionPendiente();
+};
 
 // ── TABS ──
 window.cambiarTab = function(tab) {

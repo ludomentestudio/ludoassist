@@ -415,8 +415,30 @@ document.getElementById('btn-salir').addEventListener('click', () => {
 // ── CARGAR ESTRUCTURA ──
 async function cargarEstructura() {
   try {
-    const snap = await get(ref(db, `escuelas/${escuelaActiva}/configuracion/estructura`));
-    estructura = snap.exists() ? snap.val() : {};
+    const snap = await get(ref(db, `escuelas/${escuelaActiva}/directorio`));
+    if (snap.exists()) {
+      // Construir estructura desde las claves del directorio (ej: Matutino-1-A)
+      const dir = snap.val();
+      estructura = {};
+      Object.keys(dir).forEach(clave => {
+        const partes = clave.split('-');
+        if (partes.length < 3) return;
+        const turno = partes[0];
+        const grado = partes[1];
+        const grupo = partes.slice(2).join('-');
+        if (!estructura[turno]) estructura[turno] = {};
+        if (!estructura[turno][grado]) estructura[turno][grado] = [];
+        if (!estructura[turno][grado].includes(grupo)) estructura[turno][grado].push(grupo);
+      });
+      // Ordenar grupos
+      Object.keys(estructura).forEach(t => {
+        Object.keys(estructura[t]).forEach(g => {
+          estructura[t][g].sort();
+        });
+      });
+    } else {
+      estructura = {};
+    }
     llenarTurnos();
   } catch(e) {
     toast('⚠️ Error cargando estructura.');
@@ -475,7 +497,7 @@ document.getElementById('btn-cargar').addEventListener('click', async () => {
   btn.disabled = true;
 
   try {
-    const clave = sanitizar(`${turnoActual}-${gradoActual}-${grupoActual}`);
+    const clave = `${turnoActual}-${gradoActual}-${grupoActual}`;
     const grupoDisplay = `${gradoActual}° ${grupoActual}`;
 
     // Cargar alumnos del directorio

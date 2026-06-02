@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LudoAssist PRO — Control de Asistencia Escolar</title>
+    <meta name="description" content="Sistema inteligente de control de asistencia escolar. Escáner QR, panel directivo en tiempo real y reportes oficiales.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy:    #0A192F;
+            --navy2:   #112240;
+            --emerald: #10B981;
+            --emerald2:#059669;
+            --amber:   #F59E0B;
+            --slate:   #8892B0;
+            --white:   #E6F1FF;
+            --accent:  #64FFDA;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--navy);
+            color: var(--white);
+            font-family: 'DM Sans', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* ── FONDO ANIMADO ── */
+        .bg-grid {
+            position: fixed; inset: 0; z-index: 0;
+            background-image:
+                linear-gradient(rgba(100,255,218,.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(100,255,218,.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+        }
+        .bg-glow {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(16,185,129,.15), transparent),
+                        radial-gradient(ellipse 60% 40% at 80% 80%, rgba(10,25,47,.8), transparent);
+        }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: .9rem 1.5rem;
+            background: rgba(10,25,47,.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(100,255,218,.08);
+        }
+        .nav-logo {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800; font-size: 1.1rem;
+            color: var(--white); letter-spacing: .5px;
+        }
+        .nav-logo span { color: var(--accent); }
+        .nav-cta {
+            background: var(--accent); color: var(--navy);
+            border: none; padding: .5rem 1.1rem; border-radius: 6px;
+            font-family: 'Syne', sans-serif; font-weight: 700;
+            font-size: .8rem; cursor: pointer; text-decoration: none;
+            letter-spacing: .5px; transition: all .2s;
+        }
+        .nav-cta:hover { background: var(--emerald); transform: translateY(-1px); }
+
+        /* ── HERO ── */
+        .hero {
+            position: relative; z-index: 1;
+            min-height: 100dvh;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            padding: 7rem 1.5rem 4rem;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: .5rem;
+            background: rgba(100,255,218,.08);
+            border: 1px solid rgba(100,255,218,.2);
+            border-radius: 20px; padding: .35rem .9rem;
+            font-size: .72rem; font-weight: 500;
+            color: var(--accent); letter-spacing: 1.5px;
+            text-transform: uppercase; margin-bottom: 1.5rem;
+            animation: fadeUp .6s ease both;
+        }
+        .hero-badge::before { content: "●"; font-size: .5rem; }
+
+        .hero h1 {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800; font-size: clamp(2.2rem, 8vw, 3.8rem);
+            line-height: 1.1; letter-spacing: -.5px;
+            max-width: 700px;
+            animation: fadeUp .6s .1s ease both;
+        }
+        .hero h1 em {
+            font-style: normal;
+            background: linear-gradient(135deg, var(--accent), var(--emerald));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        .hero-sub {
+            font-size: 1rem; color: var(--slate);
+            max-width: 480px; margin: 1.2rem auto 0;
+            line-height: 1.65;
+            animation: fadeUp .6s .2s ease both;
+        }
+
+        .hero-btns {
+            display: flex; gap: .8rem; flex-wrap: wrap;
+            justify-content: center; margin-top: 2rem;
+            animation: fadeUp .6s .3s ease both;
+        }
+
+        .btn-primary-hero {
+            background: var(--emerald); color: white;
+            border: none; padding: .85rem 1.8rem; border-radius: 8px;
+            font-family: 'Syne', sans-serif; font-weight: 700;
+            font-size: .9rem; cursor: pointer; text-decoration: none;
+            letter-spacing: .3px; transition: all .25s;
+            display: flex; align-items: center; gap: .5rem;
+        }
+        .btn-primary-hero:hover { background: var(--emerald2); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(16,185,129,.3); }
+
+        .btn-secondary-hero {
+            background: transparent; color: var(--white);
+            border: 1px solid rgba(230,241,255,.2);
+            padding: .85rem 1.8rem; border-radius: 8px;
+            font-family: 'Syne', sans-serif; font-weight: 600;
+            font-size: .9rem; cursor: pointer; text-decoration: none;
+            letter-spacing: .3px; transition: all .25s;
+            display: flex; align-items: center; gap: .5rem;
+        }
+        .btn-secondary-hero:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+        /* ── APPS DEMO ── */
+        .apps-preview {
+            display: flex; gap: 1rem; justify-content: center;
+            margin-top: 3rem; flex-wrap: wrap;
+            animation: fadeUp .6s .4s ease both;
+        }
+        .app-card {
+            background: rgba(17,34,64,.8);
+            border: 1px solid rgba(100,255,218,.1);
+            border-radius: 12px; padding: 1rem 1.4rem;
+            display: flex; align-items: center; gap: .8rem;
+            text-decoration: none; color: var(--white);
+            transition: all .25s; min-width: 170px;
+            backdrop-filter: blur(8px);
+        }
+        .app-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0,0,0,.3); }
+        .app-card-icon { font-size: 1.8rem; }
+        .app-card-text { text-align: left; }
+        .app-card-label { font-size: .65rem; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+        .app-card-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .95rem; }
+
+        /* ── STATS ── */
+        .stats {
+            position: relative; z-index: 1;
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 1px; background: rgba(100,255,218,.06);
+            border-top: 1px solid rgba(100,255,218,.06);
+            border-bottom: 1px solid rgba(100,255,218,.06);
+        }
+        .stat-item {
+            background: rgba(10,25,47,.95);
+            padding: 2rem 1rem; text-align: center;
+        }
+        .stat-num {
+            font-family: 'Syne', sans-serif; font-weight: 800;
+            font-size: 2rem; color: var(--accent); display: block;
+        }
+        .stat-label { font-size: .72rem; color: var(--slate); text-transform: uppercase; letter-spacing: 1px; }
+
+        /* ── SECCIONES ── */
+        section { position: relative; z-index: 1; padding: 5rem 1.5rem; }
+
+        .section-tag {
+            display: inline-block;
+            color: var(--accent); font-size: .72rem;
+            font-weight: 600; text-transform: uppercase;
+            letter-spacing: 2px; margin-bottom: .8rem;
+        }
+        .section-title {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800; font-size: clamp(1.6rem, 5vw, 2.4rem);
+            line-height: 1.2; max-width: 560px;
+        }
+        .section-desc {
+            color: var(--slate); font-size: .95rem;
+            max-width: 480px; margin-top: .8rem; line-height: 1.7;
+        }
+
+        /* ── FEATURES ── */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1px; margin-top: 3rem;
+            background: rgba(100,255,218,.06);
+            border: 1px solid rgba(100,255,218,.06);
+            border-radius: 12px; overflow: hidden;
+        }
+        .feature-card {
+            background: var(--navy2);
+            padding: 1.8rem 1.5rem;
+            transition: background .2s;
+        }
+        .feature-card:hover { background: rgba(17,34,64,.95); }
+        .feature-icon {
+            width: 42px; height: 42px; border-radius: 10px;
+            background: rgba(100,255,218,.1);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; margin-bottom: 1rem;
+            border: 1px solid rgba(100,255,218,.15);
+        }
+        .feature-title {
+            font-family: 'Syne', sans-serif; font-weight: 700;
+            font-size: 1rem; margin-bottom: .5rem;
+        }
+        .feature-desc { font-size: .85rem; color: var(--slate); line-height: 1.6; }
+
+        /* ── CÓMO FUNCIONA ── */
+        .steps { display: flex; flex-direction: column; gap: 0; margin-top: 3rem; }
+        .step {
+            display: flex; gap: 1.2rem; align-items: flex-start;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid rgba(100,255,218,.06);
+        }
+        .step:last-child { border-bottom: none; }
+        .step-num {
+            font-family: 'Syne', sans-serif; font-weight: 800;
+            font-size: 2rem; color: rgba(100,255,218,.15);
+            line-height: 1; min-width: 44px;
+        }
+        .step-content {}
+        .step-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; margin-bottom: .4rem; }
+        .step-desc { font-size: .85rem; color: var(--slate); line-height: 1.6; }
+
+        /* ── APPS SECTION ── */
+        .apps-section {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 1rem; margin-top: 2.5rem;
+        }
+        .app-big-card {
+            background: var(--navy2);
+            border: 1px solid rgba(100,255,218,.1);
+            border-radius: 12px; padding: 1.5rem;
+            text-decoration: none; color: var(--white);
+            transition: all .25s; display: block;
+        }
+        .app-big-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 16px 40px rgba(0,0,0,.4); }
+        .app-big-icon { font-size: 2.5rem; margin-bottom: 1rem; display: block; }
+        .app-big-name { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem; margin-bottom: .4rem; }
+        .app-big-desc { font-size: .8rem; color: var(--slate); line-height: 1.5; margin-bottom: 1rem; }
+        .app-big-btn {
+            display: inline-flex; align-items: center; gap: .4rem;
+            background: rgba(100,255,218,.1); color: var(--accent);
+            border: 1px solid rgba(100,255,218,.2);
+            border-radius: 6px; padding: .45rem .9rem;
+            font-size: .75rem; font-weight: 700;
+            font-family: 'Syne', sans-serif; letter-spacing: .3px;
+            transition: all .2s;
+        }
+        .app-big-card:hover .app-big-btn { background: var(--accent); color: var(--navy); }
+
+        /* ── CONTACTO ── */
+        .contact-section {
+            background: linear-gradient(135deg, rgba(16,185,129,.1), rgba(100,255,218,.05));
+            border: 1px solid rgba(100,255,218,.1);
+            border-radius: 16px; padding: 2.5rem 1.5rem;
+            text-align: center; max-width: 560px; margin: 0 auto;
+        }
+        .contact-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.6rem; margin-bottom: .8rem; }
+        .contact-desc { color: var(--slate); font-size: .9rem; line-height: 1.6; margin-bottom: 1.5rem; }
+        .whatsapp-btn {
+            display: inline-flex; align-items: center; gap: .6rem;
+            background: #25D366; color: white;
+            border: none; border-radius: 8px;
+            padding: .9rem 1.8rem; font-family: 'Syne', sans-serif;
+            font-weight: 700; font-size: .95rem;
+            text-decoration: none; transition: all .25s; cursor: pointer;
+        }
+        .whatsapp-btn:hover { background: #1ea952; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(37,211,102,.3); }
+
+        /* ── FOOTER ── */
+        footer {
+            position: relative; z-index: 1;
+            border-top: 1px solid rgba(100,255,218,.06);
+            padding: 2rem 1.5rem; text-align: center;
+            color: var(--slate); font-size: .8rem;
+        }
+        footer strong { color: var(--accent); font-family: 'Syne', sans-serif; }
+
+        /* ── ANIMACIONES ── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            opacity: 0; transform: translateY(24px);
+            transition: opacity .6s ease, transform .6s ease;
+        }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 480px) {
+            .apps-section { grid-template-columns: 1fr; }
+            .stats { grid-template-columns: 1fr; }
+            .stat-item { padding: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+
+<!-- NAV -->
+<nav>
+    <div class="nav-logo">Ludo<span>Assist</span> PRO</div>
+    <a href="#apps" class="nav-cta">Acceder →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-badge">Sistema de Control Escolar</div>
+
+    <h1>
+        Asistencia escolar<br>
+        <em>inteligente y en tiempo real</em>
+    </h1>
+
+    <p class="hero-sub">
+        Controle la asistencia de su plantel con códigos QR, 
+        panel directivo en vivo y reportes oficiales en PDF. 
+        Diseñado para directores y personal administrativo.
+    </p>
+
+    <div class="hero-btns">
+        <a href="#apps" class="btn-primary-hero">
+            📱 Acceder al Sistema
+        </a>
+        <a href="#como-funciona" class="btn-secondary-hero">
+            ¿Cómo funciona? →
+        </a>
+    </div>
+
+    <div class="apps-preview">
+        <a href="scanner.html" class="app-card" target="_blank">
+            <span class="app-card-icon">📷</span>
+            <div class="app-card-text">
+                <div class="app-card-label">Personal de entrada</div>
+                <div class="app-card-name">Escáner QR</div>
+            </div>
+        </a>
+        <a href="#apps" class="app-card">
+            <span class="app-card-icon">📊</span>
+            <div class="app-card-text">
+                <div class="app-card-label">Director / Admin</div>
+                <div class="app-card-name">Panel Directivo</div>
+            </div>
+        </a>
+    </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+    <div class="stat-item">
+        <span class="stat-num">100%</span>
+        <span class="stat-label">En la nube</span>
+    </div>
+    <div class="stat-item">
+        <span class="stat-num">⚡</span>
+        <span class="stat-label">Tiempo real</span>
+    </div>
+    <div class="stat-item">
+        <span class="stat-num">PDF</span>
+        <span class="stat-label">Reportes oficiales</span>
+    </div>
+</div>
+
+<!-- FEATURES -->
+<section id="funciones">
+    <div class="section-tag">Funcionalidades</div>
+    <h2 class="section-title fade-in">Todo lo que su plantel necesita</h2>
+    <p class="section-desc fade-in">Sin instalaciones, sin servidores propios. Funciona desde cualquier celular con Chrome.</p>
+
+    <div class="features-grid fade-in">
+        <div class="feature-card">
+            <div class="feature-icon">📷</div>
+            <div class="feature-title">Escáner QR</div>
+            <div class="feature-desc">Registra la asistencia en segundos escaneando la credencial del alumno. Detecta automáticamente asistencia o retardo según el horario configurado.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <div class="feature-title">Monitor en Tiempo Real</div>
+            <div class="feature-desc">El director ve en vivo cuántos alumnos están presentes, el porcentaje por grupo y alertas de alumnos con riesgo de deserción.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📄</div>
+            <div class="feature-title">Reportes Oficiales PDF</div>
+            <div class="feature-desc">Genera reportes individuales por alumno o por grupo con encabezado institucional, logo y espacio para firma del director. Listos para supervisión escolar.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🪪</div>
+            <div class="feature-title">Credenciales QR</div>
+            <div class="feature-desc">Genera e imprime credenciales con código QR para todos los alumnos. Exporta en Word, PDF, imágenes o listo para imprimir.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📋</div>
+            <div class="feature-title">Captura Manual</div>
+            <div class="feature-desc">Cuando no hay escáner disponible, el personal registra la asistencia manualmente desde el catálogo oficial de alumnos.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">☁️</div>
+            <div class="feature-title">Sincronización Automática</div>
+            <div class="feature-desc">Todos los datos se sincronizan en la nube al instante. Si no hay internet, guarda localmente y sincroniza cuando vuelve la conexión.</div>
+        </div>
+    </div>
+</section>
+
+<!-- CÓMO FUNCIONA -->
+<section id="como-funciona">
+    <div class="section-tag">Proceso</div>
+    <h2 class="section-title fade-in">Así de simple es empezar</h2>
+
+    <div class="steps fade-in">
+        <div class="step">
+            <div class="step-num">01</div>
+            <div class="step-content">
+                <div class="step-title">Recibe tu código de licencia</div>
+                <div class="step-desc">Al dar de alta tu plantel recibes un código único. Lo escribes una sola vez en el Panel Directivo y ya queda vinculado a tu escuela.</div>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">02</div>
+            <div class="step-content">
+                <div class="step-title">Configura tu plantel</div>
+                <div class="step-desc">Sube el logo de tu escuela, define los horarios de entrada, los grados y grupos, y carga el padrón de alumnos desde Excel.</div>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">03</div>
+            <div class="step-content">
+                <div class="step-title">Genera las credenciales</div>
+                <div class="step-desc">El sistema crea automáticamente las credenciales con código QR de todos tus alumnos. Las imprimes y las repartes.</div>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">04</div>
+            <div class="step-content">
+                <div class="step-title">Escanea en la entrada</div>
+                <div class="step-desc">El personal en la puerta abre el Escáner desde su celular. Cada alumno muestra su credencial y en segundos queda registrado.</div>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">05</div>
+            <div class="step-content">
+                <div class="step-title">Consulta y reporta</div>
+                <div class="step-desc">El director ve la asistencia en tiempo real desde el Panel. Genera reportes PDF oficiales por alumno o por grupo cuando los necesite.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- APPS -->
+<section id="apps">
+    <div class="section-tag">Acceso al Sistema</div>
+    <h2 class="section-title fade-in">Dos aplicaciones, un solo sistema</h2>
+    <p class="section-desc fade-in">No se instala nada. Se abre desde Chrome en cualquier celular.</p>
+
+    <div class="apps-section fade-in">
+        <a href="scanner.html" class="app-big-card" target="_blank">
+            <span class="app-big-icon">📷</span>
+            <div class="app-big-name">Escáner QR</div>
+            <div class="app-big-desc">Para el personal en la entrada. Escanea credenciales y registra asistencias automáticamente.</div>
+            <span class="app-big-btn">Abrir Escáner →</span>
+        </a>
+        <a href="#contacto" class="app-big-card">
+            <span class="app-big-icon">📊</span>
+            <div class="app-big-name">Panel Directivo</div>
+            <div class="app-big-desc">Para directores y administradores. Requiere código de licencia asignado a su plantel.</div>
+            <span class="app-big-btn">Solicitar Acceso →</span>
+        </a>
+    </div>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto">
+    <div class="contact-section fade-in">
+        <div class="contact-title">¿Listo para empezar?</div>
+        <div class="contact-desc">
+            Contáctenos por WhatsApp para dar de alta su plantel y recibir su código de licencia. 
+            Le tenemos funcionando el mismo día.
+        </div>
+        <a href="https://wa.me/529811244870?text=Hola,%20me%20interesa%20LudoAssist%20PRO%20para%20mi%20escuela" 
+           class="whatsapp-btn" target="_blank">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+            Contactar por WhatsApp
+        </a>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <strong>LudoAssist PRO</strong> &nbsp;·&nbsp; 
+    Sistema de Control de Asistencia Escolar &nbsp;·&nbsp;
+    Powered by <strong>Ludomente Studio</strong> © 2026
+</footer>
+
+<script>
+    // Animación de scroll
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(el => {
+            if (el.isIntersecting) {
+                el.target.classList.add('visible');
+                observer.unobserve(el.target);
+            }
+        });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Contador animado en stats
+    document.querySelectorAll('.stat-num').forEach(el => {
+        const text = el.textContent;
+        if (text.includes('%')) {
+            let n = 0;
+            const target = parseInt(text);
+            const interval = setInterval(() => {
+                n += 4;
+                if (n >= target) { el.textContent = target + '%'; clearInterval(interval); }
+                else el.textContent = n + '%';
+            }, 20);
+        }
+    });
+</script>
+
+</body>
+</html>

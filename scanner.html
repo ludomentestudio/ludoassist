@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LudoAssist Pro | Escáner</title>
+
+    <!-- PWA -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="LudoAssist Escáner">
+    <meta name="theme-color" content="#0A192F">
+    <script>
+        try {
+            const m = { name:"LudoAssist Pro — Escáner", short_name:"LudoAssist",
+                display:"standalone", background_color:"#0A192F", theme_color:"#0A192F",
+                start_url: window.location.href,
+                icons:[{ src:"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230A192F'/><text y='.9em' font-size='75' x='12'>📷</text></svg>", sizes:"192x192", type:"image/svg+xml" }]
+            };
+            const bl = new Blob([JSON.stringify(m)],{type:'application/json'});
+            document.write(`<link rel="manifest" href="${URL.createObjectURL(bl)}">`);
+        } catch(e){}
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+<style>
+:root {
+    --navy:#0A192F; --navy2:#1E293B; --slate:#334155; --slate2:#64748B;
+    --emerald:#10B981; --ruby:#EF4444; --amber:#F59E0B;
+    --blue:#0284C7; --light:#F8FAFC; --white:#FFFFFF; --border:#CBD5E1;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Roboto',sans-serif;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+body{background:var(--light);color:var(--slate);display:flex;flex-direction:column;height:100dvh;overflow:hidden;}
+
+/* ── PANTALLA DE EMPAREJAMIENTO ── */
+#screen-pair{position:fixed;inset:0;background:var(--navy);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;padding:2rem;gap:1.5rem;}
+#screen-pair.hidden{display:none;}
+.pair-logo{font-size:3.5rem;text-align:center;}
+.pair-title{font-size:1.4rem;font-weight:700;color:var(--white);text-align:center;letter-spacing:1px;}
+.pair-sub{font-size:.85rem;color:var(--emerald);text-align:center;letter-spacing:2px;text-transform:uppercase;}
+.pair-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:1.5rem;width:100%;max-width:380px;}
+.pair-label{font-size:.7rem;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:.5rem;font-weight:700;}
+.pair-input{width:100%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:.9rem 1rem;color:var(--white);font-size:1.1rem;font-weight:700;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:all .3s;}
+.pair-input:focus{border-color:var(--emerald);background:rgba(255,255,255,.15);}
+.pair-input::placeholder{color:rgba(255,255,255,.3);letter-spacing:1px;font-size:.9rem;font-weight:400;}
+.pair-btn{width:100%;padding:1rem;background:var(--emerald);color:var(--navy);border:none;border-radius:8px;font-size:1rem;font-weight:700;text-transform:uppercase;cursor:pointer;letter-spacing:1px;transition:all .3s;margin-top:.5rem;}
+.pair-btn:active{transform:scale(.97);}
+.pair-btn:disabled{background:var(--slate);color:rgba(255,255,255,.4);cursor:not-allowed;}
+.pair-error{color:var(--ruby);font-size:.82rem;text-align:center;font-weight:700;min-height:20px;}
+.pair-spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,.2);border-top-color:var(--emerald);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto;}
+.pair-info{font-size:.72rem;color:rgba(255,255,255,.4);text-align:center;line-height:1.5;}
+.pair-forget{background:none;border:none;color:rgba(255,255,255,.35);font-size:.72rem;cursor:pointer;text-decoration:underline;margin-top:.5rem;}
+
+/* ── HEADER ── */
+header{background:var(--navy);color:var(--white);padding:.75rem 1rem;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 6px -1px rgba(0,0,0,.2);z-index:10;flex-shrink:0;gap:.5rem;}
+.header-left{display:flex;align-items:center;gap:.6rem;min-width:0;}
+.school-logo-hdr{width:36px;height:36px;border-radius:6px;object-fit:contain;background:rgba(255,255,255,.1);flex-shrink:0;display:none;}
+.brand-info{min-width:0;}
+.brand-title{font-size:1rem;font-weight:700;letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.brand-school{font-size:.62rem;color:var(--emerald);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px;}
+.header-right{display:flex;gap:.4rem;flex-shrink:0;}
+.hdr-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:var(--white);padding:.35rem .65rem;border-radius:4px;cursor:pointer;font-size:.7rem;font-weight:700;transition:all .3s;white-space:nowrap;}
+.hdr-btn.active{background:var(--emerald);border-color:var(--emerald);color:var(--navy);}
+
+/* ── BANNER OFFLINE ── */
+#banner-offline{background:var(--amber);color:var(--navy);text-align:center;font-size:.72rem;font-weight:700;padding:4px 8px;display:none;flex-shrink:0;letter-spacing:.5px;}
+
+/* ── VISTAS ── */
+.view{flex:1;overflow-y:auto;padding:1rem;display:none;padding-bottom:80px;}
+.view.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.view.active{animation:fadeIn .25s ease;}
+
+/* ── TARJETAS ── */
+.card{background:var(--white);border-radius:10px;padding:1.1rem;margin-bottom:1rem;box-shadow:0 1px 4px rgba(0,0,0,.08);border-top:4px solid var(--blue);}
+.card-title{font-size:.95rem;font-weight:700;color:var(--navy);text-transform:uppercase;margin-bottom:.8rem;display:flex;align-items:center;gap:.5rem;}
+
+/* ── TURNO BADGE ── */
+.turno-badge{display:inline-block;background:var(--blue);color:white;border-radius:20px;padding:2px 10px;font-size:.68rem;font-weight:700;letter-spacing:.5px;}
+.turno-badge.vespertino{background:#7C3AED;}
+.turno-badge.entre{background:var(--amber);color:var(--navy);}
+
+/* ── ESCÁNER ── */
+#reader{width:100%;max-width:420px;margin:0 auto;border-radius:10px;overflow:hidden;border:3px solid var(--border);background:var(--navy);min-height:240px;transition:border-color .3s,box-shadow .3s;}
+#reader video{width:100%;object-fit:cover;}
+#reader img,#html5-qrcode-button-camera-stop,#html5-qrcode-button-camera-start,
+#html5-qrcode-anchor-scan-type-change{display:none!important;}
+.glow-ok  {border-color:var(--emerald)!important;box-shadow:0 0 25px rgba(16,185,129,.55)!important;}
+.glow-warn{border-color:var(--amber)  !important;box-shadow:0 0 25px rgba(245,158,11,.5) !important;}
+.glow-err {border-color:var(--ruby)   !important;box-shadow:0 0 25px rgba(239,68,68,.5)  !important;}
+
+#scan-status{text-align:center;margin-top:10px;font-weight:700;font-size:.95rem;color:var(--navy);min-height:26px;line-height:1.3;}
+
+/* ── ÚLTIMO REGISTRO ── */
+#last-box{background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:10px 14px;margin-top:10px;display:none;}
+#last-box.retardo{background:#FFFBEB;border-color:#FDE68A;}
+.lr-name{font-weight:700;color:var(--navy);font-size:.95rem;}
+.lr-meta{color:var(--slate2);font-size:.78rem;margin-top:2px;}
+
+/* ── MINI STATS ── */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin-top:.5rem;}
+.stat-mini{background:var(--light);border-radius:8px;padding:.6rem .3rem;text-align:center;}
+.stat-mini .val{font-size:1.5rem;font-weight:700;line-height:1;}
+.stat-mini .lbl{font-size:.58rem;text-transform:uppercase;letter-spacing:.5px;color:var(--slate2);margin-top:2px;}
+
+/* ── FORMULARIOS ── */
+label{display:block;font-size:.68rem;color:var(--slate);margin-bottom:3px;margin-top:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;}
+input,select{width:100%;padding:10px;border-radius:6px;border:1px solid var(--border);background:var(--light);color:var(--navy);font-size:.88rem;outline:none;transition:all .2s;}
+input:focus,select:focus{border-color:var(--blue);background:var(--white);}
+
+/* ── BOTONES ── */
+.btn{width:100%;padding:12px;border:none;border-radius:6px;font-size:.88rem;font-weight:700;text-transform:uppercase;color:white;background:var(--blue);margin-top:12px;cursor:pointer;transition:background .25s,transform .1s;letter-spacing:.5px;}
+.btn:active{transform:scale(.98);}
+.btn:disabled{background:var(--slate);opacity:.5;cursor:not-allowed;}
+.btn-ok  {background:var(--emerald)!important;color:var(--navy)!important;}
+.btn-err {background:var(--ruby)!important;}
+.btn-warn{background:var(--amber)!important;color:var(--navy)!important;}
+
+/* ── MOTIVE BOX ── */
+.motive-box{display:none;margin-top:8px;animation:fadeIn .2s ease;}
+
+/* ── TABLA ── */
+.tbl-wrap{overflow-x:auto;margin-top:10px;border-radius:8px;border:1px solid var(--border);}
+table{width:100%;border-collapse:collapse;font-size:.8rem;text-align:left;min-width:320px;}
+th,td{padding:8px 10px;border-bottom:1px solid #E2E8F0;}
+th{background:#F1F5F9;color:var(--slate);font-weight:700;text-transform:uppercase;font-size:.68rem;position:sticky;top:0;}
+td{color:var(--navy);}
+tr:last-child td{border-bottom:none;}
+.pill{display:inline-block;padding:2px 7px;border-radius:8px;font-size:.67rem;font-weight:700;}
+.p-ok  {background:#D1FAE5;color:#065F46;}
+.p-ret {background:#FEF3C7;color:#92400E;}
+.p-fal {background:#FEE2E2;color:#991B1B;}
+.p-jus {background:#DBEAFE;color:#1E40AF;}
+.p-pen {background:#F1F5F9;color:#475569;}
+.p-sync{font-size:.68rem;color:var(--slate2);}
+
+/* ── BADGE OFFLINE ── */
+#offline-badge{display:none;background:var(--amber);color:var(--navy);border-radius:10px;padding:1px 7px;font-size:.65rem;font-weight:700;margin-left:5px;}
+
+/* ── SPINNER ── */
+.spin-sm{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:4px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── NAV ── */
+nav{background:var(--white);display:flex;justify-content:space-around;padding:7px 0;border-top:1px solid var(--border);padding-bottom:max(7px,env(safe-area-inset-bottom));position:fixed;bottom:0;width:100%;z-index:20;box-shadow:0 -1px 3px rgba(0,0,0,.06);flex-shrink:0;}
+.nav-btn{background:none;border:none;color:var(--slate2);font-size:.58rem;text-transform:uppercase;letter-spacing:.6px;display:flex;flex-direction:column;align-items:center;cursor:pointer;flex:1;transition:color .2s;font-weight:700;padding:3px;}
+.nav-btn.active{color:var(--blue);}
+.nav-icon{font-size:1.3rem;margin-bottom:2px;}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════
+     PANTALLA DE EMPAREJAMIENTO
+     Se muestra al abrir por primera vez o si no hay escuela guardada.
+     El usuario escribe el ID de su escuela (ej. est17).
+     Se valida contra Firebase y guarda en localStorage.
+══════════════════════════════════════════════════════ -->
+<div id="screen-pair">
+    <div class="pair-logo">📷</div>
+    <div>
+        <div class="pair-title">LUDOASSIST PRO</div>
+        <div class="pair-sub">Escáner Operativo</div>
+    </div>
+
+    <div class="pair-card" id="pair-form-section">
+        <div class="pair-label">Código de Escuela</div>
+        <input class="pair-input" type="text" id="pair-input"
+               placeholder="Ej: est17"
+               maxlength="20"
+               autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        <div class="pair-error" id="pair-error"></div>
+        <button class="pair-btn" id="pair-btn" onclick="window.emparejarEscuela()">
+            Conectar al Plantel
+        </button>
+        <div class="pair-info" style="margin-top:1rem;">
+            El código lo proporciona el director desde el<br>Panel de Control → sección Perfil Institucional.
+        </div>
+    </div>
+
+    <div id="pair-loading" style="display:none;text-align:center;gap:1rem;flex-direction:column;align-items:center;">
+        <div class="pair-spinner"></div>
+        <div style="color:rgba(255,255,255,.7);font-size:.85rem;" id="pair-loading-text">Verificando código...</div>
+    </div>
+
+    <div id="pair-success" style="display:none;text-align:center;gap:.8rem;flex-direction:column;align-items:center;">
+        <div style="font-size:2.5rem;">✅</div>
+        <div style="color:var(--emerald);font-size:1rem;font-weight:700;" id="pair-school-name">—</div>
+        <div style="color:rgba(255,255,255,.6);font-size:.8rem;">Emparejado correctamente</div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     APP PRINCIPAL (visible tras emparejamiento)
+══════════════════════════════════════════════════════ -->
+<header>
+    <div class="header-left">
+        <img class="school-logo-hdr" id="hdr-logo" src="" alt="">
+        <div class="brand-info">
+            <div class="brand-title">LUDOASSIST PRO</div>
+            <div class="brand-school" id="hdr-school">Cargando...</div>
+        </div>
+    </div>
+    <div class="header-right">
+        <button id="btn-instalar" style="display:none;" class="hdr-btn" onclick="window.instalarPWA()">⬇ App</button>
+        <button class="hdr-btn" id="btn-audio" onclick="window.toggleAudio()">🔇</button>
+        <!-- Botón desemparejar eliminado: el escáner es dispositivo fijo -->
+    </div>
+</header>
+
+<div id="banner-offline">⚠ SIN CONEXIÓN — Los registros se guardarán y sincronizarán al reconectarse</div>
+
+<!-- ═══ VISTA 1: ESCÁNER ═══ -->
+<main id="view-scanner" class="view active">
+    <div class="card">
+        <div class="card-title">
+            Control de Acceso
+            <span class="turno-badge" id="turno-badge">—</span>
+        </div>
+
+        <div id="reader"></div>
+        <div id="scan-status">Presione el botón para iniciar el lector</div>
+
+        <div id="last-box">
+            <div class="lr-name" id="lr-nombre">—</div>
+            <div class="lr-meta" id="lr-meta">—</div>
+        </div>
+
+        <button class="btn btn-ok" id="btn-cam" onclick="window.toggleScanner()">
+            📷 Iniciar Lector Óptico
+        </button>
+    </div>
+
+    <!-- Mini estadísticas del día -->
+    <div class="card" style="padding:.9rem;">
+        <div class="card-title" style="margin-bottom:.5rem; font-size:.82rem;">Hoy — <span id="stat-fecha">—</span></div>
+        <div class="stats-row">
+            <div class="stat-mini">
+                <div class="val" style="color:var(--emerald);" id="st-asist">0</div>
+                <div class="lbl">Asistencias</div>
+            </div>
+            <div class="stat-mini">
+                <div class="val" style="color:var(--amber);" id="st-ret">0</div>
+                <div class="lbl">Retardos</div>
+            </div>
+            <div class="stat-mini">
+                <div class="val" style="color:var(--ruby);" id="st-falt">0</div>
+                <div class="lbl">Faltas</div>
+            </div>
+            <div class="stat-mini">
+                <div class="val" style="color:var(--slate2);" id="st-pend">0</div>
+                <div class="lbl">Offline</div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- ═══ VISTA 2: MANUAL ═══ -->
+<main id="view-manual" class="view">
+    <div class="card">
+        <div class="card-title">Captura Manual</div>
+        <p style="font-size:.78rem;color:var(--slate2);margin-bottom:8px;line-height:1.4;">
+            Solo aparecen alumnos que aún no registraron asistencia hoy.
+        </p>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
+            <div>
+                <label>Turno</label>
+                <select id="man-turno" onchange="window.manActualizarGrados()"></select>
+            </div>
+            <div>
+                <label>Grado</label>
+                <select id="man-grado" onchange="window.manActualizarGrupos()"></select>
+            </div>
+            <div>
+                <label>Grupo</label>
+                <select id="man-grupo" onchange="window.cargarAlumnosGrupo()"></select>
+            </div>
+        </div>
+
+        <label>Alumno (solo ausentes)</label>
+        <select id="man-nombre">
+            <option value="">Seleccione grupo...</option>
+        </select>
+
+        <div style="background:var(--light);padding:10px;border-radius:6px;border:1px solid var(--border);margin-top:10px;">
+            <label style="margin-top:0;">Estatus a aplicar</label>
+            <select id="man-mode" onchange="window.toggleMotive()">
+                <option value="auto">⏰ Automático (Reloj Inteligente)</option>
+                <option value="asistencia">✅ Asistencia</option>
+                <option value="retardo">🕐 Retardo</option>
+                <option value="falta">❌ Falta</option>
+                <option value="justificado">📋 Justificado</option>
+            </select>
+            <div id="motive-box" class="motive-box">
+                <label>Motivo Oficial</label>
+                <select id="man-motive">
+                    <option value="Receta médica">Enfermedad — Receta Médica</option>
+                    <option value="Cita médica">Cita Médica Programada</option>
+                    <option value="Aviso Padre/Tutor">Aviso de Padre / Tutor</option>
+                    <option value="Comisión escolar">Comisión Escolar o Deportiva</option>
+                    <option value="Trámite legal">Trámite Legal</option>
+                    <option value="Permiso Dirección">Permiso de Dirección</option>
+                    <option value="Fuerza mayor">Fuerza Mayor</option>
+                </select>
+            </div>
+        </div>
+
+        <button class="btn btn-ok" onclick="window.procesarManual()">
+            Registrar Auditoría Manual
+        </button>
+    </div>
+</main>
+
+<!-- ═══ VISTA 3: AUDITORÍA ═══ -->
+<main id="view-records" class="view">
+    <div class="card">
+        <div class="card-title">
+            Auditoría Local
+            <span id="offline-badge">● PEND.</span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <button class="btn" style="margin-top:0;" onclick="window.exportCSV()">⬇ CSV</button>
+            <button class="btn btn-err" style="margin-top:0;" onclick="window.clearRecords()">🗑 Purgar</button>
+        </div>
+        <div id="lbl-sync" style="font-size:.7rem;text-align:center;color:var(--emerald);margin-top:6px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;">
+            ✔ Conectado a la nube
+        </div>
+
+        <div class="tbl-wrap">
+            <table>
+                <thead>
+                    <tr><th>Hora</th><th>Grupo</th><th>Alumno</th><th>Est.</th><th>☁</th></tr>
+                </thead>
+                <tbody id="tbl-body"></tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<nav>
+    <button class="nav-btn active" id="nav-scanner" onclick="window.switchView('scanner',this)">
+        <span class="nav-icon">📷</span><span>Escáner</span>
+    </button>
+    <button class="nav-btn" id="nav-manual" onclick="window.switchView('manual',this)">
+        <span class="nav-icon">📝</span><span>Manual</span>
+    </button>
+    <button class="nav-btn" id="nav-records" onclick="window.switchView('records',this)">
+        <span class="nav-icon">📋</span><span>Auditoría</span>
+    </button>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════
+     JAVASCRIPT PRINCIPAL
+══════════════════════════════════════════════════════ -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+import { getDatabase, ref, push, get, onValue, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+// ══════════════════════════════════════════
+// 1. FIREBASE
+// ══════════════════════════════════════════
+const firebaseConfig = {
+    apiKey:            "AIzaSyD_sJOOY4wQY_473JGj0FXGHm2PzHMC2u0",
+    authDomain:        "ludoasistencia.firebaseapp.com",
+    databaseURL:       "https://ludoasistencia-default-rtdb.firebaseio.com",
+    projectId:         "ludoasistencia",
+    storageBucket:     "ludoasistencia.firebasestorage.app",
+    messagingSenderId: "738361802611",
+    appId:             "1:738361802611:web:cb13956f002a0e74844f06"
+};
+const app = initializeApp(firebaseConfig);
+const db  = getDatabase(app);
+
+// ══════════════════════════════════════════
+// 2. ESTADO GLOBAL
+// ══════════════════════════════════════════
+const SK_ESCUELA  = 'ludo_v8_escuela';   // ID de escuela emparejada
+const SK_ATTEND   = 'ludo_v8_attend';    // registros locales
+const SK_PENDING  = 'ludo_v8_pending';   // cola offline
+
+let ID_ESCUELA    = '';
+let config = {
+    matApertura:     '06:57',
+    limiteMatutino:  '07:00',
+    matSalida:       '13:30',
+    vespApertura:    '13:43',
+    limiteVespertino:'13:45',
+    vespRetardo:     '14:01',
+};
+let estructura    = {};   // {Matutino:{1:['A','B'],...}, Vespertino:{...}}
+let directorioDB  = {};   // {clave:[nombres]}
+let attendanceDB  = [];
+let pendientes    = [];
+let isOnline      = navigator.onLine;
+let html5QrCode   = null;
+let isScanning    = false;
+let lastScanTime  = 0;
+let audioCtx; let audioOn = false;
+let deferredPWA   = null;
+
+try { attendanceDB = JSON.parse(localStorage.getItem(SK_ATTEND))  || []; } catch(e){ attendanceDB=[]; }
+try { pendientes   = JSON.parse(localStorage.getItem(SK_PENDING)) || []; } catch(e){ pendientes=[]; }
+
+// ══════════════════════════════════════════
+// 3. EMPAREJAMIENTO CON EL PLANTEL
+//    Flujo:
+//    a) Al abrir, checar localStorage por ID guardado
+//    b) Si existe → validar que la escuela sigue en Firebase → cargar
+//    c) Si no → mostrar pantalla de emparejamiento
+//    d) El usuario escribe el código → se valida → se guarda → se carga
+// ══════════════════════════════════════════
+async function iniciarApp() {
+    const idGuardado = localStorage.getItem(SK_ESCUELA);
+    if (idGuardado) {
+        // Validar silenciosamente que el código sigue siendo válido
+        const valido = await validarCodigo(idGuardado, true);
+        if (valido) {
+            ocultarPantallaPair();
+            return;
+        }
+        // Si ya no es válido, pedir de nuevo
+        localStorage.removeItem(SK_ESCUELA);
+    }
+    // Mostrar pantalla de emparejamiento
+    mostrarPantallaPair();
+}
+
+async function validarCodigo(codigo, silencioso = false) {
+    try {
+        const snap = await get(ref(db, `escuelas/${codigo}/configuracion/perfil`));
+        if (!snap.exists()) return false;
+        const perfil = snap.val();
+
+        // ── VERIFICAR LICENCIA ACTIVA ──
+        if (perfil.activa === false) {
+            // Licencia bloqueada — mostrar pantalla de suspensión
+            mostrarSuspendida(codigo);
+            return false;
+        }
+
+        // Código válido — establecer escuela
+        ID_ESCUELA = codigo;
+        localStorage.setItem(SK_ESCUELA, codigo);
+        if (!silencioso) mostrarSuccessPair(perfil.nombreEscuela || codigo);
+        else cargarEscuela();
+        return true;
+    } catch(e) {
+        // Sin internet — si es silencioso (ya tiene código guardado), dejar entrar
+        if (silencioso) {
+            ID_ESCUELA = codigo;
+            cargarEscuela();
+            return true;
+        }
+        return false;
+    }
+}
+
+function mostrarSuspendida(codigo) {
+    // Ocultar todo y mostrar pantalla de suspensión
+    document.getElementById('pair-form-section') && (document.getElementById('pair-form-section').style.display = 'none');
+    document.getElementById('pair-loading') && (document.getElementById('pair-loading').style.display = 'none');
+
+    // Crear pantalla de suspensión si no existe
+    let susp = document.getElementById('screen-suspendida-scanner');
+    if (!susp) {
+        susp = document.createElement('div');
+        susp.id = 'screen-suspendida-scanner';
+        susp.style.cssText = `position:fixed;inset:0;background:#1a0a0a;display:flex;
+          flex-direction:column;align-items:center;justify-content:center;
+          z-index:9999;padding:2rem;gap:1rem;text-align:center;`;
+        susp.innerHTML = [
+          '<div style="font-size:4rem;">🔒</div>',
+          '<div style="font-size:1.4rem;font-weight:800;color:#FCA5A5;">LICENCIA SUSPENDIDA</div>',
+          '<div style="font-size:.9rem;color:rgba(255,200,200,.7);max-width:300px;line-height:1.6;">',
+          'El acceso a este sistema ha sido suspendido.<br>',
+          'Contacte al administrador de LudoAssist para reactivar su licencia.',
+          '</div>',
+          '<div style="background:rgba(255,255,255,.06);border-radius:8px;padding:.6rem 1rem;font-size:.8rem;color:#FCA5A5;font-weight:700;letter-spacing:1px;">',
+          'Código: ' + codigo.toUpperCase(),
+          '</div>',
+          '<a href="https://wa.me/529811244870?text=Hola,%20necesito%20reactivar%20mi%20licencia%20(' + codigo + ')"',
+          'style="background:#25D366;color:white;border-radius:8px;padding:.8rem 1.5rem;font-size:.9rem;font-weight:700;text-decoration:none;margin-top:.5rem;"',
+          'target="_blank">📱 Contactar por WhatsApp</a>'
+        ].join('');
+        document.body.appendChild(susp);
+    }
+    susp.style.display = 'flex';
+}
+
+window.emparejarEscuela = async function() {
+    const input = document.getElementById('pair-input');
+    const errEl = document.getElementById('pair-error');
+    const btnEl = document.getElementById('pair-btn');
+    const codigo = input.value.trim().toLowerCase().replace(/\s+/g,'');
+
+    errEl.textContent = '';
+    if (!codigo) { errEl.textContent = 'Ingrese el código de su escuela.'; return; }
+
+    // Mostrar spinner
+    document.getElementById('pair-form-section').style.display = 'none';
+    document.getElementById('pair-loading').style.display = 'flex';
+    document.getElementById('pair-loading-text').textContent = `Verificando código "${codigo}"...`;
+
+    const valido = await validarCodigo(codigo, false);
+    if (!valido) {
+        document.getElementById('pair-form-section').style.display = 'block';
+        document.getElementById('pair-loading').style.display = 'none';
+        errEl.textContent = '❌ Código no encontrado. Verifique con su director.';
+        input.value = '';
+        input.focus();
+    }
+};
+
+function mostrarSuccessPair(nombreEscuela) {
+    document.getElementById('pair-loading').style.display = 'none';
+    document.getElementById('pair-success').style.display = 'flex';
+    document.getElementById('pair-school-name').textContent = nombreEscuela;
+    setTimeout(() => {
+        ocultarPantallaPair();
+        cargarEscuela();
+    }, 1800);
+}
+
+function mostrarPantallaPair() {
+    document.getElementById('screen-pair').classList.remove('hidden');
+    setTimeout(()=>document.getElementById('pair-input').focus(), 300);
+}
+
+function ocultarPantallaPair() {
+    document.getElementById('screen-pair').classList.add('hidden');
+    cargarEscuela();
+}
+
+// Función desemparejar eliminada: escáner es dispositivo fijo en la entrada.
+// La vinculación se hace una sola vez al instalar.
+
+// ══════════════════════════════════════════
+// 4. CARGA COMPLETA DE LA ESCUELA
+//    Todo viene de Firebase usando ID_ESCUELA
+// ══════════════════════════════════════════
+function cargarEscuela() {
+    if (!ID_ESCUELA) return;
+
+    const cfgRef = ref(db, `escuelas/${ID_ESCUELA}/configuracion`);
+    const dirRef = ref(db, `escuelas/${ID_ESCUELA}/directorio`);
+
+    // Escuchar configuración en tiempo real
+    onValue(cfgRef, snap => {
+        if (!snap.exists()) return;
+        const data = snap.val();
+
+        // Perfil
+        if (data.perfil) {
+            const nombre = data.perfil.nombreEscuela || ID_ESCUELA;
+            document.getElementById('hdr-school').textContent = nombre;
+            document.title = `LudoAssist — ${nombre}`;
+            // Logo
+            if (data.perfil.logo) {
+                const img = document.getElementById('hdr-logo');
+                img.src = data.perfil.logo;
+                img.style.display = 'block';
+            }
+        }
+
+        // Políticas horarias — 6 campos
+        if (data.politicas) {
+            const p = data.politicas;
+            config.matApertura     = p.matApertura     || '06:57';
+            config.limiteMatutino  = p.limiteMatutino  || '07:00';
+            config.matSalida       = p.matSalida       || '13:30';
+            config.vespApertura    = p.vespApertura    || '13:43';
+            config.limiteVespertino= p.limiteVespertino|| '13:45';
+            config.vespRetardo     = p.vespRetardo     || '14:01';
+        }
+
+        // Estructura escolar personalizada
+        if (data.estructura) {
+            estructura = data.estructura;
+        } else {
+            // Default secundaria si no está configurada
+            estructura = {
+                Matutino:   { '1':['A','B','C','D','E','F'], '2':['A','B','C','D','E','F'], '3':['A','B','C','D','E','F'] },
+                Vespertino: { '1':['G','H','I'], '2':['G','H'], '3':['G','H'] }
+            };
+        }
+
+        // Poblar selectores del módulo manual con la estructura real
+        poblarSelectoresManuales();
+        actualizarTurnoBadge();
+    });
+
+    // Escuchar directorio en tiempo real
+    onValue(dirRef, snap => {
+        directorioDB = {};
+        if (snap.exists()) {
+            const data = snap.val();
+            for (const k in data) {
+                const g = data[k];
+                directorioDB[k] = Array.isArray(g) ? g : Object.values(g);
+                directorioDB[k] = directorioDB[k].filter(Boolean);
+            }
+        }
+        window.cargarAlumnosGrupo();
+    });
+
+    // Conexión online/offline
+    actualizarBannerOffline();
+}
+
+// ══════════════════════════════════════════
+// 5. SELECTORES DINÁMICOS (usa estructura de Firebase)
+// ══════════════════════════════════════════
+function poblarSelectoresManuales() {
+    const turnos = Object.keys(estructura);
+    if (!turnos.length) return;
+
+    const selTurno = document.getElementById('man-turno');
+    selTurno.innerHTML = '';
+    turnos.forEach(t => {
+        const o = document.createElement('option');
+        o.value = t; o.textContent = t; selTurno.appendChild(o);
+    });
+    window.manActualizarGrados();
+}
+
+window.manActualizarGrados = function() {
+    const turno  = document.getElementById('man-turno').value;
+    const grados = estructura[turno] || {};
+    const sel    = document.getElementById('man-grado');
+    sel.innerHTML = '';
+    Object.keys(grados).sort((a,b)=>Number(a)-Number(b)).forEach(g => {
+        const o = document.createElement('option');
+        o.value = g; o.textContent = `${g}° Grado`; sel.appendChild(o);
+    });
+    window.manActualizarGrupos();
+};
+
+window.manActualizarGrupos = function() {
+    const turno = document.getElementById('man-turno').value;
+    const grado = document.getElementById('man-grado').value;
+    const sel   = document.getElementById('man-grupo');
+    sel.innerHTML = '';
+    (estructura[turno]?.[grado] || []).forEach(g => {
+        const o = document.createElement('option');
+        o.value = g; o.textContent = `Grupo ${g}`; sel.appendChild(o);
+    });
+    window.cargarAlumnosGrupo();
+};
+
+window.cargarAlumnosGrupo = function() {
+    const turno  = document.getElementById('man-turno').value;
+    const grado  = document.getElementById('man-grado').value;
+    const grupo  = document.getElementById('man-grupo').value;
+    const sel    = document.getElementById('man-nombre');
+    const fecha  = getFecha();
+    const clave  = sanitizar(`${turno}-${grado}-${grupo}`);
+    const lista  = directorioDB[clave] || [];
+
+    sel.innerHTML = '';
+
+    if (!lista.length) {
+        const o = document.createElement('option');
+        o.value = ''; o.textContent = 'Sin alumnos en este grupo'; o.disabled = true;
+        sel.appendChild(o); return;
+    }
+
+    let pendientes = 0;
+    lista.forEach(alumno => {
+        if (!yaRegistrado(alumno, fecha)) {
+            pendientes++;
+            const o = document.createElement('option');
+            o.value = alumno; o.textContent = alumno; sel.appendChild(o);
+        }
+    });
+
+    if (!pendientes) {
+        const o = document.createElement('option');
+        o.value = ''; o.textContent = '✓ Todos ya registraron hoy'; o.disabled = true;
+        sel.appendChild(o);
+    }
+};
+
+// ══════════════════════════════════════════
+// 6. UTILIDADES
+// ══════════════════════════════════════════
+function sanitizar(s) { return s.replace(/[.#$\[\]/]/g,'_'); }
+function getFecha() {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth()+1).padStart(2,'0');
+    const dia = String(d.getDate()).padStart(2,'0');
+    return `${y}-${m}-${dia}`;
+}
+function getHora()    { return new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit',hour12:false}); }
+// Convierte "HH:MM" a minutos totales para comparación fácil
+function hhmm(s) { const [h,m]=s.split(':').map(Number); return h*60+m; }
+
+// Determina el turno activo según la hora real y los horarios configurados.
+// - Si estamos dentro del horario matutino → Matutino
+// - Si estamos dentro del horario vespertino → Vespertino
+// - Si estamos en la zona entre turnos → "EntreTurnos"
+// - Si el QR del alumno indica su turno, ese prevalece (se usa en onQRLeido)
+function getTurnoActual() {
+    const min = hhmm(getHora());
+    const matAp  = hhmm(config.matApertura);
+    const matSal = hhmm(config.matSalida);
+    const vespAp = hhmm(config.vespApertura);
+    const vespRet= hhmm(config.vespRetardo);
+    // Definimos fin del vespertino como 3 horas después de su inicio
+    const vespFin= vespRet + 180;
+
+    if (min >= matAp  && min <= matSal)  return 'Matutino';
+    if (min >= vespAp && min <= vespFin) return 'Vespertino';
+    if (min > matSal  && min < vespAp)   return 'EntreTurnos';
+    return 'Matutino'; // default fuera de horario (madrugada, noche)
+}
+
+// Wrapper para el badge — no muestra "EntreTurnos"
+function getTurno() {
+    const t = getTurnoActual();
+    return t === 'EntreTurnos' ? 'Entre Turnos' : t;
+}
+
+// Calcula si es asistencia o retardo usando los límites correctos de cada turno.
+// - Matutino:   apertura → limiteMatutino = asistencia; después = retardo
+// - Vespertino: vespApertura → vespRetardo = asistencia; después = retardo
+// - Antes de apertura: "anticipado" (se registra como asistencia)
+function calcularEstatus(turno, hora) {
+    const min = hhmm(hora);
+    if (turno === 'Matutino') {
+        const limite = hhmm(config.limiteMatutino);
+        return min <= limite ? 'asistencia' : 'retardo';
+    } else {
+        // Vespertino: el límite real de retardo es vespRetardo
+        const limite = hhmm(config.vespRetardo);
+        return min <= limite ? 'asistencia' : 'retardo';
+    }
+}
+
+// Verifica si la hora actual está dentro de la ventana permitida para escanear
+// (respeta apertura de puertas y zona entre turnos)
+function enVentanaPermitida(turno) {
+    const min = hhmm(getHora());
+    if (turno === 'Matutino') {
+        return min >= hhmm(config.matApertura) && min <= hhmm(config.matSalida);
+    } else {
+        return min >= hhmm(config.vespApertura);
+    }
+}
+
+function yaRegistrado(nombre, fecha) {
+    const n = nombre.replace(/^\[ [AM] \] /,'').toUpperCase();
+    return attendanceDB.some(r => {
+        return r.fecha === fecha && r.nombre.replace(/^\[ [AM] \] /,'').toUpperCase() === n;
+    });
+}
+
+function actualizarTurnoBadge() {
+    const actual = getTurnoActual();
+    const el     = document.getElementById('turno-badge');
+    const scan   = document.getElementById('scan-status');
+    
+    if (actual === 'EntreTurnos') {
+        el.textContent = '⏸ Entre Turnos';
+        el.className   = 'turno-badge entre';
+        // Mostrar aviso en el área del escáner si no está escaneando
+        if (!isScanning && scan) {
+            scan.innerHTML = `<span style="color:var(--amber)">⏸ Zona entre turnos<br>
+                <small style="font-size:.75rem;font-weight:400">Vespertino abre a las ${config.vespApertura}</small></span>`;
+        }
+    } else {
+        el.textContent = actual;
+        el.className   = 'turno-badge' + (actual === 'Vespertino' ? ' vespertino' : '');
+        if (!isScanning && scan && scan.textContent.includes('Entre Turnos')) {
+            scan.textContent = 'Presione el botón para iniciar el lector';
+        }
+    }
+}
+
+// ══════════════════════════════════════════
+// 7. PARSER QR ROBUSTO (dual: | y -)
+// ══════════════════════════════════════════
+function parsearQR(data) {
+    // Formato nuevo con | (separador seguro)
+    if (data.includes('|')) {
+        const p = data.split('|');
+        if (p.length < 4) return null;
+        return { turno:p[0].trim(), grado:p[1].trim(), grupo:p[2].trim(),
+                 nombre:p.slice(3).join(' ').replace(/_/g,' ').trim().toUpperCase() };
+    }
+    // Formato original con - (compatibilidad)
+    const p = data.split('-');
+    if (p.length < 4) return null;
+    const turno  = p[0];
+    const grado  = p[1];
+    const grupo  = p[2];
+    const nombre = p.slice(3).join('-').replace(/_/g,' ').trim().toUpperCase();
+    if (!['Matutino','Vespertino'].includes(turno)) return null;
+    if (!grado || !grupo || !nombre) return null;
+    return { turno, grado, grupo, nombre };
+}
+
+// ══════════════════════════════════════════
+// 8. GUARDAR REGISTRO (local + Firebase)
+// ══════════════════════════════════════════
+async function guardarRegistro(turno, grado, grupo, nombreAudit, estatus, hora, fecha) {
+    const grupoDisplay = `${grado}° ${grupo}`;
+    const reg = { fecha, hora, turno, grado, grupo, nombre:nombreAudit, estatus };
+
+    attendanceDB.push(reg);
+    localStorage.setItem(SK_ATTEND, JSON.stringify(attendanceDB));
+    renderTabla();
+    actualizarStats();
+
+    // Guardamos grado y grupo por separado ADEMÁS del campo legacy grupoDisplay
+    // Así el panel puede filtrar con precisión sin parsear strings
+    const fbReg = { 
+        fecha, hora, turno, 
+        grupo: grupoDisplay,   // legacy: "1° A" — para compatibilidad
+        grado: grado,          // nuevo: "1"
+        grupoLetra: grupo,     // nuevo: "A"
+        nombre: nombreAudit, 
+        estatus, 
+        timestamp: serverTimestamp() 
+    };
+
+    if (isOnline && ID_ESCUELA) {
+        try {
+            await push(ref(db,`escuelas/${ID_ESCUELA}/asistencias`), fbReg);
+        } catch(e) {
+            pendientes.push({ fecha, hora, turno, grupo:grupoDisplay, grado, grupoLetra:grupo, nombre:nombreAudit, estatus });
+            localStorage.setItem(SK_PENDING, JSON.stringify(pendientes));
+            actualizarBadgeOffline();
+        }
+    } else {
+        pendientes.push({ fecha, hora, turno, grupo:grupoDisplay, grado, grupoLetra:grupo, nombre:nombreAudit, estatus });
+        localStorage.setItem(SK_PENDING, JSON.stringify(pendientes));
+        actualizarBadgeOffline();
+    }
+}
+
+// ══════════════════════════════════════════
+// 9. ESCÁNER QR
+// ══════════════════════════════════════════
+window.toggleScanner = function() { isScanning ? detenerScanner() : iniciarScanner(); };
+
+function iniciarScanner() {
+    if (!html5QrCode) html5QrCode = new Html5Qrcode('reader');
+    const btn = document.getElementById('btn-cam');
+    btn.innerHTML = '<span class="spin-sm"></span>Iniciando cámara...';
+    btn.disabled = true;
+
+    html5QrCode.start(
+        { facingMode:'environment' },
+        { fps:12, qrbox:{width:230,height:230}, aspectRatio:1.0 },
+        onQRLeido, ()=>{}
+    ).then(() => {
+        isScanning = true;
+        btn.innerHTML = '⏹ Detener Lector';
+        btn.className = 'btn btn-err';
+        btn.disabled  = false;
+        document.getElementById('scan-status').textContent = 'Alinee el código QR en el recuadro';
+        actualizarTurnoBadge();
+    }).catch(err => {
+        btn.innerHTML = '📷 Iniciar Lector Óptico';
+        btn.className = 'btn btn-ok';
+        btn.disabled  = false;
+        const msg = err.toString().toLowerCase().includes('permission')
+            ? 'Permiso de cámara denegado. Revise la configuración del navegador.'
+            : 'Error de cámara. Use HTTPS o instale la app.';
+        document.getElementById('scan-status').innerHTML = `<span style="color:var(--ruby)">${msg}</span>`;
+    });
+}
+
+function detenerScanner() {
+    if (!html5QrCode || !isScanning) return;
+    html5QrCode.stop().then(() => {
+        isScanning = false;
+        const btn = document.getElementById('btn-cam');
+        btn.innerHTML = '📷 Iniciar Lector Óptico';
+        btn.className = 'btn btn-ok';
+        document.getElementById('scan-status').textContent = 'Lector detenido';
+    });
+}
+
+function onQRLeido(data) {
+    const ahora = Date.now();
+    if (ahora - lastScanTime < 2800) return;
+    lastScanTime = ahora;
+
+    const reader  = document.getElementById('reader');
+    const statusEl= document.getElementById('scan-status');
+    const parsed  = parsearQR(data);
+
+    if (!parsed) {
+        beep('err');
+        reader.classList.add('glow-err');
+        statusEl.innerHTML = `<span style="color:var(--ruby)">QR no reconocido. Verifique el código.</span>`;
+        setTimeout(()=>{ reader.classList.remove('glow-err'); statusEl.textContent='Alinee el código QR'; }, 2500);
+        return;
+    }
+
+    const { turno, grado, grupo, nombre } = parsed;
+    const hora  = getHora();
+    const fecha = getFecha();
+
+    // Duplicado
+    if (yaRegistrado(nombre, fecha)) {
+        beep('warn');
+        hablar(`${nombre.split(' ')[0]}, ya registrado`);
+        reader.classList.add('glow-warn');
+        statusEl.innerHTML = `<span style="color:var(--amber)">⚠ ${nombre.split(' ').slice(0,2).join(' ')} — ya registrado hoy</span>`;
+        setTimeout(()=>{ reader.classList.remove('glow-warn'); statusEl.textContent='Alinee el código QR'; }, 2500);
+        return;
+    }
+
+    // Verificar ventana horaria (advertencia, no bloqueo)
+    // El registro se hace de todos modos — el estatus lo refleja
+    const fueraVentana = !enVentanaPermitida(turno);
+    if (fueraVentana) {
+        // Solo registrar si el director explícitamente no bloqueó fuera de horario
+        // Por ahora: registrar con nota
+        console.warn(`Alumno ${nombre} escaneado fuera de ventana horaria del turno ${turno}`);
+    }
+
+    const estatus     = calcularEstatus(turno, hora);
+    const nombreAudit = `[ A ] ${nombre}`;
+
+    beep('ok');
+    setTimeout(()=> hablar(`${nombre.split(' ')[0]}, ${estatus}`), 200);
+
+    reader.classList.add('glow-ok');
+    const ico = estatus === 'asistencia' ? '✅' : '🕐';
+    statusEl.innerHTML = `<span style="color:var(--emerald)">${ico} ${nombre.split(' ').slice(0,2).join(' ')} — ${estatus.toUpperCase()}</span>`;
+
+    // Caja último registro
+    const box = document.getElementById('last-box');
+    box.style.display = 'block';
+    box.className     = estatus === 'asistencia' ? '' : 'retardo';
+    document.getElementById('lr-nombre').textContent = nombre;
+    document.getElementById('lr-meta').textContent   =
+        `${grado}° "${grupo}" · Turno ${turno} · ${hora} · ${estatus.toUpperCase()}`;
+
+    setTimeout(()=>{ reader.classList.remove('glow-ok'); statusEl.textContent='Alinee el código QR'; }, 2200);
+
+    guardarRegistro(turno, grado, grupo, nombreAudit, estatus, hora, fecha);
+}
+
+// ══════════════════════════════════════════
+// 10. CAPTURA MANUAL
+// ══════════════════════════════════════════
+window.toggleMotive = function() {
+    const v = document.getElementById('man-mode').value;
+    document.getElementById('motive-box').style.display = v === 'justificado' ? 'block' : 'none';
+};
+
+window.procesarManual = function() {
+    const turno  = document.getElementById('man-turno').value;
+    const grado  = document.getElementById('man-grado').value;
+    const grupo  = document.getElementById('man-grupo').value;
+    const nombre = document.getElementById('man-nombre').value;
+    const mode   = document.getElementById('man-mode').value;
+
+    if (!nombre) { alert('Seleccione un alumno.'); return; }
+
+    const hora  = getHora();
+    const fecha = getFecha();
+
+    // Verificar duplicado antes de registrar
+    if (yaRegistrado(nombre, fecha)) {
+        alert(`⚠️ ${nombre} ya tiene registro de asistencia hoy.\nNo se puede registrar dos veces el mismo día.`);
+        return;
+    }
+    let estatus;
+
+    if (mode === 'auto') estatus = calcularEstatus(turno, hora);
+    else if (mode === 'justificado') estatus = `justificado - ${document.getElementById('man-motive').value}`;
+    else estatus = mode;
+
+    const nombreAudit = `[ M ] ${nombre}`;
+    guardarRegistro(turno, grado, grupo, nombreAudit, estatus, hora, fecha);
+
+    beep('ok');
+    hablar(`${nombre.split(' ')[0]}, registrado`);
+    alert(`✅ Registro exitoso\n${nombre}\n${estatus.toUpperCase()} — ${hora}`);
+    window.cargarAlumnosGrupo();
+};
+
+// ══════════════════════════════════════════
+// 11. TABLA + STATS
+// ══════════════════════════════════════════
+function renderTabla() {
+    const tbody = document.getElementById('tbl-body');
+    const hoy   = getFecha();
+    const recs  = [...attendanceDB].filter(r=>r.fecha===hoy).reverse().slice(0,60);
+
+    tbody.innerHTML = '';
+    recs.forEach((r, i) => {
+        const est = (r.estatus||'').toLowerCase();
+        let pc='p-pen', el='PEND.';
+        if(est.includes('asist'))  { pc='p-ok';  el='ASIST'; }
+        if(est.includes('retard')) { pc='p-ret';  el='RET.'; }
+        if(est.includes('falt'))   { pc='p-fal';  el='FALTA'; }
+        if(est.includes('justif')) { pc='p-jus';  el='JUST.'; }
+        const sync = i < pendientes.length ? '⏳' : '✓';
+        const tr = document.createElement('tr');
+        tr.innerHTML=`<td>${r.hora}</td>
+            <td>${r.grado}°${r.grupo}</td>
+            <td style="max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.76rem">${r.nombre}</td>
+            <td><span class="pill ${pc}">${el}</span></td>
+            <td class="p-sync">${sync}</td>`;
+        tbody.appendChild(tr);
+    });
+    document.getElementById('lbl-sync').textContent =
+        pendientes.length > 0
+            ? `⏳ ${pendientes.length} pendiente(s) de sincronizar`
+            : '✔ Conectado a la nube';
+    document.getElementById('lbl-sync').style.color = pendientes.length > 0 ? 'var(--amber)' : 'var(--emerald)';
+}
+
+function actualizarStats() {
+    const hoy  = getFecha();
+    const hoyR = attendanceDB.filter(r=>r.fecha===hoy);
+    document.getElementById('st-asist').textContent = hoyR.filter(r=>r.estatus==='asistencia').length;
+    document.getElementById('st-ret').textContent   = hoyR.filter(r=>(r.estatus||'').includes('retardo')).length;
+    document.getElementById('st-falt').textContent  = hoyR.filter(r=>(r.estatus||'').includes('falta')).length;
+    document.getElementById('st-pend').textContent  = pendientes.length;
+    document.getElementById('stat-fecha').textContent = new Date().toLocaleDateString('es-MX',{day:'numeric',month:'short'});
+}
+
+// ══════════════════════════════════════════
+// 12. OFFLINE + SYNC
+// ══════════════════════════════════════════
+function actualizarBannerOffline() {
+    const banner  = document.getElementById('banner-offline');
+    const lblSync = document.getElementById('lbl-sync');
+    if (isOnline) {
+        banner.style.display = 'none';
+        sincronizarPendientes();
+    } else {
+        banner.style.display = 'block';
+    }
+    actualizarBadgeOffline();
+}
+
+function actualizarBadgeOffline() {
+    const b = document.getElementById('offline-badge');
+    b.style.display = pendientes.length ? 'inline-block' : 'none';
+    b.textContent   = `● ${pendientes.length}`;
+    document.getElementById('st-pend').textContent = pendientes.length;
+}
+
+async function sincronizarPendientes() {
+    if (!pendientes.length || !ID_ESCUELA) return;
+    const asRef = ref(db, `escuelas/${ID_ESCUELA}/asistencias`);
+    let ok = 0, restantes = [];
+    for (const r of pendientes) {
+        try { await push(asRef, { ...r, timestamp:serverTimestamp() }); ok++; }
+        catch(e) { restantes.push(r); }
+    }
+    pendientes = restantes;
+    localStorage.setItem(SK_PENDING, JSON.stringify(pendientes));
+    if (ok > 0) { actualizarBadgeOffline(); renderTabla(); }
+}
+
+window.addEventListener('online',  ()=>{ isOnline=true;  actualizarBannerOffline(); });
+window.addEventListener('offline', ()=>{ isOnline=false; actualizarBannerOffline(); });
+
+// ══════════════════════════════════════════
+// 13. EXPORTACIÓN CSV
+// ══════════════════════════════════════════
+window.exportCSV = function() {
+    if (!attendanceDB.length) { alert('Sin datos en memoria local.'); return; }
+    let csv = '\uFEFFFecha,Hora,Turno,Grado,Grupo,Alumno,Estatus\n';
+    attendanceDB.forEach(r => {
+        csv += `"${r.fecha}","${r.hora}","${r.turno}","${r.grado}","${r.grupo}","${r.nombre}","${r.estatus}"\n`;
+    });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
+    a.download = `Auditoria_${ID_ESCUELA}_${getFecha()}.csv`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+};
+
+window.clearRecords = function() {
+    if (!confirm('¿Borrar memoria local?\nEsto NO afecta los datos en la nube.')) return;
+    attendanceDB = []; pendientes = [];
+    localStorage.removeItem(SK_ATTEND); localStorage.removeItem(SK_PENDING);
+    renderTabla(); actualizarStats(); actualizarBadgeOffline();
+    window.cargarAlumnosGrupo();
+};
+
+// ══════════════════════════════════════════
+// 14. AUDIO
+// ══════════════════════════════════════════
+window.toggleAudio = function() {
+    if (!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+    if (audioCtx.state==='suspended') audioCtx.resume();
+    audioOn = !audioOn;
+    const btn = document.getElementById('btn-audio');
+    btn.textContent = audioOn ? '🔊' : '🔇';
+    btn.classList.toggle('active', audioOn);
+    if (audioOn) { beep('ok'); hablar('Audio activo.'); }
+};
+
+function beep(type) {
+    if (!audioOn||!audioCtx) return;
+    const o=audioCtx.createOscillator(), g=audioCtx.createGain();
+    o.connect(g); g.connect(audioCtx.destination);
+    if(type==='ok')  { o.type='sine';     o.frequency.setValueAtTime(900,audioCtx.currentTime); o.frequency.exponentialRampToValueAtTime(1400,audioCtx.currentTime+.12); g.gain.setValueAtTime(.12,audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.25); o.start(); o.stop(audioCtx.currentTime+.25); }
+    if(type==='err') { o.type='sawtooth'; o.frequency.setValueAtTime(250,audioCtx.currentTime); o.frequency.exponentialRampToValueAtTime(100,audioCtx.currentTime+.35); g.gain.setValueAtTime(.1,audioCtx.currentTime);  g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.35); o.start(); o.stop(audioCtx.currentTime+.35); }
+    if(type==='warn'){ o.type='triangle'; o.frequency.setValueAtTime(600,audioCtx.currentTime); g.gain.setValueAtTime(.08,audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.2); o.start(); o.stop(audioCtx.currentTime+.2); }
+}
+
+function hablar(txt) {
+    if (!audioOn||!('speechSynthesis' in window)) return;
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(txt); u.lang='es-MX'; u.rate=1.15;
+    speechSynthesis.speak(u);
+}
+
+// ══════════════════════════════════════════
+// 15. PWA
+// ══════════════════════════════════════════
+window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault(); deferredPWA = e;
+    document.getElementById('btn-instalar').style.display = 'block';
+});
+
+window.instalarPWA = async function() {
+    if (!deferredPWA) {
+        alert('Para instalar:\n• Android/Chrome: Menú ⋮ → "Añadir a pantalla de inicio"\n• iOS/Safari: Botón Compartir → "Añadir al inicio"');
+        return;
+    }
+    deferredPWA.prompt();
+    const { outcome } = await deferredPWA.userChoice;
+    if (outcome==='accepted') document.getElementById('btn-instalar').style.display='none';
+    deferredPWA = null;
+};
+
+// ══════════════════════════════════════════
+// 16. NAVEGACIÓN
+// ══════════════════════════════════════════
+window.switchView = function(name, btn) {
+    if (name!=='scanner' && isScanning) detenerScanner();
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    document.getElementById(`view-${name}`).classList.add('active');
+    document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    if (name==='manual')  window.cargarAlumnosGrupo();
+    if (name==='records') renderTabla();
+};
+
+// ══════════════════════════════════════════
+// 17. INICIO
+// ══════════════════════════════════════════
+renderTabla();
+actualizarStats();
+actualizarBadgeOffline();
+setInterval(actualizarTurnoBadge, 60000);
+setInterval(()=>{ if(isOnline) sincronizarPendientes(); }, 30000);
+iniciarApp(); // ← Punto de entrada: verifica emparejamiento
+
+</script>
+</body>
+</html>

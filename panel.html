@@ -1,0 +1,2709 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Panel Directivo | LUDOASSIST PRO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+:root {
+    --navy:#0A192F;--slate:#334155;--emerald:#10B981;--ruby:#EF4444;
+    --amber:#F59E0B;--light-bg:#F8FAFC;--white:#FFFFFF;--border-color:#CBD5E1;
+    --brand-accent:#0284C7;
+}
+/* ── PANTALLA DE EMPAREJAMIENTO (igual que escáner) ── */
+#screen-pair{position:fixed;inset:0;background:#0A192F;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;padding:2rem;gap:1.2rem;}
+#screen-pair.hidden{display:none;}
+/* ── PANTALLA LICENCIA SUSPENDIDA ── */
+#screen-suspendida{position:fixed;inset:0;background:#1a0a0a;display:none;
+  flex-direction:column;align-items:center;justify-content:center;
+  z-index:9998;padding:2rem;gap:1.2rem;text-align:center;}
+#screen-suspendida.show{display:flex;}
+.susp-icon{font-size:4rem;}
+.susp-title{font-size:1.5rem;font-weight:800;color:#FCA5A5;letter-spacing:1px;}
+.susp-msg{font-size:.9rem;color:rgba(255,200,200,.7);max-width:320px;line-height:1.6;}
+.susp-code{background:rgba(255,255,255,.06);border:1px solid rgba(255,100,100,.2);
+  border-radius:8px;padding:.7rem 1.2rem;font-size:.8rem;color:#FCA5A5;
+  font-weight:700;letter-spacing:1px;margin-top:.5rem;}
+.susp-whatsapp{background:#25D366;color:white;border:none;border-radius:8px;
+  padding:.8rem 1.5rem;font-size:.9rem;font-weight:700;cursor:pointer;
+  text-decoration:none;display:inline-block;margin-top:.8rem;}
+.pair-logo{font-size:3rem;text-align:center;}
+.pair-main-title{font-size:1.4rem;font-weight:700;color:var(--white);text-align:center;letter-spacing:1px;}
+.pair-sub{font-size:.7rem;color:var(--emerald);text-align:center;letter-spacing:2px;text-transform:uppercase;}
+.pair-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:1.4rem;width:100%;max-width:380px;}
+.pair-label{font-size:.7rem;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:.5rem;font-weight:700;}
+.pair-input{width:100%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:.85rem 1rem;color:var(--white);font-size:1.1rem;font-weight:700;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:all .3s;}
+.pair-input::placeholder{color:rgba(255,255,255,.3);letter-spacing:1px;font-size:.88rem;font-weight:400;text-transform:none;}
+.pair-input:focus{border-color:var(--emerald);background:rgba(255,255,255,.15);}
+.pair-btn{width:100%;padding:.95rem;background:var(--emerald);color:var(--navy);border:none;border-radius:8px;font-size:.95rem;font-weight:700;text-transform:uppercase;cursor:pointer;letter-spacing:1px;transition:all .3s;margin-top:.5rem;}
+.pair-btn:active{transform:scale(.97);}
+.pair-btn:disabled{background:var(--slate);color:rgba(255,255,255,.4);cursor:not-allowed;}
+.pair-error{color:var(--ruby);font-size:.8rem;text-align:center;font-weight:700;min-height:18px;margin-top:4px;}
+.pair-spinner{width:30px;height:30px;border:3px solid rgba(255,255,255,.2);border-top-color:var(--emerald);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto;}
+.pair-info{font-size:.7rem;color:rgba(255,255,255,.4);text-align:center;line-height:1.5;margin-top:.3rem;}
+.pair-success-icon{font-size:2.5rem;text-align:center;}
+.pair-success-name{color:var(--emerald);font-size:1rem;font-weight:700;text-align:center;}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Roboto',sans-serif;-webkit-tap-highlight-color:transparent;}
+body{background:var(--light-bg);color:var(--slate);display:flex;flex-direction:column;min-height:100vh;overflow-x:hidden;}
+header{background:var(--navy);color:var(--white);padding:1rem;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 6px -1px rgba(0,0,0,.1);z-index:10;}
+.brand-title{font-size:1.2rem;font-weight:700;letter-spacing:1px;}
+.brand-subtitle{font-size:.7rem;color:var(--emerald);text-transform:uppercase;letter-spacing:2px;}
+.audio-control{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);color:var(--white);padding:.5rem 1rem;border-radius:4px;cursor:pointer;font-size:.8rem;font-weight:bold;transition:all .3s;}
+.audio-control.active{background:var(--emerald);border-color:var(--emerald);color:var(--navy);}
+.view-container{flex:1;padding:1rem;display:none;flex-direction:column;gap:1rem;animation:fadeIn .3s ease-in-out;padding-bottom:90px;}
+.view-container.active{display:flex;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.panel-card{background:var(--white);padding:1.5rem;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.1);border-top:4px solid var(--brand-accent);margin-bottom:.5rem;transition:box-shadow .3s,border-color .3s;}
+.panel-danger{border-top:4px solid var(--ruby)!important;}
+.section-title{font-size:1rem;color:var(--navy);font-weight:700;margin-bottom:.8rem;text-transform:uppercase;border-bottom:1px solid var(--border-color);padding-bottom:.5rem;}
+.section-desc{font-size:.82rem;color:var(--slate);margin-bottom:1rem;line-height:1.4;}
+/* MONITOR */
+.today-panel{background:linear-gradient(135deg,var(--navy) 0%,#1E293B 100%);border-radius:10px;padding:1.2rem;color:var(--white);box-shadow:0 4px 6px rgba(0,0,0,.1);display:flex;flex-direction:column;gap:.8rem;border:2px solid transparent;transition:all .5s;}
+.today-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:.5rem;}
+.today-title{font-size:1rem;font-weight:700;color:var(--emerald);text-transform:uppercase;}
+.today-date{font-size:.8rem;opacity:.8;}
+.turno-btns{display:flex;gap:.6rem;flex-wrap:wrap;}
+.toggle-btn{background:transparent;border:1px solid var(--emerald);color:var(--emerald);padding:.4rem .8rem;border-radius:20px;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .3s;flex:1;min-width:80px;text-align:center;}
+.toggle-btn.active{background:var(--emerald);color:var(--navy);box-shadow:0 0 10px rgba(16,185,129,.5);}
+/* STATS GENERALES */
+.stats-generales{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;text-align:center;}
+.stat-box{background:rgba(255,255,255,.07);padding:.8rem .4rem;border-radius:8px;border:1px solid rgba(255,255,255,.1);}
+.stat-value{font-size:1.8rem;font-weight:700;line-height:1;margin-bottom:.3rem;}
+.stat-label{font-size:.62rem;text-transform:uppercase;letter-spacing:.8px;opacity:.75;}
+/* ACORDEONES DE GRUPOS */
+.grupos-container{display:flex;flex-direction:column;gap:.5rem;margin-top:.5rem;}
+.grupo-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:8px;overflow:hidden;cursor:pointer;}
+.grupo-header{display:flex;justify-content:space-between;align-items:center;padding:.7rem 1rem;}
+.grupo-nombre{font-size:.85rem;font-weight:700;color:#F1F5F9;}
+.grupo-meta{font-size:.72rem;margin-top:2px;color:#94A3B8;}
+.grupo-pct{font-size:1.1rem;font-weight:700;}
+/* Semáforo de colores por porcentaje */
+.pct-verde   {color:#10B981;}
+.pct-amarillo{color:#F59E0B;}
+.pct-rojo    {color:#EF4444;}
+.grupo-barra-wrap{height:5px;background:rgba(255,255,255,.08);}
+.grupo-barra-fill{height:100%;transition:width .5s ease;border-radius:0 3px 3px 0;}
+.barra-verde   {background:#10B981;}
+.barra-amarillo{background:#F59E0B;}
+.barra-rojo    {background:#EF4444;}
+.grupo-alumnos{display:none;border-top:1px solid rgba(255,255,255,.06);max-height:260px;overflow-y:auto;}
+.grupo-alumnos.open{display:block;}
+.alumno-row{display:flex;justify-content:space-between;align-items:center;padding:.45rem 1rem;border-bottom:1px solid rgba(255,255,255,.04);font-size:.78rem;}
+.alumno-nombre{color:#E2E8F0;font-weight:500;}
+/* Indicador sin pase de lista */
+.grupo-sin-datos{opacity:.65;}
+.grupo-sin-datos .grupo-nombre{color:#94A3B8;}
+/* Fix modo oscuro: forzar visibilidad en textos del monitor */
+body.dark .grupo-card{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18);}
+body.dark .grupo-nombre{color:#F1F5F9!important;}
+body.dark .grupo-meta{color:#94A3B8!important;}
+body.dark .alumno-nombre{color:#E2E8F0!important;}
+body.dark .grupo-sin-datos{opacity:.7;}
+.pill-mini{display:inline-block;padding:2px 7px;border-radius:8px;font-size:.65rem;font-weight:700;}
+.pm-verde{background:#065F46;color:#D1FAE5;}
+.pm-amarillo{background:#92400E;color:#FEF3C7;}
+.pm-rojo{background:#991B1B;color:#FEE2E2;}
+.pm-azul{background:#1E40AF;color:#DBEAFE;}
+.pm-gris{background:#374151;color:#E5E7EB;}
+/* FORMULARIOS */
+.filter-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.8rem;margin-bottom:.8rem;}
+.input-group{display:flex;flex-direction:column;margin-bottom:.4rem;}
+.input-group label{font-size:.72rem;font-weight:700;color:var(--slate);margin-bottom:.3rem;text-transform:uppercase;}
+.input-group input,.input-group select{padding:.55rem;border:1px solid var(--border-color);border-radius:4px;font-size:.9rem;color:var(--navy);background:var(--light-bg);outline:none;transition:all .3s;width:100%;}
+.input-group input:focus,.input-group select:focus{border-color:var(--brand-accent);background:var(--white);}
+.btn-primary{background:var(--brand-accent);color:var(--white);border:none;padding:.75rem 1.2rem;border-radius:4px;font-weight:700;cursor:pointer;width:100%;text-transform:uppercase;transition:background .3s,transform .1s;margin-top:8px;font-size:.85rem;}
+.btn-primary:active{background:var(--navy);transform:scale(.98);}
+.btn-primary:disabled{background:var(--slate);opacity:.5;cursor:not-allowed;}
+.btn-emerald{background:var(--emerald)!important;color:var(--navy)!important;}
+.btn-secondary{background:var(--slate)!important;color:var(--white)!important;}
+.btn-danger{background:var(--ruby)!important;color:var(--white)!important;}
+.glow-success{box-shadow:0 0 15px var(--emerald)!important;border-color:var(--emerald)!important;}
+/* TABLA HISTORIAL */
+.data-panel{background:var(--white);border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.1);overflow:hidden;margin-bottom:.5rem;border:2px solid transparent;transition:all .5s;}
+.dynamic-title-table{background:#F1F5F9;color:var(--navy);text-align:center;padding:.8rem;font-size:1rem;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--brand-accent);letter-spacing:1px;}
+.table-responsive{width:100%;overflow-x:auto;}
+table{width:100%;border-collapse:collapse;text-align:left;}
+th,td{padding:.75rem;border-bottom:1px solid #E2E8F0;white-space:nowrap;}
+th{background:#F8FAFC;font-size:.75rem;font-weight:700;text-transform:uppercase;color:var(--slate);position:sticky;top:0;}
+td{font-size:.88rem;color:var(--navy);}
+.status{padding:.25rem .7rem;border-radius:20px;font-size:.75rem;font-weight:700;display:inline-block;}
+.status.verde{background:#D1FAE5;color:#065F46;}.status.amarillo{background:#FEF3C7;color:#92400E;}
+.status.rojo{background:#FEE2E2;color:#991B1B;}.status.azul{background:#DBEAFE;color:#1E40AF;}
+/* ESTRUCTURA ESCOLAR */
+.estructura-nivel{background:#F1F5F9;border-radius:6px;padding:10px;margin-bottom:8px;border-left:3px solid var(--brand-accent);}
+.estructura-turno{font-size:.8rem;font-weight:700;color:var(--navy);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;}
+.grado-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;}
+.grado-lbl{font-size:.75rem;font-weight:700;color:var(--slate);min-width:55px;}
+.grupos-chips{display:flex;flex-wrap:wrap;gap:4px;flex:1;}
+.chip{display:inline-flex;align-items:center;gap:3px;background:var(--brand-accent);color:white;border-radius:12px;padding:2px 8px;font-size:.7rem;font-weight:700;cursor:pointer;}
+.chip-del{background:none;border:none;color:white;font-size:.8rem;cursor:pointer;padding:0;line-height:1;}
+.btn-add-grupo{background:rgba(2,132,199,.15);border:1px dashed var(--brand-accent);color:var(--brand-accent);border-radius:12px;padding:2px 8px;font-size:.7rem;font-weight:700;cursor:pointer;}
+.btn-add-turno{background:rgba(2,132,199,.1);border:1px dashed var(--brand-accent);color:var(--brand-accent);border-radius:4px;padding:4px 10px;font-size:.72rem;font-weight:700;cursor:pointer;width:100%;margin-top:6px;}
+/* LOGO */
+.logo-preview-box{width:80px;height:80px;border:1px solid var(--border-color);border-radius:8px;margin-top:8px;display:flex;align-items:center;justify-content:center;background:#F1F5F9;overflow:hidden;}
+.logo-preview-box img{max-width:100%;max-height:100%;object-fit:contain;}
+/* FILE */
+.file-drop-zone{border:2px dashed var(--border-color);background:var(--light-bg);padding:15px;border-radius:6px;text-align:center;transition:all .3s;margin-top:10px;}
+input[type="file"]{background:var(--white);padding:8px;border:1px solid var(--border-color);border-radius:4px;width:100%;color:var(--slate);margin-top:8px;font-family:'Roboto',sans-serif;}
+input[type="file"]::file-selector-button{background:var(--brand-accent);color:white;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;font-weight:bold;margin-right:8px;transition:.3s;}
+.format-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.68rem;font-weight:bold;margin-left:6px;}
+.badge-xlsx{background:#D1FAE5;color:#065F46;}.badge-csv{background:#DBEAFE;color:#1E40AF;}.badge-txt{background:#F3F4F6;color:#374151;}
+.progress-bar-container{width:100%;background:#E2E8F0;border-radius:20px;height:8px;margin-top:12px;overflow:hidden;display:none;}
+.progress-bar-fill{height:100%;background:var(--emerald);border-radius:20px;width:0%;transition:width .3s;}
+.error-report{background:#FFF7ED;border:1px solid #FED7AA;border-radius:6px;padding:8px;margin-top:8px;font-size:.75rem;color:#92400E;text-align:left;max-height:100px;overflow-y:auto;display:none;}
+.error-report ul{padding-left:14px;margin-top:4px;}
+/* Botones selector turno upload */
+.btn-turno-sel{background:#EFF6FF;border:1px solid #BFDBFE;color:#1E40AF;border-radius:6px;padding:.5rem;font-size:.72rem;font-weight:700;cursor:pointer;transition:all .25s;text-align:center;}
+.btn-turno-sel.active{background:#1E40AF;color:white;border-color:#1E40AF;}
+/* Botones grandes turno upload */
+.btn-turno-upload{background:rgba(255,255,255,.07);border:2px solid rgba(255,255,255,.15);color:rgba(255,255,255,.7);border-radius:8px;padding:.8rem;cursor:pointer;transition:all .25s;text-align:center;width:100%;}
+.btn-turno-upload:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3);}
+.btn-turno-upload.active-mat{background:rgba(251,191,36,.15);border-color:#F59E0B;color:#FCD34D;}
+.btn-turno-upload.active-vesp{background:rgba(124,58,237,.2);border-color:#7C3AED;color:#C4B5FD;}
+/* Chip preview grupo */
+.chip-preview{background:var(--emerald);color:white;border-radius:10px;padding:2px 8px;font-size:.68rem;font-weight:700;}
+/* NAV */
+nav{background:var(--white);display:flex;justify-content:space-around;padding:8px 0;border-top:1px solid var(--border-color);padding-bottom:max(8px,env(safe-area-inset-bottom));position:fixed;bottom:0;width:100%;z-index:20;box-shadow:0 -1px 3px rgba(0,0,0,.05);}
+.nav-btn{background:none;border:none;color:var(--slate);font-size:.6rem;text-transform:uppercase;letter-spacing:.8px;display:flex;flex-direction:column;align-items:center;cursor:pointer;flex:1;transition:all .3s;font-weight:bold;padding:4px;}
+.nav-btn.active{color:var(--brand-accent);}
+.nav-icon{font-size:1.3rem;margin-bottom:3px;}
+#lblStatusFirebase{font-size:.75rem;text-align:center;padding:.4rem;color:var(--slate);margin-bottom:28px;}
+.ludomente-sello{text-align:center;font-size:.65rem;color:var(--slate);opacity:.5;padding-bottom:65px;font-weight:bold;letter-spacing:2px;}
+.loading-modal{display:none;position:fixed;z-index:9999;left:0;top:0;width:100%;height:100%;background:rgba(10,25,47,.85);align-items:center;justify-content:center;backdrop-filter:blur(5px);}
+.modal-content{background:var(--white);padding:2rem;border-radius:12px;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,.3);border-top:5px solid var(--emerald);width:85%;max-width:380px;}
+#modalText{margin-top:12px;font-weight:bold;color:var(--navy);font-size:1rem;}
+.spinner{border:4px solid #f3f3f3;border-top:4px solid var(--emerald);border-radius:50%;width:46px;height:46px;animation:spin 1s linear infinite;margin:0 auto;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── MODO OSCURO ── */
+body.dark{--light-bg:#0F172A;--white:#1E293B;--border-color:#334155;--slate:#94A3B8;--navy:#E2E8F0;}
+body.dark .panel-card{background:#1E293B;box-shadow:0 1px 3px rgba(0,0,0,.4);}
+body.dark .input-group input,body.dark .input-group select{background:#0F172A;color:#E2E8F0;border-color:#334155;}
+body.dark .data-panel{background:#1E293B;}
+body.dark th{background:#0F172A;color:#94A3B8;}
+body.dark td{color:#E2E8F0;}
+body.dark .dynamic-title-table{background:#0F172A;color:#E2E8F0;}
+body.dark .estructura-nivel{background:#0F172A;}
+body.dark .file-drop-zone{background:#0F172A;border-color:#334155;}
+body.dark input[type="file"]{background:#1E293B;color:#94A3B8;}
+body.dark nav{background:#1E293B;border-top-color:#334155;}
+body.dark .nav-btn{color:#64748B;}
+body.dark #lblStatusFirebase{color:#475569;}
+.dark-toggle{background:none;border:1px solid rgba(255,255,255,.25);color:var(--white);padding:.35rem .6rem;border-radius:4px;cursor:pointer;font-size:.75rem;font-weight:700;transition:all .3s;}
+.dark-toggle:hover{background:rgba(255,255,255,.1);}
+/* Botones exportación historial */
+.btn-export-hist{background:var(--slate);color:white;border:none;padding:.6rem .4rem;border-radius:5px;font-size:.7rem;font-weight:700;cursor:pointer;transition:all .25s;text-align:center;width:100%;}
+.btn-export-hist:hover{opacity:.85;}
+.btn-export-grupo{background:#1E40AF;}
+.btn-export-xlsx2{background:#065F46;}
+.btn-export-hist:disabled{opacity:.4;cursor:not-allowed;}
+
+/* ── ALERTAS DE FALTAS ── */
+.alerta-faltas{background:linear-gradient(135deg,#7F1D1D,#991B1B);border-radius:8px;padding:10px 14px;margin-bottom:.5rem;}
+.alerta-titulo{font-size:.78rem;font-weight:700;color:#FEE2E2;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+.alerta-item{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:.8rem;}
+.alerta-item:last-child{border-bottom:none;}
+.alerta-nombre{color:#FECACA;font-weight:700;}
+.alerta-pct{background:#DC2626;color:white;border-radius:8px;padding:1px 7px;font-size:.68rem;font-weight:700;}
+.alerta-empty{font-size:.78rem;color:rgba(255,255,255,.5);text-align:center;padding:8px 0;}
+
+/* ── REPORTE PDF BOTÓN ── */
+.btn-reporte{background:linear-gradient(135deg,#7C3AED,#6D28D9);color:white;border:none;padding:.7rem 1rem;border-radius:6px;font-weight:700;cursor:pointer;width:100%;text-transform:uppercase;font-size:.82rem;margin-top:8px;transition:all .3s;}
+.btn-reporte:active{transform:scale(.98);}
+
+/* ── EXPORTAR PADRÓN EXCEL ── */
+.btn-export-xlsx{background:linear-gradient(135deg,#065F46,#047857);color:white;border:none;padding:.7rem 1rem;border-radius:6px;font-weight:700;cursor:pointer;width:100%;text-transform:uppercase;font-size:.82rem;margin-top:8px;transition:all .3s;}
+
+/* ── GRÁFICA ── */
+.grafica-wrap{background:var(--white);border-radius:8px;padding:1rem;margin-top:.5rem;border:1px solid var(--border-color);}
+.grafica-titulo{font-size:.78rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.5rem;}
+body.dark .grafica-wrap{background:#1E293B;border-color:#334155;}
+body.dark .grafica-titulo{color:#E2E8F0;}
+
+    </style>
+</head>
+<body style="background-color:#0A192F;">
+
+<!-- ════════════════════════════════════════════════════
+     PANTALLA DE EMPAREJAMIENTO
+     Se muestra la primera vez o si no hay licencia guardada.
+     El director escribe el código que Jesús le proporcionó.
+════════════════════════════════════════════════════ -->
+<div id="screen-pair">
+    <div class="pair-logo">🏫</div>
+    <div>
+        <div class="pair-main-title">LUDOASSIST PRO</div>
+        <div class="pair-sub">Panel Directivo Institucional</div>
+    </div>
+
+    <div class="pair-card" id="pair-form-section">
+        <div class="pair-label">Código de Licencia</div>
+        <input class="pair-input" type="text" id="pair-input"
+               placeholder="Ej: EST17-CAM-2026"
+               maxlength="25"
+               autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false">
+        <div class="pair-error" id="pair-error"></div>
+        <button class="pair-btn" id="pair-btn" onclick="window.emparejarPanel()">
+            Activar Panel
+        </button>
+        <div class="pair-info" style="margin-top:.8rem;">
+            El código de licencia lo proporciona el administrador<br>
+            de LudoAssist al dar de alta su plantel.
+        </div>
+    </div>
+
+    <div id="pair-loading" style="display:none;text-align:center;">
+        <div class="pair-spinner"></div>
+        <div style="color:rgba(255,255,255,.6);font-size:.82rem;margin-top:.8rem;" id="pair-loading-text">Verificando licencia...</div>
+    </div>
+
+    <div id="pair-success-section" style="display:none;text-align:center;">
+        <div class="pair-success-icon">✅</div>
+        <div class="pair-success-name" id="pair-school-name" style="margin-top:.5rem;">—</div>
+        <div style="color:rgba(255,255,255,.5);font-size:.78rem;margin-top:.3rem;">Licencia válida — Acceso concedido</div>
+    </div>
+</div>
+
+<!-- PANTALLA LICENCIA SUSPENDIDA -->
+<div id="screen-suspendida">
+    <div class="susp-icon">🔒</div>
+    <div class="susp-title">LICENCIA SUSPENDIDA</div>
+    <div class="susp-msg">
+        El acceso a este sistema ha sido suspendido.<br>
+        Para reactivar su licencia comuníquese con el administrador de LudoAssist.
+    </div>
+    <div class="susp-code">Código de plantel: <span id="susp-codigo">—</span></div>
+    <a href="https://wa.me/529811244870?text=Hola,%20necesito%20reactivar%20mi%20licencia%20LudoAssist"
+       class="susp-whatsapp" target="_blank">
+        📱 Contactar por WhatsApp
+    </a>
+</div>
+
+<header id="app-header">
+    <div>
+        <div class="brand-title">LUDOASSIST PRO</div>
+        <div class="brand-subtitle" id="hdr-subtitle">Panel Directivo Institucional</div>
+    </div>
+    <div style="display:flex;gap:6px;align-items:center;">
+        <button class="dark-toggle" id="btnDark" onclick="window.toggleDark()" title="Modo oscuro">🌙</button>
+        <button class="audio-control" id="btnAudio">Audio: OFF</button>
+    </div>
+</header>
+
+<!-- ════════════════════════════════════════════════════
+     MONITOR
+════════════════════════════════════════════════════ -->
+<main id="view-monitor" class="view-container active">
+
+    <section class="today-panel" id="panel-hoy">
+        <div class="today-header">
+            <div>
+                <div class="today-title">Radiografía en Tiempo Real</div>
+                <div style="font-size:.72rem;opacity:.7;margin-top:2px;" id="txtDinamicoBienvenida">Cargando...</div>
+            </div>
+            <div class="today-date" id="lblFechaHoy">—</div>
+        </div>
+
+        <!-- Botones de turno (se generan dinámicamente) -->
+        <div class="turno-btns" id="turno-btns-monitor"></div>
+
+        <!-- Stats generales -->
+        <div class="stats-generales">
+            <div class="stat-box">
+                <div class="stat-value" id="valTotal">--</div>
+                <div class="stat-label">Total Alumnos</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="valHoyAsistencias">--</div>
+                <div class="stat-label">Presentes</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="valHoyPorcentaje" style="color:var(--emerald);">--%</div>
+                <div class="stat-label">Asistencia</div>
+            </div>
+        </div>
+
+        <!-- Acordeones por grupo -->
+        <div class="grupos-container" id="grupos-container"></div>
+    </section>
+
+    <!-- ALERTAS DE FALTAS -->
+    <section class="alerta-faltas" id="panel-alertas" style="display:none;">
+        <div class="alerta-titulo">🚨 Alumnos con Riesgo de Deserción (&gt;20% faltas)</div>
+        <div id="lista-alertas"><div class="alerta-empty">Calculando...</div></div>
+    </section>
+
+    <!-- GRÁFICA HISTÓRICA -->
+    <div class="grafica-wrap">
+        <div class="grafica-titulo">📈 Tendencia de Asistencia — Últimas 4 Semanas</div>
+        <canvas id="grafica-asistencia" height="160"></canvas>
+        <p style="font-size:.68rem;color:var(--slate);text-align:center;margin-top:4px;" id="grafica-estado">Cargando datos históricos...</p>
+    </div>
+
+    <!-- BOTÓN REPORTE PDF -->
+    <button class="btn-reporte" onclick="window.generarReportePDF()">
+        📄 Generar Reporte Semanal PDF
+    </button>
+
+</main>
+
+<!-- ════════════════════════════════════════════════════
+     HISTORIAL
+════════════════════════════════════════════════════ -->
+<main id="view-historial" class="view-container">
+    <section class="panel-card">
+        <div class="section-title">Análisis Histórico de Asistencia</div>
+        <div class="filter-grid">
+            <div class="input-group"><label>Fecha Inicio</label><input type="date" id="dateStart"></div>
+            <div class="input-group"><label>Fecha Término</label><input type="date" id="dateEnd"></div>
+            <div class="input-group"><label>Turno</label><select id="selectTurnoHist"></select></div>
+        </div>
+        <!-- Fila 2: Grado, Grupo, Alumno -->
+        <div class="filter-grid">
+            <div class="input-group"><label>Grado</label><select id="selectGradoHist" onchange="window.histActualizarGrupos()"></select></div>
+            <div class="input-group"><label>Grupo</label><select id="selectGrupoHist" onchange="window.histActualizarAlumnos()"></select></div>
+            <div class="input-group"><label>Alumno</label><select id="selectAlumnoHist"><option value="Todos">Todos</option></select></div>
+        </div>
+        <button class="btn-primary" id="btnConsultar" style="margin-top:8px;">🔍 Consultar Nube</button>
+
+        <!-- Botones de exportación — aparecen solo tras consultar -->
+        <div id="export-btns" style="display:none;margin-top:8px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
+            <button class="btn-export-hist" id="btn-exp-individual"
+                    onclick="window.generarReporteIndividualPDF()"
+                    title="Solo disponible cuando se selecciona un alumno específico">
+                👤 PDF Individual
+            </button>
+            <button class="btn-export-hist btn-export-grupo"
+                    onclick="window.generarReporteGrupoPDF()"
+                    title="Solo disponible cuando se selecciona un grupo específico">
+                👥 PDF Grupo
+            </button>
+            <button class="btn-export-hist btn-export-xlsx2"
+                    onclick="window.descargarHistorialExcel()">
+                📊 Excel
+            </button>
+        </div>
+    </section>
+
+    <section class="data-panel" id="panel-tabla">
+        <div id="tituloTablaDinamico" class="dynamic-title-table">Esperando Parámetros</div>
+        <!-- Contador de registros -->
+        <div id="contador-registros" style="display:none;font-size:.72rem;color:var(--slate);text-align:center;padding:.4rem;border-bottom:1px solid var(--border-color);"></div>
+        <div class="table-responsive">
+            <table>
+                <thead><tr><th>Fecha</th><th>Alumno</th><th>Hora</th><th>Estatus</th></tr></thead>
+                <tbody id="tableBody"><tr><td colspan="4" style="text-align:center;color:#94A3B8;padding:2rem;">Defina filtros y consulte.</td></tr></tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<!-- ════════════════════════════════════════════════════
+     PADRÓN
+════════════════════════════════════════════════════ -->
+<main id="view-directorio" class="view-container">
+    <section class="panel-card">
+        <div class="section-title">Padrón Activo de Alumnos</div>
+        <div class="filter-grid">
+            <div class="input-group"><label>Turno</label><select id="dir-turno" onchange="window.dirActualizarGrados()"></select></div>
+            <div class="input-group"><label>Grado</label><select id="dir-grado" onchange="window.dirActualizarGrupos()"></select></div>
+            <div class="input-group"><label>Grupo</label><select id="dir-grupo"></select></div>
+        </div>
+        <button class="btn-primary btn-emerald" onclick="window.consultarDirectorio()">Consultar Padrón Escolar</button>
+        <button class="btn-export-xlsx" onclick="window.exportarPadronExcel()">📊 Exportar Padrón Completo a Excel</button>
+    </section>
+    <section class="data-panel" id="panel-tabla-directorio">
+        <div id="tituloDirectorioDinamico" class="dynamic-title-table">Esperando Parámetros</div>
+        <div class="table-responsive">
+            <table>
+                <thead><tr><th>#</th><th>Nombre del Alumno</th><th>Acción</th></tr></thead>
+                <tbody id="tableBodyDirectorio"><tr><td colspan="3" style="text-align:center;color:#94A3B8;padding:2rem;">Seleccione grupo y presione Consultar.</td></tr></tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<!-- ════════════════════════════════════════════════════
+     GAFETES
+════════════════════════════════════════════════════ -->
+<main id="view-credenciales" class="view-container">
+    <section class="panel-card">
+        <div class="section-title">Generador de Credenciales Oficiales</div>
+        <div class="filter-grid">
+            <div class="input-group"><label>Turno</label><select id="gen-turno" onchange="window.genActualizarGrados()"></select></div>
+            <div class="input-group"><label>Grado</label><select id="gen-grado" onchange="window.genActualizarGrupos()"></select></div>
+            <div class="input-group"><label>Grupo</label><select id="gen-grupo"></select></div>
+        </div>
+        <div class="input-group" style="margin-top:8px;"><label>Nombre Completo del Alumno</label><input type="text" id="gen-nombre" placeholder="Ej. GARCÍA LÓPEZ JUAN"></div>
+        <button class="btn-primary" onclick="window.createQR()">Generar y Subir Alumno a la Nube</button>
+        <p style="font-size:.72rem;color:var(--slate);margin-top:12px;font-weight:bold;text-transform:uppercase;letter-spacing:1px;">Exportar Lote del Grupo:</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;">
+            <button class="btn-primary btn-secondary" style="font-size:.78rem;" onclick="window.exportLoteMasivo('word')">📄 Word</button>
+            <button class="btn-primary btn-secondary" style="font-size:.78rem;" onclick="window.exportLoteMasivo('pdf')">📕 PDF</button>
+            <button class="btn-primary btn-secondary" style="font-size:.78rem;" onclick="window.exportLoteMasivo('imagenes')">🖼️ Imágenes ZIP</button>
+            <button class="btn-primary btn-secondary" style="font-size:.78rem;" onclick="window.exportLoteMasivo('print')">🖨️ Imprimir</button>
+        </div>
+        <div id="qr-output" style="display:none;margin-top:12px;"></div>
+    </section>
+</main>
+
+<!-- ════════════════════════════════════════════════════
+     CONTROL / CONFIGURACIÓN
+════════════════════════════════════════════════════ -->
+<main id="view-config" class="view-container">
+
+    <!-- PERFIL -->
+    <section class="panel-card">
+        <div class="section-title">Perfil Institucional</div>
+        <div class="input-group"><label>Nombre Oficial de la Escuela</label><input type="text" id="conf-nombre-escuela" placeholder="Ej. Escuela Secundaria Técnica No. 17"></div>
+        <div class="filter-grid" style="margin-top:8px;">
+            <div class="input-group"><label>Clave C.C.T. / REVOE</label><input type="text" id="conf-cct" placeholder="Ej. 04DST0017H"></div>
+            <div class="input-group">
+                <label>Nivel Educativo</label>
+                <select id="conf-nivel" onchange="window.onNivelChange()">
+                    <option value="Preescolar">Preescolar</option>
+                    <option value="Primaria">Primaria</option>
+                    <option value="Secundaria" selected>Secundaria</option>
+                    <option value="Media Superior">Media Superior (Bachillerato)</option>
+                    <option value="Superior">Superior (Universidad)</option>
+                </select>
+            </div>
+        </div>
+        <div class="filter-grid">
+            <div class="input-group"><label>Director / Responsable</label><input type="text" id="conf-director" placeholder="Ej. Jesús Rodríguez García"></div>
+            <div class="input-group"><label>Zona Escolar / Sector</label><input type="text" id="conf-zona" placeholder="Ej. Zona 03"></div>
+        </div>
+        <div class="input-group" style="margin-top:10px;">
+            <label>Logotipo Escolar (Opcional)</label>
+            <input type="file" id="conf-logo-file" accept="image/*" onchange="window.handleLogoUpload(this)">
+            <div class="logo-preview-box"><img id="conf-logo-preview" src="" alt="" style="display:none;"><span id="conf-logo-text" style="font-size:.7rem;color:#94A3B8;">Sin Logo</span></div>
+        </div>
+        <button class="btn-primary" id="btnGuardarPerfil" onclick="window.savePerfilInstitucional()" style="margin-top:14px;">Guardar Perfil Institucional</button>
+    </section>
+
+    <!-- ESTRUCTURA ESCOLAR PERSONALIZABLE -->
+    <section class="panel-card">
+        <div class="section-title">Estructura Escolar Personalizable</div>
+        <div class="section-desc">Configure exactamente qué turnos, grados y grupos existen en su plantel. Esta estructura alimenta todo el sistema: monitor, padrón, gafetes y escáner.</div>
+
+        <div id="estructura-editor">
+            <!-- Se genera dinámicamente según el nivel seleccionado -->
+        </div>
+
+        <button class="btn-primary btn-emerald" onclick="window.guardarEstructura()" style="margin-top:10px;">💾 Guardar Estructura Escolar</button>
+    </section>
+
+    <!-- POLÍTICAS DE HORARIO EXPANDIDAS -->
+    <section class="panel-card">
+        <div class="section-title">Políticas de Acceso y Reloj Inteligente</div>
+        <div class="section-desc">Configure los horarios exactos de cada turno. El escáner usará estos datos en tiempo real para calcular asistencia, retardos y la zona entre turnos.</div>
+
+        <!-- MATUTINO -->
+        <div style="background:#F0F9FF;border-left:3px solid var(--brand-accent);border-radius:0 6px 6px 0;padding:10px 12px;margin-bottom:10px;">
+            <div style="font-size:.75rem;font-weight:700;color:var(--brand-accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">🌅 Turno Matutino</div>
+            <div class="filter-grid" style="margin-bottom:0;">
+                <div class="input-group" style="margin-bottom:0;">
+                    <label>Apertura de puertas</label>
+                    <input type="time" id="conf-mat-apertura" value="06:57"
+                           title="Minutos antes de la hora oficial en que se permite la entrada">
+                </div>
+                <div class="input-group" style="margin-bottom:0;">
+                    <label>Límite sin retardo</label>
+                    <input type="time" id="conf-matutino" value="07:00"
+                           title="A partir de este minuto se registra retardo">
+                </div>
+                <div class="input-group" style="margin-bottom:0;">
+                    <label>Hora de salida</label>
+                    <input type="time" id="conf-mat-salida" value="13:30"
+                           title="Fin del turno matutino — inicio de zona entre turnos">
+                </div>
+            </div>
+        </div>
+
+        <!-- VESPERTINO -->
+        <div style="background:#F5F3FF;border-left:3px solid #7C3AED;border-radius:0 6px 6px 0;padding:10px 12px;margin-bottom:10px;">
+            <div style="font-size:.75rem;font-weight:700;color:#7C3AED;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">🌆 Turno Vespertino</div>
+            <div class="filter-grid" style="margin-bottom:0;">
+                <div class="input-group" style="margin-bottom:0;">
+                    <label>Apertura de puertas</label>
+                    <input type="time" id="conf-vesp-apertura" value="13:43"
+                           title="Minutos antes en que se permite la entrada al vespertino">
+                </div>
+                <div class="input-group" style="margin-bottom:0;">
+                    <label>Entrada oficial</label>
+                    <input type="time" id="conf-vespertino" value="13:45"
+                           title="Hora oficial de inicio del turno vespertino">
+                </div>
+                <div class="input-group" style="margin-bottom:0;">
+                    <label>Límite sin retardo</label>
+                    <input type="time" id="conf-vesp-retardo" value="14:01"
+                           title="A partir de este minuto se registra retardo en el vespertino">
+                </div>
+            </div>
+        </div>
+
+        <!-- INDICADOR VISUAL ZONA ENTRE TURNOS -->
+        <div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;padding:8px 12px;margin-bottom:10px;font-size:.75rem;color:#92400E;">
+            <strong>⚠️ Zona entre turnos:</strong> <span id="lbl-zona-turnos">—</span>
+            <br><em>En este intervalo el escáner muestra aviso de espera.</em>
+        </div>
+
+        <button class="btn-primary btn-emerald" onclick="window.savePoliticasAcceso()">💾 Guardar Políticas de Tiempo</button>
+    </section>
+
+    <!-- CARGA MASIVA -->
+    <section class="panel-card" id="tarjeta-csv">
+        <div class="section-title">Carga Masiva de Matrícula</div>
+
+        <!-- PASO 1: ELEGIR TURNO — obligatorio antes de subir -->
+        <div style="background:linear-gradient(135deg,#0A192F,#1E293B);border-radius:8px;padding:14px;margin-bottom:12px;">
+            <p style="font-size:.8rem;font-weight:700;color:#10B981;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Paso 1 — ¿De qué turno es la lista?</p>
+            <p style="font-size:.7rem;color:rgba(255,255,255,.6);margin-bottom:10px;">Seleccione el turno ANTES de subir el archivo. Todos los alumnos del archivo se asignarán a este turno.</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                <button id="btn-turno-mat" class="btn-turno-upload" onclick="window.selTurnoUpload('Matutino')">
+                    <div style="font-size:1.4rem;">☀️</div>
+                    <div style="font-size:.85rem;font-weight:700;margin-top:4px;">MATUTINO</div>
+                </button>
+                <button id="btn-turno-vesp" class="btn-turno-upload" onclick="window.selTurnoUpload('Vespertino')">
+                    <div style="font-size:1.4rem;">🌆</div>
+                    <div style="font-size:.85rem;font-weight:700;margin-top:4px;">VESPERTINO</div>
+                </button>
+            </div>
+            <div id="lbl-turno-seleccionado" style="text-align:center;margin-top:8px;font-size:.75rem;color:rgba(255,255,255,.4);">
+                Ningún turno seleccionado
+            </div>
+        </div>
+
+        <!-- PASO 2: DESCARGAR PLANTILLA -->
+        <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:6px;padding:12px;margin-bottom:12px;">
+            <p style="font-size:.8rem;font-weight:700;color:#065F46;margin-bottom:4px;">Paso 2 — ¿No tiene el formato correcto?</p>
+            <p style="font-size:.7rem;color:#047857;line-height:1.5;margin-bottom:8px;">
+                Descargue la plantilla oficial de LudoAssist. Solo necesita copiar y pegar los nombres de sus alumnos en las columnas correspondientes. La plantilla ya tiene los encabezados correctos.
+            </p>
+            <button class="btn-primary btn-emerald" style="margin-top:0;font-size:.78rem;" onclick="window.descargarPlantilla()">
+                📥 Descargar Plantilla Excel (.xlsx)
+            </button>
+        </div>
+
+        <!-- PASO 3: SUBIR ARCHIVO -->
+        <div style="background:#F8FAFC;border:2px dashed var(--border-color);border-radius:6px;padding:14px;margin-bottom:10px;">
+            <p style="font-weight:700;color:var(--navy);margin-bottom:4px;font-size:.82rem;">Paso 3 — Subir archivo con la lista</p>
+            <p style="font-size:.7rem;color:var(--slate);margin-bottom:8px;line-height:1.5;">
+                Formatos aceptados: <span class="format-badge badge-xlsx">.xlsx</span> <span class="format-badge badge-csv">.csv</span> <span class="format-badge badge-txt">.txt</span><br>
+                Columnas requeridas: <code>Grado | Grupo | Nombre Completo</code> (el turno se toma del Paso 1)
+            </p>
+            <input type="file" id="csv-file-input" accept=".xlsx,.xls,.csv,.txt" onchange="window.handleArchivoUniversal(this)">
+            <div id="csv-file-name" style="margin-top:8px;font-size:.78rem;color:var(--brand-accent);font-weight:bold;"></div>
+        </div>
+
+        <!-- VISTA PREVIA -->
+        <div id="preview-carga" style="display:none;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:6px;padding:10px;margin-bottom:8px;">
+            <p style="font-size:.75rem;font-weight:700;color:#065F46;margin-bottom:6px;" id="preview-titulo">Vista previa:</p>
+            <div id="preview-grupos" style="display:flex;flex-wrap:wrap;gap:5px;"></div>
+        </div>
+
+        <p id="lbl-validador-csv" style="text-align:center;font-size:.82rem;font-weight:bold;color:var(--emerald);margin-top:6px;display:none;"></p>
+        <div id="reporte-errores" class="error-report"><strong>⚠️ Filas omitidas:</strong><ul id="lista-errores"></ul></div>
+        <div class="progress-bar-container" id="progressContainer"><div class="progress-bar-fill" id="progressBar"></div></div>
+        <p id="lbl-progreso" style="text-align:center;font-size:.72rem;color:var(--slate);margin-top:4px;display:none;"></p>
+
+        <!-- PASO 4: INYECTAR -->
+        <button class="btn-primary" id="btnProcesarCSV" style="background:var(--navy);margin-top:8px;" onclick="window.processAndUploadDirectory()" disabled>
+            ☁️ Paso 4: Inyectar a la Nube
+        </button>
+    </section>
+
+    <!-- ZONA RIESGO -->
+    <section class="panel-card panel-danger">
+        <div class="section-title" style="color:var(--ruby);">Zona de Riesgo</div>
+        <div style="display:grid;gap:8px;">
+            <button class="btn-primary btn-danger" onclick="window.limpiarAsistencias()">🗑️ Purgar Historial de Asistencias</button>
+            <button class="btn-primary btn-danger" onclick="window.limpiarDirectorio()">🗑️ Borrar Padrón de Alumnos</button>
+            <button class="btn-primary btn-danger" onclick="window.cambiarPinSeguridad()">🔑 Cambiar Contraseña Directiva</button>
+        </div>
+    </section>
+
+    <div class="ludomente-sello">POWERED BY LUDOMENTE STUDIO © 2026</div>
+</main>
+
+<!-- Modal -->
+<div id="loadingModal" class="loading-modal">
+    <div class="modal-content">
+        <div class="spinner" id="spinnerCarga"></div>
+        <div id="modalText">Procesando...</div>
+        <div id="modalSubText" style="font-size:.78rem;color:#64748B;margin-top:8px;line-height:1.4;">Por favor espere.</div>
+        <button id="btnCerrarModal" class="btn-primary btn-danger" style="display:none;margin-top:12px;" onclick="document.getElementById('loadingModal').style.display='none'">Cerrar</button>
+    </div>
+</div>
+
+<div id="lblStatusFirebase">Inicializando...</div>
+
+<nav>
+    <button class="nav-btn active" id="tab-monitor" onclick="window.switchTab('monitor',this)"><span class="nav-icon">📊</span>Monitor</button>
+    <button class="nav-btn" id="tab-historial" onclick="window.switchTab('historial',this)"><span class="nav-icon">📋</span>Historial</button>
+    <button class="nav-btn" id="tab-directorio" onclick="window.switchTab('directorio',this)"><span class="nav-icon">👥</span>Padrón</button>
+    <button class="nav-btn" id="tab-credenciales" onclick="window.switchTab('credenciales',this)"><span class="nav-icon">🪪</span>Gafetes</button>
+    <button class="nav-btn" id="tab-config" onclick="window.switchTab('config',this)"><span class="nav-icon">⚙️</span>Control</button>
+</nav>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+
+<!-- Puente global: expone funciones del módulo al onclick del HTML -->
+<script>
+// Estas funciones actúan como puente hasta que el módulo las sobreescriba
+window.emparejarPanel = function() {
+    // Si el módulo ya cargó, usar la versión real
+    if (window._emparejarPanelReal) {
+        window._emparejarPanelReal();
+    } else {
+        // Módulo aún cargando — esperar y reintentar
+        setTimeout(window.emparejarPanel, 200);
+    }
+};
+</script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+import { getDatabase, ref, onValue, get, set, push, remove, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+// ══════════════════════════════════════════════════════
+// 1. FIREBASE
+// ══════════════════════════════════════════════════════
+const firebaseConfig = {
+    apiKey:"AIzaSyD_sJOOY4wQY_473JGj0FXGHm2PzHMC2u0",
+    authDomain:"ludoasistencia.firebaseapp.com",
+    databaseURL:"https://ludoasistencia-default-rtdb.firebaseio.com",
+    projectId:"ludoasistencia",
+    storageBucket:"ludoasistencia.firebasestorage.app",
+    messagingSenderId:"738361802611",
+    appId:"1:738361802611:web:cb13956f002a0e74844f06"
+};
+const app = initializeApp(firebaseConfig);
+const db  = getDatabase(app);
+
+// ══════════════════════════════════════════════════════
+// EMPAREJAMIENTO DEL PANEL
+// Prioridad para obtener el ID:
+// 1. Parámetro ?codigo=est17 en la URL (para links de WhatsApp)
+// 2. localStorage (para aperturas directas posteriores)
+// 3. Pantalla de ingreso manual
+// ══════════════════════════════════════════════════════
+const SK_LICENCIA = 'ludo_panel_v1_licencia';
+
+// Leer código de la URL si viene como parámetro
+function getCodigoDeURL() {
+    try {
+        const params = new URLSearchParams(window.location.search);
+        return params.get('codigo') || params.get('id') || '';
+    } catch(e) { return ''; }
+}
+
+const codigoURL = getCodigoDeURL();
+let ID = codigoURL || localStorage.getItem(SK_LICENCIA) || '';
+
+// Si viene en la URL, guardarlo en localStorage para la próxima vez
+if (codigoURL) {
+    try { localStorage.setItem(SK_LICENCIA, codigoURL); } catch(e) {}
+}
+
+// Referencias Firebase (se inicializan al conocer el ID)
+let asistenciasRef, configRef, directorioRef, seguridadRef, estructuraRef;
+
+function inicializarRefs() {
+    asistenciasRef = ref(db, `escuelas/${ID}/asistencias`);
+    configRef      = ref(db, `escuelas/${ID}/configuracion`);
+    directorioRef  = ref(db, `escuelas/${ID}/directorio`);
+    seguridadRef   = ref(db, `escuelas/${ID}/configuracion/seguridad/pin`);
+    estructuraRef  = ref(db, `escuelas/${ID}/configuracion/estructura`);
+}
+
+// Iniciar panel: verificar licencia o pedir código
+async function iniciarPanel() {
+    if (ID) {
+        try {
+            const snap = await get(ref(db, `escuelas/${ID}/configuracion/perfil`));
+            if (snap.exists()) {
+                ocultarPantallaPair();
+                return;
+            }
+            // Código no válido en Firebase — limpiar y pedir de nuevo
+            try { localStorage.removeItem(SK_LICENCIA); } catch(e) {}
+            ID = '';
+        } catch(e) {
+            // Sin internet — si tenemos ID confiar en él y entrar
+            if (ID) {
+                console.warn("Sin conexión — usando licencia en caché:", ID);
+                ocultarPantallaPair();
+                return;
+            }
+        }
+    }
+    // Sin ID válido → mostrar pantalla de emparejamiento
+}
+
+// Función real del módulo
+window._emparejarPanelReal = async function() {
+    const input     = document.getElementById('pair-input');
+    const errEl     = document.getElementById('pair-error');
+    const loadingEl = document.getElementById('pair-loading');
+    const formEl    = document.getElementById('pair-form-section');
+
+    const codigoRaw = input.value.trim().replace(/\s+/g, '');
+    errEl.textContent = '';
+    if (!codigoRaw) { errEl.textContent = 'Ingrese el código de licencia.'; return; }
+
+    formEl.style.display   = 'none';
+    loadingEl.style.display = 'block';
+    document.getElementById('pair-loading-text').textContent = `Verificando "${codigoRaw}"...`;
+
+    // Probar variantes: tal cual, minúsculas, mayúsculas
+    const variantes = [codigoRaw, codigoRaw.toLowerCase(), codigoRaw.toUpperCase()];
+    let codigoValido = '', perfilData = null;
+
+    for (const cod of variantes) {
+        try {
+            const snap = await get(ref(db, `escuelas/${cod}/configuracion/perfil`));
+            if (snap && snap.exists()) {
+                codigoValido = cod;
+                perfilData   = snap.val();
+                break;
+            }
+        } catch(e) { /* continuar con siguiente variante */ }
+    }
+
+    if (codigoValido) {
+        // Código válido
+        ID = codigoValido;
+        try { localStorage.setItem(SK_LICENCIA, ID); } catch(e) {}
+        const nombre = perfilData.nombreEscuela || ID;
+        loadingEl.style.display = 'none';
+        document.getElementById('pair-success-section').style.display = 'block';
+        document.getElementById('pair-school-name').textContent        = nombre;
+        setTimeout(() => ocultarPantallaPair(), 1600);
+    } else {
+        // Código no encontrado
+        loadingEl.style.display = 'none';
+        formEl.style.display    = 'block';
+        errEl.textContent = '❌ Código no válido. Verifique con su administrador.';
+        input.value = ''; input.focus();
+    }
+};
+
+async function ocultarPantallaPair() {
+    document.getElementById('screen-pair').classList.add('hidden');
+    document.body.style.backgroundColor = '';
+    inicializarRefs();
+
+    // ── VERIFICAR LICENCIA ACTIVA ──
+    // Si activa === false, mostrar pantalla de suspensión
+    try {
+        const snapActiva = await get(ref(db, `escuelas/${ID}/configuracion/perfil/activa`));
+        const activa = snapActiva.val();
+        if (activa === false) {
+            // Licencia bloqueada
+            document.getElementById('screen-suspendida').classList.add('show');
+            document.getElementById('susp-codigo').textContent = ID.toUpperCase();
+            return; // No cargar el panel
+        }
+    } catch(e) {
+        // Sin internet — continuar con caché
+        console.warn('Sin conexión al verificar licencia:', e.message);
+    }
+
+    cargarConfiguracionNube();
+
+    // Verificar periódicamente cada 5 minutos por si se bloquea en sesión activa
+    setInterval(async () => {
+        try {
+            const snap = await get(ref(db, `escuelas/${ID}/configuracion/perfil/activa`));
+            if (snap.val() === false) {
+                document.getElementById('screen-suspendida').classList.add('show');
+            }
+        } catch(e) {}
+    }, 5 * 60 * 1000);
+}
+
+// Enter en el input de código
+setTimeout(() => {
+    const inp = document.getElementById('pair-input');
+    if (inp) {
+        inp.addEventListener('keydown', e => {
+            if (e.key === 'Enter') window._emparejarPanelReal && window._emparejarPanelReal();
+        });
+    }
+}, 100);
+
+// ══════════════════════════════════════════════════════
+// 2. ESTADO GLOBAL
+// ══════════════════════════════════════════════════════
+let nombreEscuelaGlobal = "Mi Plantel";
+let logoBase64Global    = "";
+let isConfigUnlocked    = false;
+let ultimosResultadosHistorial = [];
+let csvParsedData       = null;
+let audioCtx; let audioEnabled = false;
+let turnoMonitorActivo  = null;   // se establece al cargar estructura
+let directorioCache     = {};     // {clave: [nombres]}
+let asistenciasHoyCache = {};     // {clave: {nombre: estatus}}
+
+// Estructura escolar activa (viene de Firebase o default)
+let estructuraActiva = {};
+/* Formato:
+   {
+     Matutino: { "1": ["A","B","C"], "2": ["A","B"] },
+     Vespertino: { "1": ["G","H"] }
+   }
+*/
+
+// ══════════════════════════════════════════════════════
+// 3. ESTRUCTURAS DEFAULT POR NIVEL
+// ══════════════════════════════════════════════════════
+const ESTRUCTURAS_DEFAULT = {
+    "Preescolar": {
+        Matutino: { "1":["A","B"], "2":["A","B"], "3":["A","B"] }
+    },
+    "Primaria": {
+        Matutino:   { "1":["A","B"],"2":["A","B"],"3":["A","B"],"4":["A","B"],"5":["A","B"],"6":["A","B"] },
+        Vespertino: { "1":["C"],"2":["C"],"3":["C"],"4":["C"],"5":["C"],"6":["C"] }
+    },
+    "Secundaria": {
+        Matutino:   { "1":["A","B","C","D","E","F"], "2":["A","B","C","D","E","F"], "3":["A","B","C","D","E","F"] },
+        Vespertino: { "1":["G","H","I"], "2":["G","H"], "3":["G","H"] }
+    },
+    "Media Superior": {
+        Matutino:   { "1":["A","B"],"2":["A","B"],"3":["A","B"],"4":["A","B"],"5":["A","B"],"6":["A","B"] },
+        Vespertino: { "1":["C"],"2":["C"],"3":["C"],"4":["C"],"5":["C"],"6":["C"] }
+    },
+    "Superior": {
+        Matutino:   { "1":["A"],"2":["A"],"3":["A"],"4":["A"],"5":["A"],"6":["A"],"7":["A"],"8":["A"] },
+        Vespertino: { "1":["B"],"2":["B"],"3":["B"],"4":["B"] }
+    }
+};
+
+function sanitizarClave(str) {
+    return str.replace(/[.#$[\]\/]/g,'_');
+}
+
+// ══════════════════════════════════════════════════════
+// 4. AUDIO
+// ══════════════════════════════════════════════════════
+const btnAudio = document.getElementById('btnAudio');
+btnAudio.addEventListener('click', () => {
+    if (!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+    if (audioCtx.state==='suspended') audioCtx.resume();
+    audioEnabled = !audioEnabled;
+    btnAudio.textContent = audioEnabled ? 'Audio: ON' : 'Audio: OFF';
+    btnAudio.classList.toggle('active', audioEnabled);
+    if (audioEnabled) { playTone(600,'sine',.1); hablar("Sistema activo."); }
+});
+function playTone(freq,type,dur) {
+    if (!audioEnabled||!audioCtx) return;
+    const o=audioCtx.createOscillator(), g=audioCtx.createGain();
+    o.type=type; o.frequency.setValueAtTime(freq,audioCtx.currentTime);
+    g.gain.setValueAtTime(.05,audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+dur);
+    o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+dur);
+}
+window.hablarTexto = function(t) {
+    if (!audioEnabled||!('speechSynthesis' in window)) return;
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(t); u.lang='es-MX'; u.rate=1.1;
+    speechSynthesis.speak(u);
+};
+function hablar(t) { window.hablarTexto(t); }
+
+// ══════════════════════════════════════════════════════
+// 5. BRILLO NEÓN
+// ══════════════════════════════════════════════════════
+window.activarBrilloNeon = function(id) {
+    const el=document.getElementById(id);
+    if(el){ el.classList.add('glow-success'); setTimeout(()=>el.classList.remove('glow-success'),1800); }
+};
+
+// ══════════════════════════════════════════════════════
+// 6. NAVEGACIÓN + SEGURIDAD
+// ══════════════════════════════════════════════════════
+window.switchTab = async function(view, btn) {
+    if (view==='config' && !isConfigUnlocked) {
+        try {
+            const snap = await get(seguridadRef);
+            const pin  = snap.val();
+            if (!pin) {
+                const np = prompt("⚙️ Primera vez: establezca una contraseña directiva:");
+                if (np?.trim()) { await set(seguridadRef,np); isConfigUnlocked=true; alert("Contraseña establecida."); }
+                else return;
+            } else {
+                const inp = prompt("🔒 Contraseña directiva:");
+                if (inp===pin) { isConfigUnlocked=true; hablar("Bóveda desbloqueada."); }
+                else { alert("Contraseña incorrecta."); return; }
+            }
+        } catch(e) { alert("Error de conexión."); return; }
+    }
+    document.querySelectorAll('.view-container').forEach(v=>v.classList.remove('active'));
+    document.getElementById(`view-${view}`).classList.add('active');
+    document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+};
+
+window.cambiarPinSeguridad = async function() {
+    const act = prompt("Contraseña ACTUAL:");
+    const snap = await get(seguridadRef);
+    if (act===snap.val()) {
+        const nueva = prompt("NUEVA contraseña:");
+        if (nueva?.trim()) { await set(seguridadRef,nueva); alert("Contraseña actualizada."); }
+    } else alert("Contraseña incorrecta.");
+};
+
+// ══════════════════════════════════════════════════════
+// 7. LOGO
+// ══════════════════════════════════════════════════════
+window.handleLogoUpload = function(input) {
+    const f=input.files[0]; if(!f) return;
+    const r=new FileReader();
+    r.onload=e=>{
+        logoBase64Global=e.target.result;
+        document.getElementById('conf-logo-preview').src=logoBase64Global;
+        document.getElementById('conf-logo-preview').style.display='block';
+        document.getElementById('conf-logo-text').style.display='none';
+    };
+    r.readAsDataURL(f);
+};
+
+// ══════════════════════════════════════════════════════
+// 8. CARGAR CONFIGURACIÓN DESDE FIREBASE
+// ══════════════════════════════════════════════════════
+function cargarConfiguracionNube() {
+    onValue(configRef, snap => {
+        if (!snap.exists()) return;
+        const data = snap.val();
+
+        // Perfil
+        if (data.perfil) {
+            nombreEscuelaGlobal = data.perfil.nombreEscuela || nombreEscuelaGlobal;
+            document.getElementById('conf-nombre-escuela').value = data.perfil.nombreEscuela||'';
+            document.getElementById('conf-cct').value            = data.perfil.cct||'';
+            document.getElementById('conf-nivel').value          = data.perfil.nivelEducativo||'Secundaria';
+            document.getElementById('conf-director').value       = data.perfil.director||'';
+            document.getElementById('conf-zona').value           = data.perfil.zona||'';
+            document.getElementById('txtDinamicoBienvenida').textContent = nombreEscuelaGlobal;
+            document.getElementById('hdr-subtitle').textContent = data.perfil.nivelEducativo
+                ? `Panel — ${data.perfil.nivelEducativo}` : 'Panel Directivo';
+            if (data.perfil.logo) {
+                logoBase64Global = data.perfil.logo;
+                document.getElementById('conf-logo-preview').src = logoBase64Global;
+                document.getElementById('conf-logo-preview').style.display='block';
+                document.getElementById('conf-logo-text').style.display='none';
+            }
+        }
+        // Políticas — 6 campos
+        if (data.politicas) {
+            const p = data.politicas;
+            document.getElementById('conf-mat-apertura').value  = p.matApertura     || '06:57';
+            document.getElementById('conf-matutino').value      = p.limiteMatutino  || '07:00';
+            document.getElementById('conf-mat-salida').value    = p.matSalida       || '13:30';
+            document.getElementById('conf-vesp-apertura').value = p.vespApertura    || '13:43';
+            document.getElementById('conf-vespertino').value    = p.limiteVespertino|| '13:45';
+            document.getElementById('conf-vesp-retardo').value  = p.vespRetardo     || '14:01';
+            actualizarZonaTurnos(p);
+        }
+        // Estructura
+        if (data.estructura) {
+            estructuraActiva = data.estructura;
+        } else {
+            // Usar default según nivel guardado
+            const nivel = data.perfil?.nivelEducativo || 'Secundaria';
+            estructuraActiva = JSON.parse(JSON.stringify(ESTRUCTURAS_DEFAULT[nivel]||ESTRUCTURAS_DEFAULT['Secundaria']));
+        }
+        // Renderizar todo lo que depende de la estructura
+        renderizarEditorEstructura();
+        poblarSelectoresTurnos();
+        iniciarMonitor();
+    });
+}
+
+window.savePerfilInstitucional = function() {
+    const btn=document.getElementById('btnGuardarPerfil'); btn.disabled=true;
+    const perfil = {
+        nombreEscuela: document.getElementById('conf-nombre-escuela').value.trim(),
+        cct:           document.getElementById('conf-cct').value.trim().toUpperCase(),
+        nivelEducativo:document.getElementById('conf-nivel').value,
+        director:      document.getElementById('conf-director').value.trim(),
+        zona:          document.getElementById('conf-zona').value.trim(),
+        logo:          logoBase64Global
+    };
+    set(ref(db,`escuelas/${ID}/configuracion/perfil`), perfil)
+        .then(()=>{ btn.disabled=false; btn.classList.add('glow-success'); hablar("Perfil guardado."); setTimeout(()=>btn.classList.remove('glow-success'),1500); })
+        .catch(e=>{ btn.disabled=false; alert("Error: "+e.message); });
+};
+
+window.savePoliticasAcceso = function() {
+    const p = {
+        matApertura:     document.getElementById('conf-mat-apertura').value,
+        limiteMatutino:  document.getElementById('conf-matutino').value,
+        matSalida:       document.getElementById('conf-mat-salida').value,
+        vespApertura:    document.getElementById('conf-vesp-apertura').value,
+        limiteVespertino:document.getElementById('conf-vespertino').value,
+        vespRetardo:     document.getElementById('conf-vesp-retardo').value,
+    };
+    set(ref(db,`escuelas/${ID}/configuracion/politicas`),p)
+        .then(()=>{ hablar("Políticas actualizadas."); actualizarZonaTurnos(p); })
+        .catch(e=>alert("Error al guardar: "+e.message));
+};
+
+function actualizarZonaTurnos(p) {
+    const el = document.getElementById('lbl-zona-turnos');
+    if (!el) return;
+    if (p.matSalida && p.vespApertura) {
+        const mins = calcMinEntre(p.matSalida, p.vespApertura);
+        el.textContent = `${p.matSalida} — ${p.vespApertura} (${mins} minutos de intervalo)`;
+    } else {
+        el.textContent = 'Configure hora de salida matutino y apertura vespertino.';
+    }
+}
+
+function calcMinEntre(h1, h2) {
+    const [a1,b1]=h1.split(':').map(Number);
+    const [a2,b2]=h2.split(':').map(Number);
+    return Math.max(0,(a2*60+b2)-(a1*60+b1));
+}
+
+// ══════════════════════════════════════════════════════
+// 9. ESTRUCTURA ESCOLAR PERSONALIZABLE
+// ══════════════════════════════════════════════════════
+
+// Cuando el usuario cambia el nivel, precarga la estructura default de ese nivel
+window.onNivelChange = function() {
+    const nivel = document.getElementById('conf-nivel').value;
+    const def   = ESTRUCTURAS_DEFAULT[nivel] || ESTRUCTURAS_DEFAULT['Secundaria'];
+    estructuraActiva = JSON.parse(JSON.stringify(def));
+    renderizarEditorEstructura();
+};
+
+function renderizarEditorEstructura() {
+    const editor = document.getElementById('estructura-editor');
+    editor.innerHTML = '';
+
+    const turnos = Object.keys(estructuraActiva);
+    if (turnos.length === 0) {
+        editor.innerHTML = '<p style="font-size:.8rem;color:var(--slate);">Sin estructura definida.</p>';
+    }
+
+    turnos.forEach(turno => {
+        const bloqueTurno = document.createElement('div');
+        bloqueTurno.className = 'estructura-nivel';
+        bloqueTurno.innerHTML = `<div class="estructura-turno">🕐 Turno ${turno}</div>`;
+
+        const grados = estructuraActiva[turno];
+        Object.keys(grados).sort((a,b)=>Number(a)-Number(b)).forEach(grado => {
+            const grupos = grados[grado];
+            const row = document.createElement('div');
+            row.className = 'grado-row';
+            row.innerHTML = `<span class="grado-lbl">${grado}° Grado</span>`;
+
+            const chipsDiv = document.createElement('div');
+            chipsDiv.className = 'grupos-chips';
+
+            grupos.forEach(grupo => {
+                const chip = document.createElement('span');
+                chip.className = 'chip';
+                chip.innerHTML = `${grupo} <button class="chip-del" title="Eliminar ${grupo}" onclick="window.eliminarGrupo('${turno}','${grado}','${grupo}')">×</button>`;
+                chipsDiv.appendChild(chip);
+            });
+
+            // Botón añadir grupo
+            const btnAdd = document.createElement('button');
+            btnAdd.className = 'btn-add-grupo';
+            btnAdd.textContent = '+ Grupo';
+            btnAdd.onclick = () => window.agregarGrupo(turno, grado);
+            chipsDiv.appendChild(btnAdd);
+
+            row.appendChild(chipsDiv);
+            bloqueTurno.appendChild(row);
+        });
+
+        // Botón añadir grado
+        const btnGrado = document.createElement('button');
+        btnGrado.className = 'btn-add-turno';
+        btnGrado.textContent = `+ Añadir Grado al Turno ${turno}`;
+        btnGrado.onclick = () => window.agregarGrado(turno);
+        bloqueTurno.appendChild(btnGrado);
+
+        editor.appendChild(bloqueTurno);
+    });
+
+    // Botón añadir turno vespertino (si no existe)
+    if (!estructuraActiva['Vespertino']) {
+        const btnVesp = document.createElement('button');
+        btnVesp.className = 'btn-primary btn-secondary';
+        btnVesp.style.marginTop = '8px';
+        btnVesp.textContent = '+ Añadir Turno Vespertino';
+        btnVesp.onclick = () => window.agregarTurnoVespertino();
+        editor.appendChild(btnVesp);
+    }
+}
+
+window.agregarGrupo = function(turno, grado) {
+    const nuevo = prompt(`Nombre del nuevo grupo para ${grado}° ${turno} (ej. D):`);
+    if (!nuevo?.trim()) return;
+    const g = nuevo.trim().toUpperCase();
+    if (!estructuraActiva[turno]) estructuraActiva[turno] = {};
+    if (!estructuraActiva[turno][grado]) estructuraActiva[turno][grado] = [];
+    if (!estructuraActiva[turno][grado].includes(g)) {
+        estructuraActiva[turno][grado].push(g);
+        renderizarEditorEstructura();
+    }
+};
+
+window.eliminarGrupo = function(turno, grado, grupo) {
+    if (!confirm(`¿Eliminar el grupo ${grupo} del ${grado}° ${turno}?`)) return;
+    estructuraActiva[turno][grado] = estructuraActiva[turno][grado].filter(g=>g!==grupo);
+    if (estructuraActiva[turno][grado].length===0) delete estructuraActiva[turno][grado];
+    renderizarEditorEstructura();
+};
+
+window.agregarGrado = function(turno) {
+    const num = prompt(`Número del nuevo grado para el Turno ${turno} (ej. 4):`);
+    if (!num?.trim()) return;
+    const g = num.trim().replace(/\D/g,'');
+    if (!g) return;
+    if (!estructuraActiva[turno][g]) {
+        estructuraActiva[turno][g] = ['A'];
+        renderizarEditorEstructura();
+    }
+};
+
+window.agregarTurnoVespertino = function() {
+    estructuraActiva['Vespertino'] = { '1': ['G'] };
+    renderizarEditorEstructura();
+};
+
+window.guardarEstructura = async function() {
+    try {
+        await set(ref(db,`escuelas/${ID}/configuracion/estructura`), estructuraActiva);
+        hablar("Estructura escolar guardada.");
+        activarBrilloNeon('estructura-editor');
+        // Actualizar todos los selectores del sistema
+        poblarSelectoresTurnos();
+        iniciarMonitor();
+        alert("✅ Estructura guardada. Todos los módulos se han actualizado.");
+    } catch(e) { alert("Error al guardar: "+e.message); }
+};
+
+// ══════════════════════════════════════════════════════
+// 10. POBLAR SELECTORES DINÁMICOS (Historial, Padrón, Gafetes)
+//     Todos usan estructuraActiva como única fuente de verdad
+// ══════════════════════════════════════════════════════
+function poblarSelectoresTurnos() {
+    const turnos = Object.keys(estructuraActiva);
+    if (turnos.length === 0) return;
+
+    // Historial
+    const selTurnoHist = document.getElementById('selectTurnoHist');
+    selTurnoHist.innerHTML = '';
+    turnos.forEach(t => { const o=document.createElement('option'); o.value=t; o.textContent=t; selTurnoHist.appendChild(o); });
+    selTurnoHist.onchange = () => histActualizarGrados();
+    histActualizarGrados();
+
+    // Padrón
+    const dirTurno = document.getElementById('dir-turno');
+    dirTurno.innerHTML = '';
+    turnos.forEach(t => { const o=document.createElement('option'); o.value=t; o.textContent=t; dirTurno.appendChild(o); });
+    window.dirActualizarGrados();
+
+    // Gafetes
+    const genTurno = document.getElementById('gen-turno');
+    genTurno.innerHTML = '';
+    turnos.forEach(t => { const o=document.createElement('option'); o.value=t; o.textContent=t; genTurno.appendChild(o); });
+    window.genActualizarGrados();
+}
+
+// ─── HISTORIAL ───
+function histActualizarGrados() {
+    const turno = document.getElementById('selectTurnoHist').value;
+    const grados = estructuraActiva[turno] || {};
+    const sel = document.getElementById('selectGradoHist');
+    sel.innerHTML = '<option value="Todos">Todos los grados</option>';
+    Object.keys(grados).sort((a,b)=>Number(a)-Number(b)).forEach(g=>{
+        const o=document.createElement('option'); o.value=g; o.textContent=`${g}° Grado`; sel.appendChild(o);
+    });
+    window.histActualizarGrupos();
+}
+window.histActualizarGrados = histActualizarGrados;
+
+window.histActualizarGrupos = function() {
+    const turno = document.getElementById('selectTurnoHist').value;
+    const grado = document.getElementById('selectGradoHist').value;
+    const sel   = document.getElementById('selectGrupoHist');
+    sel.innerHTML = '<option value="Todos">Todos los grupos</option>';
+    if (grado !== 'Todos') {
+        (estructuraActiva[turno]?.[grado]||[]).forEach(g=>{
+            const o=document.createElement('option'); o.value=g; o.textContent=`Grupo ${g}`; sel.appendChild(o);
+        });
+    }
+    window.histActualizarAlumnos();
+};
+
+window.histActualizarAlumnos = async function() {
+    const turno = document.getElementById('selectTurnoHist').value;
+    const grado = document.getElementById('selectGradoHist').value;
+    const grupo = document.getElementById('selectGrupoHist').value;
+    const sel   = document.getElementById('selectAlumnoHist');
+    sel.innerHTML = '<option value="Todos">Todos</option>';
+    if (grado==='Todos'||grupo==='Todos') return;
+    const clave = sanitizarClave(`${turno}-${grado}-${grupo}`);
+    try {
+        const snap = await get(ref(db,`escuelas/${ID}/directorio/${clave}`));
+        if (snap.exists()) {
+            const data = snap.val();
+            const lista = Array.isArray(data)?data:Object.values(data);
+            lista.filter(Boolean).forEach(n=>{
+                const o=document.createElement('option'); o.value=n; o.textContent=n; sel.appendChild(o);
+            });
+        }
+    } catch(e){}
+};
+
+// ─── PADRÓN ───
+window.dirActualizarGrados = function() {
+    const turno = document.getElementById('dir-turno').value;
+    const grados = estructuraActiva[turno]||{};
+    const sel = document.getElementById('dir-grado');
+    sel.innerHTML='';
+    Object.keys(grados).sort((a,b)=>Number(a)-Number(b)).forEach(g=>{
+        const o=document.createElement('option'); o.value=g; o.textContent=`${g}° Grado`; sel.appendChild(o);
+    });
+    window.dirActualizarGrupos();
+};
+window.dirActualizarGrupos = function() {
+    const turno = document.getElementById('dir-turno').value;
+    const grado = document.getElementById('dir-grado').value;
+    const sel   = document.getElementById('dir-grupo');
+    sel.innerHTML='';
+    (estructuraActiva[turno]?.[grado]||[]).forEach(g=>{
+        const o=document.createElement('option'); o.value=g; o.textContent=g; sel.appendChild(o);
+    });
+};
+
+// ─── GAFETES ───
+window.genActualizarGrados = function() {
+    const turno = document.getElementById('gen-turno').value;
+    const grados= estructuraActiva[turno]||{};
+    const sel   = document.getElementById('gen-grado');
+    sel.innerHTML='';
+    Object.keys(grados).sort((a,b)=>Number(a)-Number(b)).forEach(g=>{
+        const o=document.createElement('option'); o.value=g; o.textContent=`${g}° Grado`; sel.appendChild(o);
+    });
+    window.genActualizarGrupos();
+};
+window.genActualizarGrupos = function() {
+    const turno = document.getElementById('gen-turno').value;
+    const grado = document.getElementById('gen-grado').value;
+    const sel   = document.getElementById('gen-grupo');
+    sel.innerHTML='';
+    (estructuraActiva[turno]?.[grado]||[]).forEach(g=>{
+        const o=document.createElement('option'); o.value=g; o.textContent=g; sel.appendChild(o);
+    });
+};
+
+// ══════════════════════════════════════════════════════
+// 11. MONITOR — RADIOGRAFÍA EN TIEMPO REAL
+// ══════════════════════════════════════════════════════
+// Fecha de hoy en hora LOCAL (no UTC) para evitar desfase en México UTC-6
+function getFechaHoyLocal() {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth()+1).padStart(2,'0');
+    const dia = String(d.getDate()).padStart(2,'0');
+    return `${y}-${m}-${dia}`;
+}
+const hoyStr = getFechaHoyLocal();
+document.getElementById('lblFechaHoy').textContent =
+    new Date().toLocaleDateString('es-MX',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+let listenerAsistHoy = null;
+
+function iniciarMonitor() {
+    const turnos = Object.keys(estructuraActiva);
+    if (turnos.length === 0) return;
+
+    // Construir botones de turno
+    const btnsEl = document.getElementById('turno-btns-monitor');
+    btnsEl.innerHTML = '';
+    turnos.forEach((turno, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'toggle-btn' + (i===0?' active':'');
+        btn.textContent = turno;
+        btn.dataset.turno = turno;
+        btn.onclick = () => {
+            document.querySelectorAll('#turno-btns-monitor .toggle-btn').forEach(b=>b.classList.remove('active'));
+            btn.classList.add('active');
+            turnoMonitorActivo = turno;
+            renderMonitor();
+        };
+        btnsEl.appendChild(btn);
+    });
+
+    turnoMonitorActivo = turnos[0];
+
+    // Escuchar directorio en tiempo real para totales
+    onValue(directorioRef, snapDir => {
+        directorioCache = {};
+        if (snapDir.exists()) {
+            const data = snapDir.val();
+            for (const k in data) {
+                const g = data[k];
+                directorioCache[k] = Array.isArray(g)?g:Object.values(g);
+                directorioCache[k] = directorioCache[k].filter(Boolean);
+            }
+        }
+        // Escuchar asistencias del día
+        if (listenerAsistHoy) listenerAsistHoy();
+        const qHoy = ref(db,`escuelas/${ID}/asistencias`);
+        listenerAsistHoy = onValue(qHoy, snapAsist => {
+            asistenciasHoyCache = {};
+            if (snapAsist.exists()) {
+                snapAsist.forEach(child => {
+                    const r = child.val();
+                    // Recalcular fecha local en cada registro (por si la página lleva horas abierta)
+                    const _hoy = new Date();
+                    const _fechaHoy = _hoy.getFullYear()+'-'+String(_hoy.getMonth()+1).padStart(2,'0')+'-'+String(_hoy.getDate()).padStart(2,'0');
+                    // También aceptar fecha UTC que puede ser +1 día en México (UTC-6)
+                    const _utc = new Date(); _utc.setDate(_utc.getDate()+1);
+                    const _fechaUTC = _utc.getFullYear()+'-'+String(_utc.getMonth()+1).padStart(2,'0')+'-'+String(_utc.getDate()).padStart(2,'0');
+                    if (r.fecha !== _fechaHoy && r.fecha !== _fechaUTC) return;
+                    // Clave: turno-grado-grupo (extraer grado del campo grupo "1° A" → "1")
+                    // Parser robusto igual que en historial
+                    let gradoK = '', grupoK = '';
+                    if (r.grado && r.grupoLetra) {
+                        gradoK = String(r.grado).trim();
+                        grupoK = String(r.grupoLetra).trim().toUpperCase();
+                    } else {
+                        const raw = (r.grupo||'').trim();
+                        const match = raw.match(/^(\d+)\s*°?\s+([A-Z]+)/i);
+                        if (match) { gradoK=match[1]; grupoK=match[2].toUpperCase(); }
+                        else {
+                            const p=raw.replace(/°/g,'').trim().split(/\s+/);
+                            gradoK=p[0]||'?'; grupoK=(p[1]||'?').toUpperCase();
+                        }
+                    }
+                    const clave    = sanitizarClave(`${r.turno}-${gradoK}-${grupoK}`);
+                    if (!asistenciasHoyCache[clave]) asistenciasHoyCache[clave]={};
+                    const nombreLimpio = (r.nombre||'').replace(/^\[ [AM] \] /,'').toUpperCase();
+                    asistenciasHoyCache[clave][nombreLimpio] = r.estatus||'asistencia';
+                });
+            }
+            // DEBUG: mostrar qué hay en cache
+            console.log('📊 asistenciasHoyCache:', JSON.stringify(asistenciasHoyCache).substring(0,300));
+            console.log('📁 directorioCache keys:', Object.keys(directorioCache).join(', '));
+            renderMonitor();
+        });
+    });
+}
+
+function renderMonitor() {
+    if (!turnoMonitorActivo) return;
+    const turno   = turnoMonitorActivo;
+    const grados  = estructuraActiva[turno]||{};
+    const container = document.getElementById('grupos-container');
+    container.innerHTML = '';
+
+    let totalEscuela = 0, presentesEscuela = 0;
+
+    Object.keys(grados).sort((a,b)=>Number(a)-Number(b)).forEach(grado => {
+        grados[grado].forEach(grupo => {
+            const clave      = sanitizarClave(`${turno}-${grado}-${grupo}`);
+            const listaDir   = directorioCache[clave]||[];
+            const asistGrupo = asistenciasHoyCache[clave]||{};
+            const totalGrupo = listaDir.length;
+
+            let presentesGrupo = 0;
+            listaDir.forEach(nombre => {
+                const est = asistGrupo[nombre.toUpperCase()]||'';
+                if (est.includes('asist')||est.includes('retard')) presentesGrupo++;
+            });
+
+            totalEscuela    += totalGrupo;
+            presentesEscuela += presentesGrupo;
+
+            const pct = totalGrupo > 0 ? Math.round((presentesGrupo/totalGrupo)*100) : 0;
+
+            // Tarjeta de grupo
+            // Semáforo de color según porcentaje
+            const tieneDatos   = totalGrupo > 0;
+            const sinRegistros = tieneDatos && Object.keys(asistGrupo).length === 0;
+            let clsPct='pct-verde', clsBarra='barra-verde';
+            if (!tieneDatos || sinRegistros) { clsPct='pct-rojo'; clsBarra='barra-rojo'; }
+            else if (pct < 70)  { clsPct='pct-rojo';    clsBarra='barra-rojo'; }
+            else if (pct < 85)  { clsPct='pct-amarillo'; clsBarra='barra-amarillo'; }
+
+            const card = document.createElement('div');
+            card.className = 'grupo-card' + (sinRegistros ? ' grupo-sin-datos' : '');
+
+            const metaTexto = !tieneDatos
+                ? 'Sin alumnos en el padrón'
+                : sinRegistros
+                    ? 'Sin pase de lista hoy'
+                    : `${presentesGrupo} / ${totalGrupo} presentes`;
+
+            card.innerHTML = `
+                <div class="grupo-header" onclick="this.parentElement.querySelector('.grupo-alumnos').classList.toggle('open')">
+                    <div>
+                        <div class="grupo-nombre">${grado}° "${grupo}"</div>
+                        <div class="grupo-meta">${metaTexto}</div>
+                    </div>
+                    <div class="grupo-pct ${clsPct}">${tieneDatos ? pct+'%' : '—'}</div>
+                </div>
+                <div class="grupo-barra-wrap">
+                    <div class="grupo-barra-fill ${clsBarra}" style="width:${pct}%"></div>
+                </div>
+                <div class="grupo-alumnos" id="alumnos-${clave}"></div>
+            `;
+
+            // Poblar lista de alumnos
+            const listaEl = card.querySelector(`#alumnos-${clave}`);
+            if (listaDir.length === 0) {
+                listaEl.innerHTML = `<div class="alumno-row"><span style="color:rgba(255,255,255,.4);font-size:.75rem;">Sin alumnos registrados en este grupo.</span></div>`;
+            } else {
+                listaDir.forEach(nombre => {
+                    const est = asistGrupo[nombre.toUpperCase()]||'pendiente';
+                    let pillClass='pm-gris', estLabel='PENDIENTE';
+                    const e = est.toLowerCase();
+                    if(e.includes('asist'))  { pillClass='pm-verde';    estLabel='ASISTENCIA'; }
+                    if(e.includes('retard')) { pillClass='pm-amarillo'; estLabel='RETARDO'; }
+                    if(e.includes('falta'))  { pillClass='pm-rojo';     estLabel='FALTA'; }
+                    if(e.includes('justif')) { pillClass='pm-azul';     estLabel='JUSTIFICADO'; }
+                    listaEl.innerHTML += `
+                        <div class="alumno-row">
+                            <span class="alumno-nombre">${nombre}</span>
+                            <span class="pill-mini ${pillClass}">${estLabel}</span>
+                        </div>`;
+                });
+            }
+            container.appendChild(card);
+        });
+    });
+
+    // Actualizar stats generales
+    const pctGeneral = totalEscuela > 0 ? Math.round((presentesEscuela/totalEscuela)*100) : 0;
+    document.getElementById('valTotal').textContent          = totalEscuela;
+    document.getElementById('valHoyAsistencias').textContent = presentesEscuela;
+    document.getElementById('valHoyPorcentaje').textContent  = pctGeneral + '%';
+    document.getElementById('valHoyPorcentaje').style.color  =
+        pctGeneral >= 80 ? 'var(--emerald)' : pctGeneral >= 60 ? 'var(--amber)' : 'var(--ruby)';
+
+    // Disparar alertas y gráfica de forma diferida para no bloquear el render
+    clearTimeout(window._timerMonitor);
+    window._timerMonitor = setTimeout(() => {
+        if (typeof calcularAlertas === 'function') calcularAlertas();
+        if (typeof cargarGrafica   === 'function') cargarGrafica();
+    }, 800);
+}
+
+// ══════════════════════════════════════════════════════
+// 12. HISTORIAL CON FILTRO POR ALUMNO
+// ══════════════════════════════════════════════════════
+document.getElementById('dateEnd').value   = getFechaHoyLocal();
+const sem = new Date(); sem.setDate(sem.getDate()-7);
+document.getElementById('dateStart').value = sem.toISOString().split('T')[0];
+
+document.getElementById('btnConsultar').addEventListener('click', async () => {
+    const btn     = document.getElementById('btnConsultar');
+    const dStart  = document.getElementById('dateStart').value;
+    const dEnd    = document.getElementById('dateEnd').value;
+    const sTurno  = document.getElementById('selectTurnoHist').value;
+    const sGrado  = document.getElementById('selectGradoHist').value;
+    const sGrupo  = document.getElementById('selectGrupoHist').value;
+    const sAlumno = document.getElementById('selectAlumnoHist').value;
+    const tBody   = document.getElementById('tableBody');
+
+    if (!dStart||!dEnd) { alert("Defina rango de fechas."); return; }
+
+    let titulo = `REPORTE: ${sTurno}`;
+    if (sGrado!=='Todos') titulo += ` — ${sGrado}°`;
+    if (sGrupo!=='Todos') titulo += ` "${sGrupo}"`;
+    if (sAlumno!=='Todos') titulo += ` — ${sAlumno}`;
+    document.getElementById('tituloTablaDinamico').textContent = titulo;
+
+    btn.disabled=true; btn.textContent="Procesando...";
+    tBody.innerHTML=`<tr><td colspan="4" style="text-align:center;padding:2rem;">Consultando...</td></tr>`;
+    ultimosResultadosHistorial=[];
+
+    try {
+        const snap = await get(asistenciasRef);
+        tBody.innerHTML=''; let count=0;
+        if (snap.exists()) {
+            snap.forEach(child => {
+                const r = child.val();
+                if (!r?.fecha) return;
+                if (r.fecha<dStart||r.fecha>dEnd) return;
+                if (r.turno!==sTurno) return;
+
+                // Filtro grado/grupo — parser robusto
+                // El escáner guarda r.grupo como "1° A" Y también r.grado="1" r.grupo="A" por separado
+                // Soportamos ambos formatos para compatibilidad total
+                if (sGrado !== 'Todos') {
+                    let gradoReg = '';
+                    let grupoReg = '';
+
+                    if (r.grado && r.grupo && !r.grupo.includes('°')) {
+                        // Formato nuevo: campos separados grado="1", grupo="A"
+                        gradoReg = String(r.grado).trim();
+                        grupoReg = String(r.grupo).trim().toUpperCase();
+                    } else {
+                        // Formato legacy: grupo="1° A" → extraer grado y grupo
+                        const raw = (r.grupo || '').trim();
+                        // Soporta: "1° A", "1°A", "1 A", "1° Grupo A"
+                        const match = raw.match(/^(\d+)\s*°?\s+([A-Z]+)/i);
+                        if (match) {
+                            gradoReg = match[1];
+                            grupoReg = match[2].toUpperCase();
+                        } else {
+                            // Último recurso: dividir por espacio
+                            const partes = raw.replace(/°/g,'').trim().split(/\s+/);
+                            gradoReg = partes[0] || '';
+                            grupoReg = (partes[1] || '').toUpperCase();
+                        }
+                    }
+
+                    if (gradoReg !== String(sGrado).trim()) return;
+                    if (sGrupo !== 'Todos' && grupoReg !== String(sGrupo).trim().toUpperCase()) return;
+                }
+
+                // Filtro alumno individual — normalizar ambos lados
+                if (sAlumno !== 'Todos') {
+                    const nLimpio = (r.nombre || '').replace(/^\[ [AM] \] /, '').toUpperCase().trim();
+                    const nBuscar = sAlumno.toUpperCase().trim();
+                    if (nLimpio !== nBuscar) return;
+                }
+
+                count++; ultimosResultadosHistorial.push(r);
+                const tr=document.createElement('tr');
+                const est=(r.estatus||'asistencia').toLowerCase();
+                let cls='verde';
+                if(est.includes('retard')) cls='amarillo';
+                else if(est.includes('falt')) cls='rojo';
+                else if(est.includes('justif')) cls='azul';
+                const estLbl=(r.estatus||'Asistencia')[0].toUpperCase()+(r.estatus||'Asistencia').slice(1);
+                tr.innerHTML=`<td>${r.fecha}</td><td><strong>${r.nombre||'—'}</strong></td><td>${r.hora||'—'}</td><td><span class="status ${cls}">${estLbl}</span></td>`;
+                tBody.appendChild(tr);
+            });
+        }
+        activarBrilloNeon('panel-tabla');
+
+        // Mostrar contador y botones de exportación
+        const contEl = document.getElementById('contador-registros');
+        const expBtns = document.getElementById('export-btns');
+        if (count === 0) {
+            tBody.innerHTML=`<tr><td colspan="4" style="text-align:center;color:#94A3B8;padding:2rem;">Sin registros en ese rango.</td></tr>`;
+            contEl.style.display='none';
+            expBtns.style.display='none';
+            hablar("Sin registros.");
+        } else {
+            // Contador
+            contEl.style.display='block';
+            const rangoTexto = `${formatFechaMx(dStart)} al ${formatFechaMx(dEnd)}`;
+            contEl.textContent = `${count} registro${count!==1?'s':''} encontrados — ${sTurno} · ${rangoTexto}`;
+            // Activar botones según filtros seleccionados
+            expBtns.style.display='grid';
+            const btnInd  = document.getElementById('btn-exp-individual');
+            btnInd.disabled  = (sAlumno === 'Todos');
+            btnInd.title     = sAlumno==='Todos' ? 'Seleccione un alumno específico para PDF individual' : `PDF individual de ${sAlumno}`;
+            hablar(`${count} registros encontrados.`);
+        }
+    } catch(e) {
+        tBody.innerHTML=`<tr><td colspan="4" style="text-align:center;color:var(--ruby);padding:2rem;">Error: ${e.message}</td></tr>`;
+    } finally { btn.disabled=false; btn.textContent="🔍 Consultar Nube"; }
+});
+
+// Utilidad: fecha ISO → formato mexicano DD/MM/AAAA
+function formatFechaMx(iso) {
+    if (!iso) return '—';
+    const [y,m,d] = iso.split('-');
+    return `${d}/${m}/${y}`;
+}
+
+// Día de la semana en español
+function diaSemana(iso) {
+    const dias = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+    return dias[new Date(iso + 'T12:00:00').getDay()];
+}
+
+// ── UTILIDAD: cargar jsPDF + autoTable si no están ──
+async function cargarJsPDF() {
+    if (!window.jspdf) {
+        await new Promise((res,rej)=>{ const s=document.createElement('script'); s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'; s.onload=res; s.onerror=rej; document.head.appendChild(s); });
+    }
+    if (!window.jspdf?.jsPDF?.prototype?.autoTable) {
+        await new Promise((res,rej)=>{ const s=document.createElement('script'); s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js'; s.onload=res; s.onerror=rej; document.head.appendChild(s); });
+    }
+}
+
+// ── UTILIDAD: encabezado institucional en PDF ──
+function encabezadoPDF(doc, titulo, subtitulo) {
+    const pw = doc.internal.pageSize.getWidth();
+    doc.setFillColor(10,25,47);
+    doc.rect(0,0,pw,30,'F');
+    if (logoBase64Global) { try { doc.addImage(logoBase64Global,'PNG',8,5,20,20); } catch(e){} }
+    doc.setTextColor(16,185,129); doc.setFontSize(12); doc.setFont('helvetica','bold');
+    doc.text(titulo, pw/2, 11, {align:'center'});
+    doc.setTextColor(255,255,255); doc.setFontSize(8); doc.setFont('helvetica','normal');
+    doc.text(nombreEscuelaGlobal.toUpperCase(), pw/2, 18, {align:'center'});
+    doc.text(subtitulo, pw/2, 24, {align:'center'});
+}
+
+// ── UTILIDAD: pie de página en todas las páginas ──
+function piesPDF(doc, director) {
+    const pw = doc.internal.pageSize.getWidth();
+    const ph = doc.internal.pageSize.getHeight();
+    const total = doc.internal.getNumberOfPages();
+    for (let i=1; i<=total; i++) {
+        doc.setPage(i);
+        doc.setDrawColor(203,213,225); doc.line(14, ph-22, pw-14, ph-22);
+        doc.setFontSize(7); doc.setTextColor(100,116,139);
+        // Leyenda izquierda
+        doc.text('A=Asistencia  R=Retardo  F=Falta  SR=Sin Registro  J=Justificado', 14, ph-16);
+        // Página derecha
+        doc.text(`Pág. ${i}/${total}  ·  ${new Date().toLocaleDateString('es-MX')}`, pw-14, ph-16, {align:'right'});
+        // Firma director
+        if (director) {
+            doc.setFontSize(8); doc.setTextColor(30,41,59);
+            doc.text('Director(a): ' + director, 14, ph-8);
+            doc.setDrawColor(100,116,139);
+            doc.line(pw-80, ph-10, pw-14, ph-10);
+            doc.setFontSize(7); doc.setTextColor(100,116,139);
+            doc.text('Firma y Sello', pw-47, ph-6, {align:'center'});
+        }
+    }
+}
+
+// ══════════════════════════════════════════════════════
+// REPORTE 1: INDIVIDUAL POR ALUMNO (PDF)
+// ══════════════════════════════════════════════════════
+window.generarReporteIndividualPDF = async function() {
+    if (!ultimosResultadosHistorial.length) { alert("Sin datos para exportar."); return; }
+    const sAlumno = document.getElementById('selectAlumnoHist').value;
+    if (sAlumno === 'Todos') { alert("Seleccione un alumno específico en el filtro."); return; }
+    await cargarJsPDF();
+    hablar("Generando reporte individual.");
+
+    const dStart = document.getElementById('dateStart').value;
+    const dEnd   = document.getElementById('dateEnd').value;
+    const sTurno = document.getElementById('selectTurnoHist').value;
+    const sGrado = document.getElementById('selectGradoHist').value;
+    const sGrupo = document.getElementById('selectGrupoHist').value;
+
+    // Obtener TODOS los días del rango (para marcar sin registro)
+    const diasRango = [];
+    const fechaIni = new Date(dStart + 'T12:00:00');
+    const fechaFin = new Date(dEnd   + 'T12:00:00');
+    for (let d = new Date(fechaIni); d <= fechaFin; d.setDate(d.getDate()+1)) {
+        const iso = d.toISOString().split('T')[0];
+        const diaSem = diaSemana(iso);
+        // Excluir sábados (6) y domingos (0) — días no laborables
+        const diaN = new Date(iso+'T12:00:00').getDay();
+        if (diaN !== 0 && diaN !== 6) {
+            diasRango.push(iso);
+        }
+    }
+
+    // Mapear registros por fecha
+    const porFecha = {};
+    ultimosResultadosHistorial.forEach(r => { porFecha[r.fecha] = r; });
+
+    // Contadores
+    let cAsist=0, cRetard=0, cFaltas=0, cSinReg=0, cJustif=0;
+    const filas = diasRango.map(iso => {
+        const r = porFecha[iso];
+        let estatus='Sin Registro', hora='—', metodo='—', color=[100,116,139];
+        if (r) {
+            hora    = r.hora || '—';
+            metodo  = (r.nombre||'').startsWith('[ A ]') ? 'Escáner QR' : 'Manual';
+            const e = (r.estatus||'').toLowerCase();
+            if (e.includes('asist'))  { estatus='Asistencia';    color=[5,150,105];  cAsist++; }
+            else if (e.includes('retard')) { estatus='Retardo';  color=[146,64,14];  cRetard++; }
+            else if (e.includes('falt'))   { estatus='Falta';    color=[153,27,27];  cFaltas++; }
+            else if (e.includes('justif')) { estatus='Justificado'; color=[30,64,175]; cJustif++; }
+            else { estatus='Sin Registro'; cSinReg++; }
+        } else { cSinReg++; }
+        return { iso, hora, estatus, metodo, color };
+    });
+
+    const totalDias = diasRango.length; // Ya sin sábados/domingos
+    const pct = totalDias > 0 ? Math.round((cAsist+cRetard)/totalDias*100) : 0;
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({orientation:'portrait', unit:'mm', format:'letter'});
+    const pw  = doc.internal.pageSize.getWidth();
+    const ph  = doc.internal.pageSize.getHeight();
+
+    // Encabezado
+    encabezadoPDF(doc, 'REPORTE INDIVIDUAL DE ASISTENCIA',
+        `Turno ${sTurno}  ·  Período: ${formatFechaMx(dStart)} al ${formatFechaMx(dEnd)}`);
+
+    // Caja del alumno
+    doc.setFillColor(241,245,249); doc.rect(14,34,pw-28,28,'F');
+    doc.setTextColor(10,25,47); doc.setFontSize(11); doc.setFont('helvetica','bold');
+    // Limpiar prefijo [ A ] o [ M ] del nombre
+    const nombreLimpio = sAlumno.replace(/^\[ [AM] \] /,'').toUpperCase();
+    doc.text(nombreLimpio, 18, 42);
+    doc.setFontSize(8); doc.setFont('helvetica','normal'); doc.setTextColor(51,65,85);
+    doc.text(`${sGrado}° Grado  ·  Grupo "${sGrupo}"  ·  Turno ${sTurno}`, 18, 49);
+    doc.text(`Período: ${formatFechaMx(dStart)} al ${formatFechaMx(dEnd)}  ·  ${totalDias} días hábiles`, 18, 55);
+    // Porcentaje en la derecha
+    const colPct = pct>=85?[5,150,105]:pct>=70?[146,64,14]:[153,27,27];
+    doc.setFillColor(...colPct); doc.circle(pw-22, 47, 10, 'F');
+    doc.setTextColor(255,255,255); doc.setFontSize(9); doc.setFont('helvetica','bold');
+    doc.text(pct+'%', pw-22, 50, {align:'center'});
+
+    // Tabla día por día
+    doc.autoTable({
+        startY: 66,
+        head: [['Fecha','Día','Hora Entrada','Estatus','Método']],
+        body: filas.map(f => [
+            formatFechaMx(f.iso),
+            diaSemana(f.iso),
+            f.hora,
+            f.estatus,
+            f.metodo
+        ]),
+        styles: { fontSize:8, cellPadding:2 },
+        headStyles: { fillColor:[10,25,47], textColor:255, fontStyle:'bold', fontSize:8 },
+        alternateRowStyles: { fillColor:[248,250,252] },
+        columnStyles: { 0:{cellWidth:25}, 1:{cellWidth:22}, 2:{cellWidth:22}, 3:{cellWidth:25}, 4:{cellWidth:22} },
+        didParseCell: (data) => {
+            if (data.section==='body' && data.column.index===3) {
+                const v = data.cell.raw;
+                if(v==='Asistencia')   data.cell.styles.textColor=[5,150,105];
+                else if(v==='Retardo') data.cell.styles.textColor=[146,64,14];
+                else if(v==='Falta')   data.cell.styles.textColor=[153,27,27];
+                else if(v==='Sin Registro') data.cell.styles.textColor=[100,116,139];
+                else if(v==='Justificado')  data.cell.styles.textColor=[30,64,175];
+            }
+        },
+        margin: { left:14, right:14 }
+    });
+
+    // Resumen final
+    const yRes = Math.min(doc.lastAutoTable.finalY + 8, ph-50);
+    doc.setFillColor(10,25,47); doc.rect(14, yRes, pw-28, 28, 'F');
+    doc.setTextColor(16,185,129); doc.setFontSize(9); doc.setFont('helvetica','bold');
+    doc.text('RESUMEN DEL PERÍODO', pw/2, yRes+7, {align:'center'});
+    const resCol = (pw-28)/5;
+    const resData = [
+        {lbl:'Asistencias', val:cAsist,  col:[16,185,129]},
+        {lbl:'Retardos',    val:cRetard, col:[245,158,11]},
+        {lbl:'Faltas',      val:cFaltas, col:[239,68,68]},
+        {lbl:'Sin Registro',val:cSinReg, col:[100,116,139]},
+        {lbl:'% Asistencia',val:pct+'%', col:colPct},
+    ];
+    resData.forEach((item,i)=>{
+        const x = 14 + resCol*i + resCol/2;
+        doc.setTextColor(...item.col); doc.setFontSize(12); doc.setFont('helvetica','bold');
+        doc.text(String(item.val), x, yRes+17, {align:'center'});
+        doc.setTextColor(255,255,255); doc.setFontSize(7); doc.setFont('helvetica','normal');
+        doc.text(item.lbl, x, yRes+24, {align:'center'});
+    });
+
+    // Pie con firma
+    piesPDF(doc, document.getElementById('conf-director')?.value || '');
+    doc.save(`Reporte_${nombreLimpio.replace(/\s+/g,'_').substring(0,20)}_${dStart}_${dEnd}.pdf`);
+    hablar("Reporte individual generado.");
+};
+
+// ══════════════════════════════════════════════════════
+// REPORTE 2: POR GRUPO (PDF — tabla compacta)
+// ══════════════════════════════════════════════════════
+window.generarReporteGrupoPDF = async function() {
+    if (!ultimosResultadosHistorial.length) { alert("Sin datos para exportar."); return; }
+    const sGrado = document.getElementById('selectGradoHist').value;
+    const sGrupo = document.getElementById('selectGrupoHist').value;
+    const sTurno = document.getElementById('selectTurnoHist').value;
+    if (sGrado==='Todos' || sGrupo==='Todos') { alert("Seleccione un grado y grupo específico."); return; }
+    await cargarJsPDF();
+    hablar("Generando reporte de grupo.");
+
+    const dStart = document.getElementById('dateStart').value;
+    const dEnd   = document.getElementById('dateEnd').value;
+    const clave  = sanitizarClave(`${sTurno}-${sGrado}-${sGrupo}`);
+
+    // Obtener padrón del grupo desde cache
+    const listaAlumnos = (directorioCache[clave]||[]).filter(Boolean);
+    if (!listaAlumnos.length) { alert("El grupo no tiene alumnos en el padrón. Consulte primero el padrón."); return; }
+
+    // Días hábiles del rango (sin domingos)
+    const diasRango = [];
+    for (let d=new Date(dStart+'T12:00:00'); d<=new Date(dEnd+'T12:00:00'); d.setDate(d.getDate()+1)) {
+        // Excluir sábados (6) y domingos (0)
+        if (d.getDay() !== 0 && d.getDay() !== 6) {
+            const iso2 = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+            diasRango.push(iso2);
+        }
+    }
+
+    // Mapa: nombre → {fecha: estatus}
+    const mapaAsist = {};
+    listaAlumnos.forEach(a => { mapaAsist[a.toUpperCase()] = {}; });
+    ultimosResultadosHistorial.forEach(r => {
+        const nLimpio = (r.nombre||'').replace(/^\[ [AM] \] /,'').toUpperCase();
+        if (mapaAsist[nLimpio] !== undefined) {
+            const e = (r.estatus||'').toLowerCase();
+            let cod = 'SR';
+            if(e.includes('asist'))  cod='A';
+            else if(e.includes('retard')) cod='R';
+            else if(e.includes('falt'))   cod='F';
+            else if(e.includes('justif')) cod='J';
+            mapaAsist[nLimpio][r.fecha] = cod;
+        }
+    });
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({orientation:'landscape', unit:'mm', format:'letter'});
+    const pw  = doc.internal.pageSize.getWidth();
+
+    encabezadoPDF(doc, `REPORTE DE ASISTENCIA — ${sGrado}° GRADO GRUPO "${sGrupo}"`,
+        `Turno ${sTurno}  ·  Período: ${formatFechaMx(dStart)} al ${formatFechaMx(dEnd)}`);
+
+    // Encabezados de columna: Nº, Nombre, [días], Total, %
+    const colDias = diasRango.map(iso => iso.slice(8)+'/'+iso.slice(5,7));
+    const head = [['#', 'Nombre Alumno', ...colDias, 'A', 'R', 'F', '%']];
+
+    const body = listaAlumnos.map((alumno, idx) => {
+        const reg = mapaAsist[alumno.toUpperCase()] || {};
+        let cA=0, cR=0, cF=0;
+        const celdas = diasRango.map(iso => {
+            const cod = reg[iso] || 'SR';
+            if(cod==='A') cA++; else if(cod==='R') cR++; else if(cod==='F') cF++;
+            return cod;
+        });
+        const total = diasRango.length;
+        const pct = total>0 ? Math.round((cA+cR)/total*100) : 0;
+        return [idx+1, alumno, ...celdas, cA, cR, cF, pct+'%'];
+    });
+
+    // Fila de totales
+    const totA = body.reduce((s,r)=>s+r[body[0].length-4],0);
+    const totR = body.reduce((s,r)=>s+r[body[0].length-3],0);
+    const totF = body.reduce((s,r)=>s+r[body[0].length-2],0);
+    const pctGen = listaAlumnos.length>0 ? Math.round((totA+totR)/(listaAlumnos.length*diasRango.length||1)*100):0;
+    body.push(['', 'PROMEDIOS', ...diasRango.map(()=>''), totA, totR, totF, pctGen+'%']);
+
+    doc.autoTable({
+        startY: 34,
+        head, body,
+        styles: { fontSize:6, cellPadding:1.2, halign:'center' },
+        headStyles: { fillColor:[10,25,47], textColor:255, fontStyle:'bold', fontSize:6 },
+        columnStyles: { 1:{halign:'left', cellWidth:45, fontSize:6} },
+        alternateRowStyles: { fillColor:[248,250,252] },
+        didParseCell: (data) => {
+            if (data.section==='body' && data.column.index > 1) {
+                const v = String(data.cell.raw);
+                if(v==='A')  data.cell.styles.textColor=[5,150,105];
+                else if(v==='R') data.cell.styles.textColor=[146,64,14];
+                else if(v==='F') { data.cell.styles.textColor=[153,27,27]; data.cell.styles.fontStyle='bold'; }
+                else if(v==='SR') data.cell.styles.textColor=[156,163,175];
+                else if(v==='J') data.cell.styles.textColor=[30,64,175];
+            }
+            if (data.row.index === body.length-1 && data.section==='body') {
+                data.cell.styles.fontStyle='bold'; data.cell.styles.fillColor=[241,245,249];
+            }
+        },
+        margin: { left:10, right:10 }
+    });
+
+    piesPDF(doc, document.getElementById('conf-director')?.value || '');
+    doc.save(`Reporte_${sGrado}${sGrupo}_${sTurno}_${dStart}_${dEnd}.pdf`);
+    hablar("Reporte de grupo generado.");
+};
+
+// ══════════════════════════════════════════════════════
+// EXCEL LIMPIO DE HISTORIAL
+// ══════════════════════════════════════════════════════
+window.descargarHistorialExcel = function() {
+    if (!ultimosResultadosHistorial.length) { alert("Sin datos para exportar."); return; }
+    const dStart = document.getElementById('dateStart').value;
+    const dEnd   = document.getElementById('dateEnd').value;
+    const sTurno = document.getElementById('selectTurnoHist').value;
+
+    const rows = [
+        [`REPORTE DE ASISTENCIA — ${nombreEscuelaGlobal}`],
+        [`Turno: ${sTurno}   Período: ${formatFechaMx(dStart)} al ${formatFechaMx(dEnd)}`],
+        [`Generado: ${new Date().toLocaleString('es-MX')}`],
+        [],
+        ['Fecha','Día','Hora','Turno','Grupo','Alumno','Estatus','Método'],
+        ...ultimosResultadosHistorial.map(r => {
+            const nLimpio = (r.nombre||'').replace(/^\[ [AM] \] /,'').toUpperCase();
+            const metodo  = (r.nombre||'').startsWith('[ A ]') ? 'Escáner QR' : 'Manual';
+            const est     = r.estatus ? r.estatus.charAt(0).toUpperCase()+r.estatus.slice(1) : '—';
+            return [
+                formatFechaMx(r.fecha),
+                diaSemana(r.fecha),
+                r.hora||'—',
+                r.turno||'—',
+                r.grupo||'—',
+                nLimpio,
+                est,
+                metodo
+            ];
+        })
+    ];
+
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(rows);
+    ws['!cols'] = [{wch:12},{wch:12},{wch:8},{wch:12},{wch:10},{wch:40},{wch:15},{wch:12}];
+    XLSX.utils.book_append_sheet(wb, ws, 'Historial');
+    XLSX.writeFile(wb, `Historial_${sTurno}_${dStart}_${dEnd}.xlsx`);
+    hablar("Excel descargado.");
+};
+
+// ══════════════════════════════════════════════════════
+// 13. PADRÓN DE ALUMNOS
+// ══════════════════════════════════════════════════════
+window.consultarDirectorio = async function() {
+    const turno = document.getElementById('dir-turno').value;
+    const grado = document.getElementById('dir-grado').value;
+    const grupo = document.getElementById('dir-grupo').value;
+    const tBody = document.getElementById('tableBodyDirectorio');
+    document.getElementById('tituloDirectorioDinamico').textContent=`PADRÓN: ${grado}° "${grupo}" — ${turno.toUpperCase()}`;
+    tBody.innerHTML=`<tr><td colspan="3" style="text-align:center;padding:2rem;">Consultando...</td></tr>`;
+
+    const clave = sanitizarClave(`${turno}-${grado}-${grupo}`);
+    try {
+        const snap = await get(ref(db,`escuelas/${ID}/directorio/${clave}`));
+        tBody.innerHTML='';
+        if (snap.exists()) {
+            const data=snap.val();
+            let lista=Array.isArray(data)?data:Object.values(data);
+            lista=lista.filter(Boolean);
+            if(!lista.length){ tBody.innerHTML=`<tr><td colspan="3" style="text-align:center;color:#94A3B8;padding:2rem;">Grupo vacío.</td></tr>`; return; }
+            lista.forEach((alumno,i)=>{
+                const tr=document.createElement('tr');
+                tr.innerHTML=`<td>${i+1}</td><td><strong>${alumno}</strong></td>
+                    <td><button class="btn-primary btn-danger" style="padding:.35rem;font-size:.75rem;margin-top:0;"
+                        onclick="window.eliminarAlumno('${clave}',${i},'${alumno}')">Eliminar</button></td>`;
+                tBody.appendChild(tr);
+            });
+            activarBrilloNeon('panel-tabla-directorio');
+            hablar(`${lista.length} alumnos encontrados.`);
+        } else {
+            tBody.innerHTML=`<tr><td colspan="3" style="text-align:center;color:#94A3B8;padding:2rem;">Sin alumnos en este grupo.</td></tr>`;
+        }
+    } catch(e) {
+        tBody.innerHTML=`<tr><td colspan="3" style="text-align:center;color:var(--ruby);padding:2rem;">Error de conexión.</td></tr>`;
+    }
+};
+
+window.eliminarAlumno = async function(clave, idx, nombre) {
+    if(prompt(`Escriba "BORRAR" para confirmar la baja de:\n${nombre}`) !== 'BORRAR') { if(arguments[0]!==null) alert("Cancelado."); return; }
+    try {
+        const snap=await get(ref(db,`escuelas/${ID}/directorio/${clave}`));
+        if(!snap.exists()) return;
+        let lista=Object.values(snap.val()).filter(Boolean);
+        lista.splice(idx,1);
+        await set(ref(db,`escuelas/${ID}/directorio/${clave}`),Object.fromEntries(lista.map((n,i)=>[i,n])));
+        hablar("Alumno eliminado."); window.consultarDirectorio();
+    } catch(e){ alert("Error: "+e.message); }
+};
+
+// ══════════════════════════════════════════════════════
+// 14. ZONA DE RIESGO
+// ══════════════════════════════════════════════════════
+// Doble confirmación para operaciones destructivas
+async function confirmarOperacionRiesgo(nombreOp) {
+    const paso1 = prompt(`OPERACION IRREVERSIBLE\nEscriba BORRAR para continuar con: ${nombreOp}`);
+    if (paso1 !== 'BORRAR') { if(paso1 !== null) alert("Cancelado."); return false; }
+    try {
+        const snap = await get(seguridadRef);
+        const pin  = snap.val();
+        if (pin) {
+            const paso2 = prompt("Segundo factor de seguridad:\nIngrese la contrasena directiva:");
+            if (paso2 !== pin) { alert("Contrasena incorrecta. Operacion cancelada."); return false; }
+        }
+    } catch(e) { console.warn("No se pudo verificar PIN:", e.message); }
+    return true;
+}
+
+window.limpiarAsistencias = async function() {
+    if (!await confirmarOperacionRiesgo("PURGAR HISTORIAL DE ASISTENCIAS")) return;
+    remove(asistenciasRef).then(()=>hablar("Historial limpiado."));
+};
+window.limpiarDirectorio = async function() {
+    if (!await confirmarOperacionRiesgo("BORRAR PADRON DE ALUMNOS")) return;
+    remove(directorioRef).then(()=>hablar("Padron eliminado permanentemente."));
+};
+
+// ══════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
+// 15. MOTOR DE CARGA MASIVA
+//     Turno forzado por el director (Paso 1)
+//     Formato: Grado | Grupo | Nombre
+// ══════════════════════════════════════════════════════
+function sanitizarClaveFirebase(s){ return s.replace(/[.#$[\]\/]/g,'_'); }
+function normalizarNombre(r){ return r?String(r).replace(/[\r\n\t]/g,' ').replace(/\s+/g,' ').trim().toUpperCase():''; }
+function esNombreValido(s){ return s && s.length>2 && !/^(no\.|num|nombre|alumno|total|firma|profr|asig|grado|grupo|evaluac|inasis|calific|period|registro)/i.test(s.trim()); }
+function detectarGrado(r){ const n=String(r).replace(/[^0-9]/g,''); return n||''; }
+function detectarGrupo(r){ return String(r).trim().replace(/['"°\s]/g,'').toUpperCase(); }
+
+// Turno seleccionado por el director antes de subir
+let turnoUploadForzado = '';
+
+window.selTurnoUpload = function(turno) {
+    turnoUploadForzado = turno;
+    document.getElementById('btn-turno-mat').className  = 'btn-turno-upload' + (turno==='Matutino'  ? ' active-mat'  : '');
+    document.getElementById('btn-turno-vesp').className = 'btn-turno-upload' + (turno==='Vespertino' ? ' active-vesp' : '');
+    const lbl = document.getElementById('lbl-turno-seleccionado');
+    lbl.textContent = turno==='Matutino' ? '☀️ Turno Matutino seleccionado' : '🌆 Turno Vespertino seleccionado';
+    lbl.style.color = turno==='Matutino' ? '#FCD34D' : '#C4B5FD';
+    hablar(`Turno ${turno} seleccionado.`);
+};
+
+// ── PLANTILLA DESCARGABLE MEJORADA ──
+window.descargarPlantilla = function() {
+    const wb = XLSX.utils.book_new();
+    const escuela = nombreEscuelaGlobal || 'Mi Plantel';
+
+    // ── HOJA 1: INSTRUCCIONES ──
+    const instrRows = [
+        ['PLANTILLA OFICIAL DE CARGA DE ALUMNOS — LUDOASSIST PRO'],
+        [escuela.toUpperCase()],
+        [],
+        ['IMPORTANTE: El TURNO no va en este archivo. Se selecciona en el panel ANTES de subir.'],
+        [],
+        ['═══════════════════════════════════════════════════════════════'],
+        ['COLUMNAS REQUERIDAS (en este orden):'],
+        ['Columna A: GRADO    — Solo el número. Ejemplos: 1, 2, 3, 4, 5, 6'],
+        ['Columna B: GRUPO    — Solo la letra. Ejemplos: A, B, C, D, E, F, G, H'],
+        ['Columna C: NOMBRE   — Apellido Paterno Apellido Materno Nombre(s) en MAYÚSCULAS'],
+        [],
+        ['═══════════════════════════════════════════════════════════════'],
+        ['TIENE DOS OPCIONES PARA ORGANIZAR SU ARCHIVO:'],
+        [],
+        ['OPCIÓN 1 — FORMATO LINEAL (una sola hoja, todos los grupos seguidos):'],
+        ['  Use la hoja "FORMATO LINEAL" de este archivo.'],
+        ['  Ponga todos los alumnos de primero A, luego primero B, luego primero C, etc.'],
+        ['  No hay límite de alumnos — puede poner 1000 en una sola hoja.'],
+        ['  Ventaja: un solo archivo para todo el turno.'],
+        [],
+        ['  Ejemplo:'],
+        ['  GRADO | GRUPO | NOMBRE'],
+        ['  1     | A     | GARCIA LOPEZ JUAN CARLOS'],
+        ['  1     | A     | HERNANDEZ CHAN MARIA FERNANDA'],
+        ['  1     | B     | ALPUCHE GUTIERREZ ALVERTO EMANUEL'],
+        ['  1     | B     | BALAN CANCHE DEYVID ALONZO'],
+        ['  2     | A     | ACOSTA CHAN AREMI ESTEFANIA'],
+        [],
+        ['OPCIÓN 2 — FORMATO POR PESTAÑAS (una pestaña por grupo):'],
+        ['  Use la hoja "FORMATO PESTAÑAS" como base.'],
+        ['  Cree una pestaña por grupo: nómbrela como el grupo (1A, 1B, 2A, etc.)'],
+        ['  En cada pestaña ponga los alumnos del grupo en las columnas Grado, Grupo, Nombre.'],
+        ['  El sistema detecta automáticamente todas las pestañas.'],
+        ['  Ventaja: más organizado, un grupo a la vez.'],
+        [],
+        ['═══════════════════════════════════════════════════════════════'],
+        ['PASOS PARA SUBIR:'],
+        ['  1. Elija el turno en el panel (botón Matutino o Vespertino)'],
+        ['  2. Llene el archivo con los datos de sus alumnos'],
+        ['  3. Guarde el archivo como .xlsx'],
+        ['  4. Súbalo en el panel, sección Control > Carga Masiva'],
+        ['  5. Revise la vista previa y presione "Inyectar a la Nube"'],
+        [],
+        ['NOTA: Si tiene turno Matutino Y Vespertino, use DOS archivos separados.'],
+        ['      Primero suba el Matutino, luego el Vespertino.'],
+    ];
+    const wsInstr = XLSX.utils.aoa_to_sheet(instrRows);
+    wsInstr['!cols'] = [{wch:80}];
+    XLSX.utils.book_append_sheet(wb, wsInstr, 'INSTRUCCIONES');
+
+    // ── HOJA 2: FORMATO LINEAL (todos los grupos en una hoja) ──
+    const filasTitulo = [
+        [`PLANTEL: ${escuela}`],
+        ['TURNO: (seleccionar en el panel antes de subir)'],
+        ['Llene a partir de la fila 5. No modifique las filas 1-4.'],
+        [],
+        ['GRADO', 'GRUPO', 'NOMBRE COMPLETO DEL ALUMNO'],
+        ['--- EJEMPLO (borrar esta línea) ---', '', ''],
+        ['1', 'A', 'GARCIA LOPEZ JUAN CARLOS'],
+        ['1', 'A', 'HERNANDEZ CHAN MARIA FERNANDA'],
+        ['1', 'B', 'ALPUCHE GUTIERREZ ALVERTO EMANUEL'],
+        ['--- FIN EJEMPLO (borrar hasta aquí) ---', '', ''],
+        ...Array(990).fill(['', '', '']),  // espacio para 990 alumnos
+    ];
+    const wsLineal = XLSX.utils.aoa_to_sheet(filasTitulo);
+    wsLineal['!cols'] = [{wch:8},{wch:8},{wch:55}];
+    XLSX.utils.book_append_sheet(wb, wsLineal, 'FORMATO LINEAL');
+
+    // ── HOJA 3: FORMATO PESTAÑAS (base para duplicar) ──
+    const filasBase = [
+        [`PLANTEL: ${escuela}`],
+        ['TURNO: (seleccionar en el panel antes de subir)'],
+        ['INSTRUCCION: Duplique esta pestaña una vez por grupo. Nómbrela como el grupo (1A, 1B, 2A...)'],
+        [],
+        ['GRADO', 'GRUPO', 'NOMBRE COMPLETO DEL ALUMNO'],
+        ...Array(50).fill(['', '', '']),
+    ];
+    const wsPest = XLSX.utils.aoa_to_sheet(filasBase);
+    wsPest['!cols'] = [{wch:8},{wch:8},{wch:55}];
+    XLSX.utils.book_append_sheet(wb, wsPest, 'FORMATO PESTAÑAS');
+
+    // Poner INSTRUCCIONES primero
+    const sheets = wb.SheetNames;
+    const idx = sheets.indexOf('INSTRUCCIONES');
+    sheets.splice(idx,1); sheets.unshift('INSTRUCCIONES');
+
+    XLSX.writeFile(wb, `Plantilla_LudoAssist_${escuela.replace(/\s+/g,'_').substring(0,20)}.xlsx`);
+    hablar("Plantilla descargada. Revise las instrucciones en la primera hoja.");
+};
+
+// ── PARSEAR filas: Grado | Grupo | Nombre ──
+function parsearFilasPlantilla(filas, turno) {
+    let dir={}, total=0, errores=[];
+    for(let i=0; i<filas.length; i++){
+        const fila = filas[i];
+        if (!fila || fila.length < 2) continue;
+        const c0 = String(fila[0]||'').trim();
+        const c1 = String(fila[1]||'').trim();
+        const c2 = String(fila[2]||'').trim();
+        if (!c0 && !c1 && !c2) continue;
+        // Saltar encabezados de instrucciones
+        const c0l = c0.toLowerCase();
+        if (c0l==='grado'||c0l==='columna'||c0l==='paso'||c0l==='notas'||c0l==='-') continue;
+        if (c0.includes('PLANTILLA')||c0.includes('INSTRUC')||c0.includes('SELECCIONE')) continue;
+        const grado  = detectarGrado(c0);
+        const grupo  = detectarGrupo(c1);
+        const nombre = normalizarNombre(c2);
+        if (!grado) continue;
+        if (!grupo) { if(nombre&&esNombreValido(nombre)) errores.push(`Fila ${i+1}: grupo vacío — omitida.`); continue; }
+        if (!nombre || !esNombreValido(nombre)) continue;
+        if (nombre.includes('EJEMPLO')) continue; // saltar fila de ejemplo
+        const k = sanitizarClaveFirebase(`${turno}-${grado}-${grupo}`);
+        if (!dir[k]) dir[k]=[];
+        if (!dir[k].includes(nombre)) { dir[k].push(nombre); total++; }
+    }
+    return {dir, total, errores};
+}
+
+// ── HANDLER UNIVERSAL ──
+window.handleArchivoUniversal = function(input) {
+    const file = input.files[0]; if(!file) return;
+
+    if (!turnoUploadForzado) {
+        alert('⚠️ Primero seleccione el turno en el Paso 1 (Matutino o Vespertino).');
+        input.value=''; return;
+    }
+
+    const ext    = file.name.split('.').pop().toLowerCase();
+    const lblN   = document.getElementById('csv-file-name');
+    const lblV   = document.getElementById('lbl-validador-csv');
+    const repE   = document.getElementById('reporte-errores');
+    const listaE = document.getElementById('lista-errores');
+    const btnP   = document.getElementById('btnProcesarCSV');
+    const prev   = document.getElementById('preview-carga');
+
+    lblN.textContent=`📄 ${file.name}`;
+    lblV.style.display='none'; repE.style.display='none';
+    listaE.innerHTML=''; btnP.disabled=true; csvParsedData=null; prev.style.display='none';
+
+    const mostrar = ({dir, total, errores}) => {
+        csvParsedData = dir;
+        lblV.style.display='block';
+        lblV.style.color = total>0?'var(--emerald)':'var(--ruby)';
+        lblV.textContent = total>0
+            ? `✔️ ${total} alumnos en ${Object.keys(dir).length} grupos — Turno ${turnoUploadForzado}`
+            : `⚠️ Sin alumnos válidos. Verifique el formato de la plantilla.`;
+        if (errores.length) {
+            repE.style.display='block';
+            errores.slice(0,8).forEach(e=>{ const li=document.createElement('li'); li.textContent=e; listaE.appendChild(li); });
+            if(errores.length>8){ const li=document.createElement('li'); li.textContent=`... y ${errores.length-8} más.`; listaE.appendChild(li); }
+        }
+        if (total>0) {
+            prev.style.display='block';
+            document.getElementById('preview-titulo').textContent=`Vista previa — Turno ${turnoUploadForzado}:`;
+            const pgEl=document.getElementById('preview-grupos'); pgEl.innerHTML='';
+            Object.entries(dir).forEach(([k,lista])=>{
+                const p=k.split('-');
+                const chip=document.createElement('span'); chip.className='chip-preview';
+                chip.textContent=`${p[1]}° "${p[2]}": ${lista.length} alumnos`;
+                pgEl.appendChild(chip);
+            });
+            btnP.disabled=false;
+            hablar(`${total} alumnos detectados en el turno ${turnoUploadForzado}.`);
+        }
+    };
+
+    if (ext==='xlsx'||ext==='xls') {
+        const r=new FileReader();
+        r.onload=e=>{
+            try {
+                const wb=XLSX.read(new Uint8Array(e.target.result),{type:'array',cellDates:false,raw:false});
+                let dirTotal={},totalTotal=0,erroresTotal=[];
+                // Procesar TODAS las hojas (ej. una hoja por grupo)
+                wb.SheetNames.forEach(sn=>{
+                    if(sn==='INSTRUCCIONES'||sn==='Instrucciones') return;
+                    const ws=wb.Sheets[sn];
+                    const filas=XLSX.utils.sheet_to_json(ws,{header:1,defval:'',blankrows:false});
+                    const {dir,total,errores}=parsearFilasPlantilla(filas,turnoUploadForzado);
+                    Object.keys(dir).forEach(k=>{ if(!dirTotal[k]) dirTotal[k]=[]; dirTotal[k].push(...dir[k]); });
+                    totalTotal+=total; erroresTotal=erroresTotal.concat(errores);
+                });
+                mostrar({dir:dirTotal,total:totalTotal,errores:erroresTotal});
+            } catch(err){ lblV.style.display='block'; lblV.style.color='var(--ruby)'; lblV.textContent=`❌ Error: ${err.message}`; }
+        };
+        r.readAsArrayBuffer(file);
+    } else {
+        const r=new FileReader();
+        r.onload=e=>{
+            const lineas=e.target.result.split(/\r?\n/);
+            const filas=lineas.map(l=>{ if(!l.trim()) return null; const d=l.includes('	')?'	':l.includes(';')?';':','; return l.split(d).map(cx=>cx.trim().replace(/^["']|["']$/g,'')); }).filter(Boolean);
+            mostrar(parsearFilasPlantilla(filas,turnoUploadForzado));
+        };
+        r.readAsText(file,'UTF-8');
+    }
+};
+
+
+window.processAndUploadDirectory = async function() {
+    if(!csvParsedData||!Object.keys(csvParsedData).length){ alert("Sin datos."); return; }
+    const btn=document.getElementById('btnProcesarCSV');
+    const pc=document.getElementById('progressContainer');
+    const pb=document.getElementById('progressBar');
+    const lp=document.getElementById('lbl-progreso');
+    const lv=document.getElementById('lbl-validador-csv');
+    btn.disabled=true; pc.style.display='block'; lp.style.display='block'; pb.style.width='0%';
+    const grupos=Object.keys(csvParsedData); let ok=0,fail=0;
+    hablar(`Subiendo ${grupos.length} grupos.`);
+    for(let i=0;i<grupos.length;i++){
+        const k=grupos[i];
+        const obj=Object.fromEntries(csvParsedData[k].map((n,j)=>[j.toString(),n]));
+        lp.textContent=`Grupo ${i+1}/${grupos.length}: ${k} (${csvParsedData[k].length} alumnos)`;
+        pb.style.width=`${Math.round(((i+1)/grupos.length)*100)}%`;
+        try{ await set(ref(db,`escuelas/${ID}/directorio/${k}`),obj); ok++; }
+        catch(e){ fail++; }
+        await new Promise(r=>setTimeout(r,150));
+    }
+    btn.disabled=false; lp.textContent='Proceso finalizado.';
+    lv.textContent=fail===0?`✅ ${ok} grupos cargados con éxito.`:`⚠️ ${ok} OK, ${fail} con error.`;
+    lv.style.color=fail===0?'var(--emerald)':'var(--amber)';
+    if(fail===0){ hablar("Matrícula cargada con éxito."); activarBrilloNeon('tarjeta-csv'); }
+};
+
+// ══════════════════════════════════════════════════════
+// 16. GAFETES (QR + 4 FORMATOS)
+// ══════════════════════════════════════════════════════
+window.createQR = function() {
+    const turno=document.getElementById('gen-turno').value;
+    const grado=document.getElementById('gen-grado').value;
+    const grupo=document.getElementById('gen-grupo').value;
+    const nombre=document.getElementById('gen-nombre').value.trim().toUpperCase();
+    if(!nombre){ alert("Escriba el nombre del alumno."); return; }
+    const slug=nombre.replace(/\s+/g,'_');
+    const qrStr=`${turno}-${grado}-${grupo}-${slug}`;
+    const container=document.getElementById('qr-output');
+    container.style.display='flex'; container.innerHTML="<p style='color:var(--emerald);'>Generando gafete...</p>";
+    const clave=sanitizarClaveFirebase(`${turno}-${grado}-${grupo}`);
+    get(ref(db,`escuelas/${ID}/directorio/${clave}`)).then(snap=>{
+        let lista=snap.val()?( Array.isArray(snap.val())?snap.val():Object.values(snap.val()) ):[];
+        lista=lista.filter(Boolean);
+        if(!lista.includes(nombre)){
+            lista.push(nombre);
+            set(ref(db,`escuelas/${ID}/directorio/${clave}`),Object.fromEntries(lista.map((n,i)=>[i.toString(),n]))).then(()=>hablar("Alumno guardado."));
+        } else hablar("Alumno ya registrado.");
+    });
+    try{
+        const qrSize = 200;
+        const qr=new QRious({value:qrStr,size:qrSize,level:'H',foreground:'#0A192F',background:'#ffffff'});
+        const qrB64=qr.toDataURL('image/png');
+        const canvas=document.createElement('canvas'); canvas.width=520; canvas.height=680;
+        const ctx=canvas.getContext('2d'); ctx.scale(2,2);
+        ctx.fillStyle='#fff'; ctx.fillRect(0,0,260,340);
+        ctx.strokeStyle='#0284C7'; ctx.lineWidth=4; ctx.strokeRect(2,2,256,336);
+        const qrImg=new Image();
+        qrImg.onload=function(){
+            // Dibujar QR
+            ctx.drawImage(qrImg,30,20,200,200);
+            // Logo centrado sobre el QR (solo si existe)
+            if(logoBase64Global){
+                const logoOverlay=new Image();
+                logoOverlay.onload=function(){
+                    // Fondo blanco circular para el logo
+                    const cx=130, cy=120, r=22;
+                    ctx.save();
+                    ctx.beginPath(); ctx.arc(cx,cy,r+3,0,Math.PI*2);
+                    ctx.fillStyle='#ffffff'; ctx.fill();
+                    ctx.strokeStyle='#0284C7'; ctx.lineWidth=1.5; ctx.stroke();
+                    // Logo centrado
+                    ctx.drawImage(logoOverlay,cx-r,cy-r,r*2,r*2);
+                    ctx.restore();
+                    dibujarTextoGafete(ctx,canvas,nombre,grado,grupo,turno,slug,container);
+                };
+                logoOverlay.src=logoBase64Global;
+            } else {
+                dibujarTextoGafete(ctx,canvas,nombre,grado,grupo,turno,slug,container);
+            }
+        };
+        qrImg.src=qrB64;
+    } catch(e){ container.innerHTML=`<p style='color:var(--ruby);'>Error interno.</p>`; }
+};
+
+function dibujarTextoGafete(ctx,canvas,nombre,grado,grupo,turno,slug,container){
+    ctx.fillStyle='#0A192F'; ctx.textAlign='center';
+    ctx.font='bold 16px Arial';
+    ctx.fillText((nombre.length>22?nombre.substring(0,22)+'...':nombre).toUpperCase(),130,260);
+    ctx.beginPath(); ctx.setLineDash([5,5]); ctx.moveTo(30,240); ctx.lineTo(230,240); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle='#64748B'; ctx.font='bold 14px Arial';
+    ctx.fillText(`${grado}° Grado — Grupo ${grupo}`,130,290);
+    ctx.font='12px Arial'; ctx.fillText(turno,130,315);
+    // Logo pequeño esquina superior izquierda del gafete
+    if(logoBase64Global){
+        const li=new Image(); li.onload=()=>{ ctx.drawImage(li,8,5,50,50); }; li.src=logoBase64Global;
+    }
+    setTimeout(()=>{
+        const fin=canvas.toDataURL('image/png');
+        container.innerHTML=`<img src="${fin}" style="border-radius:8px;width:100%;max-width:260px;border:1px solid var(--border-color);">
+            <button class="btn-primary" style="margin-top:16px;width:auto;" onclick="window.dlQR('${fin}','${slug}')">💾 Guardar Imagen</button>`;
+        activarBrilloNeon('view-credenciales');
+    },350);
+}
+window.dlQR=(url,name)=>{ const a=document.createElement('a'); a.href=url; a.download=`Credencial_${name}.png`; document.body.appendChild(a); a.click(); document.body.removeChild(a); };
+
+function generarCanvasCredencial(alumno,turno,grado,grupo){
+    return new Promise(resolve=>{
+        const qr=new QRious({value:`${turno}-${grado}-${grupo}-${alumno.replace(/\s+/g,'_')}`,size:180,level:'H',foreground:'#0A192F',background:'#fff'});
+        const canvas=document.createElement('canvas'); canvas.width=400; canvas.height=550;
+        const ctx=canvas.getContext('2d');
+        ctx.fillStyle='#fff'; ctx.fillRect(0,0,400,550);
+        ctx.strokeStyle='#0A192F'; ctx.lineWidth=6; ctx.strokeRect(3,3,394,544);
+        ctx.fillStyle='#0A192F'; ctx.fillRect(3,3,394,70);
+        ctx.fillStyle='#10B981'; ctx.font='bold 13px Arial'; ctx.textAlign='center';
+        ctx.fillText((nombreEscuelaGlobal.length>30?nombreEscuelaGlobal.substring(0,28)+'...':nombreEscuelaGlobal).toUpperCase(),200,45);
+        const qi=new Image();
+        qi.onload=()=>{
+            ctx.drawImage(qi,110,85,180,180);
+            // Logo centrado sobre el QR del canvas masivo
+            const dibujarResto = () => {
+                ctx.beginPath(); ctx.strokeStyle='#0284C7'; ctx.lineWidth=1.5; ctx.setLineDash([6,4]);
+                ctx.moveTo(30,285); ctx.lineTo(370,285); ctx.stroke(); ctx.setLineDash([]);
+                ctx.fillStyle='#0A192F'; ctx.font='bold 15px Arial';
+                ctx.fillText((alumno.length>26?alumno.substring(0,24)+'...':alumno).toUpperCase(),200,320);
+                ctx.fillStyle='#334155'; ctx.font='bold 13px Arial'; ctx.fillText(`${grado}° Grado — Grupo "${grupo}"`,200,350);
+                ctx.fillStyle='#0284C7'; ctx.font='12px Arial'; ctx.fillText(`Turno ${turno}`,200,375);
+                resolve(canvas);
+            };
+            if(logoBase64Global){
+                const li=new Image();
+                li.onload=()=>{
+                    // Logo en esquina header
+                    ctx.drawImage(li,12,8,55,55);
+                    // Logo centrado en el QR
+                    const cx=200, cy=175, r=28;
+                    ctx.save();
+                    ctx.beginPath(); ctx.arc(cx,cy,r+4,0,Math.PI*2);
+                    ctx.fillStyle='#ffffff'; ctx.fill();
+                    ctx.strokeStyle='#0284C7'; ctx.lineWidth=2; ctx.stroke();
+                    ctx.drawImage(li,cx-r,cy-r,r*2,r*2);
+                    ctx.restore();
+                    dibujarResto();
+                };
+                li.src=logoBase64Global;
+            } else { dibujarResto(); }
+        };
+        qi.src=qr.toDataURL('image/png');
+    });
+}
+
+async function obtenerListaGrupo(turno,grado,grupo){
+    const snap=await get(directorioRef);
+    const k=sanitizarClaveFirebase(`${turno}-${grado}-${grupo}`);
+    if(!snap.exists()||!snap.val()[k]){ alert(`Sin alumnos en ${grado}° "${grupo}" — ${turno}.`); return null; }
+    const d=snap.val()[k];
+    let l=Array.isArray(d)?d:Object.values(d);
+    // Limpiar prefijos [ A ] o [ M ] que pudieran haberse colado
+    return l.filter(Boolean).map(n=>String(n).replace(/^\[ [AM] \] /,'').trim());
+}
+
+window.exportLoteMasivo = async function(fmt) {
+    const turno=document.getElementById('gen-turno').value;
+    const grado=document.getElementById('gen-grado').value;
+    const grupo=document.getElementById('gen-grupo').value;
+    try {
+        hablar("Preparando lote.");
+        const lista=await obtenerListaGrupo(turno,grado,grupo); if(!lista) return;
+        if(fmt==='word')     exportarLoteWord(lista,turno,grado,grupo);
+        else if(fmt==='pdf') await exportarLotePDF(lista,turno,grado,grupo);
+        else if(fmt==='imagenes') await exportarLoteImagenes(lista,turno,grado,grupo);
+        else imprimirLoteHTML(lista,turno,grado,grupo);
+    } catch(e){ alert("Error: "+e.message); }
+};
+
+function exportarLoteWord(alumnos,turno,grado,grupo){
+    let html=`<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word'><head><meta charset="UTF-8"><style>body{font-family:Arial}.pagina{page-break-after:always}.card{width:280px;border:3px solid #0A192F;border-radius:8px;overflow:hidden;margin:0 auto;text-align:center}.hd{background:#0A192F;color:#10B981;padding:10px;font-size:11px;font-weight:bold;text-transform:uppercase}.bd{padding:15px}.nm{font-size:14px;font-weight:bold;color:#0A192F;text-transform:uppercase;margin:8px 0 4px}.mt{font-size:12px;color:#334155;font-weight:bold}</style></head><body>`;
+    alumnos.forEach(a=>{
+        const qr=new QRious({value:`${turno}-${grado}-${grupo}-${a.replace(/\s+/g,'_')}`,size:160,level:'H'});
+        html+=`<div class="pagina"><div class="card"><div class="hd">${nombreEscuelaGlobal.toUpperCase()}</div><div class="bd"><img src="${qr.toDataURL()}" width="160" height="160"/><div class="nm">${a}</div><div class="mt">${grado}° — Grupo "${grupo}"</div><div style="font-size:11px;color:#0284C7;font-weight:bold">Turno ${turno}</div></div></div></div>`;
+    });
+    html+=`</body></html>`;
+    const blob=new Blob(['\ufeff'+html],{type:'application/msword;charset=utf-8;'});
+    const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`Credenciales_${grado}${grupo}_${turno}.doc`;
+    document.body.appendChild(a); a.click(); setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(a.href);},1000);
+    hablar("Word generado.");
+}
+
+async function exportarLotePDF(alumnos,turno,grado,grupo){
+    if(!window.jspdf) await new Promise((res,rej)=>{ const s=document.createElement('script'); s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'; s.onload=res; s.onerror=rej; document.head.appendChild(s); });
+    const {jsPDF}=window.jspdf; const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'letter'});
+    const pw=doc.internal.pageSize.getWidth();
+    hablar(`Generando PDF con ${alumnos.length} credenciales.`);
+    for(let i=0;i<alumnos.length;i++){
+        if(i>0) doc.addPage();
+        const c=await generarCanvasCredencial(alumnos[i],turno,grado,grupo);
+        doc.addImage(c.toDataURL('image/png'),'PNG',(pw-90)/2,20,90,125);
+    }
+    doc.save(`Credenciales_${grado}${grupo}_${turno}.pdf`); hablar("PDF generado.");
+}
+
+async function exportarLoteImagenes(alumnos,turno,grado,grupo){
+    if(!window.JSZip) await new Promise((res,rej)=>{ const s=document.createElement('script'); s.src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js'; s.onload=res; s.onerror=rej; document.head.appendChild(s); });
+    hablar(`Generando ${alumnos.length} imágenes.`);
+    const zip=new JSZip(); const folder=zip.folder(`Credenciales_${grado}${grupo}_${turno}`);
+    for(const a of alumnos){
+        const c=await generarCanvasCredencial(a,turno,grado,grupo);
+        folder.file(a.replace(/\s+/g,'_').replace(/[^A-Z0-9_]/gi,'')+'.png',c.toDataURL('image/png').split(',')[1],{base64:true});
+    }
+    const content=await zip.generateAsync({type:'blob'});
+    const el=document.createElement('a'); el.href=URL.createObjectURL(content); el.download=`Credenciales_${grado}${grupo}_${turno}.zip`;
+    document.body.appendChild(el); el.click(); setTimeout(()=>{document.body.removeChild(el);URL.revokeObjectURL(el.href);},1000);
+    hablar("ZIP generado.");
+}
+
+function imprimirLoteHTML(alumnos,turno,grado,grupo){
+    const logoTag=logoBase64Global?`<img src="${logoBase64Global}" style="position:absolute;top:8px;left:8px;width:40px;height:40px;object-fit:contain;">`:'';
+    let html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Gafetes ${grado}°${grupo}</title><style>body{font-family:Arial;background:#F8FAFC;margin:0;padding:20px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px}.card{position:relative;background:white;border:2px solid #0A192F;border-radius:8px;overflow:hidden;text-align:center;padding-bottom:14px}.hd{background:#0A192F;color:#10B981;padding:12px 12px 12px 48px;font-size:11px;font-weight:bold;text-transform:uppercase}.nm{font-size:13px;font-weight:bold;color:#0A192F;margin:10px 0 4px;text-transform:uppercase;padding:0 8px}.mt{font-size:11px;color:#475569;font-weight:bold}.tl{font-size:10px;color:#0284C7;font-weight:bold;margin-top:4px}.no-print{background:#0284C7;color:white;padding:12px;margin-bottom:18px;border-radius:6px;font-weight:bold;font-size:13px;text-align:center}@media print{.no-print{display:none}body{background:white;padding:4mm}.grid{gap:4mm}}</style></head><body><div class="no-print">🖨️ CTRL+P para imprimir</div><div class="grid">`;
+    alumnos.forEach(a=>{
+        const qr=new QRious({value:`${turno}-${grado}-${grupo}-${a.replace(/\s+/g,'_')}`,size:140,level:'H'});
+        html+=`<div class="card">${logoTag}<div class="hd">${nombreEscuelaGlobal}</div><div style="padding:10px"><img src="${qr.toDataURL()}" width="128" height="128"></div><div class="nm">${a}</div><div class="mt">${grado}° — Grupo ${grupo}</div><div class="tl">Turno ${turno}</div></div>`;
+    });
+    html+=`</div></body></html>`;
+    const blob=new Blob([html],{type:'text/html;charset=utf-8;'});
+    const el=document.createElement('a'); el.href=URL.createObjectURL(blob); el.target='_blank'; el.rel='noopener';
+    document.body.appendChild(el); el.click(); setTimeout(()=>{document.body.removeChild(el);URL.revokeObjectURL(el.href);},2000);
+    hablar("Página de gafetes lista para imprimir.");
+}
+
+// ══════════════════════════════════════════════════════
+
+// ══════════════════════════════════════════════════════
+// 17B. MODO OSCURO
+// ══════════════════════════════════════════════════════
+window.toggleDark = function() {
+    const isDark = document.body.classList.toggle('dark');
+    localStorage.setItem('ludo_dark', isDark ? '1' : '0');
+    document.getElementById('btnDark').textContent = isDark ? '☀️' : '🌙';
+    if (graficaInstance) { graficaInstance.destroy(); graficaInstance = null; cargarGrafica(); }
+};
+if (localStorage.getItem('ludo_dark') === '1') {
+    document.body.classList.add('dark');
+    document.getElementById('btnDark').textContent = '☀️';
+}
+
+// ══════════════════════════════════════════════════════
+// 18. ALERTAS FALTAS >20%
+// ══════════════════════════════════════════════════════
+async function calcularAlertas() {
+    const panel = document.getElementById('panel-alertas');
+    const lista = document.getElementById('lista-alertas');
+    if (!panel||!lista) return;
+    try {
+        const snap = await get(asistenciasRef);
+        if (!snap.exists()) return;
+        const hoy=new Date(); const hace4=new Date(); hace4.setDate(hoy.getDate()-28);
+        const desde=hace4.toISOString().split('T')[0];
+        const hasta=hoy.toISOString().split('T')[0];
+        const conteo={};
+        snap.forEach(child=>{
+            const r=child.val();
+            if(!r?.fecha||r.fecha<desde||r.fecha>hasta) return;
+            const nombre=(r.nombre||'').replace(/^\[ [AM] \] /,'').toUpperCase();
+            if(!nombre) return;
+            if(!conteo[nombre]) conteo[nombre]={faltas:0,total:0};
+            conteo[nombre].total++;
+            if((r.estatus||'').toLowerCase().includes('falt')) conteo[nombre].faltas++;
+        });
+        const alertas=Object.entries(conteo)
+            .filter(([,v])=>v.total>=5&&(v.faltas/v.total)>=0.20)
+            .sort((a,b)=>(b[1].faltas/b[1].total)-(a[1].faltas/a[1].total))
+            .slice(0,10);
+        if(!alertas.length){ panel.style.display='none'; return; }
+        panel.style.display='block'; lista.innerHTML='';
+        alertas.forEach(([nombre,v])=>{
+            const pct=Math.round((v.faltas/v.total)*100);
+            const div=document.createElement('div'); div.className='alerta-item';
+            div.innerHTML=`<span class="alerta-nombre">${nombre.split(' ').slice(0,3).join(' ')}</span><span class="alerta-pct">${pct}% faltas (${v.faltas}/${v.total} días)</span>`;
+            lista.appendChild(div);
+        });
+    } catch(e){ console.warn('Alertas:',e.message); }
+}
+
+// ══════════════════════════════════════════════════════
+// 19. GRÁFICA HISTÓRICA (Chart.js)
+// ══════════════════════════════════════════════════════
+let graficaInstance=null;
+async function cargarGrafica(){
+    const estadoEl=document.getElementById('grafica-estado');
+    if(!estadoEl) return;
+    try {
+        if(typeof Chart==='undefined'){ estadoEl.textContent='Cargando Chart.js...'; return; }
+        const snap=await get(asistenciasRef);
+        if(!snap.exists()){ estadoEl.textContent='Sin datos históricos aún.'; return; }
+        const hoy=new Date(); const datos={};
+        for(let i=27;i>=0;i--){ const d=new Date(hoy); d.setDate(hoy.getDate()-i); datos[d.toISOString().split('T')[0]]={p:0,t:0}; }
+        const turno=turnoMonitorActivo||Object.keys(estructuraActiva)[0]||'Matutino';
+        snap.forEach(child=>{
+            const r=child.val();
+            if(!r?.fecha||!datos[r.fecha]||r.turno!==turno) return;
+            datos[r.fecha].t++;
+            const e=(r.estatus||'').toLowerCase();
+            if(e.includes('asist')||e.includes('retard')) datos[r.fecha].p++;
+        });
+        const entradas=Object.entries(datos).filter(([,v])=>v.t>0);
+        if(entradas.length<2){ estadoEl.textContent='Se necesitan más días registrados.'; return; }
+        estadoEl.textContent='';
+        const labels=entradas.map(([f])=>{ const d=new Date(f+'T12:00:00'); return d.toLocaleDateString('es-MX',{day:'numeric',month:'short'}); });
+        const valores=entradas.map(([,v])=>Math.round((v.p/v.t)*100));
+        if(graficaInstance){ graficaInstance.destroy(); graficaInstance=null; }
+        const canvas=document.getElementById('grafica-asistencia');
+        if(!canvas) return;
+        const isDark=document.body.classList.contains('dark');
+        const gc=isDark?'rgba(255,255,255,.08)':'rgba(0,0,0,.06)';
+        const tc=isDark?'#94A3B8':'#64748B';
+        graficaInstance=new Chart(canvas,{
+            type:'line',
+            data:{ labels, datasets:[{ label:`% ${turno}`, data:valores, borderColor:'#10B981', backgroundColor:'rgba(16,185,129,.12)', borderWidth:2.5, pointBackgroundColor:'#10B981', pointRadius:4, tension:.35, fill:true }]},
+            options:{ responsive:true, plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:ctx=>` ${ctx.parsed.y}% asistencia` }}},
+                scales:{ y:{min:0,max:100,ticks:{color:tc,callback:v=>v+'%'},grid:{color:gc}}, x:{ticks:{color:tc,maxRotation:45},grid:{color:gc}} }}
+        });
+    } catch(e){ const el=document.getElementById('grafica-estado'); if(el) el.textContent='Error al cargar.'; }
+}
+
+// ══════════════════════════════════════════════════════
+// 20. REPORTE SEMANAL PDF
+// ══════════════════════════════════════════════════════
+window.generarReportePDF = async function(){
+    if(!window.jspdf){
+        for(const url of [
+            'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js'
+        ]){ await new Promise((res,rej)=>{ const s=document.createElement('script'); s.src=url; s.onload=res; s.onerror=rej; document.head.appendChild(s); }); }
+    }
+    const turno=turnoMonitorActivo||Object.keys(estructuraActiva)[0]||'Matutino';
+    hablar("Generando reporte semanal.");
+    try {
+        const hoy=new Date(); const lunes=new Date(hoy); lunes.setDate(hoy.getDate()-hoy.getDay()+1);
+        const desde=lunes.toISOString().split('T')[0]; const hasta=hoy.toISOString().split('T')[0];
+        const snap=await get(asistenciasRef);
+        const registros=[];
+        if(snap.exists()) snap.forEach(child=>{ const r=child.val(); if(r?.fecha>=desde&&r?.fecha<=hasta&&r.turno===turno) registros.push(r); });
+        const {jsPDF}=window.jspdf;
+        const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'letter'});
+        const pw=doc.internal.pageSize.getWidth(), ph=doc.internal.pageSize.getHeight();
+        doc.setFillColor(10,25,47); doc.rect(0,0,pw,28,'F');
+        doc.setTextColor(16,185,129); doc.setFontSize(13); doc.setFont('helvetica','bold');
+        doc.text('REPORTE SEMANAL DE ASISTENCIA',pw/2,11,{align:'center'});
+        doc.setTextColor(255,255,255); doc.setFontSize(9); doc.setFont('helvetica','normal');
+        doc.text(nombreEscuelaGlobal.toUpperCase(),pw/2,17,{align:'center'});
+        doc.text(`Turno ${turno}  ·  Semana: ${desde} al ${hasta}`,pw/2,22,{align:'center'});
+        if(logoBase64Global){ try{ doc.addImage(logoBase64Global,'PNG',8,4,18,18); }catch(e){} }
+        let yPos=34; let hayDatos=false;
+        const grados=estructuraActiva[turno]||{};
+        for(const grado of Object.keys(grados).sort((a,b)=>Number(a)-Number(b))){
+            for(const grupo of grados[grado]){
+                const clave=`${turno}-${grado}-${grupo}`.replace(/[.#$[\]\/]/g,'_');
+                const listaDir=directorioCache[clave]||[];
+                if(!listaDir.length) continue;
+                const regsGrupo=registros.filter(r=>{ const gRaw=(r.grupo||'').replace(/°\s*/,'').trim().split(' '); return gRaw[0]===grado&&gRaw[1]===grupo; });
+                const dias=[...new Set(regsGrupo.map(r=>r.fecha))].sort();
+                const rows=listaDir.map(alumno=>{
+                    const row=[alumno];
+                    dias.forEach(dia=>{
+                        const reg=regsGrupo.find(r=>r.nombre.replace(/^\[ [AM] \] /,'').toUpperCase()===alumno.toUpperCase()&&r.fecha===dia);
+                        let est='—';
+                        if(reg){ const e=(reg.estatus||'').toLowerCase(); if(e.includes('asist')) est='A'; else if(e.includes('retard')) est='R'; else if(e.includes('falt')) est='F'; else if(e.includes('justif')) est='J'; }
+                        row.push(est);
+                    });
+                    const pres=regsGrupo.filter(r=>r.nombre.replace(/^\[ [AM] \] /,'').toUpperCase()===alumno.toUpperCase()&&!(r.estatus||'').toLowerCase().includes('falt')).length;
+                    row.push(`${pres}/${dias.length}`); return row;
+                });
+                if(!rows.length) continue; hayDatos=true;
+                if(yPos>ph-60){ doc.addPage(); yPos=20; }
+                doc.setFillColor(2,132,199); doc.setTextColor(255,255,255); doc.setFontSize(9); doc.setFont('helvetica','bold');
+                doc.rect(14,yPos-4,pw-28,8,'F');
+                doc.text(`${grado}° GRADO — GRUPO "${grupo}"  (${listaDir.length} alumnos)`,16,yPos+1);
+                yPos+=8;
+                doc.autoTable({ startY:yPos, head:[['Alumno',...dias.map(d=>d.slice(8)),'Total']], body:rows,
+                    styles:{fontSize:7,cellPadding:1.5}, headStyles:{fillColor:[15,23,42],textColor:255,fontStyle:'bold',fontSize:7},
+                    columnStyles:{0:{cellWidth:55},[dias.length+1]:{cellWidth:12,halign:'center',fontStyle:'bold'}},
+                    alternateRowStyles:{fillColor:[248,250,252]},
+                    didParseCell:(data)=>{ if(data.section==='body'&&data.column.index>0&&data.column.index<=dias.length){ const v=data.cell.raw; if(v==='A') data.cell.styles.textColor=[5,150,105]; else if(v==='R') data.cell.styles.textColor=[146,64,14]; else if(v==='F') data.cell.styles.textColor=[153,27,27]; else if(v==='J') data.cell.styles.textColor=[30,64,175]; }},
+                    margin:{left:14,right:14} });
+                yPos=doc.lastAutoTable.finalY+8;
+            }
+        }
+        if(!hayDatos){ doc.setTextColor(100,116,139); doc.setFontSize(10); doc.text('Sin registros esta semana.',pw/2,ph/2,{align:'center'}); }
+        const total=doc.internal.getNumberOfPages();
+        for(let i=1;i<=total;i++){ doc.setPage(i); doc.setFontSize(7); doc.setTextColor(148,163,184); doc.text('A=Asistencia  R=Retardo  F=Falta  J=Justificado',14,ph-8); doc.text(`Página ${i}/${total}  ·  ${new Date().toLocaleString('es-MX')}`,pw-14,ph-8,{align:'right'}); doc.setDrawColor(203,213,225); doc.line(14,ph-11,pw-14,ph-11); }
+        doc.save(`Reporte_${turno}_${desde}.pdf`);
+        hablar("Reporte PDF listo. Revise sus descargas.");
+    } catch(e){ alert("Error PDF: "+e.message); console.error(e); }
+};
+
+// ══════════════════════════════════════════════════════
+// 21. EXPORTAR PADRÓN COMPLETO A EXCEL
+// ══════════════════════════════════════════════════════
+window.exportarPadronExcel = async function(){
+    hablar("Exportando padrón a Excel.");
+    try {
+        const snap=await get(directorioRef);
+        if(!snap.exists()){ alert("El padrón está vacío."); return; }
+        const wb=XLSX.utils.book_new();
+        const data=snap.val(); let totalAlumnos=0;
+        const resumenRows=[["Turno","Grado","Grupo","Total Alumnos"]];
+        for(const turno of Object.keys(estructuraActiva).sort()){
+            const grados=estructuraActiva[turno]||{};
+            for(const grado of Object.keys(grados).sort((a,b)=>Number(a)-Number(b))){
+                for(const grupo of grados[grado]){
+                    const clave=`${turno}-${grado}-${grupo}`.replace(/[.#$[\]\/]/g,'_');
+                    const rawG=data[clave];
+                    if(!rawG){ resumenRows.push([turno,grado+'° Grado','Grupo '+grupo,0]); continue; }
+                    const lista=(Array.isArray(rawG)?rawG:Object.values(rawG)).filter(Boolean);
+                    totalAlumnos+=lista.length;
+                    resumenRows.push([turno,grado+'° Grado','Grupo '+grupo,lista.length]);
+                    const rows=[[`PLANTEL: ${nombreEscuelaGlobal}`],[`${turno}  |  ${grado}° GRADO  |  GRUPO "${grupo}"`],[`Total: ${lista.length} alumnos`],[],['#','NOMBRE COMPLETO']];
+                    lista.forEach((n,i)=>rows.push([i+1,n]));
+                    const ws=XLSX.utils.aoa_to_sheet(rows);
+                    ws['!cols']=[{wch:5},{wch:45}];
+                    XLSX.utils.book_append_sheet(wb,ws,`${turno[0]}${grado}${grupo}`.substring(0,31));
+                }
+            }
+        }
+        resumenRows.push([]); resumenRows.push(['TOTAL GENERAL','','',totalAlumnos]);
+        const wsR=XLSX.utils.aoa_to_sheet(resumenRows); wsR['!cols']=[{wch:14},{wch:12},{wch:10},{wch:14}];
+        XLSX.utils.book_append_sheet(wb,wsR,'RESUMEN');
+        const sheets=wb.SheetNames; const ri=sheets.indexOf('RESUMEN'); sheets.splice(ri,1); sheets.unshift('RESUMEN');
+        const nombre=`Padron_${nombreEscuelaGlobal.replace(/\s+/g,'_').substring(0,20)}_${new Date().toISOString().split('T')[0]}.xlsx`;
+        XLSX.writeFile(wb,nombre);
+        hablar(`Padrón exportado. ${totalAlumnos} alumnos en total.`);
+    } catch(e){ alert("Error Excel: "+e.message); console.error(e); }
+};
+
+// Alertas y gráfica se llaman desde renderMonitor directamente (ver abajo)
+
+// 17. INICIO
+// ══════════════════════════════════════════════════════
+document.getElementById('lblStatusFirebase').textContent="Sistema LudoAssist PRO";
+// Iniciar con verificación de licencia
+iniciarPanel();
+
+</script>
+</body>
+</html>

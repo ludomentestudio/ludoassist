@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>LudoAssist PRO — Panel Maestro</title>
+<style>
+:root{
+  --navy:#0A192F;--navy2:#112240;--emerald:#10B981;--emerald2:#059669;
+  --ruby:#EF4444;--amber:#F59E0B;--slate:#8892B0;--white:#E6F1FF;
+  --accent:#64FFDA;--border:rgba(100,255,218,.1);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--navy);color:var(--white);font-family:'Segoe UI',sans-serif;min-height:100vh;}
+
+/* ── LOGIN ── */
+#screen-login{position:fixed;inset:0;background:var(--navy);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;z-index:999;gap:1.2rem;padding:2rem;}
+#screen-login.hidden{display:none;}
+.login-logo{font-size:3rem;}
+.login-title{font-size:1.6rem;font-weight:800;color:var(--white);letter-spacing:1px;}
+.login-sub{font-size:.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:2px;}
+.login-card{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:12px;
+  padding:1.5rem;width:100%;max-width:360px;}
+.login-label{font-size:.7rem;color:var(--slate);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:.5rem;}
+.login-input{width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  border-radius:8px;padding:.85rem 1rem;color:var(--white);font-size:1rem;text-align:center;
+  letter-spacing:4px;outline:none;transition:border .3s;}
+.login-input:focus{border-color:var(--accent);}
+.login-btn{width:100%;padding:.9rem;background:var(--emerald);color:var(--navy);border:none;
+  border-radius:8px;font-size:.95rem;font-weight:800;cursor:pointer;margin-top:.8rem;
+  text-transform:uppercase;letter-spacing:1px;transition:all .25s;}
+.login-btn:hover{background:var(--emerald2);}
+.login-error{color:var(--ruby);font-size:.8rem;text-align:center;min-height:18px;margin-top:.4rem;}
+
+/* ── HEADER ── */
+header{background:var(--navy2);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;padding:.8rem 1.2rem;
+  position:sticky;top:0;z-index:50;}
+.hdr-brand{font-size:1rem;font-weight:800;color:var(--white);}
+.hdr-brand span{color:var(--accent);}
+.hdr-badge{background:rgba(100,255,218,.1);border:1px solid var(--border);
+  border-radius:20px;padding:.25rem .7rem;font-size:.65rem;color:var(--accent);
+  text-transform:uppercase;letter-spacing:1px;}
+.hdr-right{display:flex;gap:.6rem;align-items:center;}
+.btn-cerrar{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);
+  color:#FCA5A5;border-radius:6px;padding:.3rem .7rem;font-size:.72rem;cursor:pointer;}
+
+/* ── TABS ── */
+.tabs{display:flex;background:var(--navy2);border-bottom:1px solid var(--border);}
+.tab{flex:1;padding:.9rem;text-align:center;font-size:.82rem;font-weight:700;
+  cursor:pointer;color:var(--slate);border-bottom:2px solid transparent;transition:all .25s;}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+/* ── MAIN ── */
+main{padding:1rem;}
+.section{display:none;}
+.section.active{display:block;}
+
+/* ── STATS ROW ── */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;margin-bottom:1.2rem;}
+.stat-card{background:var(--navy2);border:1px solid var(--border);border-radius:10px;
+  padding:.9rem;text-align:center;}
+.stat-num{font-size:1.8rem;font-weight:800;display:block;}
+.stat-lbl{font-size:.65rem;color:var(--slate);text-transform:uppercase;letter-spacing:.5px;}
+.stat-verde{color:var(--emerald);}
+.stat-rojo{color:var(--ruby);}
+.stat-amber{color:var(--amber);}
+
+/* ── TABLA ESCUELAS ── */
+.search-bar{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--border);
+  border-radius:8px;padding:.7rem 1rem;color:var(--white);font-size:.9rem;margin-bottom:.8rem;outline:none;}
+.search-bar::placeholder{color:var(--slate);}
+.escuela-card{background:var(--navy2);border:1px solid var(--border);border-radius:10px;
+  padding:1rem;margin-bottom:.7rem;transition:border .25s;}
+.escuela-card:hover{border-color:rgba(100,255,218,.25);}
+.esc-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.6rem;}
+.esc-nombre{font-size:1rem;font-weight:700;color:var(--white);}
+.esc-codigo{font-size:.7rem;color:var(--accent);font-weight:700;letter-spacing:1px;margin-top:2px;}
+.badge{border-radius:12px;padding:.2rem .6rem;font-size:.65rem;font-weight:700;text-transform:uppercase;}
+.badge-activa{background:rgba(16,185,129,.15);color:var(--emerald);border:1px solid rgba(16,185,129,.3);}
+.badge-inactiva{background:rgba(239,68,68,.15);color:var(--ruby);border:1px solid rgba(239,68,68,.3);}
+.badge-vence{background:rgba(245,158,11,.15);color:var(--amber);border:1px solid rgba(245,158,11,.3);}
+.esc-meta{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin-bottom:.7rem;}
+.esc-meta-item{font-size:.75rem;color:var(--slate);}
+.esc-meta-item span{color:var(--white);font-weight:600;}
+.esc-actions{display:flex;gap:.5rem;flex-wrap:wrap;}
+.btn-sm{border:none;border-radius:6px;padding:.4rem .8rem;font-size:.72rem;font-weight:700;
+  cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:.3px;}
+.btn-activar{background:rgba(16,185,129,.15);color:var(--emerald);border:1px solid rgba(16,185,129,.3);}
+.btn-activar:hover{background:var(--emerald);color:var(--navy);}
+.btn-bloquear{background:rgba(239,68,68,.15);color:var(--ruby);border:1px solid rgba(239,68,68,.3);}
+.btn-bloquear:hover{background:var(--ruby);color:white;}
+.btn-ver{background:rgba(100,255,218,.1);color:var(--accent);border:1px solid var(--border);}
+.btn-ver:hover{background:rgba(100,255,218,.2);}
+.btn-editar{background:rgba(245,158,11,.1);color:var(--amber);border:1px solid rgba(245,158,11,.3);}
+.btn-editar:hover{background:var(--amber);color:var(--navy);}
+
+/* ── FORMULARIO NUEVA ESCUELA ── */
+.form-card{background:var(--navy2);border:1px solid var(--border);border-radius:12px;padding:1.2rem;margin-bottom:1rem;}
+.form-title{font-size:1rem;font-weight:700;color:var(--accent);margin-bottom:1rem;text-transform:uppercase;letter-spacing:.5px;}
+.form-row{margin-bottom:.8rem;}
+.form-label{font-size:.7rem;color:var(--slate);text-transform:uppercase;letter-spacing:1px;margin-bottom:.3rem;display:block;}
+.form-input{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--border);
+  border-radius:8px;padding:.75rem 1rem;color:var(--white);font-size:.9rem;outline:none;transition:border .25s;}
+.form-input:focus{border-color:var(--accent);}
+.form-input::placeholder{color:var(--slate);}
+.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;}
+.codigo-preview{background:rgba(100,255,218,.08);border:1px solid var(--accent);border-radius:8px;
+  padding:.9rem;text-align:center;margin:.8rem 0;}
+.codigo-label{font-size:.65rem;color:var(--slate);text-transform:uppercase;letter-spacing:1px;margin-bottom:.3rem;}
+.codigo-value{font-size:1.4rem;font-weight:800;color:var(--accent);letter-spacing:3px;}
+.btn-regenerar{background:transparent;border:1px solid var(--border);color:var(--slate);
+  border-radius:6px;padding:.35rem .7rem;font-size:.7rem;cursor:pointer;margin-top:.4rem;}
+.btn-regenerar:hover{border-color:var(--accent);color:var(--accent);}
+.btn-primary{width:100%;padding:.9rem;background:var(--emerald);color:var(--navy);border:none;
+  border-radius:8px;font-size:.95rem;font-weight:800;cursor:pointer;text-transform:uppercase;
+  letter-spacing:1px;transition:all .25s;margin-top:.5rem;}
+.btn-primary:hover{background:var(--emerald2);}
+.btn-primary:disabled{background:var(--slate);cursor:not-allowed;}
+
+/* ── MODAL DE CONFIRMACIÓN ── */
+#modal-confirm{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;
+  align-items:center;justify-content:center;z-index:200;padding:1rem;}
+#modal-confirm.show{display:flex;}
+.modal-box{background:var(--navy2);border:1px solid var(--border);border-radius:12px;
+  padding:1.5rem;max-width:340px;width:100%;}
+.modal-icon{font-size:2.5rem;text-align:center;margin-bottom:.8rem;}
+.modal-title{font-size:1rem;font-weight:700;text-align:center;margin-bottom:.5rem;}
+.modal-desc{font-size:.85rem;color:var(--slate);text-align:center;line-height:1.5;margin-bottom:1.2rem;}
+.modal-btns{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;}
+.btn-cancel{padding:.7rem;background:rgba(255,255,255,.06);border:1px solid var(--border);
+  color:var(--slate);border-radius:8px;cursor:pointer;font-weight:700;font-size:.85rem;}
+.btn-confirm-rojo{padding:.7rem;background:var(--ruby);color:white;border:none;
+  border-radius:8px;cursor:pointer;font-weight:700;font-size:.85rem;}
+.btn-confirm-verde{padding:.7rem;background:var(--emerald);color:var(--navy);border:none;
+  border-radius:8px;cursor:pointer;font-weight:700;font-size:.85rem;}
+
+/* ── MODAL DETALLE ESCUELA ── */
+#modal-detalle{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;
+  align-items:flex-start;justify-content:center;z-index:200;padding:1rem;overflow-y:auto;}
+#modal-detalle.show{display:flex;}
+.detalle-box{background:var(--navy2);border:1px solid var(--border);border-radius:12px;
+  padding:1.2rem;width:100%;max-width:420px;margin-top:2rem;}
+.detalle-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;}
+.detalle-title{font-size:1.1rem;font-weight:700;color:var(--accent);}
+.btn-close{background:none;border:none;color:var(--slate);font-size:1.3rem;cursor:pointer;}
+.detalle-row{display:flex;justify-content:space-between;padding:.5rem 0;
+  border-bottom:1px solid rgba(255,255,255,.05);font-size:.85rem;}
+.detalle-key{color:var(--slate);}
+.detalle-val{color:var(--white);font-weight:600;text-align:right;max-width:60%;}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);
+  background:var(--navy2);border:1px solid var(--border);border-radius:8px;
+  padding:.7rem 1.2rem;font-size:.85rem;color:var(--white);z-index:300;
+  opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;}
+
+/* ── VACÍO ── */
+.empty-state{text-align:center;padding:3rem 1rem;color:var(--slate);}
+.empty-icon{font-size:3rem;margin-bottom:.8rem;}
+
+/* ── SPINNER ── */
+.spinner{width:28px;height:28px;border:3px solid rgba(255,255,255,.15);
+  border-top-color:var(--emerald);border-radius:50%;animation:spin .7s linear infinite;margin:2rem auto;}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- MODAL CONFIRMACIÓN -->
+<div id="modal-confirm">
+  <div class="modal-box">
+    <div class="modal-icon" id="mc-icon">⚠️</div>
+    <div class="modal-title" id="mc-title">¿Confirmar acción?</div>
+    <div class="modal-desc" id="mc-desc">Esta acción no se puede deshacer.</div>
+    <div class="modal-btns">
+      <button class="btn-cancel" id="mc-btn-cancel">Cancelar</button>
+      <button id="mc-btn-ok" class="btn-confirm-rojo">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DETALLE -->
+<div id="modal-detalle">
+  <div class="detalle-box">
+    <div class="detalle-header">
+      <span class="detalle-title" id="det-titulo">Detalle de Escuela</span>
+      <button class="btn-close" onclick="cerrarDetalle()">✕</button>
+    </div>
+    <div id="det-contenido"></div>
+    <div style="margin-top:1rem;display:flex;gap:.5rem;flex-wrap:wrap;" id="det-acciones"></div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div id="screen-login">
+  <div class="login-logo">🔐</div>
+  <div>
+    <div class="login-title">PANEL MAESTRO</div>
+    <div class="login-sub">LudoAssist PRO · Admin</div>
+  </div>
+  <div class="login-card">
+    <div class="login-label">Contraseña de Administrador</div>
+    <input class="login-input" type="password" id="pin-input" placeholder="••••••"
+      maxlength="10" autocomplete="off">
+    <div class="login-error" id="pin-error"></div>
+    <button class="login-btn" onclick="verificarPin()">Entrar</button>
+  </div>
+  <div style="font-size:.7rem;color:rgba(255,255,255,.25);text-align:center;">
+    Acceso restringido · Solo administrador LudoAssist
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div>
+    <div class="hdr-brand">Ludo<span>Assist</span> PRO</div>
+  </div>
+  <div class="hdr-right">
+    <span class="hdr-badge">Panel Maestro</span>
+    <button class="btn-cerrar" onclick="cerrarSesion()">Salir</button>
+  </div>
+</header>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" onclick="cambiarTab('dashboard')">📊 Escuelas</div>
+  <div class="tab" onclick="cambiarTab('nueva')">➕ Nueva Escuela</div>
+</div>
+
+<!-- MAIN -->
+<main>
+
+  <!-- SECCIÓN DASHBOARD -->
+  <div class="section active" id="sec-dashboard">
+    <div class="stats-row" id="stats-row">
+      <div class="stat-card"><span class="stat-num stat-verde" id="st-total">—</span><span class="stat-lbl">Total</span></div>
+      <div class="stat-card"><span class="stat-num stat-verde" id="st-activas">—</span><span class="stat-lbl">Activas</span></div>
+      <div class="stat-card"><span class="stat-num stat-rojo" id="st-bloqueadas">—</span><span class="stat-lbl">Bloqueadas</span></div>
+    </div>
+    <input class="search-bar" type="text" id="buscador" placeholder="🔍  Buscar escuela, director o código..." oninput="filtrarEscuelas()">
+    <div id="lista-escuelas"><div class="spinner"></div></div>
+  </div>
+
+  <!-- SECCIÓN NUEVA ESCUELA -->
+  <div class="section" id="sec-nueva">
+    <div class="form-card">
+      <div class="form-title">➕ Dar de Alta Nueva Escuela</div>
+
+      <div class="form-row">
+        <label class="form-label">Nombre del Plantel *</label>
+        <input class="form-input" id="f-nombre" type="text" placeholder="Ej: Escuela Primaria Benito Juárez">
+      </div>
+
+      <div class="form-row-2">
+        <div class="form-row">
+          <label class="form-label">Ciudad *</label>
+          <input class="form-input" id="f-ciudad" type="text" placeholder="Campeche">
+        </div>
+        <div class="form-row">
+          <label class="form-label">Estado</label>
+          <input class="form-input" id="f-estado" type="text" placeholder="Campeche">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Nombre del Director *</label>
+        <input class="form-input" id="f-director" type="text" placeholder="Nombre completo">
+      </div>
+
+      <div class="form-row-2">
+        <div class="form-row">
+          <label class="form-label">Teléfono</label>
+          <input class="form-input" id="f-tel" type="tel" placeholder="9811234567">
+        </div>
+        <div class="form-row">
+          <label class="form-label">Nivel Educativo</label>
+          <select class="form-input" id="f-nivel">
+            <option>Preescolar</option>
+            <option selected>Primaria</option>
+            <option>Secundaria</option>
+            <option>Preparatoria</option>
+            <option>Universidad</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row-2">
+        <div class="form-row">
+          <label class="form-label">Fecha de Alta</label>
+          <input class="form-input" id="f-alta" type="date">
+        </div>
+        <div class="form-row">
+          <label class="form-label">Fecha de Vencimiento *</label>
+          <input class="form-input" id="f-vence" type="date">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Observaciones</label>
+        <input class="form-input" id="f-obs" type="text" placeholder="Notas internas, precio pactado, etc.">
+      </div>
+
+      <!-- Código generado -->
+      <div class="codigo-preview">
+        <div class="codigo-label">Código de Licencia Generado</div>
+        <div class="codigo-value" id="codigo-generado">—</div>
+        <br>
+        <button class="btn-regenerar" onclick="generarCodigo()">🔄 Regenerar código</button>
+      </div>
+
+      <button class="btn-primary" id="btn-guardar" onclick="guardarEscuela()">
+        ☁️ Dar de Alta en Firebase
+      </button>
+    </div>
+  </div>
+
+</main>
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+import { getDatabase, ref, get, set, onValue, update }
+  from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBnlD-4trgGGXXfzHf7FhHDf1cCiaxdMjA",
+  authDomain: "ludoasistencia.firebaseapp.com",
+  databaseURL: "https://ludoasistencia-default-rtdb.firebaseio.com",
+  projectId: "ludoasistencia",
+  storageBucket: "ludoasistencia.appspot.com",
+  messagingSenderId: "738361802611",
+  appId: "1:738361802611:web:cb13956f002a0e74844f06"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getDatabase(app);
+
+// ── ESTADO ──
+let escuelasData = {};
+window.accionPendiente = null;
+
+// ── LOGIN ──
+window.verificarPin = async function() {
+  const pin    = document.getElementById('pin-input').value.trim();
+  const errEl  = document.getElementById('pin-error');
+  errEl.textContent = '';
+  if (!pin) { errEl.textContent = 'Ingresa la contraseña.'; return; }
+  try {
+    const snap = await get(ref(db, 'admin/pin'));
+    const pinGuardado = snap.val();
+    if (!pinGuardado) {
+      // Primera vez — guardar el pin 7117
+      await set(ref(db, 'admin/pin'), '7117');
+      if (pin === '7117') { entrar(); return; }
+    }
+    if (pin === String(pinGuardado)) { entrar(); }
+    else { errEl.textContent = '❌ Contraseña incorrecta.'; }
+  } catch(e) { errEl.textContent = '⚠️ Sin conexión. Verifique internet.'; }
+};
+
+function entrar() {
+  document.getElementById('screen-login').classList.add('hidden');
+  cargarEscuelas();
+}
+
+window.cerrarSesion = function() {
+  document.getElementById('screen-login').classList.remove('hidden');
+  document.getElementById('pin-input').value = '';
+};
+
+document.getElementById('pin-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') window.verificarPin();
+});
+
+// ── CARGAR ESCUELAS ──
+function cargarEscuelas() {
+  onValue(ref(db, 'admin/escuelas'), snap => {
+    escuelasData = snap.exists() ? snap.val() : {};
+    // Asegurar que est17 siempre aparece con datos base,
+    // pero RESPETAR el valor de activa y fechaVence que venga de Firebase
+    const defaults17 = {
+      nombre: 'Secundaria Técnica No. 17',
+      ciudad: 'Campeche', estado: 'Campeche',
+      director: 'Jesús Rodríguez García',
+      telefono: '9811244870', nivel: 'Secundaria',
+      activa: true, fechaAlta: '2026-05-31',
+      fechaVence: '2027-05-31', codigo: 'est17',
+      observaciones: 'Escuela piloto — administrador del sistema'
+    };
+    // Fusionar: los datos de Firebase tienen prioridad sobre los defaults
+    escuelasData['est17'] = Object.assign({}, defaults17, escuelasData['est17'] || {});
+    renderDashboard();
+  });
+}
+
+// ── RENDER DASHBOARD ──
+function renderDashboard() {
+  const lista  = Object.entries(escuelasData);
+  const activas    = lista.filter(([,e])=>e.activa).length;
+  const bloqueadas = lista.filter(([,e])=>!e.activa).length;
+
+  document.getElementById('st-total').textContent     = lista.length;
+  document.getElementById('st-activas').textContent   = activas;
+  document.getElementById('st-bloqueadas').textContent= bloqueadas;
+
+  filtrarEscuelas();
+}
+
+window.filtrarEscuelas = function() {
+  const q = (document.getElementById('buscador').value||'').toLowerCase();
+  const lista = Object.entries(escuelasData).filter(([codigo, e]) => {
+    if (!q) return true;
+    return (e.nombre||'').toLowerCase().includes(q)
+      || (e.director||'').toLowerCase().includes(q)
+      || (e.ciudad||'').toLowerCase().includes(q)
+      || codigo.toLowerCase().includes(q);
+  });
+
+  const cont = document.getElementById('lista-escuelas');
+
+  if (lista.length === 0) {
+    cont.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">🏫</div>
+      <p>No se encontraron escuelas</p>
+    </div>`;
+    return;
+  }
+
+  // Ordenar: activas primero, luego por nombre
+  lista.sort((a,b) => {
+    if (a[1].activa !== b[1].activa) return b[1].activa - a[1].activa;
+    return (a[1].nombre||'').localeCompare(b[1].nombre||'');
+  });
+
+  cont.innerHTML = lista.map(([codigo, e]) => {
+    const hoy       = new Date().toISOString().split('T')[0];
+    const vence     = e.fechaVence || '';
+    const diasVence = vence ? Math.ceil((new Date(vence)-new Date(hoy))/(1000*60*60*24)) : 999;
+    let badge = '';
+    if (!e.activa) badge = `<span class="badge badge-inactiva">🔒 Bloqueada</span>`;
+    else if (diasVence <= 30) badge = `<span class="badge badge-vence">⏳ Vence en ${diasVence}d</span>`;
+    else badge = `<span class="badge badge-activa">✅ Activa</span>`;
+
+    return `<div class="escuela-card">
+      <div class="esc-header">
+        <div>
+          <div class="esc-nombre">${e.nombre||codigo}</div>
+          <div class="esc-codigo">🔑 ${codigo.toUpperCase()}</div>
+        </div>
+        ${badge}
+      </div>
+      <div class="esc-meta">
+        <div class="esc-meta-item">📍 <span>${e.ciudad||'—'}, ${e.estado||'—'}</span></div>
+        <div class="esc-meta-item">👤 <span>${e.director||'—'}</span></div>
+        <div class="esc-meta-item">🎓 <span>${e.nivel||'—'}</span></div>
+        <div class="esc-meta-item">📅 Vence: <span>${formatFecha(vence)}</span></div>
+      </div>
+      <div class="esc-actions">
+        <button class="btn-sm btn-ver" onclick="verDetalle('${codigo}')">👁 Detalle</button>
+        ${e.activa
+          ? `<button class="btn-sm btn-bloquear" onclick="confirmarBloqueo('${codigo}')">🔒 Bloquear</button>`
+          : `<button class="btn-sm btn-activar" onclick="confirmarActivar('${codigo}')">✅ Activar</button>`
+        }
+        <button class="btn-sm btn-editar" onclick="editarVencimiento('${codigo}')">📅 Renovar</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── DETALLE ──
+window.verDetalle = function(codigo) {
+  const e = escuelasData[codigo];
+  if (!e) return;
+  document.getElementById('det-titulo').textContent = e.nombre || codigo;
+  document.getElementById('det-contenido').innerHTML = [
+    ['Código de licencia', codigo.toUpperCase()],
+    ['Estado', e.activa ? '✅ Activa' : '🔒 Bloqueada'],
+    ['Director', e.director||'—'],
+    ['Teléfono', e.telefono||'—'],
+    ['Ciudad', `${e.ciudad||'—'}, ${e.estado||'—'}`],
+    ['Nivel educativo', e.nivel||'—'],
+    ['Fecha de alta', formatFecha(e.fechaAlta)],
+    ['Vencimiento', formatFecha(e.fechaVence)],
+    ['Observaciones', e.observaciones||'—'],
+  ].map(([k,v]) => `<div class="detalle-row"><span class="detalle-key">${k}</span><span class="detalle-val">${v}</span></div>`).join('');
+
+  document.getElementById('det-acciones').innerHTML = e.activa
+    ? `<button class="btn-sm btn-bloquear" style="flex:1" onclick="cerrarDetalle();confirmarBloqueo('${codigo}')">🔒 Bloquear licencia</button>`
+    : `<button class="btn-sm btn-activar" style="flex:1" onclick="cerrarDetalle();confirmarActivar('${codigo}')">✅ Activar licencia</button>`;
+
+  document.getElementById('modal-detalle').classList.add('show');
+};
+window.cerrarDetalle = () => document.getElementById('modal-detalle').classList.remove('show');
+
+// ── BLOQUEAR / ACTIVAR ──
+window.confirmarBloqueo = function(codigo) {
+  const e = escuelasData[codigo];
+  mostrarModal('🔒', 'Bloquear licencia',
+    `¿Bloquear el acceso de "${e?.nombre||codigo}"? El panel y escáner de esa escuela dejarán de funcionar de inmediato.`,
+    'rojo', async () => {
+      await cambiarActiva(codigo, false);
+      toast('🔒 Licencia bloqueada correctamente');
+    });
+};
+
+window.confirmarActivar = function(codigo) {
+  const e = escuelasData[codigo];
+  mostrarModal('✅', 'Activar licencia',
+    `¿Activar el acceso de "${e?.nombre||codigo}"? El panel y escáner de esa escuela volverán a funcionar.`,
+    'verde', async () => {
+      await cambiarActiva(codigo, true);
+      toast('✅ Licencia activada correctamente');
+    });
+};
+
+async function cambiarActiva(codigo, valor) {
+  toast('⏳ Guardando...');
+  let errores = [];
+
+  // 1. Actualizar nodo admin (crear si no existe)
+  try {
+    const snapAdmin = await get(ref(db, 'admin/escuelas/' + codigo));
+    if (snapAdmin.exists()) {
+      await update(ref(db, 'admin/escuelas/' + codigo), { activa: valor });
+    } else {
+      const datosActuales = { ...(escuelasData[codigo] || {}), activa: valor };
+      await set(ref(db, 'admin/escuelas/' + codigo), datosActuales);
+    }
+  } catch(e) { errores.push('admin: ' + e.message); }
+
+  // 2. Actualizar nodo escuela/configuracion/perfil
+  try {
+    await update(ref(db, 'escuelas/' + codigo + '/configuracion/perfil'), { activa: valor });
+  } catch(e) { errores.push('escuela: ' + e.message); }
+
+  if (errores.length > 0) {
+    toast('❌ Error: ' + errores.join(' | '));
+    return;
+  }
+
+  // 3. Verificar que Firebase realmente guardó el valor
+  try {
+    const verificacion = await get(ref(db, 'admin/escuelas/' + codigo + '/activa'));
+    const valorReal = verificacion.val();
+    if (valorReal !== valor) {
+      toast('⚠️ No se confirmó el cambio. Intente de nuevo.');
+      return;
+    }
+  } catch(e) { /* sin internet, continuar */ }
+
+  // 4. Actualizar estado local y re-render
+  if (escuelasData[codigo]) escuelasData[codigo].activa = valor;
+  renderDashboard();
+  toast(valor ? '✅ Licencia ACTIVADA correctamente' : '🔒 Licencia BLOQUEADA correctamente');
+}
+
+// ── RENOVAR VENCIMIENTO ──
+window.editarVencimiento = function(codigo) {
+  const e     = escuelasData[codigo];
+  const nueva = prompt(`Nueva fecha de vencimiento para "${e?.nombre||codigo}":\n(Formato: YYYY-MM-DD, ej: 2027-06-01)`, e?.fechaVence||'');
+  if (!nueva) return;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(nueva)) { toast('⚠️ Formato incorrecto. Use YYYY-MM-DD'); return; }
+  update(ref(db, `admin/escuelas/${codigo}`), { fechaVence: nueva })
+    .then(() => { escuelasData[codigo].fechaVence = nueva; renderDashboard(); toast('📅 Vencimiento actualizado'); })
+    .catch(() => toast('❌ Error al actualizar'));
+};
+
+// ── NUEVA ESCUELA ──
+window.generarCodigo = function() {
+  const nombre = (document.getElementById('f-nombre').value||'').trim();
+  let prefijo  = nombre.length >= 3
+    ? nombre.replace(/[aeiouáéíóús]/gi,'').substring(0,3).toUpperCase()
+    : 'ESC';
+  const num    = Math.floor(Math.random()*90+10);
+  const letras = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+  const sufijo = letras[Math.floor(Math.random()*letras.length)] + letras[Math.floor(Math.random()*letras.length)];
+  document.getElementById('codigo-generado').textContent = `${prefijo}${num}${sufijo}`;
+};
+
+document.getElementById('f-nombre').addEventListener('input', window.generarCodigo);
+
+window.guardarEscuela = async function() {
+  const nombre   = document.getElementById('f-nombre').value.trim();
+  const ciudad   = document.getElementById('f-ciudad').value.trim();
+  const director = document.getElementById('f-director').value.trim();
+  const vence    = document.getElementById('f-vence').value;
+  const codigo   = document.getElementById('codigo-generado').textContent.trim().toLowerCase().replace(/s/g,'');
+
+  if (!nombre||!ciudad||!director||!vence) { toast('⚠️ Complete los campos obligatorios (*)'); return; }
+  if (codigo==='—'||!codigo) { toast('⚠️ Genere un código primero'); return; }
+
+  // Verificar que el código no exista
+  const snap = await get(ref(db, `admin/escuelas/${codigo}`));
+  if (snap.exists()) { toast('❌ Ese código ya existe. Regenere uno nuevo.'); return; }
+
+  const btn = document.getElementById('btn-guardar');
+  btn.disabled = true; btn.textContent = 'Guardando...';
+
+  const alta = document.getElementById('f-alta').value || new Date().toISOString().split('T')[0];
+  const datos = {
+    nombre, ciudad,
+    estado:     document.getElementById('f-estado').value.trim() || ciudad,
+    director,
+    telefono:   document.getElementById('f-tel').value.trim(),
+    nivel:      document.getElementById('f-nivel').value,
+    activa:     true,
+    fechaAlta:  alta,
+    fechaVence: vence,
+    codigo,
+    observaciones: document.getElementById('f-obs').value.trim(),
+  };
+
+  try {
+    // Guardar en admin/escuelas
+    await set(ref(db, `admin/escuelas/${codigo}`), datos);
+    // Crear estructura inicial en escuelas/{codigo}
+    await set(ref(db, `escuelas/${codigo}/configuracion/perfil`), {
+      nombreEscuela: nombre,
+      director,
+      nivelEducativo: datos.nivel,
+      activa: true,
+      cct: '',
+      zona: '',
+    });
+
+    toast(`✅ Escuela "${nombre}" dada de alta con código ${codigo.toUpperCase()}`);
+    limpiarFormulario();
+    cambiarTab('dashboard');
+  } catch(e) {
+    toast('❌ Error al guardar: ' + e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = '☁️ Dar de Alta en Firebase';
+  }
+};
+
+function limpiarFormulario() {
+  ['f-nombre','f-ciudad','f-estado','f-director','f-tel','f-obs'].forEach(id=>{
+    document.getElementById(id).value='';
+  });
+  document.getElementById('f-vence').value='';
+  document.getElementById('codigo-generado').textContent='—';
+}
+
+// ── MODAL ──
+let _callbackModal = null;
+
+function mostrarModal(icono, titulo, desc, tipo, callback) {
+  document.getElementById('mc-icon').textContent  = icono;
+  document.getElementById('mc-title').textContent = titulo;
+  document.getElementById('mc-desc').textContent  = desc;
+  const btn = document.getElementById('mc-btn-ok');
+  btn.className = tipo==='rojo' ? 'btn-confirm-rojo' : 'btn-confirm-verde';
+  btn.textContent = tipo==='rojo' ? 'Sí, bloquear' : 'Sí, activar';
+  _callbackModal = callback;
+  document.getElementById('modal-confirm').classList.add('show');
+}
+
+function cerrarModal() {
+  document.getElementById('modal-confirm').classList.remove('show');
+  _callbackModal = null;
+}
+window.cerrarModal = cerrarModal;
+
+// Listeners directos en los botones del modal
+document.getElementById('mc-btn-cancel').addEventListener('click', () => cerrarModal());
+document.getElementById('mc-btn-ok').addEventListener('click', async () => {
+  const cb = _callbackModal;
+  cerrarModal();
+  if (cb) await cb();
+});
+
+// ── TABS ──
+window.cambiarTab = function(tab) {
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['dashboard','nueva'][i]===tab));
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sec-'+tab).classList.add('active');
+  if (tab==='nueva') {
+    const hoy = new Date();
+    document.getElementById('f-alta').value = hoy.toISOString().split('T')[0];
+    const vence = new Date(hoy); vence.setFullYear(vence.getFullYear()+1);
+    document.getElementById('f-vence').value = vence.toISOString().split('T')[0];
+    if (document.getElementById('codigo-generado').textContent==='—') generarCodigo();
+  }
+};
+
+// ── HELPERS ──
+function formatFecha(iso) {
+  if (!iso) return '—';
+  const [y,m,d] = iso.split('-');
+  const meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  return `${d} ${meses[parseInt(m)-1]} ${y}`;
+}
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 3000);
+}
+
+// Inicializar fecha de alta
+document.getElementById('f-alta').value = new Date().toISOString().split('T')[0];
+</script>
+</body>
+</html>

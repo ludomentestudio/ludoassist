@@ -463,7 +463,7 @@ document.getElementById('sel-turno').addEventListener('change', () => {
   if (!turno) return;
   const grados = estructura[turno] || {};
   Object.keys(grados).sort((a,b)=>Number(a)-Number(b)).forEach(g => {
-    selG.innerHTML += `<option value="${g}">${g}°</option>`;
+    selG.innerHTML += `<option value="${g}">${g}° Grado</option>`;
   });
 });
 
@@ -499,6 +499,9 @@ document.getElementById('btn-cargar').addEventListener('click', async () => {
   try {
     const clave = `${turnoActual}-${gradoActual}-${grupoActual}`;
     const grupoDisplay = `${gradoActual}° ${grupoActual}`;
+
+    // DEBUG visible
+    document.getElementById('contenido').innerHTML = `<div style="color:var(--accent);padding:1rem;font-size:.85rem;">🔍 Buscando clave: <strong>${clave}</strong><br>Escuela: <strong>${escuelaActiva}</strong></div>`;
 
     // Cargar alumnos del directorio
     const snapDir = await get(ref(db, `escuelas/${escuelaActiva}/directorio/${clave}`));

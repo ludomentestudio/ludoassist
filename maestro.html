@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>LudoAssist · Lista Docente</title>
+<style>
+:root {
+  --navy:#0A192F; --navy2:#112240; --emerald:#10B981; --emerald2:#059669;
+  --ruby:#EF4444; --amber:#F59E0B; --blue:#3B82F6; --purple:#8B5CF6;
+  --slate:#8892B0; --white:#E6F1FF; --accent:#64FFDA;
+  --border:rgba(100,255,218,.1); --card:rgba(255,255,255,.04);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--navy);color:var(--white);font-family:'Segoe UI',sans-serif;min-height:100vh;}
+
+/* ── LOGIN ── */
+#screen-login{position:fixed;inset:0;background:var(--navy);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;z-index:999;padding:2rem;gap:1.2rem;}
+#screen-login.hidden{display:none;}
+.login-logo{font-size:2.5rem;}
+.login-title{font-size:1.4rem;font-weight:800;color:var(--white);letter-spacing:1px;}
+.login-sub{font-size:.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:2px;}
+.login-card{background:rgba(255,255,255,.05);border:1px solid var(--border);
+  border-radius:12px;padding:1.5rem;width:100%;max-width:360px;display:flex;flex-direction:column;gap:1rem;}
+.login-label{font-size:.75rem;color:var(--slate);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:.3rem;}
+.login-input{background:rgba(255,255,255,.08);border:1px solid var(--border);border-radius:8px;
+  padding:.85rem 1rem;color:var(--white);font-size:1rem;width:100%;text-align:center;
+  letter-spacing:3px;outline:none;transition:border .3s;}
+.login-input:focus{border-color:var(--accent);}
+.login-input::placeholder{letter-spacing:1px;color:var(--slate);}
+.btn-login{background:var(--emerald);color:var(--navy);border:none;border-radius:8px;
+  padding:.9rem;font-size:.95rem;font-weight:800;cursor:pointer;transition:all .25s;
+  text-transform:uppercase;letter-spacing:1px;}
+.btn-login:hover{background:var(--emerald2);}
+.login-error{color:var(--ruby);font-size:.8rem;text-align:center;min-height:18px;}
+.login-hint{font-size:.7rem;color:var(--slate);text-align:center;}
+
+/* ── HEADER ── */
+header{background:var(--navy2);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.7rem 1rem;position:sticky;top:0;z-index:50;}
+.hdr-brand{font-size:.95rem;font-weight:800;color:var(--white);}
+.hdr-brand span{color:var(--accent);}
+.hdr-right{display:flex;gap:.5rem;align-items:center;}
+.btn-escuelas{background:rgba(100,255,218,.1);border:1px solid var(--accent);
+  color:var(--accent);border-radius:6px;padding:.3rem .7rem;font-size:.7rem;
+  font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:.5px;}
+.btn-salir{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);
+  color:var(--ruby);border-radius:6px;padding:.3rem .7rem;font-size:.7rem;
+  font-weight:700;cursor:pointer;}
+
+/* ── MAIN ── */
+main{padding:1rem;max-width:600px;margin:0 auto;}
+
+/* ── ESCUELAS CHIPS ── */
+.escuelas-bar{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem;}
+.chip-escuela{background:var(--card);border:1px solid var(--border);border-radius:20px;
+  padding:.3rem .8rem;font-size:.75rem;color:var(--slate);cursor:pointer;transition:all .2s;}
+.chip-escuela.active{background:rgba(100,255,218,.1);border-color:var(--accent);color:var(--accent);}
+.chip-add{background:transparent;border:1px dashed var(--border);border-radius:20px;
+  padding:.3rem .8rem;font-size:.75rem;color:var(--slate);cursor:pointer;transition:all .2s;}
+.chip-add:hover{border-color:var(--accent);color:var(--accent);}
+
+/* ── SELECTOR GRUPO ── */
+.selector-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:1rem;}
+.selector-title{font-size:.7rem;color:var(--slate);text-transform:uppercase;letter-spacing:1px;margin-bottom:.8rem;}
+.selector-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem;margin-bottom:.8rem;}
+.sel-input{background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:8px;
+  padding:.6rem .5rem;color:var(--white);font-size:.85rem;width:100%;outline:none;cursor:pointer;}
+.sel-input:focus{border-color:var(--accent);}
+.sel-input option{background:var(--navy2);}
+.btn-cargar{background:var(--emerald);color:var(--navy);border:none;border-radius:8px;
+  padding:.7rem;font-size:.85rem;font-weight:800;cursor:pointer;width:100%;
+  text-transform:uppercase;letter-spacing:.5px;transition:all .25s;}
+.btn-cargar:hover{background:var(--emerald2);}
+.btn-cargar:disabled{background:var(--slate);cursor:not-allowed;}
+
+/* ── INFO SESIÓN ── */
+.sesion-info{background:rgba(100,255,218,.05);border:1px solid var(--border);
+  border-radius:10px;padding:.7rem 1rem;margin-bottom:1rem;display:flex;
+  justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem;}
+.sesion-dato{font-size:.75rem;color:var(--slate);}
+.sesion-dato strong{color:var(--accent);}
+.sesion-hora{font-size:.7rem;color:var(--slate);}
+
+/* ── LISTA ── */
+.lista-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem;}
+.lista-titulo{font-size:1rem;font-weight:700;color:var(--white);}
+.lista-stats{display:flex;gap:.5rem;}
+.stat-badge{font-size:.65rem;font-weight:700;padding:.2rem .5rem;border-radius:10px;}
+.stat-p{background:rgba(16,185,129,.2);color:var(--emerald);}
+.stat-f{background:rgba(239,68,68,.2);color:var(--ruby);}
+.stat-t{background:rgba(245,158,11,.2);color:var(--amber);}
+
+.alumno-card{background:var(--card);border:1px solid var(--border);border-radius:10px;
+  padding:.8rem 1rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.8rem;
+  transition:all .2s;}
+.alumno-num{font-size:.7rem;color:var(--slate);min-width:22px;text-align:center;}
+.alumno-nombre{flex:1;font-size:.88rem;font-weight:600;color:var(--white);}
+.alumno-scanner{font-size:.65rem;color:var(--slate);margin-top:.1rem;}
+.alumno-scanner.escaner-si{color:var(--emerald);}
+.alumno-scanner.escaner-no{color:var(--slate);}
+
+/* Botones de estatus */
+.btns-estatus{display:flex;gap:.3rem;}
+.btn-est{border:none;border-radius:6px;padding:.35rem .5rem;font-size:.75rem;
+  cursor:pointer;font-weight:700;opacity:.4;transition:all .2s;min-width:34px;text-align:center;}
+.btn-est.active{opacity:1;transform:scale(1.1);}
+.btn-p{background:rgba(16,185,129,.2);color:var(--emerald);}
+.btn-p.active{background:var(--emerald);color:var(--navy);}
+.btn-t{background:rgba(245,158,11,.2);color:var(--amber);}
+.btn-t.active{background:var(--amber);color:var(--navy);}
+.btn-f{background:rgba(239,68,68,.2);color:var(--ruby);}
+.btn-f.active{background:var(--ruby);color:white;}
+.btn-s{background:rgba(139,92,246,.2);color:var(--purple);}
+.btn-s.active{background:var(--purple);color:white;}
+
+/* ── ACCIONES FINALES ── */
+.acciones-finales{margin-top:1.2rem;display:flex;gap:.7rem;flex-wrap:wrap;}
+.btn-guardar{background:var(--emerald);color:var(--navy);border:none;border-radius:8px;
+  padding:.8rem 1.2rem;font-size:.85rem;font-weight:800;cursor:pointer;flex:1;
+  text-transform:uppercase;letter-spacing:.5px;transition:all .25s;}
+.btn-guardar:hover{background:var(--emerald2);}
+.btn-descargar{background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.3);
+  color:var(--blue);border-radius:8px;padding:.8rem 1.2rem;font-size:.85rem;
+  font-weight:700;cursor:pointer;flex:1;text-transform:uppercase;letter-spacing:.5px;}
+.btn-nueva{background:rgba(255,255,255,.05);border:1px solid var(--border);
+  color:var(--slate);border-radius:8px;padding:.8rem 1.2rem;font-size:.85rem;
+  font-weight:700;cursor:pointer;width:100%;margin-top:.3rem;}
+
+/* ── MODAL AGREGAR ESCUELA ── */
+#modal-escuela{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;
+  align-items:center;justify-content:center;z-index:200;padding:1rem;}
+#modal-escuela.show{display:flex;}
+.modal-box{background:var(--navy2);border:1px solid var(--border);border-radius:12px;
+  padding:1.5rem;width:100%;max-width:340px;}
+.modal-title{font-size:1rem;font-weight:700;margin-bottom:1rem;color:var(--white);}
+.modal-input{background:rgba(255,255,255,.08);border:1px solid var(--border);border-radius:8px;
+  padding:.8rem 1rem;color:var(--white);font-size:1rem;width:100%;text-align:center;
+  letter-spacing:3px;outline:none;margin-bottom:.8rem;text-transform:uppercase;}
+.modal-input:focus{border-color:var(--accent);}
+.modal-btns{display:flex;gap:.7rem;}
+.btn-modal-ok{background:var(--emerald);color:var(--navy);border:none;border-radius:8px;
+  padding:.7rem;font-size:.85rem;font-weight:800;cursor:pointer;flex:1;}
+.btn-modal-cancel{background:transparent;border:1px solid var(--border);color:var(--slate);
+  border-radius:8px;padding:.7rem;font-size:.85rem;cursor:pointer;flex:1;}
+.modal-error{color:var(--ruby);font-size:.75rem;text-align:center;margin-bottom:.5rem;min-height:16px;}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);
+  background:var(--navy2);border:1px solid var(--border);border-radius:8px;
+  padding:.6rem 1.2rem;font-size:.85rem;color:var(--white);z-index:300;
+  opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;}
+
+/* ── EMPTY STATE ── */
+.empty{text-align:center;padding:3rem 1rem;color:var(--slate);}
+.empty-icon{font-size:3rem;margin-bottom:.8rem;}
+
+/* ── NOTA DIFERENCIA ── */
+.nota-diferencia{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);
+  border-radius:8px;padding:.7rem 1rem;margin-bottom:1rem;font-size:.75rem;color:var(--amber);
+  line-height:1.5;}
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- MODAL AGREGAR ESCUELA -->
+<div id="modal-escuela">
+  <div class="modal-box">
+    <div class="modal-title">➕ Agregar Escuela</div>
+    <input class="modal-input" id="modal-codigo" placeholder="CÓDIGO" maxlength="10">
+    <div class="modal-error" id="modal-error"></div>
+    <div class="modal-btns">
+      <button class="btn-modal-cancel" id="btn-modal-cancel">Cancelar</button>
+      <button class="btn-modal-ok" id="btn-modal-ok">Verificar</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div id="screen-login">
+  <div class="login-logo">📋</div>
+  <div class="login-title">Lista Docente</div>
+  <div class="login-sub">LudoAssist PRO</div>
+  <div class="login-card">
+    <div>
+      <div class="login-label">Código de tu escuela</div>
+      <input class="login-input" id="login-codigo" placeholder="Ej: EST17" maxlength="10" autocomplete="off">
+    </div>
+    <div>
+      <div class="login-label">Tu nombre</div>
+      <input class="login-input" id="login-nombre" placeholder="Nombre completo" style="letter-spacing:0;text-align:left;" autocomplete="off">
+    </div>
+    <button class="btn-login" id="btn-login">Entrar</button>
+    <div class="login-error" id="login-error"></div>
+    <div class="login-hint">Solicita tu código al director de tu escuela</div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="hdr-brand">Ludo<span>Assist</span> · Docente</div>
+  <div class="hdr-right">
+    <button class="btn-escuelas" id="btn-add-escuela">+ Escuela</button>
+    <button class="btn-salir" id="btn-salir">Salir</button>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main>
+  <!-- Chips de escuelas -->
+  <div class="escuelas-bar" id="escuelas-bar"></div>
+
+  <!-- Selector de grupo -->
+  <div class="selector-card">
+    <div class="selector-title">Seleccionar grupo para pasar lista</div>
+    <div class="selector-row">
+      <select class="sel-input" id="sel-turno"><option value="">Turno</option></select>
+      <select class="sel-input" id="sel-grado"><option value="">Grado</option></select>
+      <select class="sel-input" id="sel-grupo"><option value="">Grupo</option></select>
+    </div>
+    <button class="btn-cargar" id="btn-cargar">📋 Cargar Lista</button>
+  </div>
+
+  <!-- Contenido dinámico -->
+  <div id="contenido"></div>
+</main>
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+import { getDatabase, ref, get, push, set, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey:            "AIzaSyD_sJOOY4wQY_473JGj0FXGHm2PzHMC2u0",
+  authDomain:        "ludoasistencia.firebaseapp.com",
+  databaseURL:       "https://ludoasistencia-default-rtdb.firebaseio.com",
+  projectId:         "ludoasistencia",
+  storageBucket:     "ludoasistencia.firebasestorage.app",
+  messagingSenderId: "738361802611",
+  appId:             "1:738361802611:web:cb13956f002a0e74844f06"
+};
+const app = initializeApp(firebaseConfig);
+const db  = getDatabase(app);
+
+// ── ESTADO ──
+const SK_ESCUELAS = 'ludo_maestro_escuelas';
+const SK_NOMBRE   = 'ludo_maestro_nombre';
+const SK_ACTIVA   = 'ludo_maestro_activa';
+
+let escuelas    = JSON.parse(localStorage.getItem(SK_ESCUELAS) || '[]'); // [{codigo, nombre}]
+let nombreDoc   = localStorage.getItem(SK_NOMBRE) || '';
+let escuelaActiva = localStorage.getItem(SK_ACTIVA) || '';
+let estructura  = {};
+let listaActual = []; // [{nombre, estatus, estatusMaestro}]
+let grupoActual = '';
+let turnoActual = '';
+let gradoActual = '';
+let sesionGuardada = false;
+
+// ── HELPERS ──
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+function hoy() {
+  return new Date().toISOString().split('T')[0];
+}
+
+function horaActual() {
+  return new Date().toLocaleTimeString('es-MX', {hour:'2-digit', minute:'2-digit'});
+}
+
+function sanitizar(s) {
+  return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,'-').replace(/[^a-z0-9\-]/g,'');
+}
+
+// ── LOGIN ──
+document.getElementById('btn-login').addEventListener('click', async () => {
+  const codigo = document.getElementById('login-codigo').value.trim().toLowerCase();
+  const nombre = document.getElementById('login-nombre').value.trim();
+  const errEl  = document.getElementById('login-error');
+  errEl.textContent = '';
+
+  if (!codigo) { errEl.textContent = 'Ingresa el código de tu escuela.'; return; }
+  if (!nombre)  { errEl.textContent = 'Ingresa tu nombre.'; return; }
+
+  document.getElementById('btn-login').textContent = 'Verificando...';
+  document.getElementById('btn-login').disabled = true;
+
+  try {
+    const snap = await get(ref(db, `escuelas/${codigo}/configuracion/perfil`));
+    if (!snap.exists()) { errEl.textContent = '❌ Código no encontrado.'; return; }
+    const perfil = snap.val();
+    if (perfil.activa === false) { errEl.textContent = '🔒 Escuela bloqueada. Contacta al administrador.'; return; }
+
+    // Guardar escuela si no existe
+    if (!escuelas.find(e => e.codigo === codigo)) {
+      escuelas.push({ codigo, nombre: perfil.nombreEscuela || perfil.nombre || codigo.toUpperCase() });
+      localStorage.setItem(SK_ESCUELAS, JSON.stringify(escuelas));
+    }
+    nombreDoc = nombre;
+    localStorage.setItem(SK_NOMBRE, nombre);
+    escuelaActiva = codigo;
+    localStorage.setItem(SK_ACTIVA, codigo);
+
+    document.getElementById('screen-login').classList.add('hidden');
+    iniciar();
+  } catch(e) {
+    errEl.textContent = '⚠️ Sin conexión. Verifica internet.';
+  } finally {
+    document.getElementById('btn-login').textContent = 'Entrar';
+    document.getElementById('btn-login').disabled = false;
+  }
+});
+
+document.getElementById('login-codigo').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('btn-login').click();
+});
+
+// ── INICIAR ──
+async function iniciar() {
+  if (escuelas.length === 0 || !escuelaActiva) return;
+  document.getElementById('screen-login').classList.add('hidden');
+  renderChips();
+  await cargarEstructura();
+}
+
+// Verificar si ya hay sesión guardada
+if (escuelas.length > 0 && nombreDoc && escuelaActiva) {
+  iniciar();
+}
+
+// ── CHIPS DE ESCUELAS ──
+function renderChips() {
+  const bar = document.getElementById('escuelas-bar');
+  bar.innerHTML = escuelas.map(e => `
+    <div class="chip-escuela ${e.codigo === escuelaActiva ? 'active' : ''}"
+         onclick="cambiarEscuela('${e.codigo}')">
+      🏫 ${e.nombre}
+    </div>
+  `).join('');
+}
+
+window.cambiarEscuela = async function(codigo) {
+  escuelaActiva = codigo;
+  localStorage.setItem(SK_ACTIVA, codigo);
+  renderChips();
+  limpiarLista();
+  await cargarEstructura();
+  toast(`🏫 Escuela cambiada`);
+};
+
+// ── MODAL AGREGAR ESCUELA ──
+document.getElementById('btn-add-escuela').addEventListener('click', () => {
+  document.getElementById('modal-codigo').value = '';
+  document.getElementById('modal-error').textContent = '';
+  document.getElementById('modal-escuela').classList.add('show');
+});
+
+document.getElementById('btn-modal-cancel').addEventListener('click', () => {
+  document.getElementById('modal-escuela').classList.remove('show');
+});
+
+document.getElementById('btn-modal-ok').addEventListener('click', async () => {
+  const codigo = document.getElementById('modal-codigo').value.trim().toLowerCase();
+  const errEl  = document.getElementById('modal-error');
+  errEl.textContent = '';
+  if (!codigo) { errEl.textContent = 'Ingresa el código.'; return; }
+
+  if (escuelas.find(e => e.codigo === codigo)) {
+    errEl.textContent = 'Esta escuela ya está agregada.'; return;
+  }
+
+  document.getElementById('btn-modal-ok').textContent = 'Verificando...';
+  try {
+    const snap = await get(ref(db, `escuelas/${codigo}/configuracion/perfil`));
+    if (!snap.exists()) { errEl.textContent = '❌ Código no encontrado.'; return; }
+    const perfil = snap.val();
+    if (perfil.activa === false) { errEl.textContent = '🔒 Escuela bloqueada.'; return; }
+
+    escuelas.push({ codigo, nombre: perfil.nombreEscuela || perfil.nombre || codigo.toUpperCase() });
+    localStorage.setItem(SK_ESCUELAS, JSON.stringify(escuelas));
+    escuelaActiva = codigo;
+    localStorage.setItem(SK_ACTIVA, codigo);
+    document.getElementById('modal-escuela').classList.remove('show');
+    renderChips();
+    await cargarEstructura();
+    toast('✅ Escuela agregada');
+  } catch(e) {
+    errEl.textContent = '⚠️ Sin conexión.';
+  } finally {
+    document.getElementById('btn-modal-ok').textContent = 'Verificar';
+  }
+});
+
+// ── SALIR ──
+document.getElementById('btn-salir').addEventListener('click', () => {
+  if (!confirm('¿Cerrar sesión? Se eliminarán tus escuelas guardadas.')) return;
+  localStorage.removeItem(SK_ESCUELAS);
+  localStorage.removeItem(SK_NOMBRE);
+  localStorage.removeItem(SK_ACTIVA);
+  location.reload();
+});
+
+// ── CARGAR ESTRUCTURA ──
+async function cargarEstructura() {
+  try {
+    const snap = await get(ref(db, `escuelas/${escuelaActiva}/configuracion/estructura`));
+    estructura = snap.exists() ? snap.val() : {};
+    llenarTurnos();
+  } catch(e) {
+    toast('⚠️ Error cargando estructura.');
+  }
+}
+
+function llenarTurnos() {
+  const sel = document.getElementById('sel-turno');
+  sel.innerHTML = '<option value="">Turno</option>';
+  Object.keys(estructura).forEach(t => {
+    sel.innerHTML += `<option value="${t}">${t}</option>`;
+  });
+  document.getElementById('sel-grado').innerHTML = '<option value="">Grado</option>';
+  document.getElementById('sel-grupo').innerHTML = '<option value="">Grupo</option>';
+}
+
+document.getElementById('sel-turno').addEventListener('change', () => {
+  const turno = document.getElementById('sel-turno').value;
+  const selG  = document.getElementById('sel-grado');
+  selG.innerHTML = '<option value="">Grado</option>';
+  document.getElementById('sel-grupo').innerHTML = '<option value="">Grupo</option>';
+  if (!turno) return;
+  const grados = estructura[turno] || {};
+  Object.keys(grados).sort((a,b)=>Number(a)-Number(b)).forEach(g => {
+    selG.innerHTML += `<option value="${g}">${g}°</option>`;
+  });
+});
+
+document.getElementById('sel-grado').addEventListener('change', () => {
+  const turno = document.getElementById('sel-turno').value;
+  const grado = document.getElementById('sel-grado').value;
+  const selGr = document.getElementById('sel-grupo');
+  selGr.innerHTML = '<option value="">Grupo</option>';
+  if (!turno || !grado) return;
+  (estructura[turno]?.[grado] || []).forEach(g => {
+    selGr.innerHTML += `<option value="${g}">${g}</option>`;
+  });
+});
+
+// ── CARGAR LISTA ──
+document.getElementById('btn-cargar').addEventListener('click', async () => {
+  turnoActual = document.getElementById('sel-turno').value;
+  gradoActual = document.getElementById('sel-grado').value;
+  const grupo = document.getElementById('sel-grupo').value;
+
+  if (!turnoActual || !gradoActual || !grupo) {
+    toast('⚠️ Selecciona turno, grado y grupo.');
+    return;
+  }
+
+  grupoActual = grupo;
+  sesionGuardada = false;
+
+  const btn = document.getElementById('btn-cargar');
+  btn.textContent = 'Cargando...';
+  btn.disabled = true;
+
+  try {
+    const clave = sanitizar(`${turnoActual}-${gradoActual}-${grupoActual}`);
+    const grupoDisplay = `${gradoActual}° ${grupoActual}`;
+
+    // Cargar alumnos del directorio
+    const snapDir = await get(ref(db, `escuelas/${escuelaActiva}/directorio/${clave}`));
+    let nombres = [];
+    if (snapDir.exists()) {
+      const val = snapDir.val();
+      nombres = Array.isArray(val) ? val : Object.values(val);
+      nombres = nombres.filter(Boolean);
+    }
+
+    if (nombres.length === 0) {
+      document.getElementById('contenido').innerHTML = `
+        <div class="empty">
+          <div class="empty-icon">📭</div>
+          <p>No hay alumnos registrados en este grupo.</p>
+          <p style="font-size:.75rem;margin-top:.5rem;">Solicita al director que cargue la lista.</p>
+        </div>`;
+      return;
+    }
+
+    // Cargar asistencias del escáner de hoy
+    const snapAs = await get(ref(db, `escuelas/${escuelaActiva}/asistencias`));
+    const asistenciasScanner = {};
+    if (snapAs.exists()) {
+      const todas = snapAs.val();
+      Object.values(todas).forEach(r => {
+        if (r.fecha === hoy() && r.turno === turnoActual &&
+            r.grado === gradoActual && r.grupoLetra === grupoActual) {
+          asistenciasScanner[r.nombre] = r.estatus; // asistencia | retardo
+        }
+      });
+    }
+
+    // Construir lista
+    listaActual = nombres.map(nombre => ({
+      nombre,
+      estatusScanner: asistenciasScanner[nombre] || null,
+      estatusMaestro: asistenciasScanner[nombre] === 'asistencia' ? 'P'
+                    : asistenciasScanner[nombre] === 'retardo'    ? 'T'
+                    : 'F' // si no escaneó, falta por defecto
+    }));
+
+    renderLista(grupoDisplay);
+  } catch(e) {
+    toast('❌ Error cargando lista.');
+  } finally {
+    btn.textContent = '📋 Cargar Lista';
+    btn.disabled = false;
+  }
+});
+
+// ── RENDER LISTA ──
+function renderLista(grupoDisplay) {
+  const cont = document.getElementById('contenido');
+  const p = listaActual.filter(a => a.estatusMaestro === 'P').length;
+  const t = listaActual.filter(a => a.estatusMaestro === 'T').length;
+  const f = listaActual.filter(a => a.estatusMaestro === 'F').length;
+  const s = listaActual.filter(a => a.estatusMaestro === 'S').length;
+
+  cont.innerHTML = `
+    <div class="nota-diferencia">
+      ⚠️ <strong>Nota:</strong> El escáner registra la entrada a la escuela. 
+      Esta lista es independiente — registra la asistencia a <strong>tu clase</strong>.
+      Un alumno puede estar en la escuela pero faltar a tu clase.
+    </div>
+    <div class="sesion-info">
+      <div>
+        <div class="sesion-dato">Grupo: <strong>${grupoDisplay}</strong></div>
+        <div class="sesion-dato">Maestro: <strong>${nombreDoc}</strong></div>
+      </div>
+      <div class="sesion-hora">📅 ${hoy()} · ⏰ ${horaActual()}</div>
+    </div>
+    <div class="lista-header">
+      <div class="lista-titulo">Lista · ${listaActual.length} alumnos</div>
+      <div class="lista-stats">
+        <span class="stat-badge stat-p">✅ ${p}</span>
+        <span class="stat-badge stat-t">⏰ ${t}</span>
+        <span class="stat-badge stat-f">❌ ${f}</span>
+      </div>
+    </div>
+    <div id="lista-alumnos">
+      ${listaActual.map((a, i) => renderAlumno(a, i)).join('')}
+    </div>
+    <div class="acciones-finales">
+      <button class="btn-guardar" id="btn-guardar-lista">💾 Guardar Lista</button>
+      <button class="btn-descargar" id="btn-descargar-lista">📥 Descargar</button>
+    </div>
+    <button class="btn-nueva" id="btn-nueva-lista">🔄 Pasar nueva lista</button>
+  `;
+
+  document.getElementById('btn-guardar-lista').addEventListener('click', guardarLista);
+  document.getElementById('btn-descargar-lista').addEventListener('click', descargarLista);
+  document.getElementById('btn-nueva-lista').addEventListener('click', () => {
+    limpiarLista();
+    window.scrollTo(0, 0);
+  });
+}
+
+function renderAlumno(a, i) {
+  const scannerTxt = a.estatusScanner === 'asistencia' ? '🟢 Entró al escáner'
+                   : a.estatusScanner === 'retardo'    ? '🟡 Entró tarde al escáner'
+                   : '⚪ Sin registro en escáner';
+  const scannerCls = a.estatusScanner ? 'escaner-si' : 'escaner-no';
+
+  return `
+    <div class="alumno-card" id="card-${i}">
+      <div class="alumno-num">${i+1}</div>
+      <div style="flex:1">
+        <div class="alumno-nombre">${a.nombre}</div>
+        <div class="alumno-scanner ${scannerCls}">${scannerTxt}</div>
+      </div>
+      <div class="btns-estatus">
+        <button class="btn-est btn-p ${a.estatusMaestro==='P'?'active':''}" onclick="setEstatus(${i},'P')">✅</button>
+        <button class="btn-est btn-t ${a.estatusMaestro==='T'?'active':''}" onclick="setEstatus(${i},'T')">⏰</button>
+        <button class="btn-est btn-f ${a.estatusMaestro==='F'?'active':''}" onclick="setEstatus(${i},'F')">❌</button>
+        <button class="btn-est btn-s ${a.estatusMaestro==='S'?'active':''}" onclick="setEstatus(${i},'S')">🚪</button>
+      </div>
+    </div>`;
+}
+
+window.setEstatus = function(i, est) {
+  listaActual[i].estatusMaestro = est;
+  sesionGuardada = false;
+  // Actualizar solo esa card
+  const card = document.getElementById(`card-${i}`);
+  card.querySelectorAll('.btn-est').forEach(b => b.classList.remove('active'));
+  const map = {'P':'btn-p','T':'btn-t','F':'btn-f','S':'btn-s'};
+  card.querySelector(`.${map[est]}`).classList.add('active');
+  // Actualizar stats
+  const p = listaActual.filter(a => a.estatusMaestro === 'P').length;
+  const t = listaActual.filter(a => a.estatusMaestro === 'T').length;
+  const f = listaActual.filter(a => a.estatusMaestro === 'F').length;
+  document.querySelector('.stat-p').textContent = `✅ ${p}`;
+  document.querySelector('.stat-t').textContent = `⏰ ${t}`;
+  document.querySelector('.stat-f').textContent = `❌ ${f}`;
+};
+
+// ── GUARDAR EN FIREBASE ──
+async function guardarLista() {
+  const btn = document.getElementById('btn-guardar-lista');
+  btn.textContent = 'Guardando...';
+  btn.disabled = true;
+
+  const fecha   = hoy();
+  const hora    = horaActual();
+  const grupoDisplay = `${gradoActual}° ${grupoActual}`;
+  const clave   = sanitizar(`${turnoActual}-${gradoActual}-${grupoActual}`);
+
+  const registro = {
+    fecha, hora,
+    maestro:  nombreDoc,
+    escuela:  escuelaActiva,
+    turno:    turnoActual,
+    grado:    gradoActual,
+    grupo:    grupoActual,
+    grupoDisplay,
+    alumnos: listaActual.map(a => ({
+      nombre: a.nombre,
+      estatusMaestro: a.estatusMaestro,
+      estatusScanner: a.estatusScanner || null
+    })),
+    timestamp: serverTimestamp()
+  };
+
+  try {
+    await push(ref(db, `escuelas/${escuelaActiva}/listas-maestro/${fecha}/${clave}`), registro);
+    sesionGuardada = true;
+    toast('✅ Lista guardada correctamente');
+    btn.textContent = '✅ Lista Guardada';
+  } catch(e) {
+    toast('❌ Error al guardar. Verifica conexión.');
+    btn.textContent = '💾 Guardar Lista';
+    btn.disabled = false;
+  }
+}
+
+// ── DESCARGAR CSV ──
+function descargarLista() {
+  const fecha = hoy();
+  const grupoDisplay = `${gradoActual}° ${grupoActual}`;
+  const hora  = horaActual();
+
+  let csv = `Lista de Clase - ${nombreDoc}\n`;
+  csv += `Fecha: ${fecha}  Hora: ${hora}  Grupo: ${grupoDisplay}  Turno: ${turnoActual}\n\n`;
+  csv += `#,Nombre,Estado Clase,Escáner\n`;
+
+  listaActual.forEach((a, i) => {
+    const est = a.estatusMaestro === 'P' ? 'Presente'
+              : a.estatusMaestro === 'T' ? 'Tarde'
+              : a.estatusMaestro === 'F' ? 'Falta'
+              : 'Salida anticipada';
+    const scan = a.estatusScanner === 'asistencia' ? 'Entró'
+               : a.estatusScanner === 'retardo'    ? 'Tarde'
+               : 'Sin registro';
+    csv += `${i+1},"${a.nombre}","${est}","${scan}"\n`;
+  });
+
+  const resumen = `\nResumen:,Presentes: ${listaActual.filter(a=>a.estatusMaestro==='P').length},Tardanzas: ${listaActual.filter(a=>a.estatusMaestro==='T').length},Faltas: ${listaActual.filter(a=>a.estatusMaestro==='F').length}`;
+  csv += resumen;
+
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = `lista_${sanitizar(grupoDisplay)}_${fecha}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('📥 Lista descargada');
+}
+
+// ── LIMPIAR ──
+function limpiarLista() {
+  listaActual = [];
+  grupoActual = '';
+  sesionGuardada = false;
+  document.getElementById('contenido').innerHTML = '';
+  document.getElementById('sel-turno').value = '';
+  document.getElementById('sel-grado').innerHTML = '<option value="">Grado</option>';
+  document.getElementById('sel-grupo').innerHTML = '<option value="">Grupo</option>';
+}
+
+</script>
+</body>
+</html>

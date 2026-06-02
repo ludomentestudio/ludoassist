@@ -226,6 +226,59 @@ main{padding:1rem;}
   border:1px solid var(--border);color:var(--slate);border-radius:8px;
   font-size:.85rem;cursor:pointer;margin-top:.4rem;}
 
+/* ── PESTAÑA PAGOS ── */
+.pagos-header-fijo{background:linear-gradient(135deg,#064E3B,#065F46);border-radius:10px;
+  padding:1rem;margin-bottom:1rem;position:sticky;top:0;z-index:10;}
+.pagos-gran-total{font-size:1.8rem;font-weight:800;color:#34D399;line-height:1;}
+.pagos-gran-lbl{font-size:.7rem;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:1px;margin-top:2px;}
+.pagos-meta{display:flex;gap:1rem;margin-top:.5rem;}
+.pagos-meta-item{font-size:.75rem;color:rgba(255,255,255,.7);}
+.pagos-meta-item strong{color:#34D399;}
+.escuela-pagos-card{background:var(--navy2);border:1px solid var(--border);border-radius:10px;
+  padding:1rem;margin-bottom:.8rem;}
+.ep-nombre{font-size:.95rem;font-weight:700;color:var(--white);margin-bottom:.3rem;}
+.ep-resumen{display:flex;gap:1rem;margin-bottom:.7rem;flex-wrap:wrap;}
+.ep-stat{font-size:.72rem;color:var(--slate);}
+.ep-stat strong{color:var(--accent);}
+.ep-tabla{width:100%;border-collapse:collapse;font-size:.75rem;margin-bottom:.6rem;}
+.ep-tabla th{background:rgba(255,255,255,.05);color:var(--slate);padding:.4rem .6rem;
+  text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
+.ep-tabla td{padding:.4rem .6rem;border-bottom:1px solid rgba(255,255,255,.05);color:var(--white);}
+.ep-tabla tr:last-child td{border-bottom:none;}
+.ep-total-row td{font-weight:800;color:var(--emerald);border-top:1px solid rgba(100,255,218,.2);}
+.btn-registrar-pago{background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.3);
+  color:var(--emerald);border-radius:6px;padding:.35rem .8rem;font-size:.72rem;
+  font-weight:700;cursor:pointer;transition:all .2s;}
+.btn-registrar-pago:hover{background:var(--emerald);color:var(--navy);}
+.ep-empty{font-size:.78rem;color:var(--slate);text-align:center;padding:.8rem 0;}
+
+/* ── MODAL REGISTRAR PAGO ── */
+#modal-pago{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;
+  align-items:center;justify-content:center;z-index:300;padding:1rem;}
+#modal-pago.show{display:flex;}
+.pago-box{background:var(--navy2);border:1px solid var(--border);border-radius:12px;
+  padding:1.5rem;width:100%;max-width:380px;}
+.pago-title{font-size:1rem;font-weight:800;color:var(--accent);margin-bottom:1rem;text-transform:uppercase;}
+.pago-row{margin-bottom:.8rem;}
+.pago-label{font-size:.68rem;color:var(--slate);text-transform:uppercase;letter-spacing:1px;
+  margin-bottom:.3rem;display:block;}
+.pago-input{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--border);
+  border-radius:8px;padding:.65rem .9rem;color:var(--white);font-size:.9rem;outline:none;transition:border .25s;}
+.pago-input:focus{border-color:var(--accent);}
+.btn-guardar-pago{width:100%;padding:.8rem;background:var(--emerald);color:var(--navy);
+  border:none;border-radius:8px;font-size:.9rem;font-weight:800;cursor:pointer;
+  text-transform:uppercase;margin-top:.3rem;transition:all .25s;}
+.btn-guardar-pago:hover{background:var(--emerald2);}
+.btn-cancelar-pago{width:100%;padding:.65rem;background:transparent;
+  border:1px solid var(--border);color:var(--slate);border-radius:8px;
+  font-size:.82rem;cursor:pointer;margin-top:.4rem;}
+.pago-vence-preview{background:rgba(100,255,218,.08);border:1px solid var(--border);
+  border-radius:6px;padding:.5rem .8rem;font-size:.75rem;color:var(--accent);
+  margin-top:.5rem;text-align:center;}
+
+/* ── PARPADEO ALERTAS ── */
+@keyframes parpadeo{0%,100%{opacity:1}50%{opacity:.4}}
+
 /* ── SPINNER ── */
 .spinner{width:28px;height:28px;border:3px solid rgba(255,255,255,.15);
   border-top-color:var(--emerald);border-radius:50%;animation:spin .7s linear infinite;margin:2rem auto;}
@@ -296,6 +349,7 @@ main{padding:1rem;}
 <div class="tabs">
   <div class="tab active" onclick="cambiarTab('dashboard')">📊 Escuelas</div>
   <div class="tab" onclick="cambiarTab('nueva')">➕ Nueva Escuela</div>
+  <div class="tab" onclick="cambiarTab('pagos');cargarPagos()">💰 Pagos</div>
 </div>
 
 <!-- MAIN -->
@@ -361,8 +415,21 @@ main{padding:1rem;}
           <input class="form-input" id="f-alta" type="date">
         </div>
         <div class="form-row">
-          <label class="form-label">Fecha de Vencimiento *</label>
-          <input class="form-input" id="f-vence" type="date">
+          <label class="form-label">Meses que cubre el primer pago</label>
+          <select class="form-input" id="f-meses-ini">
+            <option value="1">1 mes</option>
+            <option value="2">2 meses</option>
+            <option value="3">3 meses</option>
+            <option value="4">4 meses</option>
+            <option value="5">5 meses</option>
+            <option value="6">6 meses</option>
+            <option value="7">7 meses</option>
+            <option value="8">8 meses</option>
+            <option value="9">9 meses</option>
+            <option value="10">10 meses</option>
+            <option value="11">11 meses</option>
+            <option value="12">12 meses</option>
+          </select>
         </div>
       </div>
 
@@ -400,7 +467,76 @@ main{padding:1rem;}
     </div>
   </div>
 
+  <!-- SECCIÓN PAGOS -->
+  <div class="section" id="sec-pagos">
+    <!-- GRAN TOTAL FIJO ARRIBA -->
+    <div class="pagos-header-fijo">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div>
+          <div class="pagos-gran-lbl">Gran Total Generado</div>
+          <div class="pagos-gran-total" id="gran-total-val">$0</div>
+          <div class="pagos-meta">
+            <div class="pagos-meta-item">Escuelas: <strong id="gt-escuelas">0</strong></div>
+            <div class="pagos-meta-item">Pagos registrados: <strong id="gt-pagos">0</strong></div>
+          </div>
+        </div>
+        <button onclick="exportarPagosExcel()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:white;border-radius:8px;padding:.5rem .8rem;font-size:.72rem;font-weight:700;cursor:pointer;white-space:nowrap;margin-top:.2rem;">📊 Excel</button>
+      </div>
+    </div>
+    <!-- LISTA DE ESCUELAS CON PAGOS -->
+    <div id="lista-pagos-escuelas">
+      <div class="spinner"></div>
+    </div>
+  </div>
+
 </main>
+
+<!-- MODAL REGISTRAR PAGO -->
+<div id="modal-pago">
+  <div class="pago-box">
+    <div class="pago-title">💰 Registrar Pago</div>
+    <div class="pago-row">
+      <label class="pago-label">Escuela</label>
+      <div style="font-size:.85rem;color:var(--accent);font-weight:700;" id="pago-escuela-nombre">—</div>
+    </div>
+    <div class="pago-row">
+      <label class="pago-label">Fecha de Pago</label>
+      <input class="pago-input" type="date" id="pago-fecha">
+    </div>
+    <div class="pago-row">
+      <label class="pago-label">Monto Pagado (MXN)</label>
+      <input class="pago-input" type="number" id="pago-monto" placeholder="0.00" min="0" step="0.01">
+    </div>
+    <div class="pago-row">
+      <label class="pago-label">Meses que cubre</label>
+      <select class="pago-input" id="pago-meses">
+        <option value="0">0 meses (cortesía / vacaciones)</option>
+        <option value="1" selected>1 mes</option>
+        <option value="2">2 meses</option>
+        <option value="3">3 meses</option>
+        <option value="4">4 meses</option>
+        <option value="5">5 meses</option>
+        <option value="6">6 meses</option>
+        <option value="7">7 meses</option>
+        <option value="8">8 meses</option>
+        <option value="9">9 meses</option>
+        <option value="10">10 meses</option>
+        <option value="11">11 meses</option>
+        <option value="12">12 meses</option>
+      </select>
+    </div>
+    <div class="pago-row">
+      <label class="pago-label">Concepto (opcional)</label>
+      <input class="pago-input" type="text" id="pago-concepto" placeholder="Ej. Pago mensual junio">
+    </div>
+    <div class="pago-vence-preview" id="pago-vence-preview">
+      Nueva fecha de vencimiento: calculando...
+    </div>
+    <div style="font-size:.72rem;color:var(--ruby);text-align:center;min-height:16px;margin:.4rem 0;" id="pago-error"></div>
+    <button class="btn-guardar-pago" onclick="guardarPago()">💾 Registrar Pago</button>
+    <button class="btn-cancelar-pago" onclick="cerrarModalPago()">Cancelar</button>
+  </div>
+</div>
 
 <!-- MODAL ELIMINAR ESCUELA -->
 <div id="modal-eliminar">
@@ -435,7 +571,7 @@ main{padding:1rem;}
 <!-- Firebase -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getDatabase, ref, get, set, onValue, update, remove }
+import { getDatabase, ref, get, set, push, onValue, update, remove }
   from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
 const firebaseConfig = {
@@ -552,42 +688,55 @@ window.filtrarEscuelas = function() {
     const vence     = e.fechaVence || '';
     const diasVence = vence ? Math.ceil((new Date(vence)-new Date(hoy))/(1000*60*60*24)) : 999;
     let badge = '';
-    if (!e.activa) badge = `<span class="badge badge-inactiva">🔒 Bloqueada</span>`;
-    else if (diasVence <= 30) badge = `<span class="badge badge-vence">⏳ Vence en ${diasVence}d</span>`;
-    else badge = `<span class="badge badge-activa">✅ Activa</span>`;
+    if (!e.activa) {
+      badge = `<span class="badge badge-inactiva">🔒 Bloqueada</span>`;
+    } else if (diasVence < 0) {
+      badge = `<span class="badge badge-inactiva" style="animation:parpadeo 1s infinite;">🚨 PAGO VENCIDO</span>`;
+    } else if (diasVence <= 10) {
+      badge = `<span class="badge badge-vence" style="animation:parpadeo 1.5s infinite;">⚠️ Vence en ${diasVence}d</span>`;
+    } else if (diasVence <= 30) {
+      badge = `<span class="badge badge-vence">⏳ Vence en ${diasVence}d</span>`;
+    } else {
+      badge = `<span class="badge badge-activa">✅ Activa</span>`;
+    }
 
     return `<div class="escuela-card">
+      <!-- FILA 1: Nombre + Badge -->
       <div class="esc-header">
-        <div>
+        <div style="flex:1;">
           <div class="esc-nombre">${e.nombre||codigo}</div>
-          <div class="esc-codigo">🔑 ${codigo.toUpperCase()}</div>
+          <div style="font-size:.72rem;margin-top:3px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;">
+            ${e.cuota ? `<span style="color:var(--emerald);font-weight:700;">💰 $${Number(e.cuota).toLocaleString('es-MX')}/${e.periodo==='mensual'?'mes':e.periodo==='anual'?'año':e.periodo==='bimestral'?'bim':'trim'}</span>` : ''}
+            <span id="cuota-pagada-${codigo}" style="color:rgba(100,255,218,.7);font-size:.68rem;"></span>
+          </div>
         </div>
         ${badge}
       </div>
-      <div class="esc-meta">
+      <!-- FILA 2: Meta info -->
+      <div class="esc-meta" style="margin-bottom:.6rem;">
         <div class="esc-meta-item">📍 <span>${e.ciudad||'—'}, ${e.estado||'—'}</span></div>
         <div class="esc-meta-item">👤 <span>${e.director||'—'}</span></div>
         <div class="esc-meta-item">🎓 <span>${e.nivel||'—'}</span></div>
-        <div class="esc-meta-item">📅 Vence: <span>${formatFecha(vence)}</span></div>
+        <div class="esc-meta-item">📅 Vence: <span style="font-weight:700;${diasVence<0?'color:#FCA5A5':diasVence<=10?'color:#FCD34D':'color:var(--accent)'}">${formatFecha(vence)}</span></div>
       </div>
-      <div class="esc-actions">
+      <!-- FILA 3: Acciones principales -->
+      <div class="esc-actions" style="margin-bottom:.5rem;">
         <button class="btn-sm btn-ver" onclick="verDetalle('${codigo}')">👁 Detalle</button>
         ${e.activa
           ? `<button class="btn-sm btn-bloquear" onclick="confirmarBloqueo('${codigo}')">🔒 Bloquear</button>`
           : `<button class="btn-sm btn-activar" onclick="confirmarActivar('${codigo}')">✅ Activar</button>`
         }
-        <button class="btn-sm btn-editar" onclick="editarVencimiento('${codigo}')">📅 Renovar</button>
-      </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.5rem;">
-        ${e.cuota ? `<span class="cuota-badge">💰 $${Number(e.cuota).toLocaleString('es-MX')} ${e.periodo||'mensual'}</span>` : '<span></span>'}
         <button class="btn-eliminar" onclick="iniciarEliminar('${codigo}')">🗑️ Eliminar</button>
       </div>
-      <button class="stats-toggle" onclick="toggleStats('${codigo}', this)">📊 Ver estadísticas ▼</button>
+      <!-- FILA 4: Expandibles -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem;">
+        <button class="stats-toggle" style="margin-top:0;" onclick="toggleStats('${codigo}', this)">📊 Stats ▼</button>
+        <button class="accesos-toggle" style="margin-top:0;" onclick="toggleAccesos('${codigo}', this)">🔐 Accesos ▼</button>
+      </div>
       <div class="stats-panel" id="stats-${codigo}">
         <div class="stats-loading" id="stats-load-${codigo}">Toca para cargar...</div>
         <div class="stats-grid" id="stats-grid-${codigo}" style="display:none;"></div>
       </div>
-      <button class="accesos-toggle" onclick="toggleAccesos('${codigo}', this)">🔐 Ver accesos y contraseñas ▼</button>
       <div class="accesos-panel" id="accesos-${codigo}">
         <div class="acceso-row">
           <span class="acceso-lbl">📋 Código licencia</span>
@@ -668,16 +817,7 @@ async function cambiarActiva(codigo, valor) {
   }
 }
 
-// ── RENOVAR VENCIMIENTO ──
-window.editarVencimiento = function(codigo) {
-  const e     = escuelasData[codigo];
-  const nueva = prompt(`Nueva fecha de vencimiento para "${e?.nombre||codigo}":\n(Formato: YYYY-MM-DD, ej: 2027-06-01)`, e?.fechaVence||'');
-  if (!nueva) return;
-  if (!/^d{4}-d{2}-d{2}$/.test(nueva)) { toast('⚠️ Formato incorrecto. Use YYYY-MM-DD'); return; }
-  update(ref(db, `admin/escuelas/${codigo}`), { fechaVence: nueva })
-    .then(() => { escuelasData[codigo].fechaVence = nueva; renderDashboard(); toast('📅 Vencimiento actualizado'); })
-    .catch(() => toast('❌ Error al actualizar'));
-};
+// editarVencimiento eliminado - la fecha se actualiza automáticamente al registrar pagos
 
 // ── NUEVA ESCUELA ──
 window.generarCodigo = function() {
@@ -827,8 +967,11 @@ window.guardarEscuela = async function() {
   btn.disabled = true; btn.textContent = 'Guardando...';
 
   const alta = document.getElementById('f-alta').value || new Date().toISOString().split('T')[0];
+  const mesesIni = parseInt(document.getElementById('f-meses-ini')?.value || '1');
   const cuota   = document.getElementById('f-cuota')?.value || '';
   const periodo = document.getElementById('f-periodo')?.value || 'mensual';
+  // Calcular fecha de vencimiento automática desde la fecha de alta
+  const fechaVenceAuto = sumarMesesAFecha(alta, mesesIni);
   const datos = {
     nombre, ciudad,
     estado:     document.getElementById('f-estado').value.trim() || ciudad,
@@ -837,7 +980,7 @@ window.guardarEscuela = async function() {
     nivel:      document.getElementById('f-nivel').value,
     activa:     true,
     fechaAlta:  alta,
-    fechaVence: vence,
+    fechaVence: fechaVenceAuto,
     codigo,
     cuota:      cuota ? parseFloat(cuota) : 0,
     periodo,
@@ -872,7 +1015,8 @@ function limpiarFormulario() {
     const el = document.getElementById(id);
     if (el) el.value='';
   });
-  document.getElementById('f-vence').value='';
+  const mesesEl = document.getElementById('f-meses-ini');
+  if (mesesEl) mesesEl.value = '1';
   document.getElementById('codigo-generado').textContent='—';
 }
 
@@ -956,7 +1100,7 @@ window.ejecutarConfirmado = async () => {
 
 // ── TABS ──
 window.cambiarTab = function(tab) {
-  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['dashboard','nueva'][i]===tab));
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['dashboard','nueva','pagos'][i]===tab));
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById('sec-'+tab).classList.add('active');
   if (tab==='nueva') {
@@ -966,6 +1110,288 @@ window.cambiarTab = function(tab) {
     document.getElementById('f-vence').value = vence.toISOString().split('T')[0];
     if (document.getElementById('codigo-generado').textContent==='—') generarCodigo();
   }
+};
+
+// ── PAGOS — LÓGICA COMPLETA ──
+let _codigoPagoActual = '';
+
+// Calcular nueva fecha sumando meses calendario exactos
+function sumarMesesAFecha(fechaIso, meses) {
+    if (!fechaIso) fechaIso = new Date().toISOString().split('T')[0];
+    const d = new Date(fechaIso + 'T12:00:00');
+    d.setMonth(d.getMonth() + parseInt(meses));
+    return d.toISOString().split('T')[0];
+}
+// Alias para compatibilidad
+function sumarMeses(fechaIso, meses) { return sumarMesesAFecha(fechaIso, meses); }
+
+// Abrir modal de pago
+window.abrirModalPago = function(codigo) {
+    _codigoPagoActual = codigo;
+    const e = escuelasData[codigo];
+    document.getElementById('pago-escuela-nombre').textContent = e?.nombre || codigo;
+    document.getElementById('pago-fecha').value = new Date().toISOString().split('T')[0];
+    document.getElementById('pago-monto').value = e?.cuota || '';
+    const selMeses = document.getElementById('pago-meses');
+    if (selMeses) selMeses.value = '1';
+    document.getElementById('pago-concepto').value = '';
+    document.getElementById('pago-error').textContent = '';
+    actualizarPreviewVencimiento();
+    document.getElementById('modal-pago').classList.add('show');
+};
+
+window.cerrarModalPago = function() {
+    document.getElementById('modal-pago').classList.remove('show');
+    _codigoPagoActual = '';
+};
+
+// Actualizar preview de nueva fecha de vencimiento
+function actualizarPreviewVencimiento() {
+    const meses = parseInt(document.getElementById('pago-meses').value) || 1;
+    const e = escuelasData[_codigoPagoActual];
+    // Siempre extender desde la fecha de vencimiento actual (continuo)
+    // Si ya venció, extender desde HOY para no "regalar" meses pasados
+    const hoyIso = new Date().toISOString().split('T')[0];
+    const fechaBase = (e?.fechaVence && e.fechaVence >= hoyIso) ? e.fechaVence : hoyIso;
+    const nuevaFecha = sumarMesesAFecha(fechaBase, meses);
+    document.getElementById('pago-vence-preview').textContent =
+        `Nueva fecha de vencimiento: ${formatFecha(nuevaFecha)}`;
+}
+
+document.getElementById('pago-meses').addEventListener('input', actualizarPreviewVencimiento);
+
+// Guardar pago en Firebase
+window.guardarPago = async function() {
+    const errEl = document.getElementById('pago-error');
+    const fecha  = document.getElementById('pago-fecha').value;
+    const monto  = parseFloat(document.getElementById('pago-monto').value);
+    const meses  = parseInt(document.getElementById('pago-meses').value);
+    const concepto = document.getElementById('pago-concepto').value.trim();
+    errEl.textContent = '';
+
+    if (!fecha) { errEl.textContent = 'Ingresa la fecha de pago.'; return; }
+    if (!monto || monto <= 0) { errEl.textContent = 'Ingresa un monto válido.'; return; }
+    if (!meses || meses < 1) { errEl.textContent = 'Ingresa al menos 1 mes.'; return; }
+
+    const e = escuelasData[_codigoPagoActual];
+    // Siempre extender desde la fecha de vencimiento actual (continuo)
+    // Si ya venció, extender desde HOY para no "regalar" meses pasados
+    const hoyIso = new Date().toISOString().split('T')[0];
+    const fechaBase = (e?.fechaVence && e.fechaVence >= hoyIso) ? e.fechaVence : hoyIso;
+    const nuevaFecha = sumarMesesAFecha(fechaBase, meses);
+
+    try {
+        // Guardar registro de pago
+        const pagoRef = ref(db, `admin/pagos/${_codigoPagoActual}`);
+        const nuevoPago = {
+            fecha, monto, meses,
+            concepto: concepto || `Pago ${meses} mes${meses>1?'es':''}`,
+            fechaVenceAntes: fechaBase,
+            fechaVenceDespues: nuevaFecha,
+            registradoEn: new Date().toISOString()
+        };
+        await push(pagoRef, nuevoPago);
+
+        // Actualizar fecha de vencimiento en admin/escuelas y escuelas/{id}
+        await update(ref(db, `admin/escuelas/${_codigoPagoActual}`), { fechaVence: nuevaFecha });
+        try {
+            await update(ref(db, `escuelas/${_codigoPagoActual}/configuracion/perfil`), { fechaVence: nuevaFecha });
+        } catch(e) {}
+
+        cerrarModalPago();
+        toast(`✅ Pago registrado. Vence ahora: ${formatFecha(nuevaFecha)}`);
+        cargarPagos();
+    } catch(err) {
+        errEl.textContent = '❌ Error: ' + err.message;
+    }
+};
+
+// Cargar sección de pagos
+window.cargarPagos = async function() {
+    const cont = document.getElementById('lista-pagos-escuelas');
+    cont.innerHTML = '<div class="spinner"></div>';
+    try {
+        const snapPagos = await get(ref(db, 'admin/pagos'));
+        const pagosPorEscuela = snapPagos.exists() ? snapPagos.val() : {};
+
+        let granTotal = 0, totalPagos = 0, escuelasConPagos = 0;
+        const hoyIso = new Date().toISOString().split('T')[0];
+
+        // Actualizar chip en cards del dashboard
+        Object.entries(pagosPorEscuela).forEach(([codigo, pagos]) => {
+            const lista = Object.values(pagos);
+            const totalEsc = lista.reduce((s,p)=>s+(p.monto||0), 0);
+            const totalMeses = lista.reduce((s,p)=>s+(p.meses||0), 0);
+            granTotal += totalEsc; totalPagos += lista.length;
+            if (lista.length > 0) escuelasConPagos++;
+            const chipEl = document.getElementById('cuota-pagada-' + codigo);
+            if (chipEl) chipEl.textContent = totalEsc > 0
+                ? `· $${totalEsc.toLocaleString('es-MX')} pagado (${totalMeses} mes${totalMeses!==1?'es':''})`
+                : '';
+        });
+
+        document.getElementById('gran-total-val').textContent = '$' + granTotal.toLocaleString('es-MX');
+        document.getElementById('gt-escuelas').textContent = escuelasConPagos;
+        document.getElementById('gt-pagos').textContent = totalPagos;
+
+        // Detectar escuelas por vencer esta semana
+        const porVencer = Object.entries(escuelasData).filter(([,e]) => {
+            if (!e.activa || !e.fechaVence) return false;
+            const dias = Math.ceil((new Date(e.fechaVence) - new Date(hoyIso)) / (1000*60*60*24));
+            return dias >= 0 && dias <= 10;
+        });
+        const vencidas = Object.entries(escuelasData).filter(([,e]) => {
+            if (!e.fechaVence) return false;
+            return e.fechaVence < hoyIso;
+        });
+
+        // Alertas arriba
+        let alertaHtml = '';
+        if (vencidas.length > 0) {
+            alertaHtml += `<div style="background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:.8rem;margin-bottom:.7rem;">
+                <div style="font-size:.75rem;font-weight:700;color:#FCA5A5;margin-bottom:.4rem;">🚨 PAGOS VENCIDOS (${vencidas.length})</div>
+                ${vencidas.map(([,e])=>`<div style="font-size:.75rem;color:#FCA5A5;">· ${e.nombre||'—'} — venció ${formatFecha(e.fechaVence)}</div>`).join('')}
+            </div>`;
+        }
+        if (porVencer.length > 0) {
+            alertaHtml += `<div style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);border-radius:8px;padding:.8rem;margin-bottom:.7rem;">
+                <div style="font-size:.75rem;font-weight:700;color:#FCD34D;margin-bottom:.4rem;">⚠️ VENCEN PRONTO (${porVencer.length})</div>
+                ${porVencer.map(([,e])=>{
+                    const dias = Math.ceil((new Date(e.fechaVence)-new Date(hoyIso))/(1000*60*60*24));
+                    return `<div style="font-size:.75rem;color:#FCD34D;">· ${e.nombre||'—'} — en ${dias} día${dias!==1?'s':''}</div>`;
+                }).join('')}
+            </div>`;
+        }
+
+        // Renderizar escuelas
+        const escuelas = Object.entries(escuelasData).sort((a,b)=>(a[1].nombre||'').localeCompare(b[1].nombre||''));
+        let html = alertaHtml;
+
+        escuelas.forEach(([codigo, e]) => {
+            const pagos = pagosPorEscuela[codigo]
+                ? Object.entries(pagosPorEscuela[codigo]).map(([k,v])=>({...v,key:k})).sort((a,b)=>a.fecha.localeCompare(b.fecha))
+                : [];
+            const totalEsc = pagos.reduce((s,p)=>s+(p.monto||0), 0);
+            const totalMeses = pagos.reduce((s,p)=>s+(p.meses||0), 0);
+            const diasVence = e.fechaVence ? Math.ceil((new Date(e.fechaVence)-new Date(hoyIso))/(1000*60*60*24)) : null;
+            let estadoColor = '#34D399';
+            let estadoTxt = `Vence: ${formatFecha(e.fechaVence)}`;
+            if (diasVence !== null && diasVence < 0) { estadoColor='#FCA5A5'; estadoTxt='🚨 VENCIDO'; }
+            else if (diasVence !== null && diasVence <= 10) { estadoColor='#FCD34D'; estadoTxt=`⚠️ Vence en ${diasVence}d`; }
+
+            // Link WhatsApp recordatorio
+            const telDir = e.telefono ? String(e.telefono).replace(/[^0-9]/g,'') : '';
+            const nombreDir = (e.director||'Director(a)').split(' ').slice(0,2).join(' ');
+            const msgWA = encodeURIComponent(
+                `Estimado(a) *${nombreDir}*, le informamos que la licencia del sistema *LudoAssist PRO* para *${e.nombre||'su plantel'}* vence el *${formatFecha(e.fechaVence)}*. Para garantizar la continuidad del servicio de control de asistencias, le solicitamos realizar su pago a la brevedad. Quedo a sus órdenes. — *Administración LudoAssist*`
+            );
+            const linkWA = telDir ? `<a href="https://wa.me/52${telDir}?text=${msgWA}" target="_blank" style="background:rgba(37,211,102,.15);border:1px solid rgba(37,211,102,.3);color:#25D366;border-radius:6px;padding:.3rem .7rem;font-size:.68rem;font-weight:700;text-decoration:none;">📱 Recordatorio WA</a>` : '';
+
+            html += `<div class="escuela-pagos-card">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem;">
+                    <div style="flex:1;">
+                        <div class="ep-nombre">${e.nombre||codigo}</div>
+                        <div class="ep-resumen">
+                            <div class="ep-stat">Cobrado: <strong style="color:var(--emerald);">$${totalEsc.toLocaleString('es-MX')}</strong></div>
+                            <div class="ep-stat">Meses: <strong>${totalMeses}</strong></div>
+                            <div class="ep-stat" style="color:${estadoColor};font-weight:700;">${estadoTxt}</div>
+                        </div>
+                        <div style="display:flex;gap:.5rem;margin-top:.4rem;flex-wrap:wrap;">
+                            ${linkWA}
+                        </div>
+                    </div>
+                    <button class="btn-registrar-pago" onclick="abrirModalPago('${codigo}')">+ Pago</button>
+                </div>`;
+
+            if (pagos.length > 0) {
+                html += `<table class="ep-tabla">
+                    <tr><th>Fecha</th><th>Monto</th><th>Meses</th><th>Concepto</th></tr>`;
+                pagos.forEach(p => {
+                    const esGratis = (p.monto||0) === 0;
+                    html += `<tr>
+                        <td>${formatFecha(p.fecha)}</td>
+                        <td style="color:${esGratis?'var(--slate)':'var(--emerald)'};font-weight:700;">${esGratis?'Cortesía':'$'+p.monto.toLocaleString('es-MX')}</td>
+                        <td>${p.meses||1}</td>
+                        <td style="color:var(--slate);">${p.concepto||'-'}</td>
+                    </tr>`;
+                });
+                const totalReal = pagos.filter(p=>p.monto>0).reduce((s,p)=>s+p.monto,0);
+                html += `<tr class="ep-total-row">
+                    <td>TOTAL</td>
+                    <td>$${totalReal.toLocaleString('es-MX')}</td>
+                    <td>${totalMeses} meses</td>
+                    <td></td>
+                </tr></table>`;
+            } else {
+                html += `<div class="ep-empty">Sin pagos registrados. Toca + Pago para agregar.</div>`;
+            }
+            html += '</div>';
+        });
+
+        cont.innerHTML = html || '<div class="ep-empty">Sin escuelas.</div>';
+    } catch(err) {
+        cont.innerHTML = `<div class="ep-empty" style="color:var(--ruby);">❌ Error: ${err.message}</div>`;
+    }
+};
+
+// ── EXPORTAR PAGOS A EXCEL ──
+window.exportarPagosExcel = async function() {
+    if (typeof XLSX === 'undefined') {
+        const s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+        await new Promise((res,rej)=>{ s.onload=res; s.onerror=rej; document.head.appendChild(s); });
+    }
+    try {
+        const snapPagos = await get(ref(db, 'admin/pagos'));
+        const pagosPorEscuela = snapPagos.exists() ? snapPagos.val() : {};
+        const wb = XLSX.utils.book_new();
+
+        // Hoja resumen
+        let granTotal = 0;
+        const resumenRows = [
+            ['REPORTE DE INGRESOS — LUDOASSIST PRO'],
+            [`Generado: ${new Date().toLocaleString('es-MX')}`],
+            [],
+            ['Escuela', 'Código', 'Total Cobrado', 'Meses', 'Cuota Base', 'Vence', 'Estado']
+        ];
+
+        Object.entries(escuelasData).forEach(([codigo, e]) => {
+            const pagos = pagosPorEscuela[codigo] ? Object.values(pagosPorEscuela[codigo]) : [];
+            const totalEsc = pagos.reduce((s,p)=>s+(p.monto||0),0);
+            const totalMeses = pagos.reduce((s,p)=>s+(p.meses||0),0);
+            const hoy = new Date().toISOString().split('T')[0];
+            const estado = !e.activa ? 'Bloqueada' : (e.fechaVence < hoy ? 'VENCIDA' : 'Activa');
+            granTotal += totalEsc;
+            resumenRows.push([e.nombre||codigo, codigo.toUpperCase(), totalEsc, totalMeses, e.cuota||0, e.fechaVence||'-', estado]);
+        });
+        resumenRows.push([]);
+        resumenRows.push(['GRAN TOTAL', '', granTotal, '', '', '', '']);
+
+        const wsRes = XLSX.utils.aoa_to_sheet(resumenRows);
+        wsRes['!cols'] = [{wch:40},{wch:12},{wch:15},{wch:8},{wch:12},{wch:12},{wch:10}];
+        XLSX.utils.book_append_sheet(wb, wsRes, 'RESUMEN');
+
+        // Hoja detalle de pagos
+        const detalleRows = [
+            ['DETALLE DE PAGOS'],
+            [],
+            ['Escuela', 'Fecha Pago', 'Monto', 'Meses', 'Concepto', 'Vence Antes', 'Vence Después']
+        ];
+        Object.entries(escuelasData).forEach(([codigo, e]) => {
+            const pagos = pagosPorEscuela[codigo]
+                ? Object.values(pagosPorEscuela[codigo]).sort((a,b)=>a.fecha.localeCompare(b.fecha))
+                : [];
+            pagos.forEach(p => {
+                detalleRows.push([e.nombre||codigo, p.fecha, p.monto||0, p.meses||1, p.concepto||'-', p.fechaVenceAntes||'-', p.fechaVenceDespues||'-']);
+            });
+        });
+        const wsDet = XLSX.utils.aoa_to_sheet(detalleRows);
+        wsDet['!cols'] = [{wch:40},{wch:12},{wch:12},{wch:8},{wch:30},{wch:14},{wch:14}];
+        XLSX.utils.book_append_sheet(wb, wsDet, 'DETALLE PAGOS');
+
+        XLSX.writeFile(wb, `LudoAssist_Ingresos_${new Date().toISOString().split('T')[0]}.xlsx`);
+        toast('📊 Excel exportado correctamente');
+    } catch(err) { toast('❌ Error al exportar: ' + err.message); }
 };
 
 // ── HELPERS ──

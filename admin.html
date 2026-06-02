@@ -178,6 +178,21 @@ main{padding:1rem;}
 .empty-state{text-align:center;padding:3rem 1rem;color:var(--slate);}
 .empty-icon{font-size:3rem;margin-bottom:.8rem;}
 
+/* ── STATS ESCUELA ── */
+.stats-toggle{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);
+  color:#93C5FD;border-radius:6px;padding:.35rem .7rem;font-size:.7rem;
+  font-weight:700;cursor:pointer;transition:all .2s;width:100%;text-align:left;margin-top:.4rem;}
+.stats-toggle:hover{background:rgba(59,130,246,.15);}
+.stats-panel{display:none;background:rgba(0,0,0,.2);border:1px solid rgba(59,130,246,.15);
+  border-radius:8px;padding:.8rem;margin-top:.4rem;}
+.stats-panel.open{display:block;}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;}
+.stats-item{background:rgba(255,255,255,.04);border-radius:6px;padding:.5rem .7rem;
+  display:flex;align-items:center;gap:.5rem;}
+.stats-val{font-size:.95rem;font-weight:800;color:var(--white);line-height:1;}
+.stats-lbl{font-size:.62rem;color:var(--slate);text-transform:uppercase;letter-spacing:.5px;margin-top:1px;}
+.stats-loading{font-size:.75rem;color:var(--slate);text-align:center;padding:.5rem;}
+
 /* ── ELIMINAR ESCUELA ── */
 .btn-eliminar{background:rgba(239,68,68,.1);color:var(--ruby);border:1px solid rgba(239,68,68,.2);
   border-radius:6px;padding:.35rem .7rem;font-size:.7rem;font-weight:700;cursor:pointer;
@@ -567,6 +582,11 @@ window.filtrarEscuelas = function() {
         ${e.cuota ? `<span class="cuota-badge">💰 $${Number(e.cuota).toLocaleString('es-MX')} ${e.periodo||'mensual'}</span>` : '<span></span>'}
         <button class="btn-eliminar" onclick="iniciarEliminar('${codigo}')">🗑️ Eliminar</button>
       </div>
+      <button class="stats-toggle" onclick="toggleStats('${codigo}', this)">📊 Ver estadísticas ▼</button>
+      <div class="stats-panel" id="stats-${codigo}">
+        <div class="stats-loading" id="stats-load-${codigo}">Toca para cargar...</div>
+        <div class="stats-grid" id="stats-grid-${codigo}" style="display:none;"></div>
+      </div>
       <button class="accesos-toggle" onclick="toggleAccesos('${codigo}', this)">🔐 Ver accesos y contraseñas ▼</button>
       <div class="accesos-panel" id="accesos-${codigo}">
         <div class="acceso-row">
@@ -697,6 +717,69 @@ window.generarCodigo = function() {
   }
 
   document.getElementById('codigo-generado').textContent = prefijo.toUpperCase();
+};
+
+// ── STATS ESCUELA ──
+window.toggleStats = async function(codigo, btn) {
+  const panel = document.getElementById('stats-' + codigo);
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open');
+  btn.textContent = isOpen ? '📊 Ver estadísticas ▼' : '📊 Ocultar estadísticas ▲';
+  if (!isOpen) {
+    const loadEl = document.getElementById('stats-load-' + codigo);
+    const gridEl = document.getElementById('stats-grid-' + codigo);
+    if (loadEl.style.display !== 'none') {
+      loadEl.textContent = 'Cargando...';
+      try {
+        const e = escuelasData[codigo];
+        // Alumnos en padron
+        const snapDir = await get(ref(db, `escuelas/${codigo}/directorio`));
+        let totalAlumnos = 0;
+        if (snapDir.exists()) {
+          Object.values(snapDir.val()).forEach(g => {
+            const l = Array.isArray(g) ? g : Object.values(g);
+            totalAlumnos += l.filter(Boolean).length;
+          });
+        }
+        // Grupos y turnos
+        const snapEst = await get(ref(db, `escuelas/${codigo}/configuracion/estructura`));
+        let totalGrupos = 0, turnos = [];
+        if (snapEst.exists()) {
+          const est = snapEst.val();
+          turnos = Object.keys(est);
+          turnos.forEach(t => Object.values(est[t]||{}).forEach(g => {
+            totalGrupos += (Array.isArray(g)?g:Object.values(g)).length;
+          }));
+        }
+        // Dias para vencer
+        const hoy = new Date().toISOString().split('T')[0];
+        const diasVence = e.fechaVence ? Math.ceil((new Date(e.fechaVence)-new Date(hoy))/(1000*60*60*24)) : null;
+        const dColor = diasVence===null?'var(--slate)':diasVence<=30?'var(--ruby)':diasVence<=90?'var(--amber)':'var(--emerald)';
+        
+        gridEl.innerHTML = `
+          <div class="stats-item"><span style="font-size:1.1rem">👥</span><div>
+            <div class="stats-val" style="color:var(--accent)">${totalAlumnos}</div>
+            <div class="stats-lbl">Alumnos en padron</div></div></div>
+          <div class="stats-item"><span style="font-size:1.1rem">🏛️</span><div>
+            <div class="stats-val">${totalGrupos}</div>
+            <div class="stats-lbl">Grupos configurados</div></div></div>
+          <div class="stats-item"><span style="font-size:1.1rem">📚</span><div>
+            <div class="stats-val" style="font-size:.78rem">${turnos.length?turnos.join(' / '):'Sin config'}</div>
+            <div class="stats-lbl">Turnos activos</div></div></div>
+          <div class="stats-item"><span style="font-size:1.1rem">⏳</span><div>
+            <div class="stats-val" style="color:${dColor}">${diasVence!==null?diasVence+' dias':'Sin fecha'}</div>
+            <div class="stats-lbl">Para vencer</div></div></div>
+          ${e.cuota?`<div class="stats-item" style="grid-column:1/-1"><span style="font-size:1.1rem">💰</span><div>
+            <div class="stats-val" style="color:var(--emerald)">$${Number(e.cuota).toLocaleString('es-MX')} ${e.periodo||'mensual'}</div>
+            <div class="stats-lbl">Cuota pactada</div></div></div>`:''}`;
+        loadEl.style.display = 'none';
+        gridEl.style.display = 'grid';
+      } catch(err) {
+        loadEl.textContent = 'Error al cargar.';
+        loadEl.style.color = 'var(--ruby)';
+      }
+    }
+  }
 };
 
 // ── TOGGLE ACCESOS — carga contraseña director desde Firebase ──

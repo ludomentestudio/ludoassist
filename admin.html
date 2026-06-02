@@ -276,6 +276,23 @@ main{padding:1rem;}
   border-radius:6px;padding:.5rem .8rem;font-size:.75rem;color:var(--accent);
   margin-top:.5rem;text-align:center;}
 
+/* ── RESPALDOS ── */
+.backup-card{background:linear-gradient(135deg,#0F2744,#1E3A5F);border:1px solid rgba(59,130,246,.3);
+  border-radius:10px;padding:1rem;margin-bottom:.8rem;}
+.backup-title{font-size:.85rem;font-weight:700;color:#93C5FD;text-transform:uppercase;
+  letter-spacing:.5px;margin-bottom:.3rem;}
+.backup-desc{font-size:.75rem;color:rgba(147,197,253,.6);margin-bottom:.8rem;line-height:1.5;}
+.backup-btns{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;}
+.btn-backup{border:none;border-radius:8px;padding:.7rem .5rem;font-size:.75rem;font-weight:700;
+  cursor:pointer;transition:all .25s;text-align:center;line-height:1.4;}
+.btn-backup-json{background:rgba(59,130,246,.2);border:1px solid rgba(59,130,246,.4);color:#93C5FD;}
+.btn-backup-json:hover{background:#1D4ED8;color:white;}
+.btn-backup-excel{background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.3);color:var(--emerald);}
+.btn-backup-excel:hover{background:var(--emerald);color:var(--navy);}
+.btn-backup-script{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);color:var(--amber);grid-column:1/-1;}
+.btn-backup-script:hover{background:var(--amber);color:var(--navy);}
+.backup-last{font-size:.68rem;color:rgba(147,197,253,.5);margin-top:.5rem;text-align:center;}
+
 /* ── PARPADEO ALERTAS ── */
 @keyframes parpadeo{0%,100%{opacity:1}50%{opacity:.4}}
 
@@ -350,6 +367,7 @@ main{padding:1rem;}
   <div class="tab active" onclick="cambiarTab('dashboard')">📊 Escuelas</div>
   <div class="tab" onclick="cambiarTab('nueva')">➕ Nueva Escuela</div>
   <div class="tab" onclick="cambiarTab('pagos');cargarPagos()">💰 Pagos</div>
+  <div class="tab" onclick="cambiarTab('respaldos')">💾 Respaldos</div>
 </div>
 
 <!-- MAIN -->
@@ -464,6 +482,66 @@ main{padding:1rem;}
       <button class="btn-primary" id="btn-guardar" onclick="guardarEscuela()">
         ☁️ Dar de Alta en Firebase
       </button>
+    </div>
+  </div>
+
+  <!-- SECCIÓN RESPALDOS -->
+  <div class="section" id="sec-respaldos">
+
+    <!-- RESPALDO MANUAL -->
+    <div class="backup-card">
+      <div class="backup-title">💾 Respaldo Manual Inmediato</div>
+      <div class="backup-desc">
+        Descarga una copia completa de todos los datos de Firebase ahora mismo.
+        Incluye escuelas, alumnos, asistencias, pagos y configuraciones.
+      </div>
+      <div class="backup-btns">
+        <button class="btn-backup btn-backup-json" onclick="respaldarJSON()">
+          📄 Descargar<br>JSON completo
+        </button>
+        <button class="btn-backup btn-backup-excel" onclick="respaldarExcel()">
+          📊 Descargar<br>Excel completo
+        </button>
+      </div>
+      <div class="backup-last" id="backup-last-manual">Último respaldo: nunca</div>
+    </div>
+
+    <!-- RESPALDO AUTOMÁTICO — Google Apps Script -->
+    <div class="backup-card">
+      <div class="backup-title">🔄 Respaldo Automático Semanal</div>
+      <div class="backup-desc">
+        Configura un script gratuito de Google que respaldará automáticamente
+        todos los datos cada semana a tu Google Drive o correo.
+        Solo necesitas hacer la configuración una vez.
+      </div>
+      <button class="btn-backup btn-backup-script" onclick="mostrarInstruccionesScript()">
+        ⚙️ Ver instrucciones de configuración automática
+      </button>
+    </div>
+
+    <!-- INSTRUCCIONES SCRIPT (ocultas por defecto) -->
+    <div id="instrucciones-script" style="display:none;background:var(--navy2);border:1px solid var(--border);border-radius:10px;padding:1.2rem;margin-bottom:.8rem;">
+      <div style="font-size:.85rem;font-weight:700;color:var(--accent);margin-bottom:.8rem;">
+        📋 Configuración del Respaldo Automático
+      </div>
+      <div style="font-size:.78rem;color:var(--slate);line-height:1.8;">
+        <strong style="color:var(--white);">Paso 1.</strong> Abre <a href="https://script.google.com" target="_blank" style="color:var(--accent);">script.google.com</a> en tu computadora<br>
+        <strong style="color:var(--white);">Paso 2.</strong> Crea un nuevo proyecto (botón + Nuevo proyecto)<br>
+        <strong style="color:var(--white);">Paso 3.</strong> Borra todo el código y pega el código que aparece abajo<br>
+        <strong style="color:var(--white);">Paso 4.</strong> Haz clic en "Guardar" y luego en "Ejecutar" una vez para autorizar<br>
+        <strong style="color:var(--white);">Paso 5.</strong> Ve a "Activadores" (ícono del reloj) → Agregar activador → cada semana<br>
+        <strong style="color:var(--white);">Paso 6.</strong> ¡Listo! Cada semana recibirás el respaldo en tu correo de Google
+      </div>
+      <div style="margin-top:.8rem;background:rgba(0,0,0,.3);border-radius:6px;padding:.8rem;font-family:monospace;font-size:.7rem;color:#34D399;line-height:1.6;overflow-x:auto;" id="codigo-script">
+      </div>
+      <button onclick="copiarScript()" style="background:rgba(100,255,218,.1);border:1px solid var(--border);color:var(--accent);border-radius:6px;padding:.4rem .8rem;font-size:.72rem;font-weight:700;cursor:pointer;margin-top:.6rem;width:100%;">
+        📋 Copiar código del script
+      </button>
+    </div>
+
+    <div style="font-size:.68rem;color:var(--slate);text-align:center;padding:.5rem;line-height:1.6;">
+      Los respaldos no reemplazan la protección de Firebase.<br>
+      Son una capa extra de seguridad para tu tranquilidad.
     </div>
   </div>
 
@@ -819,6 +897,202 @@ async function cambiarActiva(codigo, valor) {
 
 // editarVencimiento eliminado - la fecha se actualiza automáticamente al registrar pagos
 
+// ══════════════════════════════════════════════════════
+// RESPALDOS — MANUAL Y AUTOMÁTICO
+// ══════════════════════════════════════════════════════
+
+// Leer TODOS los datos de Firebase para el respaldo
+async function leerTodosLosDatos() {
+    const [snapAdmin, snapEscuelas, snapPagos] = await Promise.all([
+        get(ref(db, 'admin')),
+        get(ref(db, 'escuelas')),
+        get(ref(db, 'admin/pagos'))
+    ]);
+    return {
+        timestamp: new Date().toISOString(),
+        version: 'LudoAssist PRO v1.0',
+        admin: snapAdmin.exists() ? snapAdmin.val() : {},
+        escuelas: snapEscuelas.exists() ? snapEscuelas.val() : {},
+    };
+}
+
+// ── RESPALDO JSON ──
+window.respaldarJSON = async function() {
+    toast('⏳ Preparando respaldo JSON...');
+    try {
+        const datos = await leerTodosLosDatos();
+        const json = JSON.stringify(datos, null, 2);
+        const blob = new Blob([json], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        const fecha = new Date().toISOString().split('T')[0];
+        a.href = url;
+        a.download = `LudoAssist_Backup_${fecha}.json`;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
+        const ahora = new Date().toLocaleString('es-MX');
+        document.getElementById('backup-last-manual').textContent = `Ultimo respaldo: ${ahora}`;
+        localStorage.setItem('ludo_last_backup', ahora);
+        toast('✅ Respaldo JSON descargado correctamente');
+    } catch(err) { toast('❌ Error al respaldar: ' + err.message); }
+};
+
+// ── RESPALDO EXCEL ──
+window.respaldarExcel = async function() {
+    if (typeof XLSX === 'undefined') {
+        const s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+        await new Promise((res,rej)=>{ s.onload=res; s.onerror=rej; document.head.appendChild(s); });
+    }
+    toast('⏳ Preparando respaldo Excel...');
+    try {
+        const datos = await leerTodosLosDatos();
+        const wb = XLSX.utils.book_new();
+        const fecha = new Date().toISOString().split('T')[0];
+
+        // Hoja 1: Escuelas
+        const escRows = [
+            [`RESPALDO LUDOASSIST PRO — ${fecha}`],
+            [],
+            ['Código','Nombre','Ciudad','Director','Nivel','Activa','FechaAlta','FechaVence','Cuota','Periodo','Observaciones']
+        ];
+        Object.entries(datos.admin.escuelas || {}).forEach(([cod,e]) => {
+            escRows.push([cod.toUpperCase(), e.nombre||'', e.ciudad||'', e.director||'',
+                e.nivel||'', e.activa?'Activa':'Bloqueada', e.fechaAlta||'',
+                e.fechaVence||'', e.cuota||0, e.periodo||'', e.observaciones||'']);
+        });
+        const wsEsc = XLSX.utils.aoa_to_sheet(escRows);
+        wsEsc['!cols'] = [{wch:12},{wch:40},{wch:15},{wch:30},{wch:14},{wch:10},{wch:12},{wch:12},{wch:10},{wch:12},{wch:30}];
+        XLSX.utils.book_append_sheet(wb, wsEsc, 'Escuelas');
+
+        // Hoja 2: Alumnos por escuela
+        const alumRows = [['Escuela','Turno','Grado','Grupo','Alumno']];
+        Object.entries(datos.escuelas || {}).forEach(([cod, escData]) => {
+            const nombre = datos.admin.escuelas?.[cod]?.nombre || cod;
+            const directorio = escData.directorio || {};
+            Object.entries(directorio).forEach(([clave, lista]) => {
+                const partes = clave.split('-');
+                const turno = partes[0] || '';
+                const grado = partes[1] || '';
+                const grupo = partes[2] || '';
+                const alumnos = Array.isArray(lista) ? lista : Object.values(lista);
+                alumnos.filter(Boolean).forEach(a => {
+                    alumRows.push([nombre, turno, grado, grupo, a]);
+                });
+            });
+        });
+        const wsAlum = XLSX.utils.aoa_to_sheet(alumRows);
+        wsAlum['!cols'] = [{wch:35},{wch:12},{wch:8},{wch:8},{wch:45}];
+        XLSX.utils.book_append_sheet(wb, wsAlum, 'Alumnos');
+
+        // Hoja 3: Pagos
+        const pagoRows = [['Escuela','Fecha Pago','Monto','Meses','Concepto','Vence Antes','Vence Despues']];
+        Object.entries(datos.admin.pagos || {}).forEach(([cod, pagos]) => {
+            const nombre = datos.admin.escuelas?.[cod]?.nombre || cod;
+            Object.values(pagos).forEach(p => {
+                pagoRows.push([nombre, p.fecha||'', p.monto||0, p.meses||1,
+                    p.concepto||'', p.fechaVenceAntes||'', p.fechaVenceDespues||'']);
+            });
+        });
+        const wsPagos = XLSX.utils.aoa_to_sheet(pagoRows);
+        wsPagos['!cols'] = [{wch:35},{wch:12},{wch:12},{wch:8},{wch:30},{wch:14},{wch:14}];
+        XLSX.utils.book_append_sheet(wb, wsPagos, 'Pagos');
+
+        // Ordenar hojas
+        const sheets = wb.SheetNames;
+        XLSX.writeFile(wb, `LudoAssist_Backup_${fecha}.xlsx`);
+
+        const ahora = new Date().toLocaleString('es-MX');
+        document.getElementById('backup-last-manual').textContent = `Ultimo respaldo: ${ahora}`;
+        localStorage.setItem('ludo_last_backup', ahora);
+        toast('✅ Respaldo Excel descargado — 3 hojas: Escuelas, Alumnos, Pagos');
+    } catch(err) { toast('❌ Error al respaldar: ' + err.message); }
+};
+
+// ── INSTRUCCIONES GOOGLE APPS SCRIPT ──
+window.mostrarInstruccionesScript = function() {
+    const div = document.getElementById('instrucciones-script');
+    div.style.display = div.style.display === 'none' ? 'block' : 'none';
+
+    // Generar el código del script
+    const scriptCode = `// ═══════════════════════════════════════════════════
+// RESPALDO AUTOMÁTICO LUDOASSIST PRO
+// Pega este código en Google Apps Script
+// Configura un activador semanal para ejecutarlo
+// ═══════════════════════════════════════════════════
+
+const FIREBASE_URL = 'https://ludoasistencia-default-rtdb.firebaseio.com';
+const FIREBASE_SECRET = 'TU_SECRET_DE_FIREBASE'; // Ver en Firebase > Configuración > Cuentas de servicio
+const CARPETA_DRIVE = 'LudoAssist Respaldos'; // Nombre de carpeta en Google Drive
+const CORREO_DESTINO = 'tu@correo.com'; // Tu correo para recibir el respaldo
+
+function respaldarLudoAssist() {
+  try {
+    // Leer datos de Firebase
+    const url = FIREBASE_URL + '/.json?auth=' + FIREBASE_SECRET;
+    const respuesta = UrlFetchApp.fetch(url);
+    const datos = respuesta.getContentText();
+    
+    // Guardar en Google Drive
+    const fecha = Utilities.formatDate(new Date(), 'America/Mexico_City', 'yyyy-MM-dd_HH-mm');
+    const nombreArchivo = 'LudoAssist_Backup_' + fecha + '.json';
+    
+    let carpeta;
+    const carpetas = DriveApp.getFoldersByName(CARPETA_DRIVE);
+    if (carpetas.hasNext()) {
+      carpeta = carpetas.next();
+    } else {
+      carpeta = DriveApp.createFolder(CARPETA_DRIVE);
+    }
+    
+    carpeta.createFile(nombreArchivo, datos, MimeType.PLAIN_TEXT);
+    
+    // Enviar correo de confirmación
+    GmailApp.sendEmail(
+      CORREO_DESTINO,
+      '✅ Respaldo LudoAssist completado - ' + fecha,
+      'El respaldo automático de LudoAssist PRO se completó correctamente.\n\n' +
+      'Archivo: ' + nombreArchivo + '\n' +
+      'Guardado en Google Drive > ' + CARPETA_DRIVE + '\n\n' +
+      '— Sistema automático LudoAssist'
+    );
+    
+    Logger.log('Respaldo completado: ' + nombreArchivo);
+  } catch(e) {
+    GmailApp.sendEmail(
+      CORREO_DESTINO,
+      '❌ Error en respaldo LudoAssist',
+      'Ocurrió un error en el respaldo automático: ' + e.toString()
+    );
+  }
+}`;
+
+    document.getElementById('codigo-script').textContent = scriptCode;
+};
+
+window.copiarScript = function() {
+    const codigo = document.getElementById('codigo-script').textContent;
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(codigo).then(() => toast('📋 Código copiado al portapapeles'));
+    } else {
+        const ta = document.createElement('textarea');
+        ta.value = codigo;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        toast('📋 Código copiado');
+    }
+};
+
+// Mostrar fecha del último respaldo al cargar
+setTimeout(() => {
+    const ultimo = localStorage.getItem('ludo_last_backup');
+    const el = document.getElementById('backup-last-manual');
+    if (el && ultimo) el.textContent = 'Ultimo respaldo: ' + ultimo;
+}, 500);
+
 // ── NUEVA ESCUELA ──
 window.generarCodigo = function() {
   const nombre = (document.getElementById('f-nombre').value||'').trim();
@@ -1100,7 +1374,7 @@ window.ejecutarConfirmado = async () => {
 
 // ── TABS ──
 window.cambiarTab = function(tab) {
-  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['dashboard','nueva','pagos'][i]===tab));
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['dashboard','nueva','pagos','respaldos'][i]===tab));
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById('sec-'+tab).classList.add('active');
   if (tab==='nueva') {

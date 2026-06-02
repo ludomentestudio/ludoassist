@@ -379,7 +379,7 @@ function abrirModalEscuela() {
 }
 
 document.getElementById('btn-agregar-visible').addEventListener('click', abrirModalEscuela);
-document.getElementById('btn-add-escuela').addEventListener('click', abrirModalEscuela);
+// btn-add-escuela removido del header — se usa btn-agregar-visible
 
 document.getElementById('btn-modal-cancel').addEventListener('click', () => {
   document.getElementById('modal-escuela').classList.remove('show');
@@ -429,6 +429,42 @@ document.getElementById('btn-salir').addEventListener('click', () => {
 // ── CARGAR ESTRUCTURA ──
 async function cargarEstructura() {
   try {
+    // Verificar que la escuela siga activa
+    const snapPerfil = await get(ref(db, `escuelas/${escuelaActiva}/configuracion/perfil`));
+    if (snapPerfil.exists() && snapPerfil.val().activa === false) {
+      const nombreEsc = escuelas.find(e => e.codigo === escuelaActiva)?.nombre || escuelaActiva.toUpperCase();
+      document.getElementById('contenido').innerHTML = `
+        <div style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);
+          border-radius:12px;padding:1.5rem;text-align:center;margin-top:1rem;">
+          <div style="font-size:2.5rem;margin-bottom:.8rem;">🔒</div>
+          <div style="font-size:1rem;font-weight:700;color:#FCA5A5;margin-bottom:.5rem;">
+            Licencia Suspendida
+          </div>
+          <div style="font-size:.85rem;color:var(--slate);margin-bottom:1rem;">
+            <strong style="color:var(--white)">${nombreEsc}</strong><br>
+            Esta escuela no tiene una licencia activa.<br>
+            Comunícate con el administrador de LudoAssist.
+          </div>
+          <div style="font-size:.75rem;color:rgba(239,68,68,.7);">
+            Código: ${escuelaActiva.toUpperCase()}
+          </div>
+        </div>`;
+      // Deshabilitar selector
+      document.getElementById('sel-turno').disabled = true;
+      document.getElementById('sel-grado').disabled = true;
+      document.getElementById('sel-grupo').disabled = true;
+      document.getElementById('btn-cargar').disabled = true;
+      document.getElementById('sel-turno').innerHTML = '<option>—</option>';
+      document.getElementById('sel-grado').innerHTML = '<option>—</option>';
+      document.getElementById('sel-grupo').innerHTML = '<option>—</option>';
+      return;
+    }
+    // Escuela activa — habilitar controles
+    document.getElementById('sel-turno').disabled = false;
+    document.getElementById('sel-grado').disabled = false;
+    document.getElementById('sel-grupo').disabled = false;
+    document.getElementById('btn-cargar').disabled = false;
+
     const snap = await get(ref(db, `escuelas/${escuelaActiva}/directorio`));
     if (snap.exists()) {
       // Construir estructura desde las claves del directorio (ej: Matutino-1-A)

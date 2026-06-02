@@ -6,10 +6,10 @@
 <title>LudoAssist · Lista Docente</title>
 <style>
 :root {
-  --navy:#0A192F; --navy2:#112240; --emerald:#10B981; --emerald2:#059669;
+  --navy:#1E2D45; --navy2:#263550; --emerald:#10B981; --emerald2:#059669;
   --ruby:#EF4444; --amber:#F59E0B; --blue:#3B82F6; --purple:#8B5CF6;
-  --slate:#8892B0; --white:#E6F1FF; --accent:#64FFDA;
-  --border:rgba(100,255,218,.1); --card:rgba(255,255,255,.04);
+  --justif:#06B6D4; --slate:#B0BEC5; --white:#F0F7FF; --accent:#64FFDA;
+  --border:rgba(100,255,218,.15); --card:rgba(255,255,255,.08);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--navy);color:var(--white);font-family:'Segoe UI',sans-serif;min-height:100vh;}
@@ -63,10 +63,12 @@ main{padding:1rem;max-width:600px;margin:0 auto;}
 .chip-add:hover{border-color:var(--accent);color:var(--accent);}
 
 /* ── BOTON AGREGAR ESCUELA VISIBLE ── */
-.btn-agregar-escuela{background:transparent;border:1px dashed rgba(100,255,218,.3);
-  color:var(--slate);border-radius:10px;padding:.6rem 1rem;font-size:.82rem;
-  cursor:pointer;width:100%;margin-bottom:.8rem;transition:all .2s;text-align:center;}
-.btn-agregar-escuela:hover{border-color:var(--accent);color:var(--accent);}
+.btn-agregar-escuela{background:linear-gradient(135deg,rgba(139,92,246,.3),rgba(236,72,153,.3));
+  border:1px solid rgba(139,92,246,.5);color:#C4B5FD;border-radius:10px;
+  padding:.7rem 1rem;font-size:.85rem;font-weight:700;cursor:pointer;width:100%;
+  margin-bottom:.8rem;transition:all .2s;text-align:center;}
+.btn-agregar-escuela:hover{background:linear-gradient(135deg,rgba(139,92,246,.5),rgba(236,72,153,.5));
+  border-color:rgba(139,92,246,.8);}
 
 /* ── SELECTOR GRUPO ── */
 .selector-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:1rem;}
@@ -110,18 +112,18 @@ main{padding:1rem;max-width:600px;margin:0 auto;}
 
 /* Botones de estatus */
 .btns-estatus{display:flex;gap:.3rem;}
-.btn-est{border:none;border-radius:8px;padding:.5rem .6rem;font-size:1.1rem;
-  cursor:pointer;font-weight:700;opacity:.35;transition:all .2s;min-width:42px;
-  min-height:42px;text-align:center;border:2px solid transparent;}
-.btn-est.active{opacity:1;transform:scale(1.08);border-color:rgba(255,255,255,.3);}
-.btn-p{background:rgba(16,185,129,.25);color:var(--emerald);}
+.btn-est{border:2px solid transparent;border-radius:8px;padding:.5rem .55rem;font-size:1.15rem;
+  cursor:pointer;font-weight:700;opacity:.6;transition:all .2s;min-width:44px;
+  min-height:44px;text-align:center;}
+.btn-est.active{opacity:1;transform:scale(1.1);border-color:rgba(255,255,255,.5);box-shadow:0 0 8px rgba(255,255,255,.2);}
+.btn-p{background:rgba(16,185,129,.3);color:#4EEDB5;}
 .btn-p.active{background:var(--emerald);color:var(--navy);}
-.btn-t{background:rgba(245,158,11,.25);color:var(--amber);}
+.btn-t{background:rgba(245,158,11,.3);color:#FCD34D;}
 .btn-t.active{background:var(--amber);color:var(--navy);}
-.btn-f{background:rgba(239,68,68,.25);color:var(--ruby);}
+.btn-f{background:rgba(239,68,68,.3);color:#FCA5A5;}
 .btn-f.active{background:var(--ruby);color:white;}
-.btn-s{background:rgba(139,92,246,.25);color:var(--purple);}
-.btn-s.active{background:var(--purple);color:white;}
+.btn-j{background:rgba(6,182,212,.3);color:#67E8F9;}
+.btn-j.active{background:var(--justif);color:var(--navy);}
 
 /* ── ACCIONES FINALES ── */
 .acciones-finales{margin-top:1.2rem;display:flex;gap:.7rem;flex-wrap:wrap;}
@@ -213,7 +215,6 @@ main{padding:1rem;max-width:600px;margin:0 auto;}
 <header>
   <div class="hdr-brand">Ludo<span>Assist</span> · Docente</div>
   <div class="hdr-right">
-    <button class="btn-escuelas" id="btn-add-escuela">+ Escuela</button>
     <button class="btn-salir" id="btn-salir">Salir</button>
   </div>
 </header>
@@ -551,7 +552,7 @@ document.getElementById('btn-cargar').addEventListener('click', async () => {
       estatusScanner: asistenciasScanner[nombre] || null,
       estatusMaestro: asistenciasScanner[nombre] === 'asistencia' ? 'P'
                     : asistenciasScanner[nombre] === 'retardo'    ? 'T'
-                    : 'F' // si no escaneó, falta por defecto
+                    : 'F' // si no escaneó, falta por defecto (el maestro puede cambiar a J si tiene justificante)
     }));
 
     renderLista(grupoDisplay);
@@ -569,7 +570,7 @@ function renderLista(grupoDisplay) {
   const p = listaActual.filter(a => a.estatusMaestro === 'P').length;
   const t = listaActual.filter(a => a.estatusMaestro === 'T').length;
   const f = listaActual.filter(a => a.estatusMaestro === 'F').length;
-  const s = listaActual.filter(a => a.estatusMaestro === 'S').length;
+  const j = listaActual.filter(a => a.estatusMaestro === 'J').length;
 
   cont.innerHTML = `
     <div class="nota-diferencia">
@@ -590,7 +591,15 @@ function renderLista(grupoDisplay) {
         <span class="stat-badge stat-p">✅ ${p}</span>
         <span class="stat-badge stat-t">⏰ ${t}</span>
         <span class="stat-badge stat-f">❌ ${f}</span>
+        <span class="stat-badge stat-j">📝 ${j}</span>
       </div>
+    </div>
+    <div style="background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;padding:.7rem 1rem;margin-bottom:.8rem;font-size:.75rem;color:var(--slate);line-height:1.8;">
+      <strong style="color:var(--white);">Guía de botones:</strong><br>
+      ✅ <strong>Presente</strong> — El alumno está en clase<br>
+      ⏰ <strong>Tarde</strong> — Llegó tarde a clase<br>
+      ❌ <strong>Falta</strong> — No se presentó a clase<br>
+      📝 <strong>Justificado</strong> — Falta con justificante oficial
     </div>
     <div id="lista-alumnos">
       ${listaActual.map((a, i) => renderAlumno(a, i)).join('')}
@@ -624,10 +633,10 @@ function renderAlumno(a, i) {
         <div class="alumno-scanner ${scannerCls}">${scannerTxt}</div>
       </div>
       <div class="btns-estatus">
-        <button class="btn-est btn-p ${a.estatusMaestro==='P'?'active':''}" onclick="setEstatus(${i},'P')">✅</button>
-        <button class="btn-est btn-t ${a.estatusMaestro==='T'?'active':''}" onclick="setEstatus(${i},'T')">⏰</button>
-        <button class="btn-est btn-f ${a.estatusMaestro==='F'?'active':''}" onclick="setEstatus(${i},'F')">❌</button>
-        <button class="btn-est btn-s ${a.estatusMaestro==='S'?'active':''}" onclick="setEstatus(${i},'S')">🚪</button>
+        <button class="btn-est btn-p ${a.estatusMaestro==='P'?'active':''}" onclick="setEstatus(${i},'P')" title="Presente">✅</button>
+        <button class="btn-est btn-t ${a.estatusMaestro==='T'?'active':''}" onclick="setEstatus(${i},'T')" title="Tarde">⏰</button>
+        <button class="btn-est btn-f ${a.estatusMaestro==='F'?'active':''}" onclick="setEstatus(${i},'F')" title="Falta">❌</button>
+        <button class="btn-est btn-j ${a.estatusMaestro==='J'?'active':''}" onclick="setEstatus(${i},'J')" title="Justificado">📝</button>
       </div>
     </div>`;
 }
@@ -638,15 +647,17 @@ window.setEstatus = function(i, est) {
   // Actualizar solo esa card
   const card = document.getElementById(`card-${i}`);
   card.querySelectorAll('.btn-est').forEach(b => b.classList.remove('active'));
-  const map = {'P':'btn-p','T':'btn-t','F':'btn-f','S':'btn-s'};
+  const map = {'P':'btn-p','T':'btn-t','F':'btn-f','J':'btn-j'};
   card.querySelector(`.${map[est]}`).classList.add('active');
   // Actualizar stats
   const p = listaActual.filter(a => a.estatusMaestro === 'P').length;
   const t = listaActual.filter(a => a.estatusMaestro === 'T').length;
   const f = listaActual.filter(a => a.estatusMaestro === 'F').length;
+  const jj = listaActual.filter(a => a.estatusMaestro === 'J').length;
   document.querySelector('.stat-p').textContent = `✅ ${p}`;
   document.querySelector('.stat-t').textContent = `⏰ ${t}`;
   document.querySelector('.stat-f').textContent = `❌ ${f}`;
+  document.querySelector('.stat-j').textContent = `📝 ${jj}`;
 };
 
 // ── GUARDAR EN FIREBASE ──

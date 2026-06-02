@@ -49,7 +49,7 @@ header{background:var(--navy2);border-bottom:1px solid var(--border);
 
 
 /* ── MAIN ── */
-main{padding:1rem;max-width:600px;margin:0 auto;}
+/* main con padding bottom para nav */
 
 /* ── ESCUELAS CHIPS ── */
 .escuelas-bar{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem;}
@@ -161,6 +161,18 @@ main{padding:1rem;max-width:600px;margin:0 auto;}
   opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;}
 #toast.show{opacity:1;}
 
+/* ── NAV INFERIOR ── */
+.nav-bottom{position:fixed;bottom:0;left:0;right:0;background:var(--navy2);
+  border-top:1px solid var(--border);display:flex;z-index:100;}
+.nav-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:.7rem .5rem;cursor:pointer;color:var(--slate);font-size:.7rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.5px;transition:all .2s;gap:.25rem;border:none;
+  background:transparent;}
+.nav-tab .nav-icon{font-size:1.3rem;}
+.nav-tab.active{color:var(--accent);}
+.nav-tab.active .nav-icon{transform:scale(1.1);}
+main{padding:1rem 1rem 5rem 1rem;max-width:600px;margin:0 auto;}
+
 /* ── EMPTY STATE ── */
 .empty{text-align:center;padding:3rem 1rem;color:var(--slate);}
 .empty-icon{font-size:3rem;margin-bottom:.8rem;}
@@ -239,6 +251,18 @@ main{padding:1rem;max-width:600px;margin:0 auto;}
   <!-- Contenido dinámico -->
   <div id="contenido"></div>
 </main>
+
+<!-- NAV INFERIOR -->
+<nav class="nav-bottom">
+  <button class="nav-tab active" id="nav-lista" onclick="cambiarVista('lista')">
+    <span class="nav-icon">📋</span>
+    Pasar Lista
+  </button>
+  <button class="nav-tab" id="nav-historial" onclick="cambiarVista('historial')">
+    <span class="nav-icon">📂</span>
+    Mi Historial
+  </button>
+</nav>
 
 <!-- Firebase -->
 <script type="module">
@@ -634,13 +658,13 @@ function renderLista(grupoDisplay) {
     </div>
     <div class="acciones-finales">
       <button class="btn-guardar" id="btn-guardar-lista">💾 Guardar Lista</button>
-      <button class="btn-descargar" id="btn-historial">📋 Mi Historial</button>
+
     </div>
     <button class="btn-nueva" id="btn-nueva-lista">🔄 Pasar nueva lista</button>
   `;
 
   document.getElementById('btn-guardar-lista').addEventListener('click', guardarLista);
-  document.getElementById('btn-historial').addEventListener('click', verHistorial);
+
   document.getElementById('btn-nueva-lista').addEventListener('click', () => {
     limpiarLista();
     window.scrollTo(0, 0);
@@ -727,6 +751,21 @@ async function guardarLista() {
   }
 }
 
+// ── NAVEGACIÓN ──
+let vistaActual = 'lista';
+
+window.cambiarVista = async function(vista) {
+  vistaActual = vista;
+  document.getElementById('nav-lista').classList.toggle('active', vista === 'lista');
+  document.getElementById('nav-historial').classList.toggle('active', vista === 'historial');
+
+  if (vista === 'historial') {
+    await verHistorial();
+  } else {
+    limpiarLista();
+  }
+};
+
 // ── VER HISTORIAL ──
 let registrosHistorial = [];
 
@@ -762,7 +801,7 @@ async function verHistorial() {
 function renderHistorial(cont) {
   cont.innerHTML = '<div style="margin-bottom:.8rem;display:flex;justify-content:space-between;align-items:center;">'
     + '<div style="font-size:1rem;font-weight:700;">📋 Mi Historial</div>'
-    + '<button id="btn-cerrar-historial" style="background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#FCA5A5;border-radius:6px;padding:.3rem .8rem;font-size:.78rem;cursor:pointer;font-weight:700;">✕ Cerrar</button>'
+    + '<button id="btn-cerrar-historial" style="background:rgba(255,255,255,.08);border:1px solid var(--border);color:var(--slate);border-radius:6px;padding:.3rem .8rem;font-size:.78rem;cursor:pointer;font-weight:700;">← Regresar</button>'
     + '</div>'
     + registrosHistorial.slice(0,30).map((r, i) => {
         const p = r.alumnos ? r.alumnos.filter(a=>a.estatusMaestro==='P').length : 0;

@@ -248,6 +248,36 @@ body.dark .doc-nombre{color:#E2E8F0;}
 body.dark .grafica-wrap{background:#1E293B;border-color:#334155;}
 body.dark .grafica-titulo{color:#E2E8F0;}
 
+/* ── MODAL VACIAR CICLO ESCOLAR ── */
+#modal-ciclo{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;
+  align-items:center;justify-content:center;z-index:9999;padding:1rem;}
+#modal-ciclo.show{display:flex;}
+.ciclo-box{background:#1a0505;border:2px solid rgba(239,68,68,.5);border-radius:12px;
+  padding:1.5rem;width:100%;max-width:380px;}
+.ciclo-icon{font-size:2.5rem;text-align:center;margin-bottom:.5rem;}
+.ciclo-title{font-size:1rem;font-weight:800;color:#EF4444;text-align:center;
+  text-transform:uppercase;letter-spacing:1px;margin-bottom:.4rem;}
+.ciclo-desc{font-size:.8rem;color:rgba(255,200,200,.75);text-align:center;
+  line-height:1.6;margin-bottom:1rem;}
+.ciclo-step{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);
+  border-radius:8px;padding:.75rem;margin-bottom:.6rem;}
+.ciclo-lbl{font-size:.68rem;color:#EF4444;text-transform:uppercase;
+  letter-spacing:1px;margin-bottom:.35rem;font-weight:700;}
+.ciclo-input{width:100%;background:rgba(0,0,0,.3);border:1px solid rgba(239,68,68,.3);
+  border-radius:6px;padding:.6rem .8rem;color:white;font-size:.85rem;outline:none;}
+.ciclo-input:focus{border-color:#EF4444;}
+.ciclo-input::placeholder{color:rgba(255,200,200,.3);}
+.btn-vaciar{width:100%;padding:.8rem;background:#EF4444;color:white;border:none;
+  border-radius:8px;font-size:.88rem;font-weight:800;cursor:pointer;
+  text-transform:uppercase;letter-spacing:1px;margin-top:.5rem;transition:all .25s;}
+.btn-vaciar:disabled{background:rgba(239,68,68,.3);cursor:not-allowed;}
+.btn-cancel-ciclo{width:100%;padding:.65rem;background:transparent;
+  border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.5);
+  border-radius:8px;font-size:.82rem;cursor:pointer;margin-top:.35rem;}
+.ciclo-error{font-size:.72rem;color:#EF4444;text-align:center;min-height:16px;margin-bottom:.3rem;}
+.ciclo-lista{background:rgba(0,0,0,.2);border-radius:6px;padding:.6rem .8rem;
+  margin-bottom:.8rem;font-size:.75rem;color:rgba(255,200,200,.7);line-height:1.8;}
+
     </style>
 </head>
 <body style="background-color:#0A192F;">
@@ -651,8 +681,62 @@ body.dark .grafica-titulo{color:#E2E8F0;}
         </div>
     </section>
 
+    <!-- VACIAR CICLO ESCOLAR -->
+    <section class="panel-card" style="border-top:4px solid #7C3AED;background:linear-gradient(135deg,#1a0a2e,#1E293B);">
+        <div class="section-title" style="color:#C4B5FD;">🎓 Vaciar Ciclo Escolar</div>
+        <div class="section-desc" style="color:rgba(196,181,253,.7);">
+            Al terminar el ciclo escolar, usa esta opción para limpiar todos los datos del año:
+            alumnos, asistencias y listas de maestros. La configuración de la escuela se conserva.
+            <br><strong style="color:#C4B5FD;">Esta acción es irreversible.</strong>
+        </div>
+        <button class="btn-primary" style="background:linear-gradient(135deg,#7C3AED,#6D28D9);margin-top:8px;"
+                onclick="window.abrirModalCiclo()">
+            🎓 Iniciar Cierre de Ciclo Escolar
+        </button>
+    </section>
+
     <div class="ludomente-sello">POWERED BY LUDOMENTE STUDIO © 2026</div>
 </main>
+
+<!-- MODAL VACIAR CICLO ESCOLAR -->
+<div id="modal-ciclo">
+  <div class="ciclo-box">
+    <div class="ciclo-icon">🎓⚠️</div>
+    <div class="ciclo-title">Cierre de Ciclo Escolar</div>
+    <div class="ciclo-desc">
+      Esta acción es <strong style="color:#EF4444;">IRREVERSIBLE</strong>.<br>
+      Se eliminarán permanentemente:
+    </div>
+    <div class="ciclo-lista">
+      🗑️ Padrón completo de alumnos<br>
+      🗑️ Historial de asistencias del escáner<br>
+      🗑️ Listas de maestros del ciclo<br>
+      ✅ <em>Se conserva:</em> configuración, estructura, perfil y horarios
+    </div>
+
+    <!-- Paso 1 -->
+    <div class="ciclo-step">
+      <div class="ciclo-lbl">Paso 1 — Escribe exactamente: VACIAR CICLO ESCOLAR</div>
+      <input class="ciclo-input" id="ciclo-input-frase" placeholder="VACIAR CICLO ESCOLAR" autocomplete="off">
+    </div>
+
+    <!-- Paso 2 -->
+    <div class="ciclo-step">
+      <div class="ciclo-lbl">Paso 2 — Contraseña directiva</div>
+      <input class="ciclo-input" id="ciclo-input-pin" type="password" placeholder="Tu contraseña de director" autocomplete="off">
+    </div>
+
+    <!-- Paso 3 -->
+    <div class="ciclo-step">
+      <div class="ciclo-lbl">Paso 3 — Contraseña de administrador LudoAssist</div>
+      <input class="ciclo-input" id="ciclo-input-admin" type="password" placeholder="Contraseña del administrador" autocomplete="off">
+    </div>
+
+    <div class="ciclo-error" id="ciclo-error"></div>
+    <button class="btn-vaciar" id="btn-vaciar-ciclo">🎓 VACIAR CICLO ESCOLAR</button>
+    <button class="btn-cancel-ciclo" id="btn-cancel-ciclo">Cancelar — Conservar todos los datos</button>
+  </div>
+</div>
 
 <!-- ════════════════════════════════════════════════════
      DOCENTES — LISTAS EN TIEMPO REAL
@@ -703,7 +787,7 @@ body.dark .grafica-titulo{color:#E2E8F0;}
     <button class="nav-btn" id="tab-historial" onclick="window.switchTab('historial',this)"><span class="nav-icon">📋</span>Historial</button>
     <button class="nav-btn" id="tab-docentes" onclick="window.switchTab('docentes',this);window.cargarListasDocentes()"><span class="nav-icon">👨‍🏫</span>Docentes</button>
     <button class="nav-btn" id="tab-directorio" onclick="window.switchTab('directorio',this)"><span class="nav-icon">👥</span>Padrón</button>
-    <button class="nav-btn" id="tab-config" onclick="window.switchTab('config',this)"><span class="nav-icon">⚙️</span>Control</button>
+    <button class="nav-btn" id="tab-config" onclick="window.switchTab('config',this)"><span class="nav-icon">⚙️</span>C. Escolar</button>
 </nav>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
@@ -2735,6 +2819,94 @@ window.exportarPadronExcel = async function(){
 };
 
 // Alertas y gráfica se llaman desde renderMonitor directamente (ver abajo)
+
+// ══════════════════════════════════════════════════════
+// VACIAR CICLO ESCOLAR
+// ══════════════════════════════════════════════════════
+window.abrirModalCiclo = function() {
+  document.getElementById('ciclo-input-frase').value = '';
+  document.getElementById('ciclo-input-pin').value = '';
+  document.getElementById('ciclo-input-admin').value = '';
+  document.getElementById('ciclo-error').textContent = '';
+  document.getElementById('btn-vaciar-ciclo').disabled = false;
+  document.getElementById('btn-vaciar-ciclo').textContent = '🎓 VACIAR CICLO ESCOLAR';
+  document.getElementById('modal-ciclo').classList.add('show');
+};
+
+document.getElementById('btn-cancel-ciclo').addEventListener('click', () => {
+  document.getElementById('modal-ciclo').classList.remove('show');
+});
+
+document.getElementById('btn-vaciar-ciclo').addEventListener('click', async () => {
+  const frase    = document.getElementById('ciclo-input-frase').value.trim();
+  const pinDir   = document.getElementById('ciclo-input-pin').value.trim();
+  const pinAdmin = document.getElementById('ciclo-input-admin').value.trim();
+  const errEl    = document.getElementById('ciclo-error');
+  errEl.textContent = '';
+
+  // Paso 1: frase exacta
+  if (frase !== 'VACIAR CICLO ESCOLAR') {
+    errEl.textContent = '❌ Escribe exactamente: VACIAR CICLO ESCOLAR';
+    return;
+  }
+
+  // Paso 2: contraseña director
+  try {
+    const snapPin = await get(seguridadRef);
+    const pinGuardado = snapPin.val();
+    if (pinGuardado && pinDir !== String(pinGuardado)) {
+      errEl.textContent = '❌ Contraseña directiva incorrecta.';
+      return;
+    }
+  } catch(e) {
+    errEl.textContent = '⚠️ Sin conexión para verificar contraseña directiva.';
+    return;
+  }
+
+  // Paso 3: contraseña admin
+  try {
+    const snapAdmin = await get(ref(db, 'admin/pin'));
+    if (pinAdmin !== String(snapAdmin.val())) {
+      errEl.textContent = '❌ Contraseña de administrador incorrecta.';
+      return;
+    }
+  } catch(e) {
+    errEl.textContent = '⚠️ Sin conexión para verificar contraseña de administrador.';
+    return;
+  }
+
+  // Proceder a vaciar
+  const btn = document.getElementById('btn-vaciar-ciclo');
+  btn.disabled = true;
+  btn.textContent = '⏳ Vaciando ciclo escolar...';
+
+  try {
+    // Borrar directorio de alumnos
+    await remove(directorioRef);
+    // Borrar historial de asistencias del escáner
+    await remove(asistenciasRef);
+    // Borrar listas de maestros
+    await remove(ref(db, `escuelas/${ID}/listas-maestro`));
+
+    document.getElementById('modal-ciclo').classList.remove('show');
+    // Limpiar caches locales
+    directorioCache = {};
+    asistenciasHoyCache = {};
+    renderMonitor();
+    alert('✅ Ciclo escolar vaciado correctamente.
+
+Se eliminaron:
+• Padrón de alumnos
+• Historial de asistencias
+• Listas de maestros
+
+La configuración de la escuela se conservó.');
+  } catch(e) {
+    errEl.textContent = '❌ Error al vaciar: ' + e.message;
+    btn.disabled = false;
+    btn.textContent = '🎓 VACIAR CICLO ESCOLAR';
+  }
+});
 
 // ══════════════════════════════════════════════════════
 // DOCENTES — LISTAS EN TIEMPO REAL

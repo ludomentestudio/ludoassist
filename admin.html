@@ -1376,8 +1376,10 @@ function mostrarModal(icono, titulo, desc, tipo, callback) {
 }
 window.cerrarModal = () => { document.getElementById('modal-confirm').classList.remove('show'); accionPendiente=null; };
 window.ejecutarConfirmado = async () => {
-  cerrarModal();
-  if (accionPendiente) await accionPendiente();
+  const fn = accionPendiente; // guardar referencia ANTES de cerrar
+  document.getElementById('modal-confirm').classList.remove('show');
+  accionPendiente = null;
+  if (fn) await fn();
 };
 
 // ── TABS ──

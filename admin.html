@@ -866,22 +866,19 @@ window.confirmarActivar = function(codigo) {
 };
 
 async function cambiarActiva(codigo, valor) {
-  let errores = [];
-  // Actualizar nodo admin
+  toast('⏳ Aplicando cambio...');
   try {
+    // Paso 1: actualizar en admin/escuelas
     await update(ref(db, 'admin/escuelas/' + codigo), { activa: valor });
-  } catch(e) { errores.push('admin: ' + e.message); }
-  // Actualizar nodo escuela
-  try {
+    // Paso 2: actualizar en escuelas/{codigo}/configuracion/perfil
     await update(ref(db, 'escuelas/' + codigo + '/configuracion/perfil'), { activa: valor });
-  } catch(e) { errores.push('escuela: ' + e.message); }
-
-  if (errores.length === 0) {
+    // Actualizar en memoria y re-renderizar
     if (escuelasData[codigo]) escuelasData[codigo].activa = valor;
     renderDashboard();
-    toast(valor ? '✅ Licencia activada' : '🔒 Licencia bloqueada');
-  } else {
-    toast('❌ Error: ' + errores.join(' | '));
+    toast(valor ? '✅ Licencia ACTIVADA correctamente' : '🔒 Licencia BLOQUEADA correctamente');
+  } catch(err) {
+    toast('❌ ERROR al cambiar estado: ' + err.message);
+    console.error('cambiarActiva error:', err);
   }
 }
 

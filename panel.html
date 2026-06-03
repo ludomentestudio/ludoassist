@@ -793,6 +793,7 @@ body.dark .grafica-titulo{color:#E2E8F0;}
     <button class="nav-btn" id="tab-historial" onclick="window.switchTab('historial',this)"><span class="nav-icon">📋</span>Historial</button>
     <button class="nav-btn" id="tab-docentes" onclick="window.switchTab('docentes',this);window.cargarListasDocentes()"><span class="nav-icon">🧑</span>Docentes</button>
     <button class="nav-btn" id="tab-directorio" onclick="window.switchTab('directorio',this)"><span class="nav-icon">👥</span>Padrón</button>
+    <button class="nav-btn" id="tab-credenciales" onclick="window.switchTab('credenciales',this)"><span class="nav-icon">🪪</span>Gafetes</button>
     <button class="nav-btn" id="tab-config" onclick="window.switchTab('config',this)"><span class="nav-icon">⚙️</span>C. Escolar</button>
 </nav>
 
@@ -1839,21 +1840,10 @@ function piesPDF(doc, director) {
     const total = doc.internal.getNumberOfPages();
     for (let i=1; i<=total; i++) {
         doc.setPage(i);
-        doc.setDrawColor(203,213,225); doc.line(14, ph-22, pw-14, ph-22);
+        doc.setDrawColor(203,213,225); doc.line(14, ph-14, pw-14, ph-14);
         doc.setFontSize(7); doc.setTextColor(100,116,139);
-        // Leyenda izquierda
-        doc.text('A=Asistencia  R=Retardo  F=Falta  SR=Sin Registro  J=Justificado', 14, ph-16);
-        // Página derecha
-        doc.text(`Pág. ${i}/${total}  ·  ${new Date().toLocaleDateString('es-MX')}`, pw-14, ph-16, {align:'right'});
-        // Firma director
-        if (director) {
-            doc.setFontSize(8); doc.setTextColor(30,41,59);
-            doc.text('Director(a): ' + director, 14, ph-8);
-            doc.setDrawColor(100,116,139);
-            doc.line(pw-80, ph-10, pw-14, ph-10);
-            doc.setFontSize(7); doc.setTextColor(100,116,139);
-            doc.text('Firma y Sello', pw-47, ph-6, {align:'center'});
-        }
+        doc.text('A=Asistencia  R=Retardo  F=Falta  SR=Sin Registro  J=Justificado', 14, ph-8);
+        doc.text(`Pág. ${i}/${total}  ·  ${new Date().toLocaleDateString('es-MX')}`, pw-14, ph-8, {align:'right'});
     }
 }
 
@@ -2500,25 +2490,8 @@ window.createQR = function() {
         qrImg.onload=function(){
             // Dibujar QR
             ctx.drawImage(qrImg,30,20,200,200);
-            // Logo centrado sobre el QR (solo si existe)
-            if(logoBase64Global){
-                const logoOverlay=new Image();
-                logoOverlay.onload=function(){
-                    // Fondo blanco circular para el logo
-                    const cx=130, cy=120, r=22;
-                    ctx.save();
-                    ctx.beginPath(); ctx.arc(cx,cy,r+3,0,Math.PI*2);
-                    ctx.fillStyle='#ffffff'; ctx.fill();
-                    ctx.strokeStyle='#0284C7'; ctx.lineWidth=1.5; ctx.stroke();
-                    // Logo centrado
-                    ctx.drawImage(logoOverlay,cx-r,cy-r,r*2,r*2);
-                    ctx.restore();
-                    dibujarTextoGafete(ctx,canvas,nombre,grado,grupo,turno,slug,container);
-                };
-                logoOverlay.src=logoBase64Global;
-            } else {
-                dibujarTextoGafete(ctx,canvas,nombre,grado,grupo,turno,slug,container);
-            }
+            // Sin logo centrado sobre el QR
+            dibujarTextoGafete(ctx,canvas,nombre,grado,grupo,turno,slug,container);
         };
         qrImg.src=qrB64;
     } catch(e){ container.innerHTML=`<p style='color:var(--ruby);'>Error interno.</p>`; }
@@ -2558,7 +2531,6 @@ function generarCanvasCredencial(alumno,turno,grado,grupo){
         const qi=new Image();
         qi.onload=()=>{
             ctx.drawImage(qi,110,85,180,180);
-            // Logo centrado sobre el QR del canvas masivo
             const dibujarResto = () => {
                 ctx.beginPath(); ctx.strokeStyle='#0284C7'; ctx.lineWidth=1.5; ctx.setLineDash([6,4]);
                 ctx.moveTo(30,285); ctx.lineTo(370,285); ctx.stroke(); ctx.setLineDash([]);
@@ -2571,16 +2543,8 @@ function generarCanvasCredencial(alumno,turno,grado,grupo){
             if(logoBase64Global){
                 const li=new Image();
                 li.onload=()=>{
-                    // Logo en esquina header
+                    // Logo en esquina header únicamente
                     ctx.drawImage(li,12,8,55,55);
-                    // Logo centrado en el QR
-                    const cx=200, cy=175, r=28;
-                    ctx.save();
-                    ctx.beginPath(); ctx.arc(cx,cy,r+4,0,Math.PI*2);
-                    ctx.fillStyle='#ffffff'; ctx.fill();
-                    ctx.strokeStyle='#0284C7'; ctx.lineWidth=2; ctx.stroke();
-                    ctx.drawImage(li,cx-r,cy-r,r*2,r*2);
-                    ctx.restore();
                     dibujarResto();
                 };
                 li.src=logoBase64Global;

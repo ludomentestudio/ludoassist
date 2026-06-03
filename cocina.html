@@ -6,36 +6,37 @@
 <title>Flow Crep's — Cocina</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-body{background:#0d0005;font-family:'Segoe UI',sans-serif;min-height:100vh;
-  background-image:radial-gradient(ellipse at top,#1a0008 0%,#0d0005 70%);}
-header{background:rgba(0,0,0,.88);backdrop-filter:blur(10px);
-  border-bottom:2px solid rgba(255,0,80,.3);padding:.7rem 1rem;
+body{background:#f5f0ff;font-family:'Segoe UI',sans-serif;min-height:100vh;
+  background-image:radial-gradient(ellipse at top,#ede5ff 0%,#f5f0ff 70%);}
+header{background:rgba(255,255,255,.95);backdrop-filter:blur(10px);
+  border-bottom:2px solid rgba(180,0,100,.3);padding:.7rem 1rem;
   display:flex;align-items:center;gap:.8rem;position:sticky;top:0;z-index:50;}
 .hdr-logo{width:46px;height:46px;object-fit:contain;border-radius:10px;}
-.hdr-title{font-size:1rem;font-weight:800;color:#FF6B9D;}
-.hdr-sub{font-size:.6rem;color:rgba(255,107,157,.5);}
-.badge-pend{background:rgba(255,0,80,.2);border:1px solid rgba(255,0,80,.4);
-  color:#FF6B9D;border-radius:20px;padding:.2rem .8rem;font-size:.75rem;
+.hdr-title{font-size:1rem;font-weight:800;color:#a0006a;}
+.hdr-sub{font-size:.6rem;color:rgba(140,0,90,.6);}
+.badge-pend{background:rgba(180,0,80,.15);border:1px solid rgba(180,0,80,.4);
+  color:#a0004a;border-radius:20px;padding:.2rem .8rem;font-size:.75rem;
   font-weight:700;margin-left:auto;}
 .main{padding:.8rem;padding-bottom:20px;}
-.sin-pedidos{text-align:center;padding:3rem 1rem;color:rgba(255,107,157,.35);}
+.sin-pedidos{text-align:center;padding:3rem 1rem;color:rgba(140,0,80,.45);}
 .sin-icon{font-size:3rem;margin-bottom:.5rem;}
 
-.pedido-card{background:rgba(255,255,255,.045);border-radius:12px;
-  padding:1rem;margin-bottom:.75rem;border:2px solid rgba(255,100,0,.25);}
-.pedido-card.urgente{border-color:rgba(255,0,80,.6);animation:pulso 1.5s infinite;}
+.pedido-card{background:#ffffff;border-radius:12px;
+  padding:1rem;margin-bottom:.75rem;border:2px solid rgba(180,80,0,.3);
+  box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.pedido-card.urgente{border-color:rgba(200,0,50,.7);animation:pulso 1.5s infinite;}
 @keyframes pulso{0%,100%{box-shadow:0 0 0 0 rgba(255,0,80,.3)}
   50%{box-shadow:0 0 0 10px rgba(255,0,80,0)}}
 .ped-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem;}
-.ped-mesa{font-size:1.2rem;font-weight:800;color:#FFD700;}
+.ped-mesa{font-size:1.2rem;font-weight:800;color:#7a4800;}
 .ped-meta{text-align:right;}
-.ped-hora{font-size:.68rem;color:rgba(255,255,255,.35);}
-.ped-total{font-size:.82rem;font-weight:700;color:#FF6400;}
+.ped-hora{font-size:.68rem;color:rgba(30,30,30,.55);}
+.ped-total{font-size:.82rem;font-weight:700;color:#b04500;}
 .ped-items{margin-bottom:.75rem;}
 .ped-item{display:flex;justify-content:space-between;align-items:center;
-  padding:.32rem 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:.83rem;}
+  padding:.32rem 0;border-bottom:1px solid rgba(0,0,0,.1);font-size:.83rem;color:#1a1a1a;}
 .ped-item:last-child{border-bottom:none;}
-.item-cant{background:rgba(255,100,0,.2);color:#FF6400;border-radius:6px;
+.item-cant{background:rgba(160,70,0,.15);color:#8b3a00;border-radius:6px;
   padding:1px 8px;font-weight:700;font-size:.78rem;}
 .btn-listo{width:100%;padding:.85rem;background:linear-gradient(135deg,#065F46,#047857);
   color:white;border:none;border-radius:10px;font-size:1rem;font-weight:800;

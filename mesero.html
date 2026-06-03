@@ -255,6 +255,7 @@ const CREPAS = [
 ];
 
 let mesaActual = null;
+let mesaUltimaVista = null;
 let cantidades = {c1:0,c2:0,c3:0,c4:0};
 let mesasOcupadas = new Set();
 let listoYaMostrado = new Set();
@@ -311,11 +312,13 @@ onValue(ref(db, 'flowcreps/mesas'), snap => {
 });
 
 // Escuchar pedidos listos para mi mesa
+// Usamos mesaUltimaVista en lugar de mesaActual para seguir recibiendo
+// notificaciones aunque el mesero haya vuelto a la pantalla de mesas.
 onValue(ref(db, 'flowcreps/pedidos'), snap => {
-  if (!snap.exists() || !mesaActual) return;
+  if (!snap.exists() || !mesaUltimaVista) return;
   snap.forEach(child => {
     const p = child.val();
-    if (p.mesa === mesaActual && p.estado === 'listo' && !listoYaMostrado.has(child.key)) {
+    if (p.mesa === mesaUltimaVista && p.estado === 'listo' && !listoYaMostrado.has(child.key)) {
       listoYaMostrado.add(child.key);
       vibrarFuerte();
       sonarCampana();
@@ -326,6 +329,8 @@ onValue(ref(db, 'flowcreps/pedidos'), snap => {
 
 window.seleccionarMesa = async function(num) {
   mesaActual = num;
+  mesaUltimaVista = num;
+  listoYaMostrado.clear(); // nueva sesión de mesa, resetear notificaciones
   document.getElementById('screen-mesa').classList.add('hidden');
   document.getElementById('hdr-mesa-txt').textContent = 'Mesa ' + num;
   document.getElementById('listo-sub').textContent = 'Mesa ' + num + ' — lista para entregar';
@@ -335,6 +340,7 @@ window.seleccionarMesa = async function(num) {
 
 window.volverMesas = function() {
   mesaActual = null;
+  // mesaUltimaVista se mantiene para que el listener siga recibiendo "listo"
   cantidades = {c1:0,c2:0,c3:0,c4:0};
   CREPAS.forEach(c => { document.getElementById('cnt-'+c.id).textContent = '0'; });
   actualizarTotal();
@@ -355,6 +361,11 @@ function actualizarTotal() {
 }
 
 window.enviarPedido = async function() {
+  if (!mesaActual) return; // guard: no enviar si no hay mesa seleccionada
+  const btn = document.getElementById('btn-enviar');
+  if (btn.disabled) return; // anti-doble-tap
+  btn.disabled = true;
+
   const items = CREPAS.filter(c => cantidades[c.id] > 0).map(c => ({
     nombre: c.nombre, cantidad: cantidades[c.id], subtotal: cantidades[c.id] * c.precio
   }));
@@ -367,8 +378,7 @@ window.enviarPedido = async function() {
   });
   cantidades = {c1:0,c2:0,c3:0,c4:0};
   CREPAS.forEach(c => { document.getElementById('cnt-'+c.id).textContent = '0'; });
-  actualizarTotal();
-  const btn = document.getElementById('btn-enviar');
+  actualizarTotal(); // esto pone disabled=true porque total=0
   btn.textContent = '✅ Pedido enviado';
   setTimeout(() => { btn.textContent = '🛒 Enviar a Cocina'; }, 2500);
 };

@@ -525,12 +525,14 @@ main{padding:1rem;}
         📋 Configuración del Respaldo Automático
       </div>
       <div style="font-size:.78rem;color:var(--slate);line-height:1.8;">
-        <strong style="color:var(--white);">Paso 1.</strong> Abre <a href="https://script.google.com" target="_blank" style="color:var(--accent);">script.google.com</a> en tu computadora<br>
-        <strong style="color:var(--white);">Paso 2.</strong> Crea un nuevo proyecto (botón + Nuevo proyecto)<br>
-        <strong style="color:var(--white);">Paso 3.</strong> Borra todo el código y pega el código que aparece abajo<br>
-        <strong style="color:var(--white);">Paso 4.</strong> Haz clic en "Guardar" y luego en "Ejecutar" una vez para autorizar<br>
-        <strong style="color:var(--white);">Paso 5.</strong> Ve a "Activadores" (ícono del reloj) → Agregar activador → cada semana<br>
-        <strong style="color:var(--white);">Paso 6.</strong> ¡Listo! Cada semana recibirás el respaldo en tu correo de Google
+        <strong style="color:var(--emerald);">No necesitas contraseñas ni secrets de Firebase.</strong><br><br>
+        <strong style="color:var(--white);">Paso 1.</strong> Abre <a href="https://script.google.com" target="_blank" style="color:var(--accent);">script.google.com</a> con ludomentestudio@gmail.com<br>
+        <strong style="color:var(--white);">Paso 2.</strong> Toca <strong style="color:var(--white);">+ Nuevo proyecto</strong><br>
+        <strong style="color:var(--white);">Paso 3.</strong> Borra todo el código que aparece y pega el código de abajo<br>
+        <strong style="color:var(--white);">Paso 4.</strong> Toca el botón <strong style="color:var(--white);">▶ Ejecutar</strong> una vez — autoriza los permisos de Google<br>
+        <strong style="color:var(--white);">Paso 5.</strong> Ve al ícono del <strong style="color:var(--white);">🕐 reloj</strong> (Activadores) → Agregar activador<br>
+        <strong style="color:var(--white);">Paso 6.</strong> Selecciona: <em>respaldarLudoAssist → Semana → Lunes → 8am</em><br>
+        <strong style="color:var(--emerald);">¡Listo!</strong> Cada lunes a las 8am llegarás respaldo a tu correo y Google Drive
       </div>
       <div style="margin-top:.8rem;background:rgba(0,0,0,.3);border-radius:6px;padding:.8rem;font-family:monospace;font-size:.7rem;color:#34D399;line-height:1.6;overflow-x:auto;" id="codigo-script">
       </div>
@@ -706,18 +708,6 @@ document.getElementById('pin-input').addEventListener('keydown', e => {
 function cargarEscuelas() {
   onValue(ref(db, 'admin/escuelas'), snap => {
     escuelasData = snap.exists() ? snap.val() : {};
-    // Asegurar que est17 siempre aparece
-    if (!escuelasData['est17']) {
-      escuelasData['est17'] = {
-        nombre: 'Escuela Secundaria Técnica No. 17',
-        ciudad: 'Campeche', estado: 'Campeche',
-        director: 'Jesús Rodríguez García',
-        telefono: '9811244870', nivel: 'Secundaria',
-        activa: true, fechaAlta: '2026-05-31',
-        fechaVence: '2027-05-31', codigo: 'est17',
-        observaciones: 'Escuela piloto — administrador del sistema'
-      };
-    }
     renderDashboard();
   });
 }
@@ -1019,52 +1009,74 @@ window.mostrarInstruccionesScript = function() {
     const scriptCode = `// ═══════════════════════════════════════════════════
 // RESPALDO AUTOMÁTICO LUDOASSIST PRO
 // Pega este código en Google Apps Script
-// Configura un activador semanal para ejecutarlo
+// URL: https://script.google.com
+// ═══════════════════════════════════════════════════
+// INSTRUCCIONES:
+// 1. Pega este código en un proyecto nuevo
+// 2. Cambia CORREO_DESTINO por ludomentestudio@gmail.com
+// 3. Ejecuta una vez manualmente para autorizar permisos
+// 4. Configura un activador: Reloj > Semanal > Lunes > 8am
 // ═══════════════════════════════════════════════════
 
-const FIREBASE_URL = 'https://ludoasistencia-default-rtdb.firebaseio.com';
-const FIREBASE_SECRET = 'TU_SECRET_DE_FIREBASE'; // Ver en Firebase > Configuración > Cuentas de servicio
-const CARPETA_DRIVE = 'LudoAssist Respaldos'; // Nombre de carpeta en Google Drive
-const CORREO_DESTINO = 'tu@correo.com'; // Tu correo para recibir el respaldo
+// ── CONFIGURACIÓN — solo cambia esto ──
+var CORREO_DESTINO = 'ludomentestudio@gmail.com';
+var CARPETA_DRIVE  = 'LudoAssist Respaldos';
+var FIREBASE_URL   = 'https://ludoasistencia-default-rtdb.firebaseio.com';
 
 function respaldarLudoAssist() {
   try {
-    // Leer datos de Firebase
-    const url = FIREBASE_URL + '/.json?auth=' + FIREBASE_SECRET;
-    const respuesta = UrlFetchApp.fetch(url);
-    const datos = respuesta.getContentText();
-    
-    // Guardar en Google Drive
-    const fecha = Utilities.formatDate(new Date(), 'America/Mexico_City', 'yyyy-MM-dd_HH-mm');
-    const nombreArchivo = 'LudoAssist_Backup_' + fecha + '.json';
-    
-    let carpeta;
-    const carpetas = DriveApp.getFoldersByName(CARPETA_DRIVE);
+    var fecha = Utilities.formatDate(
+      new Date(), 'America/Mexico_City', 'yyyy-MM-dd_HH-mm'
+    );
+
+    // ── Leer datos de Firebase (acceso público de lectura) ──
+    var urlAdmin    = FIREBASE_URL + '/admin.json';
+    var urlEscuelas = FIREBASE_URL + '/escuelas.json';
+
+    var respAdmin    = UrlFetchApp.fetch(urlAdmin,    {muteHttpExceptions: true});
+    var respEscuelas = UrlFetchApp.fetch(urlEscuelas, {muteHttpExceptions: true});
+
+    var admin    = respAdmin.getContentText();
+    var escuelas = respEscuelas.getContentText();
+
+    var contenido = '{' +
+      '"timestamp":"' + fecha + '",' +
+      '"version":"LudoAssist PRO v1.0",' +
+      '"admin":' + admin + ',' +
+      '"escuelas":' + escuelas +
+    '}';
+
+    // ── Guardar en Google Drive ──
+    var nombreArchivo = 'LudoAssist_Backup_' + fecha + '.json';
+    var carpeta;
+    var carpetas = DriveApp.getFoldersByName(CARPETA_DRIVE);
     if (carpetas.hasNext()) {
       carpeta = carpetas.next();
     } else {
       carpeta = DriveApp.createFolder(CARPETA_DRIVE);
     }
-    
-    carpeta.createFile(nombreArchivo, datos, MimeType.PLAIN_TEXT);
-    
-    // Enviar correo de confirmación
+    carpeta.createFile(nombreArchivo, contenido, MimeType.PLAIN_TEXT);
+
+    // ── Enviar correo de confirmación ──
     GmailApp.sendEmail(
       CORREO_DESTINO,
-      '✅ Respaldo LudoAssist completado - ' + fecha,
-      'El respaldo automático de LudoAssist PRO se completó correctamente.\n\n' +
+      'Respaldo LudoAssist completado - ' + fecha,
+      'El respaldo automatico de LudoAssist PRO se completo correctamente.\n\n' +
       'Archivo: ' + nombreArchivo + '\n' +
       'Guardado en Google Drive > ' + CARPETA_DRIVE + '\n\n' +
-      '— Sistema automático LudoAssist'
+      'Tamanio aprox: ' + Math.round(contenido.length / 1024) + ' KB\n\n' +
+      '-- Sistema automatico LudoAssist PRO'
     );
-    
+
     Logger.log('Respaldo completado: ' + nombreArchivo);
+
   } catch(e) {
     GmailApp.sendEmail(
       CORREO_DESTINO,
-      '❌ Error en respaldo LudoAssist',
-      'Ocurrió un error en el respaldo automático: ' + e.toString()
+      'ERROR en respaldo LudoAssist - ' + new Date(),
+      'Ocurrio un error en el respaldo automatico:\n\n' + e.toString()
     );
+    Logger.log('Error: ' + e.toString());
   }
 }`;
 
@@ -1227,10 +1239,9 @@ window.guardarEscuela = async function() {
   const nombre   = document.getElementById('f-nombre').value.trim();
   const ciudad   = document.getElementById('f-ciudad').value.trim();
   const director = document.getElementById('f-director').value.trim();
-  const vence    = document.getElementById('f-vence').value;
   const codigo   = document.getElementById('codigo-generado').textContent.trim().toLowerCase().replace(/s/g,'');
 
-  if (!nombre||!ciudad||!director||!vence) { toast('⚠️ Complete los campos obligatorios (*)'); return; }
+  if (!nombre||!ciudad||!director) { toast('⚠️ Complete los campos obligatorios (*)'); return; }
   if (codigo==='—'||!codigo) { toast('⚠️ Genere un código primero'); return; }
 
   // Verificar que el código no exista
@@ -1380,8 +1391,7 @@ window.cambiarTab = function(tab) {
   if (tab==='nueva') {
     const hoy = new Date();
     document.getElementById('f-alta').value = hoy.toISOString().split('T')[0];
-    const vence = new Date(hoy); vence.setFullYear(vence.getFullYear()+1);
-    document.getElementById('f-vence').value = vence.toISOString().split('T')[0];
+
     if (document.getElementById('codigo-generado').textContent==='—') generarCodigo();
   }
 };

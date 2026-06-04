@@ -1256,12 +1256,12 @@ window.consultarNubeExp = async function() {
         if (grado !== 'Todos' && String(gradoReg) !== String(grado)) return;
         if (grupo !== 'Todos' && String(grupoReg).toUpperCase() !== String(grupo).toUpperCase()) return;
 
-        const nombreLimpio = nombreLimpio(r.nombre || '').toUpperCase();
-        if (alumno !== 'Todos' && nombreLimpio !== alumno.toUpperCase()) return;
+        const nombreClean = nombreLimpio(r.nombre || '').toUpperCase();
+        if (alumno !== 'Todos' && nombreClean !== alumno.toUpperCase()) return;
 
         resultado.push({
           fecha: r.fecha,
-          nombre: nombreLimpio,
+          nombre: nombreClean,
           hora: r.hora || '—',
           estatus: r.estatus || '—',
           turno: r.turno || '—',

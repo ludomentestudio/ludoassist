@@ -10,6 +10,8 @@
   <meta name="theme-color" content="#1a3a2a">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <style>
 :root {
@@ -267,8 +269,42 @@ header{
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* ════════════════════
-   CONFIG
+   CONFIG — filtro turno
    ════════════════════ */
+.config-turno-filter{display:flex;gap:.5rem;margin-bottom:1rem;}
+.cfg-turno-btn{flex:1;padding:.6rem .4rem;border:2px solid var(--border);border-radius:9px;background:var(--white);color:var(--slate2);font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:.3rem;}
+.cfg-turno-btn.active-mat{background:#FFF8E1;border-color:#F59E0B;color:#92400E;}
+.cfg-turno-btn.active-vesp{background:#EEF2FF;border-color:#6366F1;color:#3730A3;}
+.cfg-turno-btn.active-all{background:#ECFDF5;border-color:var(--emerald);color:#065F46;}
+
+/* ════════════════════
+   BOTONES EXPORTAR
+   ════════════════════ */
+.export-bar{display:flex;gap:.5rem;margin-bottom:.85rem;}
+.btn-export{flex:1;padding:.7rem .4rem;border:none;border-radius:9px;font-size:.75rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.35rem;transition:all .3s;}
+.btn-export:active{transform:scale(.96);}
+.btn-export-pdf{background:linear-gradient(135deg,#EF4444,#DC2626);color:var(--white);box-shadow:0 3px 8px rgba(239,68,68,.3);}
+.btn-export-excel{background:linear-gradient(135deg,#16A34A,#15803D);color:var(--white);box-shadow:0 3px 8px rgba(22,163,74,.3);}
+
+/* Modal exportar */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9998;display:none;align-items:flex-end;justify-content:center;}
+.modal-overlay.show{display:flex;}
+.modal-sheet{background:var(--white);border-radius:20px 20px 0 0;padding:1.5rem;width:100%;max-width:480px;animation:slideUp .3s ease;}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-title{font-size:1rem;font-weight:900;color:var(--navy);margin-bottom:.3rem;}
+.modal-sub{font-size:.78rem;color:var(--slate2);margin-bottom:1.2rem;}
+.modal-options{display:flex;flex-direction:column;gap:.65rem;margin-bottom:1.2rem;}
+.modal-opt{background:var(--light);border:2px solid var(--border);border-radius:10px;padding:1rem;cursor:pointer;display:flex;align-items:center;gap:.85rem;transition:all .25s;}
+.modal-opt:active{transform:scale(.98);}
+.modal-opt.selected{border-color:var(--green);background:var(--green3);}
+.modal-opt-icon{font-size:1.8rem;}
+.modal-opt-txt{font-size:.88rem;font-weight:800;color:var(--navy);}
+.modal-opt-sub{font-size:.72rem;color:var(--slate2);}
+.modal-btns{display:flex;gap:.6rem;}
+.modal-btn-cancel{flex:1;padding:.85rem;background:var(--light);border:1px solid var(--border);border-radius:9px;font-size:.88rem;font-weight:800;cursor:pointer;color:var(--slate);}
+.modal-btn-go{flex:2;padding:.85rem;border:none;border-radius:9px;font-size:.88rem;font-weight:900;cursor:pointer;color:var(--white);transition:all .3s;}
+.modal-btn-go.pdf{background:linear-gradient(135deg,#EF4444,#DC2626);}
+.modal-btn-go.excel{background:linear-gradient(135deg,#16A34A,#15803D);}
 .config-intro{background:var(--white);border-radius:10px;padding:1rem;margin-bottom:1rem;box-shadow:0 1px 3px rgba(0,0,0,.08);font-size:.8rem;color:var(--slate);line-height:1.65;}
 .config-intro strong{color:var(--navy);}
 .config-section{margin-bottom:1.5rem;}
@@ -360,6 +396,7 @@ header{
 <div class="tabs">
   <div class="tab active" data-tab="asistencias">📋 Asistencias</div>
   <div class="tab" data-tab="config">⚙️ Links WA</div>
+  <div class="tab" data-tab="exportar">📤 Exportar</div>
 </div>
 
 <!-- ── VISTA ASISTENCIAS ── -->
@@ -402,14 +439,96 @@ header{
 <div class="view" id="view-config">
   <div class="config-intro">
     <strong>📱 Links de WhatsApp por grupo</strong><br>
-    Pega aquí el link de cada grupo de WhatsApp. Al tocar "Enviar", se abrirá ese chat con el mensaje listo.<br><br>
+    Pega aquí el link de cada grupo. Al tocar "Enviar", se abrirá WhatsApp con el mensaje listo.<br><br>
     <strong>¿Cómo obtener el link?</strong><br>
-    Abre el grupo en WhatsApp → toca el nombre del grupo → <em>Invitar por enlace</em> → copiar enlace.
+    Grupo WA → nombre del grupo → <em>Invitar por enlace</em> → copiar.
+  </div>
+  <!-- Filtro turno en config -->
+  <div class="config-turno-filter">
+    <button class="cfg-turno-btn active-all" id="cfg-btn-all"  onclick="filtrarConfig('all')">🌐 Todos</button>
+    <button class="cfg-turno-btn"            id="cfg-btn-mat"  onclick="filtrarConfig('mat')">🌅 Matutino</button>
+    <button class="cfg-turno-btn"            id="cfg-btn-vesp" onclick="filtrarConfig('vesp')">🌆 Vespertino</button>
   </div>
   <div id="config-grupos-container">
     <div class="loading-state"><div class="loader"></div></div>
   </div>
   <button class="btn-save-config" id="btn-save-config">💾 Guardar Links</button>
+</div>
+
+<!-- ── VISTA EXPORTAR ── -->
+<div class="view" id="view-exportar">
+
+  <div class="config-intro">
+    <strong>📊 Exportar Asistencia por Período</strong><br>
+    Selecciona el rango de fechas, turno, grado, grupo y alumno. Luego consulta la nube y descarga en PDF o Excel.
+  </div>
+
+  <!-- ── FILTROS ── -->
+  <div style="background:var(--white);border-radius:10px;padding:1rem;margin-bottom:1rem;box-shadow:0 1px 3px rgba(0,0,0,.08);">
+    
+    <!-- Fila 1: Fechas -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1rem;">
+      <div>
+        <label style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--slate2);display:block;margin-bottom:.4rem;">Fecha Inicio</label>
+        <input type="date" id="exp-fecha-inicio" style="width:100%;padding:.75rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-family:'Nunito',sans-serif;">
+      </div>
+      <div>
+        <label style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--slate2);display:block;margin-bottom:.4rem;">Fecha Término</label>
+        <input type="date" id="exp-fecha-fin" style="width:100%;padding:.75rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-family:'Nunito',sans-serif;">
+      </div>
+    </div>
+
+    <!-- Fila 2: Turno -->
+    <div style="margin-bottom:1rem;">
+      <label style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--slate2);display:block;margin-bottom:.4rem;">Turno</label>
+      <select id="exp-turno" style="width:100%;padding:.75rem 1rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-weight:700;color:var(--navy);background:var(--white);outline:none;font-family:'Nunito',sans-serif;">
+        <option value="Todos">🌐 Todos</option>
+        <option value="Matutino">🌅 Matutino</option>
+        <option value="Vespertino">🌆 Vespertino</option>
+      </select>
+    </div>
+
+    <!-- Fila 3: Grado y Grupo -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1rem;">
+      <div>
+        <label style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--slate2);display:block;margin-bottom:.4rem;">Grado</label>
+        <select id="exp-grado" onchange="actualizarGruposExp()" style="width:100%;padding:.75rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-weight:700;color:var(--navy);background:var(--white);outline:none;font-family:'Nunito',sans-serif;">
+          <option value="Todos">Todos los grados</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--slate2);display:block;margin-bottom:.4rem;">Grupo</label>
+        <select id="exp-grupo" onchange="actualizarAlumnosExp()" style="width:100%;padding:.75rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-weight:700;color:var(--navy);background:var(--white);outline:none;font-family:'Nunito',sans-serif;">
+          <option value="Todos">Todos los grupos</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Fila 4: Alumno -->
+    <div style="margin-bottom:1rem;">
+      <label style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--slate2);display:block;margin-bottom:.4rem;">Alumno</label>
+      <select id="exp-alumno" style="width:100%;padding:.75rem 1rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-weight:700;color:var(--navy);background:var(--white);outline:none;font-family:'Nunito',sans-serif;">
+        <option value="Todos">Todos</option>
+      </select>
+    </div>
+
+    <!-- Botón Consultar -->
+    <button id="btn-consultar-exp" onclick="consultarNubeExp()" style="width:100%;padding:1rem;background:var(--blue);color:var(--white);border:none;border-radius:10px;font-size:1rem;font-weight:900;cursor:pointer;text-transform:uppercase;letter-spacing:1px;box-shadow:0 4px 12px rgba(2,132,199,.3);transition:all .3s;">🔍 Consultar Nube</button>
+  </div>
+
+  <!-- ── BOTONES EXPORTAR ── -->
+  <div id="export-btns" style="display:none;display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1rem;">
+    <button id="btn-pdf-exp" onclick="exportarPDFExp()" style="padding:1rem;background:var(--blue);color:var(--white);border:none;border-radius:10px;font-size:.95rem;font-weight:900;cursor:pointer;text-transform:uppercase;box-shadow:0 4px 12px rgba(2,132,199,.3);transition:all .3s;">📄 PDF</button>
+    <button id="btn-excel-exp" onclick="exportarExcelExp()" style="padding:1rem;background:var(--emerald);color:var(--white);border:none;border-radius:10px;font-size:.95rem;font-weight:900;cursor:pointer;text-transform:uppercase;box-shadow:0 4px 12px rgba(16,185,129,.3);transition:all .3s;">📊 Excel</button>
+  </div>
+
+  <!-- ── VISTA PREVIA TABLA ── -->
+  <div style="background:var(--white);border-radius:10px;padding:1rem;box-shadow:0 1px 3px rgba(0,0,0,.08);">
+    <div style="font-weight:800;color:var(--navy);margin-bottom:.75rem;">📋 Vista Previa</div>
+    <div id="exp-preview-table" style="font-size:.78rem;color:var(--slate2);text-align:center;padding:2rem 1rem;">
+      Defina filtros y consulte la nube.
+    </div>
+  </div>
 </div>
 
 <div id="toast"></div>
@@ -442,6 +561,9 @@ let estructura    = {};
 let asistencias   = {};
 let nombreEscuela = '';
 let turnoFiltro   = 'all'; // 'all' | 'mat' | 'vesp'
+let cfgTurnoFiltro = 'all';
+let expTurnoFiltro = 'all';
+let perfilEscuela  = {}; // {nombreEscuela, director, cct, logo}
 
 // ── HELPERS ──
 function toast(msg) {
@@ -490,9 +612,29 @@ document.querySelectorAll('.tab').forEach(t => {
     document.querySelectorAll('.view').forEach(x => x.classList.remove('active'));
     t.classList.add('active');
     document.getElementById('view-' + id).classList.add('active');
-    if (id === 'config') renderConfig();
+    if (id === 'config')   renderConfig();
+    if (id === 'exportar') renderExpPreview();
   });
 });
+
+// ── FILTRO CONFIG ──
+window.filtrarConfig = function(f) {
+  cfgTurnoFiltro = f;
+  document.getElementById('cfg-btn-all').className  = 'cfg-turno-btn' + (f==='all'  ? ' active-all'  : '');
+  document.getElementById('cfg-btn-mat').className  = 'cfg-turno-btn' + (f==='mat'  ? ' active-mat'  : '');
+  document.getElementById('cfg-btn-vesp').className = 'cfg-turno-btn' + (f==='vesp' ? ' active-vesp' : '');
+  renderConfig();
+};
+
+// ── FILTRO TURNO EXPORTAR ──
+window.selTurnoExp = function(f) {
+  expTurnoFiltro = f;
+  document.getElementById('exp-btn-all').className  = 'cfg-turno-btn' + (f==='all'  ? ' active-all'  : '');
+  document.getElementById('exp-btn-mat').className  = 'cfg-turno-btn' + (f==='mat'  ? ' active-mat'  : '');
+  document.getElementById('exp-btn-vesp').className = 'cfg-turno-btn' + (f==='vesp' ? ' active-vesp' : '');
+  poblarSelectGrupo();
+  renderExpPreview();
+};
 
 // ── LOGIN ──
 document.getElementById('btn-login').addEventListener('click', async () => {
@@ -559,12 +701,22 @@ if (ID_ESCUELA) {
 // ── CARGAR ESTRUCTURA ──
 async function cargarEstructura() {
   try {
-    const snap = await get(ref(db, `escuelas/${ID_ESCUELA}/configuracion/estructura`));
+    const snap = await get(ref(db, `escuelas/${ID_ESCUELA}/configuracion`));
     if (snap.exists()) {
-      estructura = snap.val();
-    } else {
+      const cfg = snap.val();
+      if (cfg.perfil) {
+        perfilEscuela = cfg.perfil;
+        nombreEscuela = cfg.perfil.nombreEscuela || ID_ESCUELA.toUpperCase();
+        document.getElementById('hdr-school').textContent = nombreEscuela;
+      }
+      if (cfg.estructura) {
+        estructura = cfg.estructura;
+      }
+    }
+    // Si no hubo estructura, construir desde directorio
+    if (!Object.keys(estructura).length) {
       const dirSnap = await get(ref(db, `escuelas/${ID_ESCUELA}/directorio`));
-      if (dirSnap.exists()) {
+      if (dirSnap && dirSnap.exists()) {
         Object.keys(dirSnap.val()).forEach(clave => {
           const partes = clave.split('-');
           if (partes.length < 3) return;
@@ -826,9 +978,9 @@ window.copiarMensaje = function(clave) {
 // ── RENDER CONFIG ──
 function renderConfig() {
   const container = document.getElementById('config-grupos-container');
-  const turnos    = Object.keys(estructura).sort();
+  const turnos    = Object.keys(estructura).sort().filter(t => esTurno(t, cfgTurnoFiltro));
   if (!turnos.length) {
-    container.innerHTML = '<div class="empty-state"><div class="empty-icon">⚙️</div><div class="empty-txt">Sin grupos cargados</div></div>';
+    container.innerHTML = '<div class="empty-state"><div class="empty-icon">⚙️</div><div class="empty-txt">Sin grupos para este turno</div></div>';
     return;
   }
   let html = '';
@@ -865,6 +1017,401 @@ document.getElementById('btn-save-config').addEventListener('click', () => {
   localStorage.setItem(SK_LINKS, JSON.stringify(linksWA));
   toast('💾 Links guardados');
   cargarAsistencias();
+});
+
+// ── POBLAR SELECT GRUPO (exportar) ──
+function poblarSelectGrupo() {
+  const sel = document.getElementById('exp-grupo-select');
+  if (!sel) return;
+  const prevVal = sel.value;
+  sel.innerHTML = '<option value="todos">🏫 Toda la escuela</option>';
+  const turnos = Object.keys(estructura).sort().filter(t => esTurno(t, expTurnoFiltro));
+  turnos.forEach(turno => {
+    const grados = estructura[turno] || {};
+    Object.keys(grados).sort((a,b)=>Number(a)-Number(b)).forEach(grado => {
+      (grados[grado]||[]).sort().forEach(grupoLetra => {
+        const val = sanitizar(`${turno}-${grado}-${grupoLetra}`);
+        const opt = document.createElement('option');
+        opt.value = val;
+        opt.textContent = `${turno} · ${grado}° "${grupoLetra}"`;
+        sel.appendChild(opt);
+      });
+    });
+  });
+  if (prevVal) sel.value = prevVal;
+  sel.onchange = renderExpPreview;
+}
+
+// ── PREVIEW EXPORTAR ──
+function renderExpPreview() {
+  poblarSelectGrupo();
+  const el = document.getElementById('exp-preview-txt');
+  if (!el) return;
+  if (!Object.keys(asistencias).length) { el.textContent = 'Carga las asistencias primero desde la pestaña Asistencias.'; return; }
+  const grupos = obtenerGruposExportar();
+  if (!grupos.length) { el.textContent = 'Sin datos para el turno seleccionado.'; return; }
+  let txt = '';
+  grupos.forEach(({turno, grado, grupoLetra}) => {
+    const alumnos = filtrarAlumnos(turno, grado, grupoLetra);
+    const p = alumnos.filter(([,d])=>d.estatus.includes('asist')).length;
+    const f = alumnos.filter(([,d])=>d.estatus.includes('falt')||d.estatus.includes('ausent')).length;
+    const r = alumnos.filter(([,d])=>d.estatus.includes('retard')).length;
+    txt += `${turno} · ${grado}° "${grupoLetra}"  →  ✅ ${p}  ❌ ${f}  ⏰ ${r}\n`;
+  });
+  el.textContent = txt;
+}
+
+// ── OBTENER GRUPOS A EXPORTAR ──
+function obtenerGruposExportar() {
+  const sel = document.getElementById('exp-grupo-select');
+  const val = sel ? sel.value : 'todos';
+  const lista = [];
+  const turnos = Object.keys(estructura).sort().filter(t => esTurno(t, expTurnoFiltro));
+  turnos.forEach(turno => {
+    const grados = estructura[turno] || {};
+    Object.keys(grados).sort((a,b)=>Number(a)-Number(b)).forEach(grado => {
+      (grados[grado]||[]).sort().forEach(grupoLetra => {
+        const clave = sanitizar(`${turno}-${grado}-${grupoLetra}`);
+        if (val === 'todos' || val === clave) lista.push({turno, grado, grupoLetra});
+      });
+    });
+  });
+  return lista;
+}
+
+// ── EXPORTAR PDF ──
+window.exportarPDF = function() {
+  if (!Object.keys(asistencias).length) { toast('⚠️ Carga las asistencias primero'); return; }
+  const { jsPDF } = window.jspdf;
+  const doc  = new jsPDF({orientation:'portrait', unit:'mm', format:'letter'});
+  const pw   = doc.internal.pageSize.getWidth();
+  const ph   = doc.internal.pageSize.getHeight();
+  const fecha = hoy();
+  const [yy,mm,dd] = fecha.split('-');
+  const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const fechaStr = `${dd} de ${meses[mm-1]} de ${yy}`;
+  const grupos = obtenerGruposExportar();
+  if (!grupos.length) { toast('⚠️ Sin grupos para exportar'); return; }
+
+  function encabezado(subtitulo) {
+    doc.setFillColor(10,25,47);
+    doc.rect(0,0,pw,28,'F');
+    if (perfilEscuela.logo) { try { doc.addImage(perfilEscuela.logo,'PNG',8,4,20,20); } catch(e){} }
+    doc.setTextColor(16,185,129); doc.setFontSize(11); doc.setFont('helvetica','bold');
+    doc.text('LudoAssist — Reporte de Asistencia', pw/2, 10, {align:'center'});
+    doc.setTextColor(255,255,255); doc.setFontSize(9); doc.setFont('helvetica','normal');
+    doc.text((perfilEscuela.nombreEscuela||nombreEscuela||'').toUpperCase(), pw/2, 17, {align:'center'});
+    doc.text(subtitulo, pw/2, 23, {align:'center'});
+  }
+
+  grupos.forEach((g, idx) => {
+    if (idx > 0) doc.addPage();
+    const alumnos = filtrarAlumnos(g.turno, g.grado, g.grupoLetra);
+    const pres    = alumnos.filter(([,d])=>d.estatus.includes('asist'));
+    const rets    = alumnos.filter(([,d])=>d.estatus.includes('retard'));
+    const falts   = alumnos.filter(([,d])=>d.estatus.includes('falt')||d.estatus.includes('ausent'));
+    const justs   = alumnos.filter(([,d])=>d.estatus.includes('justif'));
+    const total   = alumnos.length;
+    const pct     = total>0 ? Math.round((pres.length/total)*100) : 0;
+
+    encabezado(`${g.turno} · ${g.grado}° Grado — Grupo "${g.grupoLetra}" · ${fechaStr}`);
+
+    let y2 = 36;
+    // Chips resumen
+    [{lbl:'Presentes',val:pres.length,bg:[220,252,231],tc:[22,101,52]},
+     {lbl:'Retardos', val:rets.length,bg:[254,249,195],tc:[133,77,14]},
+     {lbl:'Faltas',   val:falts.length,bg:[254,226,226],tc:[153,27,27]},
+     {lbl:'Total',    val:total,       bg:[241,245,249],tc:[30,41,59]}
+    ].forEach((c,i) => {
+      const x2 = 14+i*48;
+      doc.setFillColor(...c.bg); doc.roundedRect(x2,y2,44,14,2,2,'F');
+      doc.setTextColor(...c.tc); doc.setFontSize(14); doc.setFont('helvetica','bold');
+      doc.text(String(c.val), x2+22, y2+9, {align:'center'});
+      doc.setFontSize(6); doc.setFont('helvetica','normal');
+      doc.text(c.lbl.toUpperCase(), x2+22, y2+13, {align:'center'});
+    });
+    y2 += 20;
+
+    // Encabezado tabla
+    doc.setFontSize(8); doc.setFont('helvetica','bold'); doc.setTextColor(30,41,59);
+    doc.setFillColor(241,245,249); doc.rect(14,y2,pw-28,7,'F');
+    doc.text('#',17,y2+5); doc.text('Nombre',26,y2+5);
+    doc.text('Hora',pw-55,y2+5); doc.text('Estatus',pw-38,y2+5);
+    y2 += 7;
+
+    [...pres,...rets,...falts,...justs].forEach(([nombre,data],ni) => {
+      if (y2>ph-30) { doc.addPage(); encabezado(`${g.turno} · ${g.grado}° "${g.grupoLetra}" (cont.)`); y2=36; }
+      if (ni%2===0) { doc.setFillColor(248,250,252); doc.rect(14,y2,pw-28,6,'F'); }
+      doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(51,65,85);
+      doc.text(String(ni+1),17,y2+4.5);
+      doc.text((nombre||'').substring(0,38),26,y2+4.5);
+      doc.text(data.hora||'—',pw-55,y2+4.5);
+      const est = data.estatus.includes('asist')?'Asistencia':data.estatus.includes('retard')?'Retardo':data.estatus.includes('falt')||data.estatus.includes('ausent')?'Falta':data.estatus.includes('justif')?'Justif.':'—';
+      const ec  = data.estatus.includes('asist')?[22,163,74]:data.estatus.includes('retard')?[202,138,4]:[220,38,38];
+      doc.setTextColor(...ec); doc.setFont('helvetica','bold');
+      doc.text(est,pw-38,y2+4.5);
+      doc.setTextColor(51,65,85); doc.setFont('helvetica','normal');
+      y2+=6;
+    });
+
+    // Pie
+    doc.setDrawColor(203,213,225); doc.line(14,ph-20,pw-14,ph-20);
+    doc.setFontSize(7); doc.setTextColor(100,116,139);
+    doc.text(`Asistencia: ${pct}% · Total: ${total} · LudoAssist`, 14, ph-15);
+    if (perfilEscuela.director) {
+      doc.text('Director(a): '+(perfilEscuela.director||''), 14, ph-9);
+      doc.line(pw-70,ph-11,pw-14,ph-11);
+      doc.text('Firma y Sello',pw-42,ph-7,{align:'center'});
+    }
+    doc.text(`Pág. ${idx+1}/${grupos.length}`,pw-14,ph-15,{align:'right'});
+  });
+
+  const sel    = document.getElementById('exp-grupo-select');
+  const sufijo = sel?.value==='todos'?'general':sel.value;
+  doc.save(`asistencia_${fecha}_${sufijo}.pdf`);
+  toast('📄 PDF generado');
+};
+
+// ── ACTUALIZAR GRADOS EN EXPORTAR ──
+window.actualizarGradosExp = function() {
+  const turno = document.getElementById('exp-turno').value;
+  const gradoSel = document.getElementById('exp-grado');
+  const grados = (estructura[turno] || {});
+  gradoSel.innerHTML = '<option value="Todos">Todos los grados</option>';
+  Object.keys(grados).sort((a,b)=>Number(a)-Number(b)).forEach(g => {
+    const opt = document.createElement('option');
+    opt.value = g; opt.textContent = `${g}° Grado`;
+    gradoSel.appendChild(opt);
+  });
+  actualizarGruposExp();
+};
+
+// ── ACTUALIZAR GRUPOS EN EXPORTAR ──
+window.actualizarGruposExp = function() {
+  const turno = document.getElementById('exp-turno').value;
+  const grado = document.getElementById('exp-grado').value;
+  const grupoSel = document.getElementById('exp-grupo');
+  grupoSel.innerHTML = '<option value="Todos">Todos los grupos</option>';
+  if (grado !== 'Todos') {
+    const grupos = (estructura[turno]?.[grado] || []).sort();
+    grupos.forEach(g => {
+      const opt = document.createElement('option');
+      opt.value = g; opt.textContent = `Grupo ${g}`;
+      grupoSel.appendChild(opt);
+    });
+  }
+  actualizarAlumnosExp();
+};
+
+// ── ACTUALIZAR ALUMNOS EN EXPORTAR ──
+window.actualizarAlumnosExp = function() {
+  const turno = document.getElementById('exp-turno').value;
+  const grado = document.getElementById('exp-grado').value;
+  const grupo = document.getElementById('exp-grupo').value;
+  const alumnoSel = document.getElementById('exp-alumno');
+  alumnoSel.innerHTML = '<option value="Todos">Todos</option>';
+  if (grado !== 'Todos' && grupo !== 'Todos') {
+    const alumnos = filtrarAlumnos(turno, grado, grupo);
+    alumnos.forEach(([nombre]) => {
+      const opt = document.createElement('option');
+      opt.value = nombre; opt.textContent = nombre;
+      alumnoSel.appendChild(opt);
+    });
+  }
+};
+
+// ── CONSULTAR NUBE EXPORTAR ──
+window.consultarNubeExp = async function() {
+  const fechaInicio = document.getElementById('exp-fecha-inicio').value;
+  const fechaFin    = document.getElementById('exp-fecha-fin').value;
+  const turno       = document.getElementById('exp-turno').value;
+  const grado       = document.getElementById('exp-grado').value;
+  const grupo       = document.getElementById('exp-grupo').value;
+  const alumno      = document.getElementById('exp-alumno').value;
+
+  if (!fechaInicio || !fechaFin) { toast('⚠️ Define rango de fechas'); return; }
+
+  const btn = document.getElementById('btn-consultar-exp');
+  btn.disabled = true; btn.textContent = '⏳ Consultando...';
+
+  try {
+    const snap = await get(ref(db, `escuelas/${ID_ESCUELA}/asistencias`));
+    const resultado = [];
+
+    if (snap.exists()) {
+      snap.forEach(child => {
+        const r = child.val();
+        if (!r?.fecha || r.fecha < fechaInicio || r.fecha > fechaFin) return;
+        if (turno !== 'Todos' && r.turno?.toLowerCase() !== turno.toLowerCase()) return;
+        
+        // Parser robusto de grado/grupo
+        let gradoReg = r.grado || '';
+        let grupoReg = r.grupoLetra || '';
+        if (!gradoReg || !grupoReg) {
+          const raw = (r.grupo || '').trim();
+          const match = raw.match(/^(\d+)\s*°?\s+([A-Z]+)/i);
+          if (match) { gradoReg = match[1]; grupoReg = match[2].toUpperCase(); }
+        }
+
+        if (grado !== 'Todos' && String(gradoReg) !== String(grado)) return;
+        if (grupo !== 'Todos' && String(grupoReg).toUpperCase() !== String(grupo).toUpperCase()) return;
+
+        const nombreLimpio = nombreLimpio(r.nombre || '').toUpperCase();
+        if (alumno !== 'Todos' && nombreLimpio !== alumno.toUpperCase()) return;
+
+        resultado.push({
+          fecha: r.fecha,
+          nombre: nombreLimpio,
+          hora: r.hora || '—',
+          estatus: r.estatus || '—',
+          turno: r.turno || '—',
+          grado: gradoReg,
+          grupo: grupoReg
+        });
+      });
+    }
+
+    // Almacenar para exportar
+    window.expResultados = resultado;
+
+    // Renderizar tabla
+    const tableEl = document.getElementById('exp-preview-table');
+    if (!resultado.length) {
+      tableEl.innerHTML = '<div style="color:var(--slate2);padding:2rem 1rem;">Sin registros en ese rango.</div>';
+      document.getElementById('export-btns').style.display = 'none';
+    } else {
+      let html = `<table style="width:100%;border-collapse:collapse;font-size:.75rem;">
+        <thead style="background:var(--light);border-bottom:2px solid var(--border);">
+          <tr><th style="padding:.5rem;text-align:left;font-weight:800;color:var(--navy);">Fecha</th>
+              <th style="padding:.5rem;text-align:left;font-weight:800;color:var(--navy);">Alumno</th>
+              <th style="padding:.5rem;text-align:left;font-weight:800;color:var(--navy);">Hora</th>
+              <th style="padding:.5rem;text-align:left;font-weight:800;color:var(--navy);">Estatus</th></tr>
+        </thead>
+        <tbody>`;
+      resultado.forEach((r, i) => {
+        const estColor = r.estatus.toLowerCase().includes('asist') ? 'var(--emerald)' :
+                         r.estatus.toLowerCase().includes('retard') ? 'var(--amber)' :
+                         r.estatus.toLowerCase().includes('falt') ? 'var(--ruby)' : 'var(--slate2)';
+        html += `<tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:.4rem .5rem;">${r.fecha}</td>
+          <td style="padding:.4rem .5rem;">${r.nombre}</td>
+          <td style="padding:.4rem .5rem;">${r.hora}</td>
+          <td style="padding:.4rem .5rem;color:${estColor};font-weight:700;">${r.estatus}</td>
+        </tr>`;
+      });
+      html += '</tbody></table>';
+      tableEl.innerHTML = html;
+      document.getElementById('export-btns').style.display = 'grid';
+    }
+    toast('✅ Datos cargados: ' + resultado.length + ' registros');
+  } catch(e) {
+    toast('⚠️ Error: ' + e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = '🔍 Consultar Nube';
+  }
+};
+
+// ── EXPORTAR PDF EXPORTAR ──
+window.exportarPDFExp = async function() {
+  if (!window.expResultados || !window.expResultados.length) { toast('⚠️ Consulta primero'); return; }
+  
+  // Cargar jsPDF + autoTable si no existen
+  if (!window.jspdf) {
+    await new Promise((res,rej)=>{ const s=document.createElement('script'); s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js'; s.onload=res; s.onerror=rej; document.head.appendChild(s); });
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({orientation:'portrait',unit:'mm',format:'letter'});
+  const pw = doc.internal.pageSize.getWidth();
+  const ph = doc.internal.pageSize.getHeight();
+
+  // Encabezado
+  doc.setFillColor(26,107,58);
+  doc.rect(0,0,pw,25,'F');
+  
+  // Logo si existe
+  if (perfilEscuela.logo) {
+    try { doc.addImage(perfilEscuela.logo,'PNG',8,3,18,18); } catch(e){}
+  }
+
+  // Textos
+  doc.setTextColor(255,214,0); doc.setFontSize(12); doc.setFont('helvetica','bold');
+  doc.text('REPORTE DE ASISTENCIA', pw/2, 11, {align:'center'});
+  doc.setTextColor(255,255,255); doc.setFontSize(9); doc.setFont('helvetica','normal');
+  doc.text((perfilEscuela.nombreEscuela || nombreEscuela).toUpperCase(), pw/2, 17, {align:'center'});
+  doc.text(`CCT: ${perfilEscuela.cct || '—'}  ·  Zona: ${perfilEscuela.zona || '—'}`, pw/2, 22, {align:'center'});
+
+  const fechaInicio = document.getElementById('exp-fecha-inicio').value;
+  const fechaFin = document.getElementById('exp-fecha-fin').value;
+  doc.setFontSize(8); doc.setTextColor(100,116,139);
+  doc.text(`Período: ${fechaInicio} al ${fechaFin}`, pw/2, 27, {align:'center'});
+
+  // Tabla
+  const resultado = window.expResultados;
+  const rows = resultado.map(r => [
+    r.fecha,
+    r.nombre,
+    r.hora,
+    r.estatus.charAt(0).toUpperCase() + r.estatus.slice(1)
+  ]);
+
+  doc.autoTable({
+    startY: 30,
+    head: [['Fecha','Alumno','Hora','Estatus']],
+    body: rows,
+    styles: { fontSize: 8, cellPadding: 2 },
+    headStyles: { fillColor: [10,25,47], textColor: 255, fontStyle: 'bold' },
+    alternateRowStyles: { fillColor: [248,250,252] },
+    columnStyles: { 0: {cellWidth:28}, 1: {cellWidth:80}, 2: {cellWidth:20}, 3: {cellWidth:25} },
+    margin: { left: 10, right: 10 }
+  });
+
+  // Pie
+  const total = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= total; i++) {
+    doc.setPage(i);
+    doc.setFontSize(7); doc.setTextColor(148,163,184);
+    doc.text(`Página ${i}/${total}  ·  ${new Date().toLocaleString('es-MX')}`, pw-10, ph-8, {align:'right'});
+  }
+
+  doc.save(`asistencia_${fechaInicio}_${fechaFin}.pdf`);
+  toast('📄 PDF generado');
+};
+
+// ── EXPORTAR EXCEL EXPORTAR ──
+window.exportarExcelExp = function() {
+  if (!window.expResultados || !window.expResultados.length) { toast('⚠️ Consulta primero'); return; }
+
+  const wb = XLSX.utils.book_new();
+  const resultado = window.expResultados;
+
+  const fechaInicio = document.getElementById('exp-fecha-inicio').value;
+  const fechaFin = document.getElementById('exp-fecha-fin').value;
+
+  const rows = [
+    [`REPORTE DE ASISTENCIA - ${nombreEscuela}`],
+    [`CCT: ${perfilEscuela.cct || '—'}  ·  Zona: ${perfilEscuela.zona || '—'}`],
+    [`Período: ${fechaInicio} al ${fechaFin}`],
+    [],
+    ['Fecha','Alumno','Hora','Estatus','Turno','Grado','Grupo'],
+    ...resultado.map(r => [r.fecha, r.nombre, r.hora, r.estatus, r.turno, r.grado, r.grupo])
+  ];
+
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols'] = [{wch:12},{wch:40},{wch:10},{wch:12},{wch:12},{wch:8},{wch:8}];
+  XLSX.utils.book_append_sheet(wb, ws, 'Asistencia');
+
+  XLSX.writeFile(wb, `asistencia_${fechaInicio}_${fechaFin}.xlsx`);
+  toast('📊 Excel generado');
+};
+
+// Inicializar fechas por defecto
+document.addEventListener('DOMContentLoaded', () => {
+  const hoyISO = hoy();
+  const hace7 = new Date(); hace7.setDate(hace7.getDate()-7);
+  document.getElementById('exp-fecha-fin').value = hoyISO;
+  document.getElementById('exp-fecha-inicio').value = hace7.toISOString().split('T')[0];
+  document.getElementById('exp-turno').addEventListener('change', actualizarGradosExp);
 });
 </script>
 </body>

@@ -827,14 +827,13 @@ function actualizarTurnoBadge() {
     if (actual === 'EntreTurnos') {
         el.textContent = '⏸ Entre Turnos';
         el.className   = 'turno-badge entre';
-        // Mostrar aviso en el área del escáner si no está escaneando
         if (!isScanning && scan) {
             scan.innerHTML = `<span style="color:var(--amber)">⏸ Zona entre turnos<br>
                 <small style="font-size:.75rem;font-weight:400">Vespertino abre a las ${config.vespApertura}</small></span>`;
         }
     } else {
-        el.textContent = actual;
-        el.className   = 'turno-badge' + (actual === 'Vespertino' ? ' vespertino' : '');
+        el.textContent = '⚡ Automático';
+        el.className   = 'turno-badge';
         if (!isScanning && scan && scan.textContent.includes('Entre Turnos')) {
             scan.textContent = 'Presione el botón para iniciar el lector';
         }
@@ -1254,7 +1253,7 @@ window.camActualizarGrupos = function() {
     });
 };
 
-window.cargarAlumnosCambiar = function() {
+window.cargarAlumnosCambiar = async function() {
     const turno = document.getElementById('cam-turno').value;
     const grado = document.getElementById('cam-grado').value;
     const grupo = document.getElementById('cam-grupo').value;
@@ -1269,6 +1268,37 @@ window.cargarAlumnosCambiar = function() {
         return;
     }
 
+    cont.innerHTML = `<div style="text-align:center;padding:1rem;color:var(--slate2);">⏳ Cargando estatus...</div>`;
+
+    // Construir mapa de estatus: primero desde local, luego enriquecer con Firebase
+    const mapaEstatus = {};
+
+    // 1. Desde memoria local
+    attendanceDB.forEach(r => {
+        if (r.fecha === fecha) {
+            const n = r.nombre.replace(/^\[ [AM] \] /,'').toUpperCase();
+            mapaEstatus[n] = (r.estatus||'').toLowerCase();
+        }
+    });
+
+    // 2. Enriquecer con Firebase (para registros que no están en local)
+    if (isOnline && ID_ESCUELA) {
+        try {
+            const snap = await get(ref(db, `escuelas/${ID_ESCUELA}/asistencias`));
+            if (snap.exists()) {
+                snap.forEach(child => {
+                    const r = child.val();
+                    if (r.fecha === fecha) {
+                        const n = (r.nombre||'').replace(/^\[ [AM] \] /,'').toUpperCase();
+                        if (!mapaEstatus[n]) {
+                            mapaEstatus[n] = (r.estatus||'').toLowerCase();
+                        }
+                    }
+                });
+            }
+        } catch(e) { /* sin internet, usar solo local */ }
+    }
+
     cont.innerHTML = `
         <div class="card" style="padding:.9rem;margin-bottom:0;">
             <div class="card-title" style="font-size:.82rem;margin-bottom:.8rem;">
@@ -1280,17 +1310,13 @@ window.cargarAlumnosCambiar = function() {
             </div>
             <div id="cam-alumnos-lista">
             ${lista.map((nombre, i) => {
-                const reg = attendanceDB.find(r =>
-                    r.fecha === fecha &&
-                    r.nombre.replace(/^\[ [AM] \] /,'').toUpperCase() === nombre.toUpperCase()
-                );
-                const est = reg ? (reg.estatus||'').toLowerCase() : null;
+                const est = mapaEstatus[nombre.toUpperCase()] || null;
                 let clsCard = '', lblEst = 'Sin registro', clrEst = 'color:var(--slate2)';
                 if (est) {
-                    if (est.includes('asist'))  { clsCard='est-asistencia'; lblEst='Asistencia';   clrEst='color:var(--emerald)'; }
-                    if (est.includes('retard')) { clsCard='est-retardo';    lblEst='Retardo';      clrEst='color:var(--amber)'; }
-                    if (est.includes('falt'))   { clsCard='est-falta';      lblEst='Falta';        clrEst='color:var(--ruby)'; }
-                    if (est.includes('justif')) { clsCard='est-justificado';lblEst='Justificado';  clrEst='color:var(--blue)'; }
+                    if (est.includes('asist'))  { clsCard='est-asistencia'; lblEst='Asistencia';  clrEst='color:var(--emerald)'; }
+                    if (est.includes('retard')) { clsCard='est-retardo';    lblEst='Retardo';     clrEst='color:var(--amber)'; }
+                    if (est.includes('falt'))   { clsCard='est-falta';      lblEst='Falta';       clrEst='color:var(--ruby)'; }
+                    if (est.includes('justif')) { clsCard='est-justificado';lblEst='Justificado'; clrEst='color:var(--blue)'; }
                 }
                 const isP = est && est.includes('asist');
                 const isR = est && est.includes('retard');

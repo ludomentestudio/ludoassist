@@ -150,6 +150,28 @@ nav{background:var(--white);display:flex;justify-content:space-around;padding:7p
 .nav-btn{background:none;border:none;color:var(--slate2);font-size:.58rem;text-transform:uppercase;letter-spacing:.6px;display:flex;flex-direction:column;align-items:center;cursor:pointer;flex:1;transition:color .2s;font-weight:700;padding:3px;}
 .nav-btn.active{color:var(--blue);}
 .nav-icon{font-size:1.3rem;margin-bottom:2px;}
+/* ── CAMBIAR ESTATUS ── */
+.cam-alumno{background:var(--white);border-radius:8px;padding:.8rem 1rem;margin-bottom:.5rem;
+  box-shadow:0 1px 3px rgba(0,0,0,.07);display:flex;align-items:center;gap:.8rem;border-left:4px solid var(--border);}
+.cam-alumno.est-asistencia{border-left-color:var(--emerald);}
+.cam-alumno.est-retardo{border-left-color:var(--amber);}
+.cam-alumno.est-falta{border-left-color:var(--ruby);}
+.cam-alumno.est-justificado{border-left-color:var(--blue);}
+.cam-nombre{flex:1;font-size:.85rem;font-weight:700;color:var(--navy);}
+.cam-estatus-actual{font-size:.65rem;font-weight:700;margin-top:2px;}
+.cam-btns{display:flex;gap:.3rem;}
+.cam-btn{border:2px solid transparent;border-radius:7px;padding:.45rem .5rem;
+  font-size:1rem;cursor:pointer;opacity:.5;transition:all .2s;min-width:40px;min-height:40px;text-align:center;}
+.cam-btn.activo{opacity:1;transform:scale(1.08);border-color:rgba(0,0,0,.15);}
+.cam-btn-p{background:rgba(16,185,129,.2);color:#065F46;}
+.cam-btn-p.activo{background:var(--emerald);color:var(--navy);}
+.cam-btn-r{background:rgba(245,158,11,.2);color:#92400E;}
+.cam-btn-r.activo{background:var(--amber);color:var(--navy);}
+.cam-btn-f{background:rgba(239,68,68,.2);color:#991B1B;}
+.cam-btn-f.activo{background:var(--ruby);color:white;}
+.cam-btn-j{background:rgba(2,132,199,.2);color:#1E40AF;}
+.cam-btn-j.activo{background:var(--blue);color:white;}
+
 </style>
 </head>
 <body>
@@ -343,12 +365,46 @@ nav{background:var(--white);display:flex;justify-content:space-around;padding:7p
     </div>
 </main>
 
+<!-- ═══ VISTA 4: CAMBIAR ESTATUS ═══ -->
+<main id="view-cambiar" class="view">
+    <div class="card">
+        <div class="card-title">✏️ Cambiar Estatus</div>
+        <p style="font-size:.78rem;color:var(--slate2);margin-bottom:8px;line-height:1.4;">
+            Modifica el estatus de cualquier alumno del día de hoy. Si no tiene registro, se crea uno nuevo.
+        </p>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
+            <div>
+                <label>Turno</label>
+                <select id="cam-turno" onchange="window.camActualizarGrados()"></select>
+            </div>
+            <div>
+                <label>Grado</label>
+                <select id="cam-grado" onchange="window.camActualizarGrupos()"></select>
+            </div>
+            <div>
+                <label>Grupo</label>
+                <select id="cam-grupo"></select>
+            </div>
+        </div>
+
+        <button class="btn btn-ok" style="margin-top:10px;" onclick="window.cargarAlumnosCambiar()">
+            📋 Cargar Alumnos
+        </button>
+    </div>
+
+    <div id="cam-lista"></div>
+</main>
+
 <nav>
     <button class="nav-btn active" id="nav-scanner" onclick="window.switchView('scanner',this)">
         <span class="nav-icon">📷</span><span>Escáner</span>
     </button>
     <button class="nav-btn" id="nav-manual" onclick="window.switchView('manual',this)">
         <span class="nav-icon">📝</span><span>Manual</span>
+    </button>
+    <button class="nav-btn" id="nav-cambiar" onclick="window.switchView('cambiar',this)">
+        <span class="nav-icon">✏️</span><span>Cambiar</span>
     </button>
     <button class="nav-btn" id="nav-records" onclick="window.switchView('records',this)">
         <span class="nav-icon">📋</span><span>Auditoría</span>
@@ -593,6 +649,7 @@ function cargarEscuela() {
 
         // Poblar selectores del módulo manual con la estructura real
         poblarSelectoresManuales();
+        poblarSelectoresCambiar();
         actualizarTurnoBadge();
     });
 
@@ -1154,11 +1211,216 @@ window.switchView = function(name, btn) {
     document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     if (name==='manual')  window.cargarAlumnosGrupo();
+    if (name==='cambiar') { document.getElementById('cam-lista').innerHTML=''; }
     if (name==='records') renderTabla();
 };
 
 // ══════════════════════════════════════════
-// 17. INICIO
+// 17. CAMBIAR ESTATUS
+// ══════════════════════════════════════════
+// Poblar selectores de Cambiar (igual que Manual, usa estructura de Firebase)
+function poblarSelectoresCambiar() {
+    const turnos = Object.keys(estructura);
+    if (!turnos.length) return;
+    const sel = document.getElementById('cam-turno');
+    sel.innerHTML = '';
+    turnos.forEach(t => {
+        const o = document.createElement('option');
+        o.value = t; o.textContent = t; sel.appendChild(o);
+    });
+    window.camActualizarGrados();
+}
+
+window.camActualizarGrados = function() {
+    const turno  = document.getElementById('cam-turno').value;
+    const grados = estructura[turno] || {};
+    const sel    = document.getElementById('cam-grado');
+    sel.innerHTML = '';
+    Object.keys(grados).sort((a,b)=>Number(a)-Number(b)).forEach(g => {
+        const o = document.createElement('option');
+        o.value = g; o.textContent = `${g}° Grado`; sel.appendChild(o);
+    });
+    window.camActualizarGrupos();
+};
+
+window.camActualizarGrupos = function() {
+    const turno = document.getElementById('cam-turno').value;
+    const grado = document.getElementById('cam-grado').value;
+    const sel   = document.getElementById('cam-grupo');
+    sel.innerHTML = '';
+    (estructura[turno]?.[grado] || []).forEach(g => {
+        const o = document.createElement('option');
+        o.value = g; o.textContent = `Grupo ${g}`; sel.appendChild(o);
+    });
+};
+
+window.cargarAlumnosCambiar = function() {
+    const turno = document.getElementById('cam-turno').value;
+    const grado = document.getElementById('cam-grado').value;
+    const grupo = document.getElementById('cam-grupo').value;
+    const fecha = getFecha();
+    const clave = sanitizar(`${turno}-${grado}-${grupo}`);
+    const lista = directorioDB[clave] || [];
+    const cont  = document.getElementById('cam-lista');
+
+    if (!lista.length) {
+        cont.innerHTML = `<div style="text-align:center;padding:2rem;color:var(--slate2);">
+            Sin alumnos registrados en este grupo.</div>`;
+        return;
+    }
+
+    cont.innerHTML = `
+        <div class="card" style="padding:.9rem;margin-bottom:0;">
+            <div class="card-title" style="font-size:.82rem;margin-bottom:.8rem;">
+                ${grado}° Grupo ${grupo} — ${turno} · ${lista.length} alumnos
+            </div>
+            <div style="display:flex;gap:.5rem;justify-content:flex-end;margin-bottom:.8rem;flex-wrap:wrap;">
+                <button onclick="window.aplicarTodos('asistencia')" style="background:rgba(16,185,129,.15);border:1px solid var(--emerald);color:#065F46;border-radius:6px;padding:.3rem .7rem;font-size:.7rem;font-weight:700;cursor:pointer;">✅ Todos presentes</button>
+                <button onclick="window.aplicarTodos('falta')" style="background:rgba(239,68,68,.15);border:1px solid var(--ruby);color:#991B1B;border-radius:6px;padding:.3rem .7rem;font-size:.7rem;font-weight:700;cursor:pointer;">❌ Todos falta</button>
+            </div>
+            <div id="cam-alumnos-lista">
+            ${lista.map((nombre, i) => {
+                const reg = attendanceDB.find(r =>
+                    r.fecha === fecha &&
+                    r.nombre.replace(/^\[ [AM] \] /,'').toUpperCase() === nombre.toUpperCase()
+                );
+                const est = reg ? (reg.estatus||'').toLowerCase() : null;
+                let clsCard = '', lblEst = 'Sin registro', clrEst = 'color:var(--slate2)';
+                if (est) {
+                    if (est.includes('asist'))  { clsCard='est-asistencia'; lblEst='Asistencia';   clrEst='color:var(--emerald)'; }
+                    if (est.includes('retard')) { clsCard='est-retardo';    lblEst='Retardo';      clrEst='color:var(--amber)'; }
+                    if (est.includes('falt'))   { clsCard='est-falta';      lblEst='Falta';        clrEst='color:var(--ruby)'; }
+                    if (est.includes('justif')) { clsCard='est-justificado';lblEst='Justificado';  clrEst='color:var(--blue)'; }
+                }
+                const isP = est && est.includes('asist');
+                const isR = est && est.includes('retard');
+                const isF = est && est.includes('falt');
+                const isJ = est && est.includes('justif');
+                return `
+                <div class="cam-alumno ${clsCard}" id="cam-row-${i}">
+                    <div style="flex:1;min-width:0;">
+                        <div class="cam-nombre">${nombre}</div>
+                        <div class="cam-estatus-actual" style="${clrEst}" id="cam-lbl-${i}">${lblEst}</div>
+                    </div>
+                    <div class="cam-btns">
+                        <button class="cam-btn cam-btn-p ${isP?'activo':''}" onclick="window.cambiarEstatus(${i},'${nombre}','${turno}','${grado}','${grupo}','asistencia')" title="Asistencia">✅</button>
+                        <button class="cam-btn cam-btn-r ${isR?'activo':''}" onclick="window.cambiarEstatus(${i},'${nombre}','${turno}','${grado}','${grupo}','retardo')" title="Retardo">🕐</button>
+                        <button class="cam-btn cam-btn-f ${isF?'activo':''}" onclick="window.cambiarEstatus(${i},'${nombre}','${turno}','${grado}','${grupo}','falta')" title="Falta">❌</button>
+                        <button class="cam-btn cam-btn-j ${isJ?'activo':''}" onclick="window.cambiarEstatus(${i},'${nombre}','${turno}','${grado}','${grupo}','justificado')" title="Justificado">📋</button>
+                    </div>
+                </div>`;
+            }).join('')}
+            </div>
+        </div>`;
+};
+
+window.cambiarEstatus = async function(idx, nombre, turno, grado, grupo, nuevoEstatus) {
+    const fecha = getFecha();
+    const hora  = getHora();
+    const nombreAudit = `[ M ] ${nombre}`;
+
+    // Actualizar en memoria local
+    const regIdx = attendanceDB.findIndex(r =>
+        r.fecha === fecha &&
+        r.nombre.replace(/^\[ [AM] \] /,'').toUpperCase() === nombre.toUpperCase()
+    );
+
+    if (regIdx >= 0) {
+        // Actualizar registro existente
+        attendanceDB[regIdx].estatus = nuevoEstatus;
+        attendanceDB[regIdx].hora    = hora;
+    } else {
+        // Crear nuevo registro
+        attendanceDB.push({ fecha, hora, turno, grado, grupo, nombre: nombreAudit, estatus: nuevoEstatus });
+    }
+    localStorage.setItem(SK_ATTEND, JSON.stringify(attendanceDB));
+    actualizarStats();
+
+    // Actualizar UI del botón y etiqueta
+    const row = document.getElementById(`cam-row-${idx}`);
+    const lbl = document.getElementById(`cam-lbl-${idx}`);
+    if (row) {
+        row.className = 'cam-alumno';
+        const mapCls = { asistencia:'est-asistencia', retardo:'est-retardo', falta:'est-falta', justificado:'est-justificado' };
+        row.classList.add(mapCls[nuevoEstatus] || '');
+        // Actualizar botones activos
+        row.querySelectorAll('.cam-btn').forEach(b => b.classList.remove('activo'));
+        const mapBtn = { asistencia:'cam-btn-p', retardo:'cam-btn-r', falta:'cam-btn-f', justificado:'cam-btn-j' };
+        row.querySelector(`.${mapBtn[nuevoEstatus]}`)?.classList.add('activo');
+    }
+    if (lbl) {
+        const mapLbl = { asistencia:'Asistencia', retardo:'Retardo', falta:'Falta', justificado:'Justificado' };
+        const mapClr = { asistencia:'color:var(--emerald)', retardo:'color:var(--amber)', falta:'color:var(--ruby)', justificado:'color:var(--blue)' };
+        lbl.textContent = mapLbl[nuevoEstatus] || nuevoEstatus;
+        lbl.style.cssText = mapClr[nuevoEstatus] || '';
+    }
+
+    // Subir a Firebase
+    const grupoDisplay = `${grado}° ${grupo}`;
+    const fbReg = {
+        fecha, hora, turno,
+        grupo: grupoDisplay,
+        grado, grupoLetra: grupo,
+        nombre: nombreAudit,
+        estatus: nuevoEstatus,
+        timestamp: serverTimestamp()
+    };
+
+    if (isOnline && ID_ESCUELA) {
+        try {
+            // Buscar si ya existe en Firebase para sobreescribir
+            const snap = await get(ref(db, `escuelas/${ID_ESCUELA}/asistencias`));
+            let claveExistente = null;
+            if (snap.exists()) {
+                snap.forEach(child => {
+                    const r = child.val();
+                    const nLimpio = (r.nombre||'').replace(/^\[ [AM] \] /,'').toUpperCase();
+                    if (r.fecha === fecha && nLimpio === nombre.toUpperCase()) {
+                        claveExistente = child.key;
+                    }
+                });
+            }
+            if (claveExistente) {
+                // Sobreescribir el registro existente
+                await set(ref(db, `escuelas/${ID_ESCUELA}/asistencias/${claveExistente}`), fbReg);
+            } else {
+                // Crear nuevo
+                await push(ref(db, `escuelas/${ID_ESCUELA}/asistencias`), fbReg);
+            }
+            // Toast discreto
+            const t = document.createElement('div');
+            t.textContent = `✅ ${nombre.split(' ')[0]} → ${nuevoEstatus.toUpperCase()}`;
+            t.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--navy2);border:1px solid var(--border);color:var(--white);padding:.5rem 1rem;border-radius:8px;font-size:.8rem;font-weight:700;z-index:999;animation:fadeIn .2s ease;';
+            document.body.appendChild(t);
+            setTimeout(() => t.remove(), 2200);
+        } catch(e) {
+            pendientes.push({ fecha, hora, turno, grupo: grupoDisplay, grado, grupoLetra: grupo, nombre: nombreAudit, estatus: nuevoEstatus });
+            localStorage.setItem(SK_PENDING, JSON.stringify(pendientes));
+            actualizarBadgeOffline();
+        }
+    } else {
+        pendientes.push({ fecha, hora, turno, grupo: grupoDisplay, grado, grupoLetra: grupo, nombre: nombreAudit, estatus: nuevoEstatus });
+        localStorage.setItem(SK_PENDING, JSON.stringify(pendientes));
+        actualizarBadgeOffline();
+    }
+};
+
+// Aplicar estatus a todos los alumnos del grupo visible
+window.aplicarTodos = function(estatus) {
+    const turno = document.getElementById('cam-turno').value;
+    const grado = document.getElementById('cam-grado').value;
+    const grupo = document.getElementById('cam-grupo').value;
+    const clave = sanitizar(`${turno}-${grado}-${grupo}`);
+    const lista = directorioDB[clave] || [];
+    if (!lista.length) return;
+    if (!confirm(`¿Aplicar "${estatus.toUpperCase()}" a los ${lista.length} alumnos del grupo?`)) return;
+    lista.forEach((nombre, i) => {
+        window.cambiarEstatus(i, nombre, turno, grado, grupo, estatus);
+    });
+};
+
+// ══════════════════════════════════════════
+// 18. INICIO
 // ══════════════════════════════════════════
 renderTabla();
 actualizarStats();

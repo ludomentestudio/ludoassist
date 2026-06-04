@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>LudoAssist | Trabajadora Social</title>
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#1a3a2a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --green:#1a6b3a; --green2:#2d8a52; --green3:#e8f5ed;
+  --navy:#0A192F; --navy2:#1E293B; --slate:#334155; --slate2:#64748B;
+  --emerald:#10B981; --ruby:#EF4444; --amber:#F59E0B; --wa:#25D366;
+  --yellow:#FFD600; --coral:#FF6B6B; --sky:#38BDF8;
+  --blue:#0284C7; --light:#F0F7F2; --white:#FFFFFF; --border:#CBD5E1;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+body{background:var(--light);color:var(--slate);min-height:100dvh;display:flex;flex-direction:column;}
+
+/* ════════════════════════════════
+   PANTALLA LOGIN — con vida escolar
+   ════════════════════════════════ */
+#screen-login{
+  position:fixed;inset:0;
+  background:linear-gradient(160deg,#1a4a2a 0%,#0d2b1a 50%,#0a1f14 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  z-index:999;padding:1.5rem;gap:1rem;overflow:hidden;
+}
+#screen-login.hidden{display:none;}
+
+/* Fondo pizarrón con líneas */
+#screen-login::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    repeating-linear-gradient(0deg,transparent,transparent 38px,rgba(255,255,255,.04) 38px,rgba(255,255,255,.04) 40px),
+    repeating-linear-gradient(90deg,transparent,transparent 38px,rgba(255,255,255,.02) 38px,rgba(255,255,255,.02) 40px);
+  pointer-events:none;
+}
+
+/* ── Útiles flotantes animados ── */
+.utensilios{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+.util{position:absolute;font-size:1.6rem;animation:flotar linear infinite;opacity:.55;}
+.util:nth-child(1) {left:5%;  animation-duration:14s; animation-delay:0s;   top:110%;}
+.util:nth-child(2) {left:15%; animation-duration:11s; animation-delay:2s;   top:110%;}
+.util:nth-child(3) {left:25%; animation-duration:16s; animation-delay:0.5s; top:110%;}
+.util:nth-child(4) {left:38%; animation-duration:12s; animation-delay:3s;   top:110%;}
+.util:nth-child(5) {left:52%; animation-duration:15s; animation-delay:1s;   top:110%;}
+.util:nth-child(6) {left:64%; animation-duration:13s; animation-delay:4s;   top:110%;}
+.util:nth-child(7) {left:75%; animation-duration:10s; animation-delay:1.5s; top:110%;}
+.util:nth-child(8) {left:85%; animation-duration:17s; animation-delay:2.5s; top:110%;}
+.util:nth-child(9) {left:92%; animation-duration:11s; animation-delay:0.8s; top:110%;}
+.util:nth-child(10){left:45%; animation-duration:14s; animation-delay:5s;   top:110%;}
+.util:nth-child(11){left:8%;  animation-duration:18s; animation-delay:3.5s; top:110%;}
+.util:nth-child(12){left:70%; animation-duration:12s; animation-delay:6s;   top:110%;}
+@keyframes flotar{
+  0%  {transform:translateY(0) rotate(0deg);   opacity:.55;}
+  50% {opacity:.7;}
+  100%{transform:translateY(-120vh) rotate(360deg); opacity:0;}
+}
+
+/* ── Logo central ── */
+.login-logo-wrap{
+  position:relative;z-index:2;
+  background:rgba(255,255,255,.1);
+  border:2px solid rgba(255,255,255,.2);
+  border-radius:24px;padding:1rem 1.5rem;
+  display:flex;flex-direction:column;align-items:center;gap:.3rem;
+  backdrop-filter:blur(8px);
+  animation:aparecer .6s ease both;
+}
+@keyframes aparecer{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+.login-icon{font-size:2.8rem;line-height:1;}
+.login-app{font-family:'Fredoka One',cursive;font-size:1.6rem;color:var(--yellow);letter-spacing:1px;line-height:1;}
+.login-role{font-size:.7rem;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:3px;font-weight:700;}
+
+/* ── Tarjeta de login ── */
+.login-card{
+  background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:16px;padding:1.5rem;
+  width:100%;max-width:360px;
+  display:flex;flex-direction:column;gap:1rem;
+  backdrop-filter:blur(12px);
+  position:relative;z-index:2;
+  animation:aparecer .6s .15s ease both;
+}
+.login-label{font-size:.68rem;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:1.5px;font-weight:800;margin-bottom:.3rem;}
+.login-input-wrap{position:relative;}
+.login-icon-field{position:absolute;left:.85rem;top:50%;transform:translateY(-50%);font-size:1.1rem;pointer-events:none;}
+.login-input{
+  width:100%;background:rgba(255,255,255,.12);
+  border:1.5px solid rgba(255,255,255,.25);border-radius:10px;
+  padding:.85rem 1rem .85rem 2.6rem;
+  color:var(--white);font-size:1rem;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;
+  outline:none;transition:all .3s;font-family:'Nunito',sans-serif;
+}
+.login-input:focus{border-color:var(--yellow);background:rgba(255,255,255,.18);}
+.login-input::placeholder{color:rgba(255,255,255,.35);letter-spacing:1px;font-weight:600;font-size:.85rem;}
+.login-btn{
+  width:100%;padding:1rem;
+  background:linear-gradient(135deg,var(--yellow),#ffaa00);
+  color:#1a3a00;border:none;border-radius:10px;
+  font-size:1rem;font-weight:900;
+  text-transform:uppercase;letter-spacing:1px;
+  cursor:pointer;transition:all .3s;
+  font-family:'Nunito',sans-serif;
+  box-shadow:0 4px 15px rgba(255,214,0,.3);
+}
+.login-btn:active{transform:scale(.97);}
+.login-btn:disabled{background:rgba(255,255,255,.2);color:rgba(255,255,255,.4);cursor:not-allowed;box-shadow:none;}
+.login-error{color:#ff8a80;font-size:.82rem;text-align:center;font-weight:700;min-height:18px;}
+
+/* Decoración esquinas */
+.corner-deco{
+  position:absolute;z-index:1;font-size:5rem;opacity:.08;
+  animation:rotar 20s linear infinite;
+}
+.corner-deco.tl{top:-1rem;left:-1rem;}
+.corner-deco.br{bottom:-1rem;right:-1rem;animation-direction:reverse;}
+@keyframes rotar{to{transform:rotate(360deg)}}
+
+/* ════════════════════
+   HEADER
+   ════════════════════ */
+header{
+  background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);
+  color:var(--white);padding:.75rem 1rem;
+  display:flex;justify-content:space-between;align-items:center;
+  box-shadow:0 4px 12px rgba(0,0,0,.2);flex-shrink:0;
+}
+.hdr-left{display:flex;align-items:center;gap:.6rem;}
+.hdr-icon{font-size:1.5rem;}
+.hdr-texts{}
+.hdr-title{font-size:.95rem;font-weight:800;letter-spacing:.3px;font-family:'Fredoka One',cursive;}
+.hdr-school{font-size:.62rem;color:rgba(255,255,255,.75);font-weight:700;letter-spacing:.5px;}
+.hdr-right{display:flex;gap:.5rem;}
+.hdr-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:var(--white);padding:.35rem .65rem;border-radius:6px;cursor:pointer;font-size:.7rem;font-weight:700;transition:all .3s;}
+.hdr-btn:active{background:rgba(255,255,255,.25);}
+
+/* ════════════════════
+   TABS
+   ════════════════════ */
+.tabs{display:flex;background:#0d2b1a;border-bottom:2px solid rgba(255,255,255,.08);flex-shrink:0;}
+.tab{flex:1;padding:.7rem .5rem;text-align:center;font-size:.7rem;font-weight:800;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.8px;cursor:pointer;transition:all .3s;border-bottom:3px solid transparent;}
+.tab.active{color:var(--yellow);border-bottom-color:var(--yellow);}
+
+/* ════════════════════
+   VISTAS
+   ════════════════════ */
+.view{flex:1;overflow-y:auto;padding:1rem;display:none;padding-bottom:2rem;}
+.view.active{display:block;animation:fadeIn .2s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ════════════════════
+   BARRA FECHA + FILTRO TURNO
+   ════════════════════ */
+.top-bar{
+  background:var(--white);border-radius:12px;
+  padding:.85rem 1rem;margin-bottom:.85rem;
+  box-shadow:0 2px 6px rgba(0,0,0,.08);
+  display:flex;flex-direction:column;gap:.75rem;
+}
+.top-row1{display:flex;justify-content:space-between;align-items:center;}
+.fecha-txt{font-size:.88rem;font-weight:800;color:var(--navy);}
+.fecha-sub{font-size:.68rem;color:var(--slate2);}
+.btn-refresh{
+  background:var(--green);color:var(--white);border:none;
+  border-radius:8px;padding:.45rem .9rem;font-size:.72rem;font-weight:800;
+  cursor:pointer;display:flex;align-items:center;gap:.3rem;
+}
+.btn-refresh:active{transform:scale(.96);}
+
+/* ── Selector de turno ── */
+.turno-selector{display:flex;gap:.5rem;}
+.turno-btn{
+  flex:1;padding:.55rem .5rem;
+  border:2px solid var(--border);border-radius:8px;
+  background:var(--white);color:var(--slate2);
+  font-size:.75rem;font-weight:800;text-transform:uppercase;
+  letter-spacing:.5px;cursor:pointer;transition:all .25s;
+  display:flex;align-items:center;justify-content:center;gap:.35rem;
+}
+.turno-btn.active-mat{background:#FFF8E1;border-color:#F59E0B;color:#92400E;}
+.turno-btn.active-vesp{background:#EEF2FF;border-color:#6366F1;color:#3730A3;}
+.turno-btn.active-all{background:#ECFDF5;border-color:var(--emerald);color:#065F46;}
+
+/* ════════════════════
+   RESUMEN
+   ════════════════════ */
+.resumen-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin-bottom:.85rem;}
+.res-card{background:var(--white);border-radius:10px;padding:.7rem .4rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.07);}
+.res-num{font-size:1.3rem;font-weight:900;color:var(--navy);}
+.res-lbl{font-size:.58rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--slate2);margin-top:.1rem;}
+
+/* ════════════════════
+   SECCIÓN TURNO (desplegable)
+   ════════════════════ */
+.turno-section{margin-bottom:.75rem;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.turno-section-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.85rem 1rem;cursor:pointer;user-select:none;
+  transition:filter .2s;
+}
+.turno-section-hdr:active{filter:brightness(.95);}
+.turno-section.mat .turno-section-hdr{background:linear-gradient(135deg,#F59E0B,#D97706);}
+.turno-section.vesp .turno-section-hdr{background:linear-gradient(135deg,#6366F1,#4F46E5);}
+.turno-section-title{font-size:.95rem;font-weight:900;color:var(--white);display:flex;align-items:center;gap:.5rem;}
+.turno-section-meta{font-size:.68rem;color:rgba(255,255,255,.75);margin-top:.1rem;}
+.turno-section-right{display:flex;align-items:center;gap:.5rem;}
+.turno-total-chip{background:rgba(255,255,255,.25);color:var(--white);font-size:.7rem;font-weight:800;padding:.2rem .55rem;border-radius:20px;}
+.turno-chevron{font-size:.85rem;color:rgba(255,255,255,.8);transition:transform .3s;}
+.turno-section.open .turno-chevron{transform:rotate(180deg);}
+.turno-section-body{display:none;background:#F8FAFC;padding:.75rem;}
+.turno-section.open .turno-section-body{display:block;}
+
+/* ════════════════════
+   TARJETA GRUPO
+   ════════════════════ */
+.grupo-card{background:var(--white);border-radius:10px;margin-bottom:.65rem;box-shadow:0 1px 4px rgba(0,0,0,.07);overflow:hidden;transition:all .3s;border-left:4px solid var(--border);}
+.grupo-card.mat-card{border-left-color:#F59E0B;}
+.grupo-card.vesp-card{border-left-color:#6366F1;}
+.grupo-card.enviado{opacity:.55;}
+.grupo-header{display:flex;align-items:center;justify-content:space-between;padding:.8rem .9rem;cursor:pointer;user-select:none;}
+.grupo-info{display:flex;align-items:center;gap:.65rem;}
+.grupo-badge{font-size:.78rem;font-weight:900;padding:.3rem .6rem;border-radius:7px;min-width:46px;text-align:center;}
+.mat-badge{background:#FEF3C7;color:#92400E;}
+.vesp-badge{background:#EEF2FF;color:#3730A3;}
+.grupo-nombre{font-size:.88rem;font-weight:800;color:var(--navy);}
+.grupo-meta{font-size:.67rem;color:var(--slate2);margin-top:.1rem;}
+.grupo-stats{display:flex;gap:.35rem;align-items:center;}
+.stat-chip{font-size:.65rem;font-weight:800;padding:.18rem .42rem;border-radius:4px;}
+.stat-a{background:#DCFCE7;color:#166534;}
+.stat-r{background:#FEF9C3;color:#854D0E;}
+.stat-f{background:#FEE2E2;color:#991B1B;}
+.grupo-chevron{font-size:.75rem;color:var(--slate2);transition:transform .3s;margin-left:.3rem;}
+.grupo-card.open .grupo-chevron{transform:rotate(180deg);}
+
+/* ── Detalle ── */
+.grupo-detail{display:none;border-top:1px solid var(--border);}
+.grupo-card.open .grupo-detail{display:block;}
+.detail-msg{background:#F8FAFC;padding:.85rem 1rem;font-size:.75rem;color:var(--slate);white-space:pre-wrap;line-height:1.65;border-bottom:1px solid var(--border);font-family:'Courier New',monospace;}
+.detail-actions{display:flex;gap:.6rem;padding:.85rem 1rem;}
+.btn-wa{flex:1;background:var(--wa);color:var(--white);border:none;border-radius:9px;padding:.85rem;font-size:.85rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.5rem;transition:all .3s;}
+.btn-wa:active{transform:scale(.97);}
+.btn-wa.disabled-wa{background:#94A3B8;cursor:not-allowed;}
+.btn-copy{background:var(--navy2);color:var(--white);border:none;border-radius:9px;padding:.85rem 1rem;font-size:.85rem;font-weight:800;cursor:pointer;transition:all .3s;}
+.btn-copy:active{transform:scale(.97);}
+.sent-badge{display:none;align-items:center;gap:.4rem;font-size:.72rem;font-weight:800;color:var(--emerald);padding:.4rem 1rem .7rem;}
+.grupo-card.enviado .sent-badge{display:flex;}
+
+/* ════════════════════
+   ESTADOS VACÍO / CARGA
+   ════════════════════ */
+.empty-state{text-align:center;padding:3rem 1rem;color:var(--slate2);}
+.empty-icon{font-size:3rem;margin-bottom:.75rem;}
+.empty-txt{font-size:.9rem;font-weight:800;color:var(--navy);}
+.empty-sub{font-size:.78rem;margin-top:.4rem;}
+.loading-state{text-align:center;padding:3rem 1rem;}
+.loader{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 1rem;}
+.spin{animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ════════════════════
+   CONFIG
+   ════════════════════ */
+.config-intro{background:var(--white);border-radius:10px;padding:1rem;margin-bottom:1rem;box-shadow:0 1px 3px rgba(0,0,0,.08);font-size:.8rem;color:var(--slate);line-height:1.65;}
+.config-intro strong{color:var(--navy);}
+.config-section{margin-bottom:1.5rem;}
+.config-title{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--slate2);margin-bottom:.6rem;padding-left:.25rem;}
+.config-grupo-row{background:var(--white);border-radius:8px;padding:.85rem 1rem;margin-bottom:.5rem;box-shadow:0 1px 3px rgba(0,0,0,.06);display:flex;flex-direction:column;gap:.5rem;}
+.config-grupo-nombre{font-size:.82rem;font-weight:800;color:var(--navy);}
+.config-link-wrap{display:flex;gap:.5rem;}
+.config-link-input{flex:1;background:var(--light);border:1px solid var(--border);border-radius:6px;padding:.55rem .75rem;font-size:.78rem;color:var(--slate);outline:none;transition:all .3s;font-family:'Nunito',sans-serif;}
+.config-link-input:focus{border-color:var(--green);}
+.config-link-input::placeholder{color:var(--slate2);}
+.btn-test-wa{background:var(--wa);color:var(--white);border:none;border-radius:6px;padding:.55rem .75rem;font-size:.72rem;font-weight:800;cursor:pointer;white-space:nowrap;}
+.btn-save-config{width:100%;padding:1rem;background:linear-gradient(135deg,var(--green),var(--green2));color:var(--white);border:none;border-radius:10px;font-size:1rem;font-weight:900;cursor:pointer;margin-top:.5rem;transition:all .3s;box-shadow:0 4px 12px rgba(26,107,58,.3);}
+.btn-save-config:active{transform:scale(.97);}
+
+/* ════════════════════
+   TOAST
+   ════════════════════ */
+#toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--navy);color:var(--white);padding:.7rem 1.5rem;border-radius:50px;font-size:.82rem;font-weight:800;z-index:9999;transition:transform .3s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.3);}
+#toast.show{transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     PANTALLA LOGIN
+     ══════════════════════════════════ -->
+<div id="screen-login">
+
+  <!-- Útiles flotantes -->
+  <div class="utensilios">
+    <span class="util">✏️</span>
+    <span class="util">📏</span>
+    <span class="util">📐</span>
+    <span class="util">🖊️</span>
+    <span class="util">📚</span>
+    <span class="util">🖋️</span>
+    <span class="util">📝</span>
+    <span class="util">🔭</span>
+    <span class="util">🎒</span>
+    <span class="util">📌</span>
+    <span class="util">✂️</span>
+    <span class="util">🔬</span>
+  </div>
+
+  <!-- Decoraciones de esquina -->
+  <span class="corner-deco tl">📐</span>
+  <span class="corner-deco br">📏</span>
+
+  <!-- Logo / título -->
+  <div class="login-logo-wrap">
+    <div class="login-icon">👩‍💼</div>
+    <div class="login-app">LudoAssist</div>
+    <div class="login-role">Trabajadora Social</div>
+  </div>
+
+  <!-- Formulario -->
+  <div class="login-card">
+    <div>
+      <div class="login-label">Código de escuela</div>
+      <div class="login-input-wrap">
+        <span class="login-icon-field">🏫</span>
+        <input class="login-input" id="login-codigo" type="text"
+          placeholder="Ej: est17"
+          autocomplete="off" autocorrect="off" spellcheck="false">
+      </div>
+    </div>
+    <button class="login-btn" id="btn-login">✅ Entrar</button>
+    <div class="login-error" id="login-error"></div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════
+     APP PRINCIPAL
+     ══════════════════════════════════ -->
+<header>
+  <div class="hdr-left">
+    <div class="hdr-icon">👩‍💼</div>
+    <div class="hdr-texts">
+      <div class="hdr-title">Trabajadora Social</div>
+      <div class="hdr-school" id="hdr-school">LudoAssist</div>
+    </div>
+  </div>
+  <div class="hdr-right">
+    <button class="hdr-btn" id="btn-logout">🔓 Salir</button>
+  </div>
+</header>
+
+<div class="tabs">
+  <div class="tab active" data-tab="asistencias">📋 Asistencias</div>
+  <div class="tab" data-tab="config">⚙️ Links WA</div>
+</div>
+
+<!-- ── VISTA ASISTENCIAS ── -->
+<div class="view active" id="view-asistencias">
+
+  <div class="top-bar">
+    <div class="top-row1">
+      <div>
+        <div class="fecha-txt" id="fecha-txt">—</div>
+        <div class="fecha-sub" id="fecha-sub">Cargando datos...</div>
+      </div>
+      <button class="btn-refresh" id="btn-refresh">
+        <span id="refresh-icon">🔄</span> Actualizar
+      </button>
+    </div>
+    <!-- Selector de turno -->
+    <div class="turno-selector">
+      <button class="turno-btn active-all" id="btn-turno-all" onclick="filtrarTurno('all')">🌐 Todos</button>
+      <button class="turno-btn" id="btn-turno-mat" onclick="filtrarTurno('mat')">🌅 Matutino</button>
+      <button class="turno-btn" id="btn-turno-vesp" onclick="filtrarTurno('vesp')">🌆 Vespertino</button>
+    </div>
+  </div>
+
+  <div class="resumen-bar">
+    <div class="res-card"><div class="res-num" id="res-grupos">—</div><div class="res-lbl">Grupos</div></div>
+    <div class="res-card"><div class="res-num" style="color:var(--emerald)" id="res-asist">—</div><div class="res-lbl">Asist.</div></div>
+    <div class="res-card"><div class="res-num" style="color:var(--amber)" id="res-retard">—</div><div class="res-lbl">Ret.</div></div>
+    <div class="res-card"><div class="res-num" style="color:var(--ruby)" id="res-faltas">—</div><div class="res-lbl">Faltas</div></div>
+  </div>
+
+  <div id="lista-grupos">
+    <div class="loading-state">
+      <div class="loader"></div>
+      <div style="font-size:.82rem;color:var(--slate2);">Cargando asistencias...</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── VISTA CONFIG ── -->
+<div class="view" id="view-config">
+  <div class="config-intro">
+    <strong>📱 Links de WhatsApp por grupo</strong><br>
+    Pega aquí el link de cada grupo de WhatsApp. Al tocar "Enviar", se abrirá ese chat con el mensaje listo.<br><br>
+    <strong>¿Cómo obtener el link?</strong><br>
+    Abre el grupo en WhatsApp → toca el nombre del grupo → <em>Invitar por enlace</em> → copiar enlace.
+  </div>
+  <div id="config-grupos-container">
+    <div class="loading-state"><div class="loader"></div></div>
+  </div>
+  <button class="btn-save-config" id="btn-save-config">💾 Guardar Links</button>
+</div>
+
+<div id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+const FB = {
+  apiKey: "AIzaSyBnlD-4trgGGXXfzHf7FhHDf1cCiaxdMjA",
+  authDomain: "ludoasistencia.firebaseapp.com",
+  databaseURL: "https://ludoasistencia-default-rtdb.firebaseio.com",
+  projectId: "ludoasistencia",
+  storageBucket: "ludoasistencia.appspot.com",
+  messagingSenderId: "738361802611",
+  appId: "1:738361802611:web:cb13956f002a0e74844f06"
+};
+const app = initializeApp(FB);
+const db  = getDatabase(app);
+
+// ── ESTADO ──
+const SK_ESCUELA  = 'ludo_ts_escuela';
+const SK_LINKS    = 'ludo_ts_links';
+const SK_ENVIADOS = 'ludo_ts_enviados';
+
+let ID_ESCUELA    = localStorage.getItem(SK_ESCUELA) || '';
+let linksWA       = JSON.parse(localStorage.getItem(SK_LINKS)    || '{}');
+let enviados      = JSON.parse(localStorage.getItem(SK_ENVIADOS) || '{}');
+let estructura    = {};
+let asistencias   = {};
+let nombreEscuela = '';
+let turnoFiltro   = 'all'; // 'all' | 'mat' | 'vesp'
+
+// ── HELPERS ──
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2500);
+}
+function hoy() {
+  return new Date().toISOString().split('T')[0];
+}
+function sanitizar(s) {
+  return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,'-').replace(/[^a-z0-9\-]/g,'');
+}
+function fechaLegible(iso) {
+  const [y,m,d] = iso.split('-');
+  const dias  = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const dt = new Date(y, m-1, d);
+  return `${dias[dt.getDay()]} ${d} de ${meses[m-1]} de ${y}`;
+}
+function nombreLimpio(n) {
+  return (n||'').replace(/^\[ M \] /,'');
+}
+function esTurno(t, filtro) {
+  const tl = (t||'').toLowerCase();
+  if (filtro === 'mat')  return tl.includes('mat');
+  if (filtro === 'vesp') return tl.includes('vesp');
+  return true;
+}
+
+// ── FILTRO TURNO ──
+window.filtrarTurno = function(f) {
+  turnoFiltro = f;
+  document.getElementById('btn-turno-all').className  = 'turno-btn' + (f==='all'  ? ' active-all'  : '');
+  document.getElementById('btn-turno-mat').className  = 'turno-btn' + (f==='mat'  ? ' active-mat'  : '');
+  document.getElementById('btn-turno-vesp').className = 'turno-btn' + (f==='vesp' ? ' active-vesp' : '');
+  renderGrupos(hoy());
+};
+
+// ── TABS ──
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    const id = t.dataset.tab;
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('view-' + id).classList.add('active');
+    if (id === 'config') renderConfig();
+  });
+});
+
+// ── LOGIN ──
+document.getElementById('btn-login').addEventListener('click', async () => {
+  const codigo = document.getElementById('login-codigo').value.trim().toLowerCase();
+  const errEl  = document.getElementById('login-error');
+  errEl.textContent = '';
+  if (!codigo) { errEl.textContent = 'Ingresa el código de tu escuela.'; return; }
+  const btn = document.getElementById('btn-login');
+  btn.disabled = true; btn.textContent = '⏳ Verificando...';
+  try {
+    const snap = await get(ref(db, `escuelas/${codigo}/configuracion/perfil`));
+    if (!snap.exists()) {
+      errEl.textContent = '❌ Código no encontrado.';
+      btn.disabled = false; btn.textContent = '✅ Entrar'; return;
+    }
+    const perfil = snap.val();
+    if (perfil.activa === false) {
+      errEl.textContent = '🔒 Escuela bloqueada.';
+      btn.disabled = false; btn.textContent = '✅ Entrar'; return;
+    }
+    ID_ESCUELA = codigo;
+    nombreEscuela = perfil.nombreEscuela || codigo.toUpperCase();
+    localStorage.setItem(SK_ESCUELA, codigo);
+    document.getElementById('screen-login').classList.add('hidden');
+    document.getElementById('hdr-school').textContent = nombreEscuela;
+    cargarEstructura();
+  } catch(e) {
+    if (localStorage.getItem(SK_ESCUELA) === codigo) {
+      ID_ESCUELA = codigo;
+      document.getElementById('screen-login').classList.add('hidden');
+      cargarEstructura();
+    } else {
+      errEl.textContent = '⚠️ Sin conexión y código no verificado.';
+      btn.disabled = false; btn.textContent = '✅ Entrar';
+    }
+  }
+});
+document.getElementById('login-codigo').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('btn-login').click();
+});
+
+// ── LOGOUT ──
+document.getElementById('btn-logout').addEventListener('click', () => {
+  if (!confirm('¿Cerrar sesión?')) return;
+  localStorage.removeItem(SK_ESCUELA);
+  location.reload();
+});
+
+// ── AUTO-LOGIN ──
+if (ID_ESCUELA) {
+  document.getElementById('screen-login').classList.add('hidden');
+  (async () => {
+    try {
+      const snap = await get(ref(db, `escuelas/${ID_ESCUELA}/configuracion/perfil`));
+      if (snap.exists()) {
+        nombreEscuela = snap.val().nombreEscuela || ID_ESCUELA.toUpperCase();
+        document.getElementById('hdr-school').textContent = nombreEscuela;
+      }
+    } catch(e) {}
+    cargarEstructura();
+  })();
+}
+
+// ── CARGAR ESTRUCTURA ──
+async function cargarEstructura() {
+  try {
+    const snap = await get(ref(db, `escuelas/${ID_ESCUELA}/configuracion/estructura`));
+    if (snap.exists()) {
+      estructura = snap.val();
+    } else {
+      const dirSnap = await get(ref(db, `escuelas/${ID_ESCUELA}/directorio`));
+      if (dirSnap.exists()) {
+        Object.keys(dirSnap.val()).forEach(clave => {
+          const partes = clave.split('-');
+          if (partes.length < 3) return;
+          const turno = partes[0].charAt(0).toUpperCase() + partes[0].slice(1);
+          const grado = partes[1];
+          const grupo = partes[2].toUpperCase();
+          if (!estructura[turno]) estructura[turno] = {};
+          if (!estructura[turno][grado]) estructura[turno][grado] = [];
+          if (!estructura[turno][grado].includes(grupo)) estructura[turno][grado].push(grupo);
+        });
+      }
+    }
+  } catch(e) {}
+  cargarAsistencias();
+}
+
+// ── CARGAR ASISTENCIAS ──
+async function cargarAsistencias() {
+  const fecha = hoy();
+  document.getElementById('fecha-txt').textContent = fechaLegible(fecha);
+  document.getElementById('fecha-sub').textContent = 'Cargando...';
+  document.getElementById('lista-grupos').innerHTML = '<div class="loading-state"><div class="loader"></div><div style="font-size:.82rem;color:var(--slate2);">Cargando asistencias...</div></div>';
+  try {
+    const snap = await get(ref(db, `escuelas/${ID_ESCUELA}/asistencias`));
+    asistencias = {};
+    if (snap.exists()) {
+      snap.forEach(child => {
+        const r = child.val();
+        if (r.fecha !== fecha) return;
+        const nombre = nombreLimpio(r.nombre || '');
+        if (!nombre) return;
+        if (!asistencias[nombre]) {
+          asistencias[nombre] = {
+            estatus:    (r.estatus || '').toLowerCase(),
+            hora:       r.hora || '',
+            turno:      r.turno || '',
+            grado:      r.grado || '',
+            grupoLetra: r.grupoLetra || '',
+            grupo:      r.grupo || ''
+          };
+        }
+      });
+    }
+    renderGrupos(fecha);
+  } catch(e) {
+    document.getElementById('lista-grupos').innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-txt">Sin conexión</div><div class="empty-sub">Verifica tu internet y recarga.</div></div>';
+  }
+}
+
+// ── REFRESH ──
+document.getElementById('btn-refresh').addEventListener('click', async () => {
+  const icon = document.getElementById('refresh-icon');
+  icon.classList.add('spin');
+  await cargarAsistencias();
+  setTimeout(() => icon.classList.remove('spin'), 500);
+  toast('✅ Datos actualizados');
+});
+
+// ── RENDER GRUPOS ──
+function renderGrupos(fecha) {
+  const container   = document.getElementById('lista-grupos');
+  const enviadosHoy = enviados[fecha] || {};
+  const turnos      = Object.keys(estructura).sort();
+
+  if (!turnos.length) {
+    container.innerHTML = '<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-txt">Sin estructura configurada</div><div class="empty-sub">Contacta al administrador.</div></div>';
+    return;
+  }
+
+  let totalAsist=0, totalRetard=0, totalFaltas=0, totalGrupos=0;
+  let html = '';
+
+  turnos.forEach(turno => {
+    // Aplicar filtro de turno
+    if (!esTurno(turno, turnoFiltro)) return;
+
+    const grados      = estructura[turno] || {};
+    const gradosOrden = Object.keys(grados).sort((a,b)=>Number(a)-Number(b));
+    const esMat       = turno.toLowerCase().includes('mat');
+    const turnoClass  = esMat ? 'mat' : 'vesp';
+    const turnoEmoji  = esMat ? '🌅' : '🌆';
+
+    // Calcular totales del turno para el header
+    let gruposTurno=0, asistTurno=0, faltasTurno=0;
+    gradosOrden.forEach(grado => {
+      (grados[grado]||[]).forEach(grupoLetra => {
+        gruposTurno++;
+        const alumnos = filtrarAlumnos(turno, grado, grupoLetra);
+        asistTurno  += alumnos.filter(([,d]) => d.estatus.includes('asist')).length;
+        faltasTurno += alumnos.filter(([,d]) => d.estatus.includes('falt') || d.estatus.includes('ausent')).length;
+      });
+    });
+
+    html += `
+    <div class="turno-section ${turnoClass} open" id="sec-${turnoClass}">
+      <div class="turno-section-hdr" onclick="toggleTurnoSec('${turnoClass}')">
+        <div>
+          <div class="turno-section-title">${turnoEmoji} Turno ${turno}</div>
+          <div class="turno-section-meta">${gruposTurno} grupos · ✅${asistTurno} asistencias · ❌${faltasTurno} faltas</div>
+        </div>
+        <div class="turno-section-right">
+          <span class="turno-total-chip">${gruposTurno} grupos</span>
+          <span class="turno-chevron">▼</span>
+        </div>
+      </div>
+      <div class="turno-section-body">`;
+
+    gradosOrden.forEach(grado => {
+      const grupos = (grados[grado] || []).sort();
+      grupos.forEach(grupoLetra => {
+        totalGrupos++;
+        const clave        = sanitizar(`${turno}-${grado}-${grupoLetra}`);
+        const yaEnviado    = enviadosHoy[clave] || false;
+        const alumnosGrupo = filtrarAlumnos(turno, grado, grupoLetra);
+
+        const presentes = alumnosGrupo.filter(([,d]) => d.estatus.includes('asist'));
+        const retardos  = alumnosGrupo.filter(([,d]) => d.estatus.includes('retard'));
+        const faltas    = alumnosGrupo.filter(([,d]) => d.estatus.includes('falt') || d.estatus.includes('ausent'));
+        const justif    = alumnosGrupo.filter(([,d]) => d.estatus.includes('justif'));
+        const total     = alumnosGrupo.length;
+
+        totalAsist  += presentes.length;
+        totalRetard += retardos.length;
+        totalFaltas += faltas.length;
+
+        const pct    = total > 0 ? Math.round((presentes.length / total)*100) : 0;
+        const msg    = generarMensaje(turno, grado, grupoLetra, fecha, presentes, retardos, faltas, justif, total);
+        const linkWA = linksWA[clave] || '';
+
+        html += `
+        <div class="grupo-card ${turnoClass}-card ${yaEnviado ? 'enviado' : ''}" id="card-${clave}">
+          <div class="grupo-header" onclick="toggleCard('${clave}')">
+            <div class="grupo-info">
+              <div class="grupo-badge ${turnoClass}-badge">${grado}°${grupoLetra}</div>
+              <div>
+                <div class="grupo-nombre">${grado}° Grado — Grupo "${grupoLetra}"</div>
+                <div class="grupo-meta">${total} registrados · ${pct}% asistencia</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:.35rem;">
+              <div class="grupo-stats">
+                <span class="stat-chip stat-a">✅${presentes.length}</span>
+                ${retardos.length > 0 ? `<span class="stat-chip stat-r">⏰${retardos.length}</span>` : ''}
+                ${faltas.length > 0   ? `<span class="stat-chip stat-f">❌${faltas.length}</span>`   : ''}
+              </div>
+              <span class="grupo-chevron">▼</span>
+            </div>
+          </div>
+          <div class="grupo-detail">
+            <div class="detail-msg" id="msg-${clave}">${msg}</div>
+            <div class="detail-actions">
+              <button class="btn-wa ${!linkWA ? 'disabled-wa' : ''}"
+                onclick="abrirWA('${clave}','${encodeURIComponent(msg)}')"
+                ${!linkWA ? 'title="Configura el link en ⚙️ Links WA"' : ''}>
+                ${linkWA ? '📤 Enviar a WhatsApp' : '⚙️ Sin link'}
+              </button>
+              <button class="btn-copy" onclick="copiarMensaje('${clave}')">📋</button>
+            </div>
+            <div class="sent-badge">✅ Enviado hoy</div>
+          </div>
+        </div>`;
+      });
+    });
+
+    html += `</div></div>`;
+  });
+
+  if (!html) {
+    container.innerHTML = '<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-txt">Sin grupos para este turno</div></div>';
+    return;
+  }
+
+  container.innerHTML = html;
+  document.getElementById('res-grupos').textContent  = totalGrupos;
+  document.getElementById('res-asist').textContent   = totalAsist;
+  document.getElementById('res-retard').textContent  = totalRetard;
+  document.getElementById('res-faltas').textContent  = totalFaltas;
+  document.getElementById('fecha-sub').textContent   = `${Object.keys(asistencias).length} alumnos registrados hoy`;
+}
+
+// ── FILTRAR ALUMNOS DEL GRUPO ──
+function filtrarAlumnos(turno, grado, grupoLetra) {
+  return Object.entries(asistencias).filter(([, data]) => {
+    const tMatch = data.turno && data.turno.toLowerCase() === turno.toLowerCase();
+    const gMatch = data.grado && String(data.grado) === String(grado);
+    const grMatch = data.grupoLetra && data.grupoLetra.toUpperCase() === grupoLetra.toUpperCase();
+    const legacyMatch = data.grupo && data.grupo.replace(/\s/g,'') === `${grado}°${grupoLetra}`;
+    return (tMatch && gMatch && grMatch) || legacyMatch;
+  });
+}
+
+// ── TOGGLE SECCIÓN TURNO ──
+window.toggleTurnoSec = function(cls) {
+  const sec = document.getElementById('sec-' + cls);
+  if (sec) sec.classList.toggle('open');
+};
+
+// ── TOGGLE CARD ──
+window.toggleCard = function(clave) {
+  document.getElementById('card-' + clave)?.classList.toggle('open');
+};
+
+// ── GENERAR MENSAJE ──
+function generarMensaje(turno, grado, grupoLetra, fecha, presentes, retardos, faltas, justif, total) {
+  const [y,m,d] = fecha.split('-');
+  const meses   = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const hora    = new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
+  const pct     = total > 0 ? Math.round((presentes.length/total)*100) : 0;
+
+  let msg = `📋 *Asistencia ${grado}° "${grupoLetra}" — Turno ${turno}*\n`;
+  msg += `📅 ${d} de ${meses[m-1]} · ${hora} hrs\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━━\n`;
+  if (presentes.length)  { msg += `\n✅ *Presentes (${presentes.length}):*\n` + presentes.map(([n])=>`• ${n}`).join('\n'); }
+  if (retardos.length)   { msg += `\n\n⏰ *Retardos (${retardos.length}):*\n`  + retardos.map(([n])=>`• ${n}`).join('\n'); }
+  if (faltas.length)     { msg += `\n\n❌ *Faltas (${faltas.length}):*\n`       + faltas.map(([n])=>`• ${n}`).join('\n'); }
+  if (justif.length)     { msg += `\n\n📝 *Justificados (${justif.length}):*\n` + justif.map(([n])=>`• ${n}`).join('\n'); }
+  msg += `\n\n━━━━━━━━━━━━━━━━━━━━`;
+  msg += `\n📊 *Total: ${total} · Asistencia: ${pct}%*`;
+  msg += `\n_LudoAssist_`;
+  return msg;
+}
+
+// ── ABRIR WHATSAPP ──
+window.abrirWA = function(clave, msgEncoded) {
+  const linkWA = linksWA[clave] || '';
+  if (!linkWA) { toast('⚙️ Configura el link en Links WA'); return; }
+  const msg = decodeURIComponent(msgEncoded);
+
+  // Marcar enviado
+  const fecha = hoy();
+  if (!enviados[fecha]) enviados[fecha] = {};
+  enviados[fecha][clave] = true;
+  localStorage.setItem(SK_ENVIADOS, JSON.stringify(enviados));
+  document.getElementById('card-' + clave)?.classList.add('enviado');
+
+  // Abrir WhatsApp con el mensaje
+  const a = document.createElement('a');
+  a.href = `whatsapp://send?text=${encodeURIComponent(msg)}`;
+  a.click();
+  // Abrir también el link del grupo si existe
+  setTimeout(() => {
+    if (linkWA.includes('chat.whatsapp.com')) window.open(linkWA, '_blank');
+  }, 600);
+  toast('📤 Abriendo WhatsApp...');
+};
+
+// ── COPIAR ──
+window.copiarMensaje = function(clave) {
+  const el = document.getElementById('msg-' + clave);
+  if (!el) return;
+  navigator.clipboard.writeText(el.textContent).then(() => toast('📋 Copiado')).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = el.textContent;
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    toast('📋 Copiado');
+  });
+};
+
+// ── RENDER CONFIG ──
+function renderConfig() {
+  const container = document.getElementById('config-grupos-container');
+  const turnos    = Object.keys(estructura).sort();
+  if (!turnos.length) {
+    container.innerHTML = '<div class="empty-state"><div class="empty-icon">⚙️</div><div class="empty-txt">Sin grupos cargados</div></div>';
+    return;
+  }
+  let html = '';
+  turnos.forEach(turno => {
+    html += `<div class="config-section"><div class="config-title">🕐 Turno ${turno}</div>`;
+    const grados = estructura[turno] || {};
+    Object.keys(grados).sort((a,b)=>Number(a)-Number(b)).forEach(grado => {
+      (grados[grado]||[]).sort().forEach(grupoLetra => {
+        const clave = sanitizar(`${turno}-${grado}-${grupoLetra}`);
+        const link  = linksWA[clave] || '';
+        html += `
+        <div class="config-grupo-row">
+          <div class="config-grupo-nombre">📌 ${turno} · ${grado}° — Grupo "${grupoLetra}"</div>
+          <div class="config-link-wrap">
+            <input class="config-link-input" id="link-${clave}" type="url"
+              placeholder="https://chat.whatsapp.com/..." value="${link}">
+            ${link ? `<button class="btn-test-wa" onclick="window.open('${link}','_blank')">🔗</button>` : ''}
+          </div>
+        </div>`;
+      });
+    });
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+// ── GUARDAR CONFIG ──
+document.getElementById('btn-save-config').addEventListener('click', () => {
+  document.querySelectorAll('.config-link-input').forEach(inp => {
+    const clave = inp.id.replace('link-', '');
+    const val   = inp.value.trim();
+    if (val) linksWA[clave] = val; else delete linksWA[clave];
+  });
+  localStorage.setItem(SK_LINKS, JSON.stringify(linksWA));
+  toast('💾 Links guardados');
+  cargarAsistencias();
+});
+</script>
+</body>
+</html>

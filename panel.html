@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Panel Directivo | LUDOASSIST PRO</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Nunito:wght@700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
@@ -13,10 +13,91 @@
     --amber:#F59E0B;--light-bg:#F8FAFC;--white:#FFFFFF;--border-color:#CBD5E1;
     --brand-accent:#0284C7;
 }
-/* ── PANTALLA DE EMPAREJAMIENTO (igual que escáner) ── */
-#screen-pair{position:fixed;inset:0;background:#0A192F;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;padding:2rem;gap:1.2rem;}
+/* ── PANTALLA DE EMPAREJAMIENTO — estilo escolar animado ── */
+#screen-pair{
+    position:fixed;inset:0;
+    background:linear-gradient(160deg,#1a4a2a 0%,#0d2b1a 55%,#071a10 100%);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    z-index:9999;padding:1.5rem;gap:1rem;overflow:hidden;
+}
 #screen-pair.hidden{display:none;}
-/* ── PANTALLA LICENCIA SUSPENDIDA ── */
+#screen-pair::before{
+    content:'';position:absolute;inset:0;
+    background-image:
+        repeating-linear-gradient(0deg,transparent,transparent 38px,rgba(255,255,255,.04) 38px,rgba(255,255,255,.04) 40px),
+        repeating-linear-gradient(90deg,transparent,transparent 38px,rgba(255,255,255,.02) 38px,rgba(255,255,255,.02) 40px);
+    pointer-events:none;
+}
+/* Útiles flotantes */
+.pair-utensilios{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+.pair-util{position:absolute;font-size:1.6rem;animation:pairFlotar linear infinite;opacity:.5;}
+.pair-util:nth-child(1){left:5%;  animation-duration:13s;animation-delay:0s;   top:110%;}
+.pair-util:nth-child(2){left:15%; animation-duration:11s;animation-delay:2s;   top:110%;}
+.pair-util:nth-child(3){left:27%; animation-duration:16s;animation-delay:.5s;  top:110%;}
+.pair-util:nth-child(4){left:38%; animation-duration:12s;animation-delay:3s;   top:110%;}
+.pair-util:nth-child(5){left:50%; animation-duration:15s;animation-delay:1s;   top:110%;}
+.pair-util:nth-child(6){left:62%; animation-duration:10s;animation-delay:4s;   top:110%;}
+.pair-util:nth-child(7){left:73%; animation-duration:14s;animation-delay:1.5s; top:110%;}
+.pair-util:nth-child(8){left:83%; animation-duration:17s;animation-delay:2.5s; top:110%;}
+.pair-util:nth-child(9){left:91%; animation-duration:11s;animation-delay:.8s;  top:110%;}
+.pair-util:nth-child(10){left:44%;animation-duration:13s;animation-delay:5s;   top:110%;}
+.pair-util:nth-child(11){left:8%; animation-duration:18s;animation-delay:3.5s; top:110%;}
+.pair-util:nth-child(12){left:70%;animation-duration:12s;animation-delay:6s;   top:110%;}
+@keyframes pairFlotar{
+    0%  {transform:translateY(0) rotate(0deg);opacity:.5;}
+    50% {opacity:.65;}
+    100%{transform:translateY(-120vh) rotate(360deg);opacity:0;}
+}
+.pair-corner{position:absolute;z-index:1;font-size:5rem;opacity:.07;animation:pairRotar 20s linear infinite;}
+.pair-corner.tl{top:-1rem;left:-1rem;}
+.pair-corner.br{bottom:-1rem;right:-1rem;animation-direction:reverse;}
+@keyframes pairRotar{to{transform:rotate(360deg)}}
+/* Logo wrap */
+.pair-logo-wrap{
+    position:relative;z-index:2;
+    background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);
+    border-radius:24px;padding:1rem 1.5rem;
+    display:flex;flex-direction:column;align-items:center;gap:.3rem;
+    backdrop-filter:blur(8px);animation:pairAparecer .6s ease both;
+}
+.pair-logo{font-size:2.8rem;line-height:1;text-align:center;}
+.pair-main-title{font-family:'Fredoka One',cursive;font-size:1.7rem;color:#FFD600;letter-spacing:1px;line-height:1;text-align:center;}
+.pair-sub{font-size:.68rem;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:3px;font-weight:700;text-align:center;}
+@keyframes pairAparecer{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+/* Card */
+.pair-card{
+    background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);
+    border-radius:16px;padding:1.5rem;width:100%;max-width:370px;
+    display:flex;flex-direction:column;gap:1rem;
+    backdrop-filter:blur(12px);position:relative;z-index:2;
+    animation:pairAparecer .6s .15s ease both;
+}
+.pair-label{font-size:.68rem;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:.3rem;font-weight:800;font-family:'Nunito',sans-serif;}
+.pair-input-wrap{position:relative;}
+.pair-input-icon{position:absolute;left:.85rem;top:50%;transform:translateY(-50%);font-size:1.1rem;pointer-events:none;}
+.pair-input{
+    width:100%;background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.25);border-radius:10px;
+    padding:.85rem 1rem .85rem 2.6rem;color:#FFFFFF;font-size:1rem;font-weight:700;
+    letter-spacing:2px;text-transform:uppercase;outline:none;transition:all .3s;
+    font-family:'Nunito',sans-serif;
+}
+.pair-input:focus{border-color:#FFD600;background:rgba(255,255,255,.18);}
+.pair-input::placeholder{color:rgba(255,255,255,.35);letter-spacing:1px;font-weight:600;font-size:.85rem;text-transform:none;}
+.pair-btn{
+    width:100%;padding:1rem;
+    background:linear-gradient(135deg,#FFD600,#ffaa00);
+    color:#1a3a00;border:none;border-radius:10px;
+    font-size:1rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;
+    cursor:pointer;transition:all .3s;font-family:'Nunito',sans-serif;
+    box-shadow:0 4px 15px rgba(255,214,0,.35);
+}
+.pair-btn:active{transform:scale(.97);}
+.pair-btn:disabled{background:rgba(255,255,255,.2);color:rgba(255,255,255,.4);cursor:not-allowed;box-shadow:none;}
+.pair-error{color:#ff8a80;font-size:.82rem;text-align:center;font-weight:700;min-height:18px;}
+.pair-spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,.2);border-top-color:#FFD600;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto;}
+.pair-info{font-size:.7rem;color:rgba(255,255,255,.4);text-align:center;line-height:1.6;font-family:'Nunito',sans-serif;}
+.pair-success-icon{font-size:3rem;text-align:center;}
+.pair-success-name{color:#FFD600;font-size:1.1rem;font-weight:900;text-align:center;font-family:'Fredoka One',cursive;}
 #screen-suspendida{position:fixed;inset:0;background:#1a0a0a;display:none;
   flex-direction:column;align-items:center;justify-content:center;
   z-index:9998;padding:2rem;gap:1.2rem;text-align:center;}
@@ -120,7 +201,12 @@ body.dark .grupo-sin-datos{opacity:.7;}
 .btn-emerald{background:var(--emerald)!important;color:var(--navy)!important;}
 .btn-secondary{background:var(--slate)!important;color:var(--white)!important;}
 .btn-danger{background:var(--ruby)!important;color:var(--white)!important;}
-.glow-success{box-shadow:0 0 15px var(--emerald)!important;border-color:var(--emerald)!important;}
+.glow-success{box-shadow:0 0 20px var(--emerald),0 0 40px rgba(16,185,129,.4)!important;border-color:var(--emerald)!important;transition:all .3s!important;}
+@keyframes pulseGreen{
+    0%  {box-shadow:0 0 0 0 rgba(16,185,129,.7);}
+    50% {box-shadow:0 0 0 12px rgba(16,185,129,0);}
+    100%{box-shadow:0 0 0 0 rgba(16,185,129,0);}
+}
 /* TABLA HISTORIAL */
 .data-panel{background:var(--white);border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.1);overflow:hidden;margin-bottom:.5rem;border:2px solid transparent;transition:all .5s;}
 .dynamic-title-table{background:#F1F5F9;color:var(--navy);text-align:center;padding:.8rem;font-size:1rem;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--brand-accent);letter-spacing:1px;}
@@ -300,37 +386,62 @@ body.dark .grafica-titulo{color:#E2E8F0;}
      El director escribe el código que Jesús le proporcionó.
 ════════════════════════════════════════════════════ -->
 <div id="screen-pair">
-    <div class="pair-logo">🏫</div>
-    <div>
-        <div class="pair-main-title">LUDOASSIST PRO</div>
+    <!-- Útiles flotantes -->
+    <div class="pair-utensilios">
+        <span class="pair-util">✏️</span>
+        <span class="pair-util">📏</span>
+        <span class="pair-util">📐</span>
+        <span class="pair-util">🧪</span>
+        <span class="pair-util">📚</span>
+        <span class="pair-util">🔬</span>
+        <span class="pair-util">📝</span>
+        <span class="pair-util">🔭</span>
+        <span class="pair-util">🎒</span>
+        <span class="pair-util">📌</span>
+        <span class="pair-util">✂️</span>
+        <span class="pair-util">🖊️</span>
+    </div>
+    <span class="pair-corner tl">📐</span>
+    <span class="pair-corner br">🔬</span>
+
+    <!-- Logo -->
+    <div class="pair-logo-wrap">
+        <div class="pair-logo">🏫</div>
+        <div class="pair-main-title">LudoAssist</div>
         <div class="pair-sub">Panel Directivo Institucional</div>
     </div>
 
+    <!-- Formulario -->
     <div class="pair-card" id="pair-form-section">
-        <div class="pair-label">Código de Licencia</div>
-        <input class="pair-input" type="text" id="pair-input"
-               placeholder="Ej: EST17-CAM-2026"
-               maxlength="25"
-               autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false">
+        <div>
+            <div class="pair-label">Código de Licencia</div>
+            <div class="pair-input-wrap">
+                <span class="pair-input-icon">🔑</span>
+                <input class="pair-input" type="text" id="pair-input"
+                       placeholder="Ej: EST17-CAM-2026"
+                       maxlength="25"
+                       autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false">
+            </div>
+        </div>
         <div class="pair-error" id="pair-error"></div>
         <button class="pair-btn" id="pair-btn" onclick="window.emparejarPanel()">
-            Activar Panel
+            🔓 Activar Panel
         </button>
-        <div class="pair-info" style="margin-top:.8rem;">
+        <div class="pair-info">
             El código de licencia lo proporciona el administrador<br>
             de LudoAssist al dar de alta su plantel.
         </div>
     </div>
 
-    <div id="pair-loading" style="display:none;text-align:center;">
+    <div id="pair-loading" style="display:none;text-align:center;z-index:2;position:relative;">
         <div class="pair-spinner"></div>
-        <div style="color:rgba(255,255,255,.6);font-size:.82rem;margin-top:.8rem;" id="pair-loading-text">Verificando licencia...</div>
+        <div style="color:rgba(255,255,255,.7);font-size:.85rem;margin-top:.8rem;" id="pair-loading-text">Verificando licencia...</div>
     </div>
 
-    <div id="pair-success-section" style="display:none;text-align:center;">
+    <div id="pair-success-section" style="display:none;text-align:center;z-index:2;position:relative;flex-direction:column;align-items:center;gap:.8rem;">
         <div class="pair-success-icon">✅</div>
-        <div class="pair-success-name" id="pair-school-name" style="margin-top:.5rem;">—</div>
-        <div style="color:rgba(255,255,255,.5);font-size:.78rem;margin-top:.3rem;">Licencia válida — Acceso concedido</div>
+        <div class="pair-success-name" id="pair-school-name">—</div>
+        <div style="color:rgba(255,255,255,.6);font-size:.82rem;">Licencia válida — Acceso concedido</div>
     </div>
 </div>
 
@@ -1069,7 +1180,15 @@ function hablar(t) { window.hablarTexto(t); }
 // ══════════════════════════════════════════════════════
 window.activarBrilloNeon = function(id) {
     const el=document.getElementById(id);
-    if(el){ el.classList.add('glow-success'); setTimeout(()=>el.classList.remove('glow-success'),1800); }
+    if(!el) return;
+    el.classList.add('glow-success');
+    // También animar el borde superior si es panel-card
+    const prevBorder = el.style.borderTop;
+    el.style.borderTop = '4px solid var(--emerald)';
+    setTimeout(()=>{
+        el.classList.remove('glow-success');
+        el.style.borderTop = prevBorder;
+    }, 2200);
 };
 
 // ══════════════════════════════════════════════════════
@@ -1840,10 +1959,21 @@ function piesPDF(doc, director) {
     const total = doc.internal.getNumberOfPages();
     for (let i=1; i<=total; i++) {
         doc.setPage(i);
-        doc.setDrawColor(203,213,225); doc.line(14, ph-14, pw-14, ph-14);
+        doc.setDrawColor(203,213,225); doc.line(14, ph-22, pw-14, ph-22);
         doc.setFontSize(7); doc.setTextColor(100,116,139);
-        doc.text('A=Asistencia  R=Retardo  F=Falta  SR=Sin Registro  J=Justificado', 14, ph-8);
-        doc.text(`Pág. ${i}/${total}  ·  ${new Date().toLocaleDateString('es-MX')}`, pw-14, ph-8, {align:'right'});
+        // Leyenda izquierda
+        doc.text('A=Asistencia  R=Retardo  F=Falta  SR=Sin Registro  J=Justificado', 14, ph-16);
+        // Página derecha
+        doc.text(`Pág. ${i}/${total}  ·  ${new Date().toLocaleDateString('es-MX')}`, pw-14, ph-16, {align:'right'});
+        // Firma director
+        if (director) {
+            doc.setFontSize(8); doc.setTextColor(30,41,59);
+            doc.text('Director(a): ' + director, 14, ph-8);
+            doc.setDrawColor(100,116,139);
+            doc.line(pw-80, ph-10, pw-14, ph-10);
+            doc.setFontSize(7); doc.setTextColor(100,116,139);
+            doc.text('Firma y Sello', pw-47, ph-6, {align:'center'});
+        }
     }
 }
 
@@ -2450,10 +2580,31 @@ window.processAndUploadDirectory = async function() {
         catch(e){ fail++; }
         await new Promise(r=>setTimeout(r,150));
     }
-    btn.disabled=false; lp.textContent='Proceso finalizado.';
+    // Ocultar barra de progreso al terminar
+    setTimeout(() => {
+        pc.style.display='none';
+        lp.style.display='none';
+        pb.style.width='0%';
+    }, 1200);
+    btn.disabled=false;
     lv.textContent=fail===0?`✅ ${ok} grupos cargados con éxito.`:`⚠️ ${ok} OK, ${fail} con error.`;
     lv.style.color=fail===0?'var(--emerald)':'var(--amber)';
-    if(fail===0){ hablar("Matrícula cargada con éxito."); activarBrilloNeon('tarjeta-csv'); }
+    if(fail===0){
+        hablar("Matrícula cargada con éxito.");
+        // Brillo de confirmación expandido en la tarjeta
+        activarBrilloNeon('tarjeta-csv');
+        // Botón con animación de éxito clara
+        btn.textContent = '✅ ¡Cargado con éxito!';
+        btn.style.background = 'var(--emerald)';
+        btn.style.boxShadow = '0 0 0 0 rgba(16,185,129,.7)';
+        btn.style.animation = 'pulseGreen 0.6s ease 3';
+        setTimeout(() => {
+            btn.textContent = '☁️ Paso 4: Inyectar a la Nube';
+            btn.style.background = '';
+            btn.style.boxShadow = '';
+            btn.style.animation = '';
+        }, 3500);
+    }
 };
 
 // ══════════════════════════════════════════════════════
@@ -2479,25 +2630,27 @@ window.createQR = function() {
         } else hablar("Alumno ya registrado.");
     });
     try{
-        const qrSize = 200;
-        const qr=new QRious({value:qrStr,size:qrSize,level:'H',foreground:'#0A192F',background:'#ffffff'});
-        const qrB64=qr.toDataURL('image/png');
-        const canvas=document.createElement('canvas'); canvas.width=520; canvas.height=680;
-        const ctx=canvas.getContext('2d'); ctx.scale(2,2);
-        ctx.fillStyle='#fff'; ctx.fillRect(0,0,260,340);
-        ctx.strokeStyle='#0284C7'; ctx.lineWidth=4; ctx.strokeRect(2,2,256,336);
+        // 3x resolución — QR 600px — sin logo en ningún lado — máxima nitidez
+        const SCALE=4, QR_SZ=1200, W=260, H=340;
+        const qr=new QRious({value:qrStr,size:QR_SZ,level:'H',foreground:'#0A192F',background:'#ffffff'});
+        const canvas=document.createElement('canvas');
+        canvas.width=W*SCALE; canvas.height=H*SCALE;
+        const ctx=canvas.getContext('2d');
+        ctx.imageSmoothingEnabled=false; ctx.scale(SCALE,SCALE);
+        ctx.fillStyle='#fff'; ctx.fillRect(0,0,W,H);
+        ctx.strokeStyle='#0284C7'; ctx.lineWidth=3; ctx.strokeRect(2,2,W-4,H-4);
         const qrImg=new Image();
         qrImg.onload=function(){
-            // Dibujar QR
+            ctx.imageSmoothingEnabled=false;
             ctx.drawImage(qrImg,30,20,200,200);
-            // Sin logo centrado sobre el QR
-            dibujarTextoGafete(ctx,canvas,nombre,grado,grupo,turno,slug,container);
+            dibujarTextoGafete(ctx,canvas,nombre,grado,grupo,turno,slug,container,SCALE);
         };
-        qrImg.src=qrB64;
+        qrImg.src=qr.toDataURL('image/png');
     } catch(e){ container.innerHTML=`<p style='color:var(--ruby);'>Error interno.</p>`; }
 };
 
-function dibujarTextoGafete(ctx,canvas,nombre,grado,grupo,turno,slug,container){
+function dibujarTextoGafete(ctx,canvas,nombre,grado,grupo,turno,slug,container,scale){
+    // Sin logo — solo texto limpio
     ctx.fillStyle='#0A192F'; ctx.textAlign='center';
     ctx.font='bold 16px Arial';
     ctx.fillText((nombre.length>22?nombre.substring(0,22)+'...':nombre).toUpperCase(),130,260);
@@ -2505,12 +2658,8 @@ function dibujarTextoGafete(ctx,canvas,nombre,grado,grupo,turno,slug,container){
     ctx.fillStyle='#64748B'; ctx.font='bold 14px Arial';
     ctx.fillText(`${grado}° Grado - Grupo ${grupo}`,130,290);
     ctx.font='12px Arial'; ctx.fillText(turno,130,315);
-    // Logo pequeño esquina superior izquierda del gafete
-    if(logoBase64Global){
-        const li=new Image(); li.onload=()=>{ ctx.drawImage(li,8,5,50,50); }; li.src=logoBase64Global;
-    }
     setTimeout(()=>{
-        const fin=canvas.toDataURL('image/png');
+        const fin=canvas.toDataURL('image/png',1.0);
         container.innerHTML=`<img src="${fin}" style="border-radius:8px;width:100%;max-width:260px;border:1px solid var(--border-color);">
             <button class="btn-primary" style="margin-top:16px;width:auto;" onclick="window.dlQR('${fin}','${slug}')">💾 Guardar Imagen</button>`;
         activarBrilloNeon('view-credenciales');
@@ -2520,35 +2669,32 @@ window.dlQR=(url,name)=>{ const a=document.createElement('a'); a.href=url; a.dow
 
 function generarCanvasCredencial(alumno,turno,grado,grupo){
     return new Promise(resolve=>{
-        const qr=new QRious({value:`${turno}-${grado}-${grupo}-${alumno.replace(/\s+/g,'_')}`,size:180,level:'H',foreground:'#0A192F',background:'#fff'});
-        const canvas=document.createElement('canvas'); canvas.width=400; canvas.height=550;
+        // 2x resolución — QR 600px — sin logo en ningún lado
+        const SCALE=4, W=400, H=550;
+        const qr=new QRious({value:`${turno}-${grado}-${grupo}-${alumno.replace(/\s+/g,'_')}`,size:1200,level:'H',foreground:'#0A192F',background:'#fff'});
+        const canvas=document.createElement('canvas');
+        canvas.width=W*SCALE; canvas.height=H*SCALE;
         const ctx=canvas.getContext('2d');
-        ctx.fillStyle='#fff'; ctx.fillRect(0,0,400,550);
-        ctx.strokeStyle='#0A192F'; ctx.lineWidth=6; ctx.strokeRect(3,3,394,544);
-        ctx.fillStyle='#0A192F'; ctx.fillRect(3,3,394,70);
+        ctx.imageSmoothingEnabled=false; ctx.scale(SCALE,SCALE);
+        ctx.fillStyle='#fff'; ctx.fillRect(0,0,W,H);
+        ctx.strokeStyle='#0A192F'; ctx.lineWidth=4; ctx.strokeRect(3,3,W-6,H-6);
+        ctx.fillStyle='#0A192F'; ctx.fillRect(3,3,W-6,70);
         ctx.fillStyle='#10B981'; ctx.font='bold 13px Arial'; ctx.textAlign='center';
-        ctx.fillText((nombreEscuelaGlobal.length>30?nombreEscuelaGlobal.substring(0,28)+'...':nombreEscuelaGlobal).toUpperCase(),200,45);
+        ctx.fillText((nombreEscuelaGlobal.length>30?nombreEscuelaGlobal.substring(0,28)+'...':nombreEscuelaGlobal).toUpperCase(),W/2,45);
         const qi=new Image();
         qi.onload=()=>{
+            ctx.imageSmoothingEnabled=false;
             ctx.drawImage(qi,110,85,180,180);
-            const dibujarResto = () => {
-                ctx.beginPath(); ctx.strokeStyle='#0284C7'; ctx.lineWidth=1.5; ctx.setLineDash([6,4]);
-                ctx.moveTo(30,285); ctx.lineTo(370,285); ctx.stroke(); ctx.setLineDash([]);
-                ctx.fillStyle='#0A192F'; ctx.font='bold 15px Arial';
-                ctx.fillText((alumno.length>26?alumno.substring(0,24)+'...':alumno).toUpperCase(),200,320);
-                ctx.fillStyle='#334155'; ctx.font='bold 13px Arial'; ctx.fillText(`${grado}° Grado - Grupo "${grupo}"`,200,350);
-                ctx.fillStyle='#0284C7'; ctx.font='12px Arial'; ctx.fillText(`Turno ${turno}`,200,375);
-                resolve(canvas);
-            };
-            if(logoBase64Global){
-                const li=new Image();
-                li.onload=()=>{
-                    // Logo en esquina header únicamente
-                    ctx.drawImage(li,12,8,55,55);
-                    dibujarResto();
-                };
-                li.src=logoBase64Global;
-            } else { dibujarResto(); }
+            // Sin logo — solo el QR limpio
+            ctx.beginPath(); ctx.strokeStyle='#0284C7'; ctx.lineWidth=1.5; ctx.setLineDash([6,4]);
+            ctx.moveTo(30,285); ctx.lineTo(370,285); ctx.stroke(); ctx.setLineDash([]);
+            ctx.fillStyle='#0A192F'; ctx.font='bold 15px Arial';
+            ctx.fillText((alumno.length>26?alumno.substring(0,24)+'...':alumno).toUpperCase(),W/2,320);
+            ctx.fillStyle='#334155'; ctx.font='bold 13px Arial';
+            ctx.fillText(`${grado}° Grado - Grupo "${grupo}"`,W/2,350);
+            ctx.fillStyle='#0284C7'; ctx.font='12px Arial';
+            ctx.fillText(`Turno ${turno}`,W/2,375);
+            resolve(canvas);
         };
         qi.src=qr.toDataURL('image/png');
     });

@@ -1382,6 +1382,7 @@ window.consultarNubeExp = async function() {
 
 
 // ── EXPORTAR EXCEL EXPORTAR ──
+window.exportarExcelExp = function() {
 window.exportarPDFExp = async function() {
   if (!window.expResultados || !window.expResultados.length) { 
     toast('⚠️ Consulta primero'); 
@@ -1432,6 +1433,7 @@ window.exportarPDFExp = async function() {
     const pw = doc.internal.pageSize.getWidth();
     const ph = doc.internal.pageSize.getHeight();
 
+    // ENCABEZADO DEL DOCUMENTO
     doc.setFillColor(26, 107, 58);
     doc.rect(0, 0, pw, 18, 'F');
 
@@ -1457,9 +1459,22 @@ window.exportarPDFExp = async function() {
     const turno = document.getElementById('exp-turno-actual')?.textContent || '—';
     doc.text(`${turno} · Período: ${fechaInicio} al ${fechaFin}`, pw / 2, 15, { align: 'center' });
 
-    const headRow1 = ['Nombre Alumno', ...todasFechas.map(f => f.split('-').slice(1).join('/'))];
-    const headRow2 = ['', ...todasFechas.flatMap(f => ['Hora', 'Est'])];
+    // CONSTRUCCIÓN CORRECTA DE HEADERS
+    // headRow1: Nombre Alumno + TODAS las fechas
+    const headRow1 = ['Nombre Alumno'];
+    todasFechas.forEach(f => {
+      const fechaCorta = f.split('-').slice(1).join('/');
+      headRow1.push(fechaCorta); // Agregar fecha una sola vez
+    });
 
+    // headRow2: vacío para nombre + Hora|Est para CADA fecha
+    const headRow2 = [''];
+    todasFechas.forEach(f => {
+      headRow2.push('Hora');
+      headRow2.push('Est');
+    });
+
+    // BODY: UNA FILA POR ALUMNO
     const body = [];
 
     alumnos.forEach((alumno) => {
@@ -1475,15 +1490,18 @@ window.exportarPDFExp = async function() {
                      reg.estatus.toLowerCase().includes('retard') ? 'R' :
                      reg.estatus.toLowerCase().includes('justif') ? 'J' :
                      reg.estatus.toLowerCase().includes('falt') || reg.estatus.toLowerCase().includes('ausent') ? 'F' : 'SR';
-          row.push(hora, est);
+          row.push(hora);
+          row.push(est);
         } else {
-          row.push('', '');
+          row.push('');
+          row.push('');
         }
       });
 
       body.push(row);
     });
 
+    // TABLA autoTable
     doc.autoTable({
       startY: 20,
       head: [headRow1, headRow2],
@@ -1511,14 +1529,14 @@ window.exportarPDFExp = async function() {
         fillColor: [248, 250, 252]
       },
       columnStyles: {
-        0: { cellWidth: 45, halign: 'left', fontStyle: 'bold' }
+        0: { cellWidth: 50, halign: 'left', fontStyle: 'bold' }
       },
       margin: { left: 5, right: 5, top: 5 },
       didDrawCell: (data) => {
         const content = data.cell.text?.[0];
         const rowIndex = data.rowIndex;
         
-        if (rowIndex < 2) return;
+        if (rowIndex < 2) return; // No colorear headers
 
         if (content === 'A') {
           data.cell.styles.textColor = [0, 168, 84];
@@ -1530,12 +1548,13 @@ window.exportarPDFExp = async function() {
           data.cell.styles.textColor = [217, 83, 79];
           data.cell.styles.fontStyle = 'bold';
         } else if (content === 'SR') {
-          data.cell.styles.textColor = [200, 150, 100];
+          data.cell.styles.textColor = [180, 140, 100];
           data.cell.styles.fontStyle = 'bold';
         }
       }
     });
 
+    // PIE DE PÁGINA
     const finalY = doc.lastAutoTable?.finalY || 100;
     
     doc.setFontSize(6);
@@ -1550,6 +1569,7 @@ window.exportarPDFExp = async function() {
     const pageCount = doc.internal.getNumberOfPages();
     doc.text(`Pág. ${pageCount} · ${new Date().toLocaleDateString('es-MX')}`, pw - 25, ph - 3);
 
+    // DESCARGAR
     doc.save(`asistencia_${fechaInicio}_${fechaFin}.pdf`);
     toast('📄 PDF generado correctamente');
 
@@ -1561,7 +1581,6 @@ window.exportarPDFExp = async function() {
     btn.textContent = '📄 PDF';
   }
 };
-window.exportarExcelExp = function() {
   if (!window.expResultados || !window.expResultados.length) { toast('⚠️ Consulta primero'); return; }
 
   const wb = XLSX.utils.book_new();

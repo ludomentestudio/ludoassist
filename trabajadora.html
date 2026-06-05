@@ -1391,7 +1391,6 @@ window.exportarPDFExp = async function() {
         const script = document.createElement('script');
         script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
         script.onload = () => {
-          // Esperar a que se ejecute el script
           setTimeout(resolve, 100);
         };
         script.onerror = reject;
@@ -1399,9 +1398,8 @@ window.exportarPDFExp = async function() {
       });
     }
 
-    // Obtener jsPDF desde window.jspdf
     if (!window.jspdf || !window.jspdf.jsPDF) {
-      throw new Error('jsPDF no disponible en window.jspdf.jsPDF');
+      throw new Error('jsPDF no disponible');
     }
 
     const { jsPDF } = window.jspdf;
@@ -1417,107 +1415,157 @@ window.exportarPDFExp = async function() {
       });
     }
 
+    // Agrupar datos por alumno
+    const resultado = window.expResultados;
+    const porAlumno = {};
+
+    resultado.forEach(r => {
+      if (!porAlumno[r.nombre]) {
+        porAlumno[r.nombre] = [];
+      }
+      porAlumno[r.nombre].push(r);
+    });
+
+    // Ordenar alumnos alfabéticamente
+    const alumnos = Object.keys(porAlumno).sort();
+
     // Crear documento
     const doc = new jsPDF({
-      orientation: 'portrait',
+      orientation: 'landscape',
       unit: 'mm',
       format: 'letter'
     });
 
     const pw = doc.internal.pageSize.getWidth();
     const ph = doc.internal.pageSize.getHeight();
+    let currentY = 10;
 
-    // Encabezado verde
-    doc.setFillColor(26, 107, 58);
-    doc.rect(0, 0, pw, 25, 'F');
+    // Función para agregar encabezado
+    const agregarEncabezado = () => {
+      doc.setFillColor(26, 107, 58);
+      doc.rect(5, currentY, pw - 10, 20, 'F');
 
-    // Logo si existe
-    if (perfilEscuela?.logo) {
-      try {
-        doc.addImage(perfilEscuela.logo, 'PNG', 8, 3, 18, 18);
-      } catch (e) {
-        console.warn('Logo no se pudo agregar');
+      // Logo si existe
+      if (perfilEscuela?.logo) {
+        try {
+          doc.addImage(perfilEscuela.logo, 'PNG', 8, currentY + 1, 12, 12);
+        } catch (e) {}
       }
-    }
 
-    // Título
-    doc.setTextColor(255, 214, 0);
-    doc.setFontSize(12);
-    doc.setFont('helvetica', 'bold');
-    doc.text('REPORTE DE ASISTENCIA', pw / 2, 11, { align: 'center' });
+      // Títulos
+      doc.setTextColor(255, 214, 0);
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'bold');
+      doc.text('REPORTE DE ASISTENCIA', pw / 2, currentY + 8, { align: 'center' });
 
-    // Datos escuela
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(9);
-    doc.setFont('helvetica', 'normal');
-    const nombreEsc = perfilEscuela?.nombreEscuela || nombreEscuela || 'Escuela';
-    doc.text(nombreEsc.toUpperCase(), pw / 2, 17, { align: 'center' });
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'normal');
+      const nombreEsc = perfilEscuela?.nombreEscuela || nombreEscuela || 'Escuela';
+      doc.text(nombreEsc.toUpperCase(), pw / 2, currentY + 13, { align: 'center' });
 
-    const cct = perfilEscuela?.cct || '—';
-    const zona = perfilEscuela?.zona || '—';
-    doc.text(`CCT: ${cct}  ·  Zona: ${zona}`, pw / 2, 22, { align: 'center' });
+      const cct = perfilEscuela?.cct || '—';
+      doc.text(`CCT: ${cct}`, pw / 2, currentY + 17, { align: 'center' });
 
-    // Período
-    const fechaInicio = document.getElementById('exp-fecha-inicio').value;
-    const fechaFin = document.getElementById('exp-fecha-fin').value;
-    doc.setFontSize(8);
-    doc.setTextColor(100, 116, 139);
-    doc.text(`Período: ${fechaInicio} al ${fechaFin}`, pw / 2, 27, { align: 'center' });
+      currentY += 22;
+    };
 
-    // Tabla
-    const resultado = window.expResultados;
-    const rows = resultado.map(r => [
-      r.fecha,
-      r.nombre,
-      r.hora,
-      r.estatus
-    ]);
+    agregarEncabezado();
 
-    // Usar autoTable
-    doc.autoTable({
-      startY: 30,
-      head: [['Fecha', 'Alumno', 'Hora', 'Estatus']],
-      body: rows,
-      styles: {
-        fontSize: 8,
-        cellPadding: 3
-      },
-      headStyles: {
-        fillColor: [10, 25, 47],
-        textColor: 255,
-        fontStyle: 'bold',
-        halign: 'left'
-      },
-      bodyStyles: {
-        textColor: 51
-      },
-      alternateRowStyles: {
-        fillColor: [248, 250, 252]
-      },
-      columnStyles: {
-        0: { cellWidth: 28, halign: 'center' },
-        1: { cellWidth: 85, halign: 'left' },
-        2: { cellWidth: 20, halign: 'center' },
-        3: { cellWidth: 30, halign: 'left' }
-      },
-      margin: { left: 10, right: 10, top: 10 },
-      didDrawPage: (data) => {
-        // Pie de página
-        const pageCount = doc.internal.getNumberOfPages();
-        const pageSize = doc.internal.pageSize;
-        const pageHeight = pageSize.getHeight();
-        doc.setFontSize(7);
-        doc.setTextColor(148, 163, 184);
-        doc.text(
-          `Página ${data.pageNumber} de ${pageCount}`,
-          pageSize.getWidth() / 2,
-          pageHeight - 8,
-          { align: 'center' }
-        );
+    // Procesar cada alumno
+    alumnos.forEach((alumno, idx) => {
+      const registros = porAlumno[alumno];
+      
+      // Obtener fechas únicas y ordenadas
+      const fechas = [...new Set(registros.map(r => r.fecha))].sort();
+      
+      // Calcular porcentaje asistencia
+      const asistencias = registros.filter(r => r.estatus.toLowerCase().includes('asist')).length;
+      const pctAsist = registros.length > 0 ? Math.round((asistencias / registros.length) * 100) : 0;
+
+      // Crear tabla para este alumno
+      const head = [
+        ['ALUMNO: ' + alumno, ...fechas.map(f => f.split('-').slice(1).join('-')), '% ASIST']
+      ];
+
+      const body = [
+        [
+          'ESTATUS',
+          ...fechas.map(f => {
+            const reg = registros.find(r => r.fecha === f);
+            if (!reg) return '';
+            
+            // Mapear estatus a símbolos
+            const est = reg.estatus.toLowerCase();
+            const sym = est.includes('asist') ? 'A' : 
+                       est.includes('retard') ? 'R' : 
+                       est.includes('justif') ? 'J' : 'F';
+            return sym;
+          }),
+          pctAsist + '%'
+        ],
+        [
+          'HORA',
+          ...fechas.map(f => {
+            const reg = registros.find(r => r.fecha === f);
+            return reg?.hora || '—';
+          }),
+          ''
+        ]
+      ];
+
+      // Verificar si necesita página nueva
+      if (currentY > ph - 50) {
+        doc.addPage();
+        currentY = 10;
+        agregarEncabezado();
       }
+
+      doc.autoTable({
+        startY: currentY,
+        head: head,
+        body: body,
+        styles: {
+          fontSize: 7,
+          cellPadding: 2,
+          halign: 'center',
+          valign: 'middle'
+        },
+        headStyles: {
+          fillColor: [13, 43, 26],
+          textColor: 255,
+          fontStyle: 'bold',
+          halign: 'center'
+        },
+        bodyStyles: {
+          textColor: 51
+        },
+        alternateRowStyles: {
+          fillColor: [248, 250, 252]
+        },
+        columnStyles: {
+          0: { cellWidth: 20, fontStyle: 'bold' }
+        },
+        margin: { left: 5, right: 5 },
+        didDrawPage: (data) => {
+          // Pie de página
+          const pageCount = doc.internal.getNumberOfPages();
+          doc.setFontSize(6);
+          doc.setTextColor(148, 163, 184);
+          doc.text(
+            `Pág. ${data.pageNumber} de ${pageCount}`,
+            pw - 15,
+            ph - 5
+          );
+        }
+      });
+
+      currentY = doc.lastAutoTable.finalY + 5;
     });
 
     // Descargar
+    const fechaInicio = document.getElementById('exp-fecha-inicio').value;
+    const fechaFin = document.getElementById('exp-fecha-fin').value;
     doc.save(`asistencia_${fechaInicio}_${fechaFin}.pdf`);
     toast('📄 PDF generado correctamente');
   } catch (e) {

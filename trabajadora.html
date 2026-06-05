@@ -1562,8 +1562,8 @@ window.exportarPDFExp = async function() {
       },
       margin: { left: 5, right: 5, top: 5 },
       didDrawPage: (data) => {
-        // Pie de página
-        const finalY = data.lastAutoTable.finalY || ph - 30;
+        // Pie de página - acceder correctamente a finalY
+        const finalY = data?.lastAutoTable?.finalY || ph - 50;
         
         // Leyenda
         doc.setFontSize(6);
@@ -1578,7 +1578,7 @@ window.exportarPDFExp = async function() {
         ).length;
         const pctTotal = resultado.length > 0 ? Math.round((contTotalA / resultado.length) * 100) : 0;
 
-        doc.text(`PROMEDIOS: ${contTotalA}  ${contTotalR}  ${contTotalF}  ${pctTotal}%`, pw - 50, finalY + 5);
+        doc.text(`PROMEDIOS: ${contTotalA}  ${contTotalR}  ${contTotalF}  ${pctTotal}%`, pw - 60, finalY + 5);
 
         // Firma
         doc.setFontSize(7);
@@ -1588,7 +1588,7 @@ window.exportarPDFExp = async function() {
         doc.setFontSize(6);
         doc.setTextColor(150, 150, 150);
         const pageCount = doc.internal.getNumberOfPages();
-        doc.text(`Pág. ${data.pageNumber}/${pageCount} · ${new Date().toLocaleDateString('es-MX')}`, pw - 20, ph - 3);
+        doc.text(`Pág. ${data.pageNumber}/${pageCount} · ${new Date().toLocaleDateString('es-MX')}`, pw - 30, ph - 3);
       }
     });
 

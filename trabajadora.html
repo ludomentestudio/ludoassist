@@ -460,7 +460,16 @@ header{
 
   <div class="config-intro">
     <strong>📊 Exportar Asistencia por Período</strong><br>
-    Selecciona el rango de fechas, turno, grado, grupo y alumno. Luego consulta la nube y descarga en PDF o Excel.
+    Selecciona el rango de fechas, grado, grupo y alumno. Luego consulta la nube y descarga en PDF o Excel.
+  </div>
+
+  <!-- ── TURNO ACTUAL (SOLO LECTURA) ── -->
+  <div style="background:var(--white);border-radius:10px;padding:.85rem 1rem;margin-bottom:1rem;box-shadow:0 1px 3px rgba(0,0,0,.08);display:flex;align-items:center;gap:.75rem;">
+    <div style="font-size:1.5rem;">🕐</div>
+    <div>
+      <div style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--slate2);">Turno Actual</div>
+      <div style="font-size:1rem;font-weight:900;color:var(--navy);" id="exp-turno-actual">—</div>
+    </div>
   </div>
 
   <!-- ── FILTROS ── -->
@@ -478,17 +487,7 @@ header{
       </div>
     </div>
 
-    <!-- Fila 2: Turno -->
-    <div style="margin-bottom:1rem;">
-      <label style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--slate2);display:block;margin-bottom:.4rem;">Turno</label>
-      <select id="exp-turno" style="width:100%;padding:.75rem 1rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-weight:700;color:var(--navy);background:var(--white);outline:none;font-family:'Nunito',sans-serif;">
-        <option value="Todos">🌐 Todos</option>
-        <option value="Matutino">🌅 Matutino</option>
-        <option value="Vespertino">🌆 Vespertino</option>
-      </select>
-    </div>
-
-    <!-- Fila 3: Grado y Grupo -->
+    <!-- Fila 2: Grado y Grupo -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1rem;">
       <div>
         <label style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--slate2);display:block;margin-bottom:.4rem;">Grado</label>
@@ -504,7 +503,7 @@ header{
       </div>
     </div>
 
-    <!-- Fila 4: Alumno -->
+    <!-- Fila 3: Alumno -->
     <div style="margin-bottom:1rem;">
       <label style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--slate2);display:block;margin-bottom:.4rem;">Alumno</label>
       <select id="exp-alumno" style="width:100%;padding:.75rem 1rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-weight:700;color:var(--navy);background:var(--white);outline:none;font-family:'Nunito',sans-serif;">
@@ -602,6 +601,8 @@ window.filtrarTurno = function(f) {
   document.getElementById('btn-turno-mat').className  = 'turno-btn' + (f==='mat'  ? ' active-mat'  : '');
   document.getElementById('btn-turno-vesp').className = 'turno-btn' + (f==='vesp' ? ' active-vesp' : '');
   renderGrupos(hoy());
+  // Actualizar turno mostrado en pestaña Exportar
+  if (window.actualizarTurnoMostrado) actualizarTurnoMostrado();
 };
 
 // ── TABS ──
@@ -1172,32 +1173,57 @@ window.exportarPDF = function() {
   toast('📄 PDF generado');
 };
 
+// ── MOSTRAR TURNO ACTUAL EN EXPORTAR ──
+window.actualizarTurnoMostrado = function() {
+  const turnoTexto = turnoFiltro === 'mat' ? '🌅 Matutino' : turnoFiltro === 'vesp' ? '🌆 Vespertino' : '🌐 Todos';
+  const el = document.getElementById('exp-turno-actual');
+  if (el) el.textContent = turnoTexto;
+  actualizarGradosExp();
+};
+
 // ── ACTUALIZAR GRADOS EN EXPORTAR ──
 window.actualizarGradosExp = function() {
-  const turno = document.getElementById('exp-turno').value;
-  const gradoSel = document.getElementById('exp-grado');
-  const grados = (estructura[turno] || {});
-  gradoSel.innerHTML = '<option value="Todos">Todos los grados</option>';
-  Object.keys(grados).sort((a,b)=>Number(a)-Number(b)).forEach(g => {
-    const opt = document.createElement('option');
-    opt.value = g; opt.textContent = `${g}° Grado`;
-    gradoSel.appendChild(opt);
+  // Determinar turnos según filtro
+  let turnosPermitidos = [];
+  Object.keys(estructura).forEach(t => {
+    if (esTurno(t, turnoFiltro)) turnosPermitidos.push(t);
   });
+  
+  const gradoSel = document.getElementById('exp-grado');
+  gradoSel.innerHTML = '<option value="Todos">Todos los grados</option>';
+  
+  turnosPermitidos.forEach(turno => {
+    const grados = (estructura[turno] || {});
+    Object.keys(grados).sort((a,b)=>Number(a)-Number(b)).forEach(g => {
+      if (!gradoSel.querySelector(`option[value="${g}"]`)) {
+        const opt = document.createElement('option');
+        opt.value = g; opt.textContent = `${g}° Grado`;
+        gradoSel.appendChild(opt);
+      }
+    });
+  });
+  
   actualizarGruposExp();
 };
 
 // ── ACTUALIZAR GRUPOS EN EXPORTAR ──
 window.actualizarGruposExp = function() {
-  const turno = document.getElementById('exp-turno').value;
   const grado = document.getElementById('exp-grado').value;
   const grupoSel = document.getElementById('exp-grupo');
   grupoSel.innerHTML = '<option value="Todos">Todos los grupos</option>';
+  
   if (grado !== 'Todos') {
-    const grupos = (estructura[turno]?.[grado] || []).sort();
-    grupos.forEach(g => {
-      const opt = document.createElement('option');
-      opt.value = g; opt.textContent = `Grupo ${g}`;
-      grupoSel.appendChild(opt);
+    // Buscar el grupo en todos los turnos permitidos
+    Object.keys(estructura).forEach(turno => {
+      if (!esTurno(turno, turnoFiltro)) return;
+      const grupos = (estructura[turno]?.[grado] || []).sort();
+      grupos.forEach(g => {
+        if (!grupoSel.querySelector(`option[value="${g}"]`)) {
+          const opt = document.createElement('option');
+          opt.value = g; opt.textContent = `Grupo ${g}`;
+          grupoSel.appendChild(opt);
+        }
+      });
     });
   }
   actualizarAlumnosExp();
@@ -1205,17 +1231,23 @@ window.actualizarGruposExp = function() {
 
 // ── ACTUALIZAR ALUMNOS EN EXPORTAR ──
 window.actualizarAlumnosExp = function() {
-  const turno = document.getElementById('exp-turno').value;
   const grado = document.getElementById('exp-grado').value;
   const grupo = document.getElementById('exp-grupo').value;
   const alumnoSel = document.getElementById('exp-alumno');
   alumnoSel.innerHTML = '<option value="Todos">Todos</option>';
+  
   if (grado !== 'Todos' && grupo !== 'Todos') {
-    const alumnos = filtrarAlumnos(turno, grado, grupo);
-    alumnos.forEach(([nombre]) => {
-      const opt = document.createElement('option');
-      opt.value = nombre; opt.textContent = nombre;
-      alumnoSel.appendChild(opt);
+    // Buscar alumnos en todos los turnos permitidos
+    Object.keys(estructura).forEach(turno => {
+      if (!esTurno(turno, turnoFiltro)) return;
+      const alumnos = filtrarAlumnos(turno, grado, grupo);
+      alumnos.forEach(([nombre]) => {
+        if (!alumnoSel.querySelector(`option[value="${nombre}"]`)) {
+          const opt = document.createElement('option');
+          opt.value = nombre; opt.textContent = nombre;
+          alumnoSel.appendChild(opt);
+        }
+      });
     });
   }
 };
@@ -1224,7 +1256,6 @@ window.actualizarAlumnosExp = function() {
 window.consultarNubeExp = async function() {
   const fechaInicio = document.getElementById('exp-fecha-inicio').value;
   const fechaFin    = document.getElementById('exp-fecha-fin').value;
-  const turno       = document.getElementById('exp-turno').value;
   const grado       = document.getElementById('exp-grado').value;
   const grupo       = document.getElementById('exp-grupo').value;
   const alumno      = document.getElementById('exp-alumno').value;
@@ -1242,7 +1273,9 @@ window.consultarNubeExp = async function() {
       snap.forEach(child => {
         const r = child.val();
         if (!r?.fecha || r.fecha < fechaInicio || r.fecha > fechaFin) return;
-        if (turno !== 'Todos' && r.turno?.toLowerCase() !== turno.toLowerCase()) return;
+        
+        // Aplicar filtro turno del filtro actual
+        if (!esTurno(r.turno, turnoFiltro)) return;
         
         // Parser robusto de grado/grupo
         let gradoReg = r.grado || '';
@@ -1271,10 +1304,8 @@ window.consultarNubeExp = async function() {
       });
     }
 
-    // Almacenar para exportar
     window.expResultados = resultado;
 
-    // Renderizar tabla
     const tableEl = document.getElementById('exp-preview-table');
     if (!resultado.length) {
       tableEl.innerHTML = '<div style="color:var(--slate2);padding:2rem 1rem;">Sin registros en ese rango.</div>';
@@ -1315,67 +1346,104 @@ window.consultarNubeExp = async function() {
 window.exportarPDFExp = async function() {
   if (!window.expResultados || !window.expResultados.length) { toast('⚠️ Consulta primero'); return; }
   
-  // Cargar jsPDF + autoTable si no existen
-  if (!window.jspdf) {
-    await new Promise((res,rej)=>{ const s=document.createElement('script'); s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js'; s.onload=res; s.onerror=rej; document.head.appendChild(s); });
+  const btn = document.getElementById('btn-pdf-exp');
+  btn.disabled = true; btn.textContent = '⏳ Generando PDF...';
+
+  try {
+    // Cargar jsPDF
+    if (typeof jsPDF === 'undefined') {
+      await new Promise((res, rej) => {
+        const s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+        s.onload = res;
+        s.onerror = () => rej(new Error('No se pudo cargar jsPDF'));
+        document.head.appendChild(s);
+      });
+    }
+
+    // Cargar autoTable
+    if (!window.jsPDF?.prototype?.autoTable) {
+      await new Promise((res, rej) => {
+        const s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js';
+        s.onload = res;
+        s.onerror = () => rej(new Error('No se pudo cargar autoTable'));
+        document.head.appendChild(s);
+      });
+    }
+
+    const { jsPDF } = window;
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'letter' });
+    const pw = doc.internal.pageSize.getWidth();
+    const ph = doc.internal.pageSize.getHeight();
+
+    // Encabezado
+    doc.setFillColor(26, 107, 58);
+    doc.rect(0, 0, pw, 25, 'F');
+
+    // Logo si existe
+    if (perfilEscuela?.logo) {
+      try {
+        doc.addImage(perfilEscuela.logo, 'PNG', 8, 3, 18, 18);
+      } catch (e) { console.warn('Logo no cargó'); }
+    }
+
+    // Textos
+    doc.setTextColor(255, 214, 0);
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text('REPORTE DE ASISTENCIA', pw / 2, 11, { align: 'center' });
+
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.text((perfilEscuela?.nombreEscuela || nombreEscuela).toUpperCase(), pw / 2, 17, { align: 'center' });
+    doc.text(`CCT: ${perfilEscuela?.cct || '—'}  ·  Zona: ${perfilEscuela?.zona || '—'}`, pw / 2, 22, { align: 'center' });
+
+    const fechaInicio = document.getElementById('exp-fecha-inicio').value;
+    const fechaFin = document.getElementById('exp-fecha-fin').value;
+    doc.setFontSize(8);
+    doc.setTextColor(100, 116, 139);
+    doc.text(`Período: ${fechaInicio} al ${fechaFin}`, pw / 2, 27, { align: 'center' });
+
+    // Tabla
+    const resultado = window.expResultados;
+    const rows = resultado.map(r => [
+      r.fecha,
+      r.nombre,
+      r.hora,
+      r.estatus.charAt(0).toUpperCase() + r.estatus.slice(1)
+    ]);
+
+    doc.autoTable({
+      startY: 30,
+      head: [['Fecha', 'Alumno', 'Hora', 'Estatus']],
+      body: rows,
+      styles: { fontSize: 8, cellPadding: 2 },
+      headStyles: { fillColor: [10, 25, 47], textColor: 255, fontStyle: 'bold' },
+      alternateRowStyles: { fillColor: [248, 250, 252] },
+      columnStyles: { 0: { cellWidth: 28 }, 1: { cellWidth: 80 }, 2: { cellWidth: 20 }, 3: { cellWidth: 25 } },
+      margin: { left: 10, right: 10 }
+    });
+
+    // Pie
+    const total = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= total; i++) {
+      doc.setPage(i);
+      doc.setFontSize(7);
+      doc.setTextColor(148, 163, 184);
+      doc.text(`Página ${i}/${total}  ·  ${new Date().toLocaleString('es-MX')}`, pw - 10, ph - 8, { align: 'right' });
+    }
+
+    doc.save(`asistencia_${fechaInicio}_${fechaFin}.pdf`);
+    toast('📄 PDF generado');
+  } catch (e) {
+    console.error('Error PDF:', e);
+    toast('❌ Error al generar PDF: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '📄 PDF';
   }
-
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({orientation:'portrait',unit:'mm',format:'letter'});
-  const pw = doc.internal.pageSize.getWidth();
-  const ph = doc.internal.pageSize.getHeight();
-
-  // Encabezado
-  doc.setFillColor(26,107,58);
-  doc.rect(0,0,pw,25,'F');
-  
-  // Logo si existe
-  if (perfilEscuela.logo) {
-    try { doc.addImage(perfilEscuela.logo,'PNG',8,3,18,18); } catch(e){}
-  }
-
-  // Textos
-  doc.setTextColor(255,214,0); doc.setFontSize(12); doc.setFont('helvetica','bold');
-  doc.text('REPORTE DE ASISTENCIA', pw/2, 11, {align:'center'});
-  doc.setTextColor(255,255,255); doc.setFontSize(9); doc.setFont('helvetica','normal');
-  doc.text((perfilEscuela.nombreEscuela || nombreEscuela).toUpperCase(), pw/2, 17, {align:'center'});
-  doc.text(`CCT: ${perfilEscuela.cct || '—'}  ·  Zona: ${perfilEscuela.zona || '—'}`, pw/2, 22, {align:'center'});
-
-  const fechaInicio = document.getElementById('exp-fecha-inicio').value;
-  const fechaFin = document.getElementById('exp-fecha-fin').value;
-  doc.setFontSize(8); doc.setTextColor(100,116,139);
-  doc.text(`Período: ${fechaInicio} al ${fechaFin}`, pw/2, 27, {align:'center'});
-
-  // Tabla
-  const resultado = window.expResultados;
-  const rows = resultado.map(r => [
-    r.fecha,
-    r.nombre,
-    r.hora,
-    r.estatus.charAt(0).toUpperCase() + r.estatus.slice(1)
-  ]);
-
-  doc.autoTable({
-    startY: 30,
-    head: [['Fecha','Alumno','Hora','Estatus']],
-    body: rows,
-    styles: { fontSize: 8, cellPadding: 2 },
-    headStyles: { fillColor: [10,25,47], textColor: 255, fontStyle: 'bold' },
-    alternateRowStyles: { fillColor: [248,250,252] },
-    columnStyles: { 0: {cellWidth:28}, 1: {cellWidth:80}, 2: {cellWidth:20}, 3: {cellWidth:25} },
-    margin: { left: 10, right: 10 }
-  });
-
-  // Pie
-  const total = doc.internal.getNumberOfPages();
-  for (let i = 1; i <= total; i++) {
-    doc.setPage(i);
-    doc.setFontSize(7); doc.setTextColor(148,163,184);
-    doc.text(`Página ${i}/${total}  ·  ${new Date().toLocaleString('es-MX')}`, pw-10, ph-8, {align:'right'});
-  }
-
-  doc.save(`asistencia_${fechaInicio}_${fechaFin}.pdf`);
-  toast('📄 PDF generado');
 };
 
 // ── EXPORTAR EXCEL EXPORTAR ──
@@ -1390,28 +1458,29 @@ window.exportarExcelExp = function() {
 
   const rows = [
     [`REPORTE DE ASISTENCIA - ${nombreEscuela}`],
-    [`CCT: ${perfilEscuela.cct || '—'}  ·  Zona: ${perfilEscuela.zona || '—'}`],
+    [`CCT: ${perfilEscuela?.cct || '—'}  ·  Zona: ${perfilEscuela?.zona || '—'}`],
     [`Período: ${fechaInicio} al ${fechaFin}`],
     [],
-    ['Fecha','Alumno','Hora','Estatus','Turno','Grado','Grupo'],
+    ['Fecha', 'Alumno', 'Hora', 'Estatus', 'Turno', 'Grado', 'Grupo'],
     ...resultado.map(r => [r.fecha, r.nombre, r.hora, r.estatus, r.turno, r.grado, r.grupo])
   ];
 
   const ws = XLSX.utils.aoa_to_sheet(rows);
-  ws['!cols'] = [{wch:12},{wch:40},{wch:10},{wch:12},{wch:12},{wch:8},{wch:8}];
+  ws['!cols'] = [{ wch: 12 }, { wch: 40 }, { wch: 10 }, { wch: 12 }, { wch: 12 }, { wch: 8 }, { wch: 8 }];
   XLSX.utils.book_append_sheet(wb, ws, 'Asistencia');
 
   XLSX.writeFile(wb, `asistencia_${fechaInicio}_${fechaFin}.xlsx`);
   toast('📊 Excel generado');
 };
 
-// Inicializar fechas por defecto
+// Inicializar fechas por defecto y turno mostrado
 document.addEventListener('DOMContentLoaded', () => {
   const hoyISO = hoy();
   const hace7 = new Date(); hace7.setDate(hace7.getDate()-7);
   document.getElementById('exp-fecha-fin').value = hoyISO;
   document.getElementById('exp-fecha-inicio').value = hace7.toISOString().split('T')[0];
-  document.getElementById('exp-turno').addEventListener('change', actualizarGradosExp);
+  // Mostrar turno actual en exportar
+  actualizarTurnoMostrado();
 });
 </script>
 </body>

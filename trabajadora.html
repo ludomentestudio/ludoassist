@@ -1378,11 +1378,19 @@ window.consultarNubeExp = async function() {
 };
 
 // ── EXPORTAR PDF EXPORTAR ──
+
+
+
+// ── EXPORTAR EXCEL EXPORTAR ──
 window.exportarPDFExp = async function() {
-  if (!window.expResultados || !window.expResultados.length) { toast('⚠️ Consulta primero'); return; }
+  if (!window.expResultados || !window.expResultados.length) { 
+    toast('⚠️ Consulta primero'); 
+    return; 
+  }
   
   const btn = document.getElementById('btn-pdf-exp');
-  btn.disabled = true; btn.textContent = '⏳ Generando PDF...';
+  btn.disabled = true;
+  btn.textContent = '⏳ Generando PDF...';
 
   try {
     if (typeof window.jspdf === 'undefined') {
@@ -1395,7 +1403,7 @@ window.exportarPDFExp = async function() {
       });
     }
 
-    if (!window.jspdf || !window.jspdf.jsPDF) throw new Error('jsPDF no disponible');
+    if (!window.jspdf?.jsPDF) throw new Error('jsPDF no disponible');
 
     const { jsPDF } = window.jspdf;
 
@@ -1411,6 +1419,7 @@ window.exportarPDFExp = async function() {
 
     const resultado = window.expResultados;
     const porAlumno = {};
+
     resultado.forEach(r => {
       if (!porAlumno[r.nombre]) porAlumno[r.nombre] = [];
       porAlumno[r.nombre].push(r);
@@ -1423,11 +1432,13 @@ window.exportarPDFExp = async function() {
     const pw = doc.internal.pageSize.getWidth();
     const ph = doc.internal.pageSize.getHeight();
 
-    // Encabezado
     doc.setFillColor(26, 107, 58);
     doc.rect(0, 0, pw, 18, 'F');
-    if (perfilEscuela?.logo) { try { doc.addImage(perfilEscuela.logo, 'PNG', 5, 1, 10, 10); } catch (e) {} }
-    
+
+    if (perfilEscuela?.logo) {
+      try { doc.addImage(perfilEscuela.logo, 'PNG', 5, 1, 10, 10); } catch (e) {}
+    }
+
     doc.setTextColor(0, 200, 100);
     doc.setFontSize(11);
     doc.setFont('helvetica', 'bold');
@@ -1446,79 +1457,94 @@ window.exportarPDFExp = async function() {
     const turno = document.getElementById('exp-turno-actual')?.textContent || '—';
     doc.text(`${turno} · Período: ${fechaInicio} al ${fechaFin}`, pw / 2, 15, { align: 'center' });
 
-    // Tabla
-    const head = [
-      ['#', 'Nombre Alumno', ...todasFechas.map(f => f.split('-').slice(1).join('/')), 'A', 'R', 'F', '%'],
-      ['', '', ...todasFechas.flatMap(f => ['Hora', 'Est']), '', '', '', '']
-    ];
+    const headRow1 = ['Nombre Alumno', ...todasFechas.map(f => f.split('-').slice(1).join('/'))];
+    const headRow2 = ['', ...todasFechas.flatMap(f => ['Hora', 'Est'])];
 
     const body = [];
-    let numReg = 0;
 
     alumnos.forEach((alumno) => {
       const registros = porAlumno[alumno];
-      const contA = registros.filter(r => r.estatus.toLowerCase().includes('asist')).length;
-      const contR = registros.filter(r => r.estatus.toLowerCase().includes('retard')).length;
-      const contF = registros.filter(r => r.estatus.toLowerCase().includes('falt') || r.estatus.toLowerCase().includes('ausent')).length;
-      const pctAsist = registros.length > 0 ? Math.round((contA / registros.length) * 100) : 0;
+      const row = [alumno];
 
-      registros.forEach((registro, idx) => {
-        numReg++;
-        const row = [idx === 0 ? numReg : '', idx === 0 ? alumno : ''];
-
-        todasFechas.forEach(fecha => {
-          if (fecha === registro.fecha) {
-            const hora = registro.hora || '—';
-            const est = registro.estatus.toLowerCase().includes('asist') ? 'A' :
-                       registro.estatus.toLowerCase().includes('retard') ? 'R' :
-                       registro.estatus.toLowerCase().includes('justif') ? 'J' :
-                       registro.estatus.toLowerCase().includes('falt') || registro.estatus.toLowerCase().includes('ausent') ? 'F' : 'SR';
-            row.push(hora, est);
-          } else {
-            row.push('', '');
-          }
-        });
-
-        if (idx === 0) {
-          row.push(contA, contR, contF, pctAsist + '%');
+      todasFechas.forEach(fecha => {
+        const reg = registros.find(r => r.fecha === fecha);
+        
+        if (reg) {
+          const hora = reg.hora || '—';
+          const est = reg.estatus.toLowerCase().includes('asist') ? 'A' :
+                     reg.estatus.toLowerCase().includes('retard') ? 'R' :
+                     reg.estatus.toLowerCase().includes('justif') ? 'J' :
+                     reg.estatus.toLowerCase().includes('falt') || reg.estatus.toLowerCase().includes('ausent') ? 'F' : 'SR';
+          row.push(hora, est);
         } else {
-          row.push('', '', '', '');
+          row.push('', '');
         }
-        body.push(row);
       });
+
+      body.push(row);
     });
 
     doc.autoTable({
       startY: 20,
-      head: head,
+      head: [headRow1, headRow2],
       body: body,
-      styles: { fontSize: 6, cellPadding: 1.2, halign: 'center', valign: 'middle', lineColor: [180, 180, 180] },
-      headStyles: { fillColor: [44, 62, 80], textColor: 255, fontStyle: 'bold', lineWidth: 0.4 },
-      bodyStyles: { textColor: 51, lineWidth: 0.2 },
-      alternateRowStyles: { fillColor: [248, 250, 252] },
-      columnStyles: { 0: { cellWidth: 7, fontStyle: 'bold' }, 1: { cellWidth: 38, halign: 'left' } },
-      margin: { left: 4, right: 4, top: 5 },
+      styles: {
+        fontSize: 6.5,
+        cellPadding: 2,
+        halign: 'center',
+        valign: 'middle',
+        lineColor: [150, 150, 150],
+        lineWidth: 0.3
+      },
+      headStyles: {
+        fillColor: [44, 62, 80],
+        textColor: 255,
+        fontStyle: 'bold',
+        halign: 'center',
+        lineWidth: 0.4
+      },
+      bodyStyles: {
+        textColor: 51,
+        lineWidth: 0.3
+      },
+      alternateRowStyles: {
+        fillColor: [248, 250, 252]
+      },
+      columnStyles: {
+        0: { cellWidth: 45, halign: 'left', fontStyle: 'bold' }
+      },
+      margin: { left: 5, right: 5, top: 5 },
       didDrawCell: (data) => {
         const content = data.cell.text?.[0];
-        if (content === 'A') { data.cell.styles.textColor = [0, 168, 84]; data.cell.styles.fontStyle = 'bold'; }
-        else if (content === 'R') { data.cell.styles.textColor = [240, 173, 78]; data.cell.styles.fontStyle = 'bold'; }
-        else if (content === 'F') { data.cell.styles.textColor = [217, 83, 79]; data.cell.styles.fontStyle = 'bold'; }
+        const rowIndex = data.rowIndex;
+        
+        if (rowIndex < 2) return;
+
+        if (content === 'A') {
+          data.cell.styles.textColor = [0, 168, 84];
+          data.cell.styles.fontStyle = 'bold';
+        } else if (content === 'R') {
+          data.cell.styles.textColor = [240, 173, 78];
+          data.cell.styles.fontStyle = 'bold';
+        } else if (content === 'F') {
+          data.cell.styles.textColor = [217, 83, 79];
+          data.cell.styles.fontStyle = 'bold';
+        } else if (content === 'SR') {
+          data.cell.styles.textColor = [200, 150, 100];
+          data.cell.styles.fontStyle = 'bold';
+        }
       }
     });
 
     const finalY = doc.lastAutoTable?.finalY || 100;
+    
     doc.setFontSize(6);
     doc.setTextColor(100, 100, 100);
     doc.text('A=Asistencia  R=Retardo  F=Falta  SR=Sin Registro  J=Justificado', 5, finalY + 5);
 
-    const contTotalA = resultado.filter(r => r.estatus.toLowerCase().includes('asist')).length;
-    const contTotalR = resultado.filter(r => r.estatus.toLowerCase().includes('retard')).length;
-    const contTotalF = resultado.filter(r => r.estatus.toLowerCase().includes('falt') || r.estatus.toLowerCase().includes('ausent')).length;
-    const pctTotal = resultado.length > 0 ? Math.round((contTotalA / resultado.length) * 100) : 0;
-
-    doc.text(`PROMEDIOS: ${contTotalA}  ${contTotalR}  ${contTotalF}  ${pctTotal}%`, pw - 65, finalY + 5);
     doc.setFontSize(7);
-    doc.text(`Director(a): _________________     Firma y Sello`, 5, finalY + 15);
+    doc.text('Director(a): _________________     Firma y Sello', 5, finalY + 15);
+
     doc.setFontSize(6);
     doc.setTextColor(150, 150, 150);
     const pageCount = doc.internal.getNumberOfPages();
@@ -1526,6 +1552,7 @@ window.exportarPDFExp = async function() {
 
     doc.save(`asistencia_${fechaInicio}_${fechaFin}.pdf`);
     toast('📄 PDF generado correctamente');
+
   } catch (e) {
     console.error('Error PDF:', e);
     toast('❌ Error: ' + e.message);
@@ -1534,8 +1561,6 @@ window.exportarPDFExp = async function() {
     btn.textContent = '📄 PDF';
   }
 };
-
-// ── EXPORTAR EXCEL EXPORTAR ──
 window.exportarExcelExp = function() {
   if (!window.expResultados || !window.expResultados.length) { toast('⚠️ Consulta primero'); return; }
 

@@ -491,13 +491,13 @@ header{
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1rem;">
       <div>
         <label style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--slate2);display:block;margin-bottom:.4rem;">Grado</label>
-        <select id="exp-grado" onchange="actualizarGruposExp()" style="width:100%;padding:.75rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-weight:700;color:var(--navy);background:var(--white);outline:none;font-family:'Nunito',sans-serif;">
+        <select id="exp-grado" onchange="setTimeout(actualizarGruposExp, 50)" style="width:100%;padding:.75rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-weight:700;color:var(--navy);background:var(--white);outline:none;font-family:'Nunito',sans-serif;">
           <option value="Todos">Todos los grados</option>
         </select>
       </div>
       <div>
         <label style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--slate2);display:block;margin-bottom:.4rem;">Grupo</label>
-        <select id="exp-grupo" onchange="actualizarAlumnosExp()" style="width:100%;padding:.75rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-weight:700;color:var(--navy);background:var(--white);outline:none;font-family:'Nunito',sans-serif;">
+        <select id="exp-grupo" onchange="setTimeout(actualizarAlumnosExp, 50)" style="width:100%;padding:.75rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-weight:700;color:var(--navy);background:var(--white);outline:none;font-family:'Nunito',sans-serif;">
           <option value="Todos">Todos los grupos</option>
         </select>
       </div>
@@ -731,6 +731,8 @@ async function cargarEstructura() {
       }
     }
   } catch(e) {}
+  // Actualizar exportar ahora que estructura está lista
+  if (window.actualizarTurnoMostrado) actualizarTurnoMostrado();
   cargarAsistencias();
 }
 
@@ -1178,11 +1180,19 @@ window.actualizarTurnoMostrado = function() {
   const turnoTexto = turnoFiltro === 'mat' ? '🌅 Matutino' : turnoFiltro === 'vesp' ? '🌆 Vespertino' : '🌐 Todos';
   const el = document.getElementById('exp-turno-actual');
   if (el) el.textContent = turnoTexto;
-  actualizarGradosExp();
+  // Solo actualizar grados si estructura existe y tiene datos
+  if (Object.keys(estructura).length > 0) {
+    actualizarGradosExp();
+  }
 };
 
 // ── ACTUALIZAR GRADOS EN EXPORTAR ──
 window.actualizarGradosExp = function() {
+  if (!estructura || Object.keys(estructura).length === 0) {
+    console.warn('estructura no está lista');
+    return;
+  }
+
   // Determinar turnos según filtro
   let turnosPermitidos = [];
   Object.keys(estructura).forEach(t => {
@@ -1190,14 +1200,27 @@ window.actualizarGradosExp = function() {
   });
   
   const gradoSel = document.getElementById('exp-grado');
+  if (!gradoSel) {
+    console.warn('exp-grado no existe');
+    return;
+  }
+
   gradoSel.innerHTML = '<option value="Todos">Todos los grados</option>';
   
+  if (turnosPermitidos.length === 0) {
+    console.warn('No hay turnos permitidos para:', turnoFiltro);
+    return;
+  }
+
   turnosPermitidos.forEach(turno => {
     const grados = (estructura[turno] || {});
-    Object.keys(grados).sort((a,b)=>Number(a)-Number(b)).forEach(g => {
-      if (!gradoSel.querySelector(`option[value="${g}"]`)) {
+    Object.keys(grados).sort((a, b) => Number(a) - Number(b)).forEach(g => {
+      // Verificar si la opción ya existe
+      const existe = Array.from(gradoSel.options).some(opt => opt.value === g);
+      if (!existe) {
         const opt = document.createElement('option');
-        opt.value = g; opt.textContent = `${g}° Grado`;
+        opt.value = g;
+        opt.textContent = `${g}° Grado`;
         gradoSel.appendChild(opt);
       }
     });
@@ -1208,8 +1231,12 @@ window.actualizarGradosExp = function() {
 
 // ── ACTUALIZAR GRUPOS EN EXPORTAR ──
 window.actualizarGruposExp = function() {
-  const grado = document.getElementById('exp-grado').value;
+  if (!estructura || Object.keys(estructura).length === 0) return;
+
+  const grado = document.getElementById('exp-grado')?.value || 'Todos';
   const grupoSel = document.getElementById('exp-grupo');
+  if (!grupoSel) return;
+
   grupoSel.innerHTML = '<option value="Todos">Todos los grupos</option>';
   
   if (grado !== 'Todos') {
@@ -1218,9 +1245,11 @@ window.actualizarGruposExp = function() {
       if (!esTurno(turno, turnoFiltro)) return;
       const grupos = (estructura[turno]?.[grado] || []).sort();
       grupos.forEach(g => {
-        if (!grupoSel.querySelector(`option[value="${g}"]`)) {
+        const existe = Array.from(grupoSel.options).some(opt => opt.value === g);
+        if (!existe) {
           const opt = document.createElement('option');
-          opt.value = g; opt.textContent = `Grupo ${g}`;
+          opt.value = g;
+          opt.textContent = `Grupo ${g}`;
           grupoSel.appendChild(opt);
         }
       });
@@ -1231,9 +1260,13 @@ window.actualizarGruposExp = function() {
 
 // ── ACTUALIZAR ALUMNOS EN EXPORTAR ──
 window.actualizarAlumnosExp = function() {
-  const grado = document.getElementById('exp-grado').value;
-  const grupo = document.getElementById('exp-grupo').value;
+  if (!estructura || Object.keys(estructura).length === 0) return;
+
+  const grado = document.getElementById('exp-grado')?.value || 'Todos';
+  const grupo = document.getElementById('exp-grupo')?.value || 'Todos';
   const alumnoSel = document.getElementById('exp-alumno');
+  if (!alumnoSel) return;
+
   alumnoSel.innerHTML = '<option value="Todos">Todos</option>';
   
   if (grado !== 'Todos' && grupo !== 'Todos') {
@@ -1242,9 +1275,11 @@ window.actualizarAlumnosExp = function() {
       if (!esTurno(turno, turnoFiltro)) return;
       const alumnos = filtrarAlumnos(turno, grado, grupo);
       alumnos.forEach(([nombre]) => {
-        if (!alumnoSel.querySelector(`option[value="${nombre}"]`)) {
+        const existe = Array.from(alumnoSel.options).some(opt => opt.value === nombre);
+        if (!existe) {
           const opt = document.createElement('option');
-          opt.value = nombre; opt.textContent = nombre;
+          opt.value = nombre;
+          opt.textContent = nombre;
           alumnoSel.appendChild(opt);
         }
       });
@@ -1483,14 +1518,14 @@ window.exportarExcelExp = function() {
   toast('📊 Excel generado');
 };
 
-// Inicializar fechas por defecto y turno mostrado
+// Inicializar fechas por defecto
 document.addEventListener('DOMContentLoaded', () => {
   const hoyISO = hoy();
   const hace7 = new Date(); hace7.setDate(hace7.getDate()-7);
-  document.getElementById('exp-fecha-fin').value = hoyISO;
-  document.getElementById('exp-fecha-inicio').value = hace7.toISOString().split('T')[0];
-  // Mostrar turno actual en exportar
-  actualizarTurnoMostrado();
+  const finEl = document.getElementById('exp-fecha-fin');
+  const iniEl = document.getElementById('exp-fecha-inicio');
+  if (finEl) finEl.value = hoyISO;
+  if (iniEl) iniEl.value = hace7.toISOString().split('T')[0];
 });
 </script>
 </body>

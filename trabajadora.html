@@ -1385,7 +1385,6 @@ window.exportarPDFExp = async function() {
   btn.disabled = true; btn.textContent = '⏳ Generando PDF...';
 
   try {
-    // Cargar jsPDF
     if (typeof window.jspdf === 'undefined') {
       await new Promise((resolve, reject) => {
         const script = document.createElement('script');
@@ -1396,13 +1395,10 @@ window.exportarPDFExp = async function() {
       });
     }
 
-    if (!window.jspdf || !window.jspdf.jsPDF) {
-      throw new Error('jsPDF no disponible');
-    }
+    if (!window.jspdf || !window.jspdf.jsPDF) throw new Error('jsPDF no disponible');
 
     const { jsPDF } = window.jspdf;
 
-    // Cargar autoTable
     if (!jsPDF.prototype.autoTable) {
       await new Promise((resolve, reject) => {
         const script = document.createElement('script');
@@ -1413,44 +1409,25 @@ window.exportarPDFExp = async function() {
       });
     }
 
-    // Agrupar datos por alumno
     const resultado = window.expResultados;
     const porAlumno = {};
-
     resultado.forEach(r => {
-      if (!porAlumno[r.nombre]) {
-        porAlumno[r.nombre] = [];
-      }
+      if (!porAlumno[r.nombre]) porAlumno[r.nombre] = [];
       porAlumno[r.nombre].push(r);
     });
 
     const alumnos = Object.keys(porAlumno).sort();
-
-    // Obtener fechas únicas y ordenadas
     const todasFechas = [...new Set(resultado.map(r => r.fecha))].sort();
 
-    // Crear documento (landscape para más columnas)
-    const doc = new jsPDF({
-      orientation: 'landscape',
-      unit: 'mm',
-      format: 'letter'
-    });
-
+    const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'letter' });
     const pw = doc.internal.pageSize.getWidth();
     const ph = doc.internal.pageSize.getHeight();
 
     // Encabezado
     doc.setFillColor(26, 107, 58);
     doc.rect(0, 0, pw, 18, 'F');
-
-    // Logo
-    if (perfilEscuela?.logo) {
-      try {
-        doc.addImage(perfilEscuela.logo, 'PNG', 5, 1, 10, 10);
-      } catch (e) {}
-    }
-
-    // Títulos
+    if (perfilEscuela?.logo) { try { doc.addImage(perfilEscuela.logo, 'PNG', 5, 1, 10, 10); } catch (e) {} }
+    
     doc.setTextColor(0, 200, 100);
     doc.setFontSize(11);
     doc.setFont('helvetica', 'bold');
@@ -1469,61 +1446,28 @@ window.exportarPDFExp = async function() {
     const turno = document.getElementById('exp-turno-actual')?.textContent || '—';
     doc.text(`${turno} · Período: ${fechaInicio} al ${fechaFin}`, pw / 2, 15, { align: 'center' });
 
-    // Construir tabla con formato: # | Nombre | Fecha1(H|E) | Fecha2(H|E) | ... | A | R | F | %
-    // UN REGISTRO POR LÍNEA
-    
+    // Tabla
     const head = [
-      // Fila 1: # | Nombre | Fechas
-      [
-        '#',
-        'Nombre Alumno',
-        ...todasFechas.map(f => f.split('-').slice(1).join('/')),
-        'A',
-        'R',
-        'F',
-        '%'
-      ],
-      // Fila 2: '' | '' | Hora|Est para cada fecha
-      [
-        '',
-        '',
-        ...todasFechas.flatMap(f => ['Hora', 'Est']),
-        '',
-        '',
-        '',
-        ''
-      ]
+      ['#', 'Nombre Alumno', ...todasFechas.map(f => f.split('-').slice(1).join('/')), 'A', 'R', 'F', '%'],
+      ['', '', ...todasFechas.flatMap(f => ['Hora', 'Est']), '', '', '', '']
     ];
 
-    // Body: UN registro por línea
     const body = [];
-    let numRegistro = 0;
+    let numReg = 0;
 
     alumnos.forEach((alumno) => {
       const registros = porAlumno[alumno];
-      
-      // Contar totales del alumno
       const contA = registros.filter(r => r.estatus.toLowerCase().includes('asist')).length;
       const contR = registros.filter(r => r.estatus.toLowerCase().includes('retard')).length;
-      const contF = registros.filter(r => 
-        r.estatus.toLowerCase().includes('falt') || r.estatus.toLowerCase().includes('ausent')
-      ).length;
-      
+      const contF = registros.filter(r => r.estatus.toLowerCase().includes('falt') || r.estatus.toLowerCase().includes('ausent')).length;
       const pctAsist = registros.length > 0 ? Math.round((contA / registros.length) * 100) : 0;
 
-      // Procesar cada registro del alumno
       registros.forEach((registro, idx) => {
-        numRegistro++;
-        
-        const row = [
-          idx === 0 ? numRegistro : '',  // # solo en primer registro
-          idx === 0 ? alumno : '',       // Nombre solo en primer registro
-        ];
+        numReg++;
+        const row = [idx === 0 ? numReg : '', idx === 0 ? alumno : ''];
 
-        // Para cada fecha, encontrar si hay registro
         todasFechas.forEach(fecha => {
           if (fecha === registro.fecha) {
-            // Hay registro para esta fecha
             const hora = registro.hora || '—';
             const est = registro.estatus.toLowerCase().includes('asist') ? 'A' :
                        registro.estatus.toLowerCase().includes('retard') ? 'R' :
@@ -1531,18 +1475,15 @@ window.exportarPDFExp = async function() {
                        registro.estatus.toLowerCase().includes('falt') || registro.estatus.toLowerCase().includes('ausent') ? 'F' : 'SR';
             row.push(hora, est);
           } else {
-            // No hay registro para esta fecha
             row.push('', '');
           }
         });
 
-        // Columnas finales solo en primer registro del alumno
         if (idx === 0) {
           row.push(contA, contR, contF, pctAsist + '%');
         } else {
           row.push('', '', '', '');
         }
-
         body.push(row);
       });
     });
@@ -1551,76 +1492,38 @@ window.exportarPDFExp = async function() {
       startY: 20,
       head: head,
       body: body,
-      styles: {
-        fontSize: 6.5,
-        cellPadding: 1.5,
-        halign: 'center',
-        valign: 'middle',
-        lineColor: 200
-      },
-      headStyles: {
-        fillColor: [44, 62, 80],
-        textColor: 255,
-        fontStyle: 'bold',
-        halign: 'center',
-        lineWidth: 0.3
-      },
-      bodyStyles: {
-        textColor: 51,
-        lineWidth: 0.2
-      },
-      alternateRowStyles: {
-        fillColor: [245, 248, 250]
-      },
-      columnStyles: {
-        0: { cellWidth: 8, fontStyle: 'bold' },
-        1: { cellWidth: 40, halign: 'left' }
-      },
-      margin: { left: 5, right: 5, top: 5 },
+      styles: { fontSize: 6, cellPadding: 1.2, halign: 'center', valign: 'middle', lineColor: [180, 180, 180] },
+      headStyles: { fillColor: [44, 62, 80], textColor: 255, fontStyle: 'bold', lineWidth: 0.4 },
+      bodyStyles: { textColor: 51, lineWidth: 0.2 },
+      alternateRowStyles: { fillColor: [248, 250, 252] },
+      columnStyles: { 0: { cellWidth: 7, fontStyle: 'bold' }, 1: { cellWidth: 38, halign: 'left' } },
+      margin: { left: 4, right: 4, top: 5 },
       didDrawCell: (data) => {
-        // Colorear estatus A/R/F
         const content = data.cell.text?.[0];
-        if (content === 'A') {
-          data.cell.styles.textColor = [0, 168, 84];
-          data.cell.styles.fontStyle = 'bold';
-        } else if (content === 'R') {
-          data.cell.styles.textColor = [240, 173, 78];
-          data.cell.styles.fontStyle = 'bold';
-        } else if (content === 'F') {
-          data.cell.styles.textColor = [217, 83, 79];
-          data.cell.styles.fontStyle = 'bold';
-        }
+        if (content === 'A') { data.cell.styles.textColor = [0, 168, 84]; data.cell.styles.fontStyle = 'bold'; }
+        else if (content === 'R') { data.cell.styles.textColor = [240, 173, 78]; data.cell.styles.fontStyle = 'bold'; }
+        else if (content === 'F') { data.cell.styles.textColor = [217, 83, 79]; data.cell.styles.fontStyle = 'bold'; }
       }
     });
 
-    // Pie de página
     const finalY = doc.lastAutoTable?.finalY || 100;
-
     doc.setFontSize(6);
     doc.setTextColor(100, 100, 100);
-    doc.text('A=Asistencia  R=Retardo  F=Falta  SR=Sin Registro  J=Justificado', 8, finalY + 5);
+    doc.text('A=Asistencia  R=Retardo  F=Falta  SR=Sin Registro  J=Justificado', 5, finalY + 5);
 
-    // Promedios
     const contTotalA = resultado.filter(r => r.estatus.toLowerCase().includes('asist')).length;
     const contTotalR = resultado.filter(r => r.estatus.toLowerCase().includes('retard')).length;
-    const contTotalF = resultado.filter(r => 
-      r.estatus.toLowerCase().includes('falt') || r.estatus.toLowerCase().includes('ausent')
-    ).length;
+    const contTotalF = resultado.filter(r => r.estatus.toLowerCase().includes('falt') || r.estatus.toLowerCase().includes('ausent')).length;
     const pctTotal = resultado.length > 0 ? Math.round((contTotalA / resultado.length) * 100) : 0;
 
-    doc.text(`PROMEDIOS: ${contTotalA}  ${contTotalR}  ${contTotalF}  ${pctTotal}%`, pw - 60, finalY + 5);
-
-    // Firma
+    doc.text(`PROMEDIOS: ${contTotalA}  ${contTotalR}  ${contTotalF}  ${pctTotal}%`, pw - 65, finalY + 5);
     doc.setFontSize(7);
-    doc.text(`Director(a): _________________     Firma y Sello`, 8, finalY + 15);
-
-    // Pie
+    doc.text(`Director(a): _________________     Firma y Sello`, 5, finalY + 15);
     doc.setFontSize(6);
     doc.setTextColor(150, 150, 150);
     const pageCount = doc.internal.getNumberOfPages();
-    doc.text(`Pág. ${pageCount} · ${new Date().toLocaleDateString('es-MX')}`, pw - 30, ph - 3);
+    doc.text(`Pág. ${pageCount} · ${new Date().toLocaleDateString('es-MX')}`, pw - 25, ph - 3);
 
-    // Descargar
     doc.save(`asistencia_${fechaInicio}_${fechaFin}.pdf`);
     toast('📄 PDF generado correctamente');
   } catch (e) {

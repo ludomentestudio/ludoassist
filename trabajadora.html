@@ -1385,44 +1385,49 @@ window.exportarPDFExp = async function() {
   btn.disabled = true; btn.textContent = '⏳ Generando PDF...';
 
   try {
-    // Cargar jsPDF de forma correcta
-    const loadScript = (src) => {
-      return new Promise((resolve, reject) => {
+    // Cargar jsPDF desde CDN alternativo más confiable
+    if (typeof window.jspdf === 'undefined') {
+      await new Promise((resolve, reject) => {
         const script = document.createElement('script');
-        script.src = src;
-        script.onload = resolve;
-        script.onerror = () => reject(new Error(`No se pudo cargar: ${src}`));
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+        script.onload = () => {
+          // Esperar a que se ejecute el script
+          setTimeout(resolve, 100);
+        };
+        script.onerror = reject;
         document.head.appendChild(script);
       });
-    };
-
-    // Cargar jsPDF si no existe
-    if (typeof jsPDF === 'undefined') {
-      await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
     }
 
-    // Esperar a que jsPDF esté disponible
-    let attempts = 0;
-    while (typeof jsPDF === 'undefined' && attempts < 10) {
-      await new Promise(r => setTimeout(r, 100));
-      attempts++;
+    // Obtener jsPDF desde window.jspdf
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+      throw new Error('jsPDF no disponible en window.jspdf.jsPDF');
     }
 
-    if (typeof jsPDF === 'undefined') {
-      throw new Error('jsPDF no se cargó correctamente');
+    const { jsPDF } = window.jspdf;
+
+    // Cargar autoTable
+    if (!jsPDF.prototype.autoTable) {
+      await new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js';
+        script.onload = () => setTimeout(resolve, 100);
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
     }
 
-    // Cargar autoTable si no existe
-    if (!jsPDF.jsPDF.prototype.autoTable) {
-      await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js');
-    }
+    // Crear documento
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'letter'
+    });
 
-    // Crear PDF
-    const doc = new jsPDF.jsPDF({ orientation: 'portrait', unit: 'mm', format: 'letter' });
     const pw = doc.internal.pageSize.getWidth();
     const ph = doc.internal.pageSize.getHeight();
 
-    // Encabezado
+    // Encabezado verde
     doc.setFillColor(26, 107, 58);
     doc.rect(0, 0, pw, 25, 'F');
 
@@ -1430,21 +1435,29 @@ window.exportarPDFExp = async function() {
     if (perfilEscuela?.logo) {
       try {
         doc.addImage(perfilEscuela.logo, 'PNG', 8, 3, 18, 18);
-      } catch (e) { console.warn('Logo no cargó'); }
+      } catch (e) {
+        console.warn('Logo no se pudo agregar');
+      }
     }
 
-    // Textos
+    // Título
     doc.setTextColor(255, 214, 0);
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
     doc.text('REPORTE DE ASISTENCIA', pw / 2, 11, { align: 'center' });
 
+    // Datos escuela
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(9);
     doc.setFont('helvetica', 'normal');
-    doc.text((perfilEscuela?.nombreEscuela || nombreEscuela).toUpperCase(), pw / 2, 17, { align: 'center' });
-    doc.text(`CCT: ${perfilEscuela?.cct || '—'}  ·  Zona: ${perfilEscuela?.zona || '—'}`, pw / 2, 22, { align: 'center' });
+    const nombreEsc = perfilEscuela?.nombreEscuela || nombreEscuela || 'Escuela';
+    doc.text(nombreEsc.toUpperCase(), pw / 2, 17, { align: 'center' });
 
+    const cct = perfilEscuela?.cct || '—';
+    const zona = perfilEscuela?.zona || '—';
+    doc.text(`CCT: ${cct}  ·  Zona: ${zona}`, pw / 2, 22, { align: 'center' });
+
+    // Período
     const fechaInicio = document.getElementById('exp-fecha-inicio').value;
     const fechaFin = document.getElementById('exp-fecha-fin').value;
     doc.setFontSize(8);
@@ -1457,31 +1470,56 @@ window.exportarPDFExp = async function() {
       r.fecha,
       r.nombre,
       r.hora,
-      r.estatus.charAt(0).toUpperCase() + r.estatus.slice(1)
+      r.estatus
     ]);
 
+    // Usar autoTable
     doc.autoTable({
       startY: 30,
       head: [['Fecha', 'Alumno', 'Hora', 'Estatus']],
       body: rows,
-      styles: { fontSize: 8, cellPadding: 2 },
-      headStyles: { fillColor: [10, 25, 47], textColor: 255, fontStyle: 'bold' },
-      alternateRowStyles: { fillColor: [248, 250, 252] },
-      columnStyles: { 0: { cellWidth: 28 }, 1: { cellWidth: 80 }, 2: { cellWidth: 20 }, 3: { cellWidth: 25 } },
-      margin: { left: 10, right: 10 }
+      styles: {
+        fontSize: 8,
+        cellPadding: 3
+      },
+      headStyles: {
+        fillColor: [10, 25, 47],
+        textColor: 255,
+        fontStyle: 'bold',
+        halign: 'left'
+      },
+      bodyStyles: {
+        textColor: 51
+      },
+      alternateRowStyles: {
+        fillColor: [248, 250, 252]
+      },
+      columnStyles: {
+        0: { cellWidth: 28, halign: 'center' },
+        1: { cellWidth: 85, halign: 'left' },
+        2: { cellWidth: 20, halign: 'center' },
+        3: { cellWidth: 30, halign: 'left' }
+      },
+      margin: { left: 10, right: 10, top: 10 },
+      didDrawPage: (data) => {
+        // Pie de página
+        const pageCount = doc.internal.getNumberOfPages();
+        const pageSize = doc.internal.pageSize;
+        const pageHeight = pageSize.getHeight();
+        doc.setFontSize(7);
+        doc.setTextColor(148, 163, 184);
+        doc.text(
+          `Página ${data.pageNumber} de ${pageCount}`,
+          pageSize.getWidth() / 2,
+          pageHeight - 8,
+          { align: 'center' }
+        );
+      }
     });
 
-    // Pie
-    const total = doc.internal.getNumberOfPages();
-    for (let i = 1; i <= total; i++) {
-      doc.setPage(i);
-      doc.setFontSize(7);
-      doc.setTextColor(148, 163, 184);
-      doc.text(`Página ${i}/${total}  ·  ${new Date().toLocaleString('es-MX')}`, pw - 10, ph - 8, { align: 'right' });
-    }
-
+    // Descargar
     doc.save(`asistencia_${fechaInicio}_${fechaFin}.pdf`);
-    toast('📄 PDF generado');
+    toast('📄 PDF generado correctamente');
   } catch (e) {
     console.error('Error PDF:', e);
     toast('❌ Error: ' + e.message);

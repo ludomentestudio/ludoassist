@@ -1385,14 +1385,12 @@ window.exportarPDFExp = async function() {
   btn.disabled = true; btn.textContent = '⏳ Generando PDF...';
 
   try {
-    // Cargar jsPDF desde CDN alternativo más confiable
+    // Cargar jsPDF
     if (typeof window.jspdf === 'undefined') {
       await new Promise((resolve, reject) => {
         const script = document.createElement('script');
         script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-        script.onload = () => {
-          setTimeout(resolve, 100);
-        };
+        script.onload = () => setTimeout(resolve, 100);
         script.onerror = reject;
         document.head.appendChild(script);
       });
@@ -1426,10 +1424,12 @@ window.exportarPDFExp = async function() {
       porAlumno[r.nombre].push(r);
     });
 
-    // Ordenar alumnos alfabéticamente
     const alumnos = Object.keys(porAlumno).sort();
 
-    // Crear documento
+    // Obtener fechas únicas y ordenadas
+    const todasFechas = [...new Set(resultado.map(r => r.fecha))].sort();
+
+    // Crear documento (landscape para más columnas)
     const doc = new jsPDF({
       orientation: 'landscape',
       unit: 'mm',
@@ -1438,134 +1438,161 @@ window.exportarPDFExp = async function() {
 
     const pw = doc.internal.pageSize.getWidth();
     const ph = doc.internal.pageSize.getHeight();
-    let currentY = 10;
 
-    // Función para agregar encabezado
-    const agregarEncabezado = () => {
-      doc.setFillColor(26, 107, 58);
-      doc.rect(5, currentY, pw - 10, 20, 'F');
+    // Encabezado
+    doc.setFillColor(26, 107, 58);
+    doc.rect(0, 0, pw, 18, 'F');
 
-      // Logo si existe
-      if (perfilEscuela?.logo) {
-        try {
-          doc.addImage(perfilEscuela.logo, 'PNG', 8, currentY + 1, 12, 12);
-        } catch (e) {}
-      }
+    // Logo
+    if (perfilEscuela?.logo) {
+      try {
+        doc.addImage(perfilEscuela.logo, 'PNG', 5, 1, 10, 10);
+      } catch (e) {}
+    }
 
-      // Títulos
-      doc.setTextColor(255, 214, 0);
-      doc.setFontSize(11);
-      doc.setFont('helvetica', 'bold');
-      doc.text('REPORTE DE ASISTENCIA', pw / 2, currentY + 8, { align: 'center' });
+    // Títulos
+    doc.setTextColor(0, 200, 100);
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    const grado = resultado[0]?.grado || '—';
+    const grupo = resultado[0]?.grupo || '—';
+    doc.text(`REPORTE DE ASISTENCIA - ${grado}° GRADO GRUPO "${grupo}"`, pw / 2, 6, { align: 'center' });
 
-      doc.setTextColor(255, 255, 255);
-      doc.setFontSize(8);
-      doc.setFont('helvetica', 'normal');
-      const nombreEsc = perfilEscuela?.nombreEscuela || nombreEscuela || 'Escuela';
-      doc.text(nombreEsc.toUpperCase(), pw / 2, currentY + 13, { align: 'center' });
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    const nombreEsc = perfilEscuela?.nombreEscuela || nombreEscuela || 'Escuela';
+    doc.text(nombreEsc.toUpperCase(), pw / 2, 11, { align: 'center' });
 
-      const cct = perfilEscuela?.cct || '—';
-      doc.text(`CCT: ${cct}`, pw / 2, currentY + 17, { align: 'center' });
+    const fechaInicio = document.getElementById('exp-fecha-inicio').value;
+    const fechaFin = document.getElementById('exp-fecha-fin').value;
+    const turno = document.getElementById('exp-turno-actual')?.textContent || '—';
+    doc.text(`${turno} · Período: ${fechaInicio} al ${fechaFin}`, pw / 2, 15, { align: 'center' });
 
-      currentY += 22;
-    };
+    // Construir tabla
+    const head = [
+      [
+        '#',
+        'Nombre Alumno',
+        ...todasFechas.flatMap(f => [
+          f.split('-').slice(1).join('/'), // Fecha corta
+          ''                                 // Espacio para estatus
+        ]),
+        'A',
+        'R',
+        'F',
+        '%'
+      ]
+    ];
 
-    agregarEncabezado();
+    // Agregar subheader (Hora/Estatus)
+    const subhead = [
+      '',
+      '',
+      ...todasFechas.flatMap(f => ['Hora', 'Estatus']),
+      '',
+      '',
+      '',
+      ''
+    ];
 
-    // Procesar cada alumno
-    alumnos.forEach((alumno, idx) => {
+    const body = alumnos.map((alumno, idx) => {
       const registros = porAlumno[alumno];
       
-      // Obtener fechas únicas y ordenadas
-      const fechas = [...new Set(registros.map(r => r.fecha))].sort();
+      // Contar por estatus
+      const contA = registros.filter(r => r.estatus.toLowerCase().includes('asist')).length;
+      const contR = registros.filter(r => r.estatus.toLowerCase().includes('retard')).length;
+      const contF = registros.filter(r => 
+        r.estatus.toLowerCase().includes('falt') || r.estatus.toLowerCase().includes('ausent')
+      ).length;
       
-      // Calcular porcentaje asistencia
-      const asistencias = registros.filter(r => r.estatus.toLowerCase().includes('asist')).length;
-      const pctAsist = registros.length > 0 ? Math.round((asistencias / registros.length) * 100) : 0;
+      const pctAsist = registros.length > 0 ? Math.round((contA / registros.length) * 100) : 0;
 
-      // Crear tabla para este alumno
-      const head = [
-        ['ALUMNO: ' + alumno, ...fechas.map(f => f.split('-').slice(1).join('-')), '% ASIST']
+      const row = [
+        idx + 1,
+        alumno,
+        ...todasFechas.flatMap(f => {
+          const reg = registros.find(r => r.fecha === f);
+          const hora = reg?.hora || 'SR';
+          const est = reg ? (
+            reg.estatus.toLowerCase().includes('asist') ? 'A' :
+            reg.estatus.toLowerCase().includes('retard') ? 'R' :
+            reg.estatus.toLowerCase().includes('justif') ? 'J' :
+            reg.estatus.toLowerCase().includes('falt') || reg.estatus.toLowerCase().includes('ausent') ? 'F' : 'SR'
+          ) : 'SR';
+          return [hora, est];
+        }),
+        contA,
+        contR,
+        contF,
+        pctAsist + '%'
       ];
 
-      const body = [
-        [
-          'ESTATUS',
-          ...fechas.map(f => {
-            const reg = registros.find(r => r.fecha === f);
-            if (!reg) return '';
-            
-            // Mapear estatus a símbolos
-            const est = reg.estatus.toLowerCase();
-            const sym = est.includes('asist') ? 'A' : 
-                       est.includes('retard') ? 'R' : 
-                       est.includes('justif') ? 'J' : 'F';
-            return sym;
-          }),
-          pctAsist + '%'
-        ],
-        [
-          'HORA',
-          ...fechas.map(f => {
-            const reg = registros.find(r => r.fecha === f);
-            return reg?.hora || '—';
-          }),
-          ''
-        ]
-      ];
+      return row;
+    });
 
-      // Verificar si necesita página nueva
-      if (currentY > ph - 50) {
-        doc.addPage();
-        currentY = 10;
-        agregarEncabezado();
+    doc.autoTable({
+      startY: 20,
+      head: head,
+      body: body,
+      styles: {
+        fontSize: 6.5,
+        cellPadding: 1.5,
+        halign: 'center',
+        valign: 'middle',
+        lineColor: 200
+      },
+      headStyles: {
+        fillColor: [44, 62, 80],
+        textColor: 255,
+        fontStyle: 'bold',
+        halign: 'center',
+        lineWidth: 0.3
+      },
+      bodyStyles: {
+        textColor: 51,
+        lineWidth: 0.2
+      },
+      alternateRowStyles: {
+        fillColor: [245, 248, 250]
+      },
+      columnStyles: {
+        0: { cellWidth: 8, fontStyle: 'bold' },
+        1: { cellWidth: 40, halign: 'left' }
+      },
+      margin: { left: 5, right: 5, top: 5 },
+      didDrawPage: (data) => {
+        // Pie de página
+        const finalY = data.lastAutoTable.finalY || ph - 30;
+        
+        // Leyenda
+        doc.setFontSize(6);
+        doc.setTextColor(100, 100, 100);
+        doc.text('A=Asistencia  R=Retardo  F=Falta  SR=Sin Registro  J=Justificado', 8, finalY + 5);
+
+        // Promedios
+        const contTotalA = resultado.filter(r => r.estatus.toLowerCase().includes('asist')).length;
+        const contTotalR = resultado.filter(r => r.estatus.toLowerCase().includes('retard')).length;
+        const contTotalF = resultado.filter(r => 
+          r.estatus.toLowerCase().includes('falt') || r.estatus.toLowerCase().includes('ausent')
+        ).length;
+        const pctTotal = resultado.length > 0 ? Math.round((contTotalA / resultado.length) * 100) : 0;
+
+        doc.text(`PROMEDIOS: ${contTotalA}  ${contTotalR}  ${contTotalF}  ${pctTotal}%`, pw - 50, finalY + 5);
+
+        // Firma
+        doc.setFontSize(7);
+        doc.text(`Director(a): _________________     Firma y Sello`, 8, finalY + 15);
+
+        // Pie
+        doc.setFontSize(6);
+        doc.setTextColor(150, 150, 150);
+        const pageCount = doc.internal.getNumberOfPages();
+        doc.text(`Pág. ${data.pageNumber}/${pageCount} · ${new Date().toLocaleDateString('es-MX')}`, pw - 20, ph - 3);
       }
-
-      doc.autoTable({
-        startY: currentY,
-        head: head,
-        body: body,
-        styles: {
-          fontSize: 7,
-          cellPadding: 2,
-          halign: 'center',
-          valign: 'middle'
-        },
-        headStyles: {
-          fillColor: [13, 43, 26],
-          textColor: 255,
-          fontStyle: 'bold',
-          halign: 'center'
-        },
-        bodyStyles: {
-          textColor: 51
-        },
-        alternateRowStyles: {
-          fillColor: [248, 250, 252]
-        },
-        columnStyles: {
-          0: { cellWidth: 20, fontStyle: 'bold' }
-        },
-        margin: { left: 5, right: 5 },
-        didDrawPage: (data) => {
-          // Pie de página
-          const pageCount = doc.internal.getNumberOfPages();
-          doc.setFontSize(6);
-          doc.setTextColor(148, 163, 184);
-          doc.text(
-            `Pág. ${data.pageNumber} de ${pageCount}`,
-            pw - 15,
-            ph - 5
-          );
-        }
-      });
-
-      currentY = doc.lastAutoTable.finalY + 5;
     });
 
     // Descargar
-    const fechaInicio = document.getElementById('exp-fecha-inicio').value;
-    const fechaFin = document.getElementById('exp-fecha-fin').value;
     doc.save(`asistencia_${fechaInicio}_${fechaFin}.pdf`);
     toast('📄 PDF generado correctamente');
   } catch (e) {

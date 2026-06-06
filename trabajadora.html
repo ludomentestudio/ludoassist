@@ -1124,74 +1124,48 @@ window.procesarManual = async function() {
     timestamp: Date.now()
   };
 
+  // Función auxiliar: buscar key existente de un alumno en una fecha
+  async function buscarKeyExistente(nombreBuscar, fechaBuscar) {
+    const snap = await dbOnce(`escuelas/${ID_ESC}/asistencias`);
+    let key = null, horaOriginal = null;
+    if (snap.exists()) {
+      snap.forEach(child => {
+        const r = child.val();
+        if (r.fecha !== fechaBuscar) return;
+        const nL = nombreLimpio(r.nombre||'').toUpperCase();
+        if (nL === nombreBuscar.toUpperCase() && r.turno === turno &&
+            r.grado === String(grado) && r.grupoLetra === grupo) {
+          key = child.key;
+          horaOriginal = r.hora || null;
+        }
+      });
+    }
+    return { key, horaOriginal };
+  }
+
   try {
     if (estatusSeleccionado==='justificado') {
-      // Registro por cada día seleccionado
-      const fechas=[...diasSeleccionados].sort();
-      let ok=0;
-      for(const fecha of fechas) {
-        // Buscar si ya existe registro del alumno en esa fecha (del escáner)
-        const snapBuscar = await new Promise(res =>
-          dbOnce(`escuelas/${ID_ESC}/asistencias`).then(snap => res(snap)).catch(rej)
-        );
-        let keyExistente=null, horaEntradaOriginal=null;
-        if(snapBuscar.exists()) {
-          snapBuscar.forEach(child=>{
-            const r=child.val();
-            const nLimpio=nombreLimpio(r.nombre||'').toUpperCase();
-            if(nLimpio===nombre.toUpperCase()&&r.turno===turno&&r.grado===String(grado)&&r.grupoLetra===grupo) {
-              keyExistente=child.key;
-              horaEntradaOriginal=r.hora||null;
-            }
-          });
-        }
-        const registro = {
-          ...baseRegistro,
-          fecha,
-          hora: horaActual(),
-          horaEntradaOriginal: horaEntradaOriginal // null si no había registro previo
-        };
-        if(keyExistente) {
-          // Sobreescribir registro existente
-          await new Promise((res,rej)=>
-            dbSet(`escuelas/${ID_ESC}/asistencias/${keyExistente}`, registro).then(res).catch(rej)
-          );
+      const fechas = [...diasSeleccionados].sort();
+      let ok = 0;
+      for (const fecha of fechas) {
+        const { key: keyExistente, horaOriginal } = await buscarKeyExistente(nombre, fecha);
+        const registro = { ...baseRegistro, fecha, hora: horaActual(), horaEntradaOriginal: horaOriginal };
+        if (keyExistente) {
+          await dbSet(`escuelas/${ID_ESC}/asistencias/${keyExistente}`, registro);
         } else {
-          // Crear nuevo registro
-          await new Promise((res,rej)=>
-            dbPush(`escuelas/${ID_ESC}/asistencias`, registro).then(res).catch(rej)
-          );
+          await dbPush(`escuelas/${ID_ESC}/asistencias`, registro);
         }
         ok++;
       }
       toast(`✅ Justificación registrada en ${ok} día${ok!==1?'s':''}`);
     } else {
-      // Registro simple para la fecha de hoy
-      const fecha=hoy();
-      const registro={...baseRegistro, fecha, hora:horaActual(), horaEntradaOriginal:null};
-      // Buscar si existe registro previo hoy
-      const snapBuscar = await new Promise(res =>
-        dbOnce(`escuelas/${ID_ESC}/asistencias`).then(snap => res(snap)).catch(rej)
-      );
-      let keyExistente=null, horaOriginal=null;
-      if(snapBuscar.exists()) {
-        snapBuscar.forEach(child=>{
-          const r=child.val();
-          const nL=nombreLimpio(r.nombre||'').toUpperCase();
-          if(nL===nombre.toUpperCase()&&r.turno===turno&&r.grado===String(grado)&&r.grupoLetra===grupo) {
-            keyExistente=child.key; horaOriginal=r.hora||null;
-          }
-        });
-      }
-      registro.horaEntradaOriginal=horaOriginal;
-      if(keyExistente) {
-        await new Promise((res,rej)=>
-          dbSet(`escuelas/${ID_ESC}/asistencias/${keyExistente}`, registro).then(res).catch(rej)
-        );
+      const fecha = hoy();
+      const { key: keyExistente, horaOriginal } = await buscarKeyExistente(nombre, fecha);
+      const registro = { ...baseRegistro, fecha, hora: horaActual(), horaEntradaOriginal: horaOriginal };
+      if (keyExistente) {
+        await dbSet(`escuelas/${ID_ESC}/asistencias/${keyExistente}`, registro);
       } else {
-        await new Promise((res,rej)=>
-          dbPush(`escuelas/${ID_ESC}/asistencias`, registro).then(res).catch(rej)
-        );
+        await dbPush(`escuelas/${ID_ESC}/asistencias`, registro);
       }
       toast('✅ Asistencia registrada');
     }

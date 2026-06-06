@@ -26,9 +26,6 @@
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
 body{background:var(--light);color:var(--slate);min-height:100dvh;display:flex;flex-direction:column;}
 
-/* ════════════════════════════════
-   PANTALLA LOGIN — con vida escolar
-   ════════════════════════════════ */
 #screen-login{
   position:fixed;inset:0;
   background:linear-gradient(160deg,#1a4a2a 0%,#0d2b1a 50%,#0a1f14 100%);
@@ -36,8 +33,6 @@ body{background:var(--light);color:var(--slate);min-height:100dvh;display:flex;f
   z-index:999;padding:1.5rem;gap:1rem;overflow:hidden;
 }
 #screen-login.hidden{display:none;}
-
-/* Fondo pizarrón con líneas */
 #screen-login::before{
   content:'';position:absolute;inset:0;
   background-image:
@@ -45,8 +40,6 @@ body{background:var(--light);color:var(--slate);min-height:100dvh;display:flex;f
     repeating-linear-gradient(90deg,transparent,transparent 38px,rgba(255,255,255,.02) 38px,rgba(255,255,255,.02) 40px);
   pointer-events:none;
 }
-
-/* ── Útiles flotantes animados ── */
 .utensilios{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
 .util{position:absolute;font-size:1.6rem;animation:flotar linear infinite;opacity:.55;}
 .util:nth-child(1) {left:5%;  animation-duration:14s; animation-delay:0s;   top:110%;}
@@ -66,8 +59,6 @@ body{background:var(--light);color:var(--slate);min-height:100dvh;display:flex;f
   50% {opacity:.7;}
   100%{transform:translateY(-120vh) rotate(360deg); opacity:0;}
 }
-
-/* ── Logo central ── */
 .login-logo-wrap{
   position:relative;z-index:2;
   background:rgba(255,255,255,.1);
@@ -81,8 +72,6 @@ body{background:var(--light);color:var(--slate);min-height:100dvh;display:flex;f
 .login-icon{font-size:2.8rem;line-height:1;}
 .login-app{font-family:'Fredoka One',cursive;font-size:1.6rem;color:var(--yellow);letter-spacing:1px;line-height:1;}
 .login-role{font-size:.7rem;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:3px;font-weight:700;}
-
-/* ── Tarjeta de login ── */
 .login-card{
   background:rgba(255,255,255,.1);
   border:1px solid rgba(255,255,255,.2);
@@ -119,19 +108,11 @@ body{background:var(--light);color:var(--slate);min-height:100dvh;display:flex;f
 .login-btn:active{transform:scale(.97);}
 .login-btn:disabled{background:rgba(255,255,255,.2);color:rgba(255,255,255,.4);cursor:not-allowed;box-shadow:none;}
 .login-error{color:#ff8a80;font-size:.82rem;text-align:center;font-weight:700;min-height:18px;}
-
-/* Decoración esquinas */
-.corner-deco{
-  position:absolute;z-index:1;font-size:5rem;opacity:.08;
-  animation:rotar 20s linear infinite;
-}
+.corner-deco{position:absolute;z-index:1;font-size:5rem;opacity:.08;animation:rotar 20s linear infinite;}
 .corner-deco.tl{top:-1rem;left:-1rem;}
 .corner-deco.br{bottom:-1rem;right:-1rem;animation-direction:reverse;}
 @keyframes rotar{to{transform:rotate(360deg)}}
 
-/* ════════════════════
-   HEADER
-   ════════════════════ */
 header{
   background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);
   color:var(--white);padding:.75rem 1rem;
@@ -140,77 +121,36 @@ header{
 }
 .hdr-left{display:flex;align-items:center;gap:.6rem;}
 .hdr-icon{font-size:1.5rem;}
-.hdr-texts{}
 .hdr-title{font-size:.95rem;font-weight:800;letter-spacing:.3px;font-family:'Fredoka One',cursive;}
 .hdr-school{font-size:.62rem;color:rgba(255,255,255,.75);font-weight:700;letter-spacing:.5px;}
 .hdr-right{display:flex;gap:.5rem;}
 .hdr-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:var(--white);padding:.35rem .65rem;border-radius:6px;cursor:pointer;font-size:.7rem;font-weight:700;transition:all .3s;}
 .hdr-btn:active{background:rgba(255,255,255,.25);}
 
-/* ════════════════════
-   TABS
-   ════════════════════ */
-.tabs{display:flex;background:#0d2b1a;border-bottom:2px solid rgba(255,255,255,.08);flex-shrink:0;}
-.tab{flex:1;padding:.7rem .5rem;text-align:center;font-size:.7rem;font-weight:800;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.8px;cursor:pointer;transition:all .3s;border-bottom:3px solid transparent;}
-.tab.active{color:var(--yellow);border-bottom-color:var(--yellow);}
-
-/* ════════════════════
-   VISTAS
-   ════════════════════ */
 .view{flex:1;overflow-y:auto;padding:1rem;display:none;padding-bottom:2rem;}
 .view.active{display:block;animation:fadeIn .2s ease;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
-/* ════════════════════
-   BARRA FECHA + FILTRO TURNO
-   ════════════════════ */
-.top-bar{
-  background:var(--white);border-radius:12px;
-  padding:.85rem 1rem;margin-bottom:.85rem;
-  box-shadow:0 2px 6px rgba(0,0,0,.08);
-  display:flex;flex-direction:column;gap:.75rem;
-}
+.top-bar{background:var(--white);border-radius:12px;padding:.85rem 1rem;margin-bottom:.85rem;box-shadow:0 2px 6px rgba(0,0,0,.08);display:flex;flex-direction:column;gap:.75rem;}
 .top-row1{display:flex;justify-content:space-between;align-items:center;}
 .fecha-txt{font-size:.88rem;font-weight:800;color:var(--navy);}
 .fecha-sub{font-size:.68rem;color:var(--slate2);}
-.btn-refresh{
-  background:var(--green);color:var(--white);border:none;
-  border-radius:8px;padding:.45rem .9rem;font-size:.72rem;font-weight:800;
-  cursor:pointer;display:flex;align-items:center;gap:.3rem;
-}
+.btn-refresh{background:var(--green);color:var(--white);border:none;border-radius:8px;padding:.45rem .9rem;font-size:.72rem;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:.3rem;}
 .btn-refresh:active{transform:scale(.96);}
 
-/* ── Selector de turno ── */
 .turno-selector{display:flex;gap:.5rem;}
-.turno-btn{
-  flex:1;padding:.55rem .5rem;
-  border:2px solid var(--border);border-radius:8px;
-  background:var(--white);color:var(--slate2);
-  font-size:.75rem;font-weight:800;text-transform:uppercase;
-  letter-spacing:.5px;cursor:pointer;transition:all .25s;
-  display:flex;align-items:center;justify-content:center;gap:.35rem;
-}
+.turno-btn{flex:1;padding:.55rem .5rem;border:2px solid var(--border);border-radius:8px;background:var(--white);color:var(--slate2);font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:.35rem;}
 .turno-btn.active-mat{background:#FFF8E1;border-color:#F59E0B;color:#92400E;}
 .turno-btn.active-vesp{background:#EEF2FF;border-color:#6366F1;color:#3730A3;}
 .turno-btn.active-all{background:#ECFDF5;border-color:var(--emerald);color:#065F46;}
 
-/* ════════════════════
-   RESUMEN
-   ════════════════════ */
 .resumen-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin-bottom:.85rem;}
 .res-card{background:var(--white);border-radius:10px;padding:.7rem .4rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.07);}
 .res-num{font-size:1.3rem;font-weight:900;color:var(--navy);}
 .res-lbl{font-size:.58rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--slate2);margin-top:.1rem;}
 
-/* ════════════════════
-   SECCIÓN TURNO (desplegable)
-   ════════════════════ */
 .turno-section{margin-bottom:.75rem;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08);}
-.turno-section-hdr{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:.85rem 1rem;cursor:pointer;user-select:none;
-  transition:filter .2s;
-}
+.turno-section-hdr{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1rem;cursor:pointer;user-select:none;transition:filter .2s;}
 .turno-section-hdr:active{filter:brightness(.95);}
 .turno-section.mat .turno-section-hdr{background:linear-gradient(135deg,#F59E0B,#D97706);}
 .turno-section.vesp .turno-section-hdr{background:linear-gradient(135deg,#6366F1,#4F46E5);}
@@ -223,9 +163,6 @@ header{
 .turno-section-body{display:none;background:#F8FAFC;padding:.75rem;}
 .turno-section.open .turno-section-body{display:block;}
 
-/* ════════════════════
-   TARJETA GRUPO
-   ════════════════════ */
 .grupo-card{background:var(--white);border-radius:10px;margin-bottom:.65rem;box-shadow:0 1px 4px rgba(0,0,0,.07);overflow:hidden;transition:all .3s;border-left:4px solid var(--border);}
 .grupo-card.mat-card{border-left-color:#F59E0B;}
 .grupo-card.vesp-card{border-left-color:#6366F1;}
@@ -244,8 +181,6 @@ header{
 .stat-f{background:#FEE2E2;color:#991B1B;}
 .grupo-chevron{font-size:.75rem;color:var(--slate2);transition:transform .3s;margin-left:.3rem;}
 .grupo-card.open .grupo-chevron{transform:rotate(180deg);}
-
-/* ── Detalle ── */
 .grupo-detail{display:none;border-top:1px solid var(--border);}
 .grupo-card.open .grupo-detail{display:block;}
 .detail-msg{background:#F8FAFC;padding:.85rem 1rem;font-size:.75rem;color:var(--slate);white-space:pre-wrap;line-height:1.65;border-bottom:1px solid var(--border);font-family:'Courier New',monospace;}
@@ -258,9 +193,6 @@ header{
 .sent-badge{display:none;align-items:center;gap:.4rem;font-size:.72rem;font-weight:800;color:var(--emerald);padding:.4rem 1rem .7rem;}
 .grupo-card.enviado .sent-badge{display:flex;}
 
-/* ════════════════════
-   ESTADOS VACÍO / CARGA
-   ════════════════════ */
 .empty-state{text-align:center;padding:3rem 1rem;color:var(--slate2);}
 .empty-icon{font-size:3rem;margin-bottom:.75rem;}
 .empty-txt{font-size:.9rem;font-weight:800;color:var(--navy);}
@@ -270,43 +202,16 @@ header{
 .spin{animation:spin .7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* ════════════════════
-   CONFIG — filtro turno
-   ════════════════════ */
 .config-turno-filter{display:flex;gap:.5rem;margin-bottom:1rem;}
 .cfg-turno-btn{flex:1;padding:.6rem .4rem;border:2px solid var(--border);border-radius:9px;background:var(--white);color:var(--slate2);font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:.3rem;}
 .cfg-turno-btn.active-mat{background:#FFF8E1;border-color:#F59E0B;color:#92400E;}
 .cfg-turno-btn.active-vesp{background:#EEF2FF;border-color:#6366F1;color:#3730A3;}
 .cfg-turno-btn.active-all{background:#ECFDF5;border-color:var(--emerald);color:#065F46;}
 
-/* ════════════════════
-   BOTONES EXPORTAR
-   ════════════════════ */
-.export-bar{display:flex;gap:.5rem;margin-bottom:.85rem;}
-.btn-export{flex:1;padding:.7rem .4rem;border:none;border-radius:9px;font-size:.75rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.35rem;transition:all .3s;}
-.btn-export:active{transform:scale(.96);}
-.btn-export-pdf{background:linear-gradient(135deg,#EF4444,#DC2626);color:var(--white);box-shadow:0 3px 8px rgba(239,68,68,.3);}
-.btn-export-excel{background:linear-gradient(135deg,#16A34A,#15803D);color:var(--white);box-shadow:0 3px 8px rgba(22,163,74,.3);}
-
-/* Modal exportar */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9998;display:none;align-items:flex-end;justify-content:center;}
 .modal-overlay.show{display:flex;}
 .modal-sheet{background:var(--white);border-radius:20px 20px 0 0;padding:1.5rem;width:100%;max-width:480px;animation:slideUp .3s ease;}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.modal-title{font-size:1rem;font-weight:900;color:var(--navy);margin-bottom:.3rem;}
-.modal-sub{font-size:.78rem;color:var(--slate2);margin-bottom:1.2rem;}
-.modal-options{display:flex;flex-direction:column;gap:.65rem;margin-bottom:1.2rem;}
-.modal-opt{background:var(--light);border:2px solid var(--border);border-radius:10px;padding:1rem;cursor:pointer;display:flex;align-items:center;gap:.85rem;transition:all .25s;}
-.modal-opt:active{transform:scale(.98);}
-.modal-opt.selected{border-color:var(--green);background:var(--green3);}
-.modal-opt-icon{font-size:1.8rem;}
-.modal-opt-txt{font-size:.88rem;font-weight:800;color:var(--navy);}
-.modal-opt-sub{font-size:.72rem;color:var(--slate2);}
-.modal-btns{display:flex;gap:.6rem;}
-.modal-btn-cancel{flex:1;padding:.85rem;background:var(--light);border:1px solid var(--border);border-radius:9px;font-size:.88rem;font-weight:800;cursor:pointer;color:var(--slate);}
-.modal-btn-go{flex:2;padding:.85rem;border:none;border-radius:9px;font-size:.88rem;font-weight:900;cursor:pointer;color:var(--white);transition:all .3s;}
-.modal-btn-go.pdf{background:linear-gradient(135deg,#EF4444,#DC2626);}
-.modal-btn-go.excel{background:linear-gradient(135deg,#16A34A,#15803D);}
 .config-intro{background:var(--white);border-radius:10px;padding:1rem;margin-bottom:1rem;box-shadow:0 1px 3px rgba(0,0,0,.08);font-size:.8rem;color:var(--slate);line-height:1.65;}
 .config-intro strong{color:var(--navy);}
 .config-section{margin-bottom:1.5rem;}
@@ -321,134 +226,55 @@ header{
 .btn-save-config{width:100%;padding:1rem;background:linear-gradient(135deg,var(--green),var(--green2));color:var(--white);border:none;border-radius:10px;font-size:1rem;font-weight:900;cursor:pointer;margin-top:.5rem;transition:all .3s;box-shadow:0 4px 12px rgba(26,107,58,.3);}
 .btn-save-config:active{transform:scale(.97);}
 
-/* ════════════════════
-   TOAST
-   ════════════════════ */
 #toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--navy);color:var(--white);padding:.7rem 1.5rem;border-radius:50px;font-size:.82rem;font-weight:800;z-index:9999;transition:transform .3s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.3);}
 #toast.show{transform:translateX(-50%) translateY(0);}
-/* ════════════════════════════════
-   BOTONES FLOTANTES AL PIE
-   ════════════════════════════════ */
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 90px;
-  background: linear-gradient(180deg, rgba(240, 247, 242, 0.95) 0%, rgba(240, 247, 242, 0.98) 100%);
-  border-top: 2px solid var(--border);
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding-bottom: 12px;
-  padding-top: 8px;
-  gap: 8px;
-  z-index: 100;
-  backdrop-filter: blur(8px);
-}
 
-.bottom-nav-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  padding: 8px 12px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  font-size: 1.8rem;
-  text-align: center;
-  border-radius: 12px;
-  transition: all 0.2s;
-  flex: 1;
-  max-width: 70px;
-  position: relative;
-}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:90px;background:linear-gradient(180deg,rgba(240,247,242,.95) 0%,rgba(240,247,242,.98) 100%);border-top:2px solid var(--border);display:flex;justify-content:space-around;align-items:center;padding-bottom:12px;padding-top:8px;gap:8px;z-index:100;backdrop-filter:blur(8px);}
+.bottom-nav-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px 12px;background:transparent;border:none;cursor:pointer;font-size:1.8rem;text-align:center;border-radius:12px;transition:all .2s;flex:1;max-width:70px;position:relative;}
+.bottom-nav-btn:hover{background:rgba(26,107,58,.08);transform:translateY(-2px);}
+.bottom-nav-btn:active{transform:translateY(0);}
+.bottom-nav-btn-label{font-size:.65rem;font-weight:700;color:var(--slate);text-transform:uppercase;letter-spacing:.5px;line-height:1.1;}
+.bottom-nav-btn.active{background:rgba(26,107,58,.12);border-bottom:3px solid var(--green);}
+body{padding-bottom:110px;}
 
-.bottom-nav-btn:hover {
-  background: rgba(26, 107, 58, 0.08);
-  transform: translateY(-2px);
-}
-
-.bottom-nav-btn:active {
-  transform: translateY(0);
-}
-
-.bottom-nav-btn-label {
-  font-size: 0.65rem;
-  font-weight: 700;
-  color: var(--slate);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  line-height: 1.1;
-}
-
-.bottom-nav-btn.active {
-  background: rgba(26, 107, 58, 0.12);
-  border-bottom: 3px solid var(--green);
-}
-
-body {
-  padding-bottom: 110px;
-}
-
+/* ── select estilizado para manual ── */
+.man-select{width:100%;padding:.75rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-weight:700;color:var(--navy);background:var(--white);outline:none;font-family:'Nunito',sans-serif;appearance:auto;}
+.man-select:focus{border-color:var(--green);}
+.man-select:disabled{background:#f1f5f9;color:var(--slate2);}
 </style>
 </head>
 <body>
 
-<!-- ══════════════════════════════════
-     PANTALLA LOGIN
-     ══════════════════════════════════ -->
+<!-- LOGIN -->
 <div id="screen-login">
-
-  <!-- Útiles flotantes -->
   <div class="utensilios">
-    <span class="util">✏️</span>
-    <span class="util">📏</span>
-    <span class="util">📐</span>
-    <span class="util">🖊️</span>
-    <span class="util">📚</span>
-    <span class="util">🖋️</span>
-    <span class="util">📝</span>
-    <span class="util">🔭</span>
-    <span class="util">🎒</span>
-    <span class="util">📌</span>
-    <span class="util">✂️</span>
-    <span class="util">🔬</span>
+    <span class="util">✏️</span><span class="util">📏</span><span class="util">📐</span>
+    <span class="util">🖊️</span><span class="util">📚</span><span class="util">🖋️</span>
+    <span class="util">📝</span><span class="util">🔭</span><span class="util">🎒</span>
+    <span class="util">📌</span><span class="util">✂️</span><span class="util">🔬</span>
   </div>
-
-  <!-- Decoraciones de esquina -->
   <span class="corner-deco tl">📐</span>
   <span class="corner-deco br">📏</span>
-
-  <!-- Logo / título -->
   <div class="login-logo-wrap">
     <div class="login-icon">👩‍💼</div>
     <div class="login-app">LudoAssist</div>
     <div class="login-role">Trabajadora Social</div>
   </div>
-
-  <!-- Formulario -->
   <div class="login-card">
     <div>
       <div class="login-label">Código de escuela</div>
       <div class="login-input-wrap">
         <span class="login-icon-field">🏫</span>
         <input class="login-input" id="login-codigo" type="text"
-          placeholder="Ej: est17"
-          autocomplete="off" autocorrect="off" spellcheck="false">
+          placeholder="Ej: est17" autocomplete="off" autocorrect="off" spellcheck="false">
       </div>
     </div>
     <button class="login-btn" id="btn-login">✅ Entrar</button>
     <div class="login-error" id="login-error"></div>
   </div>
-
 </div>
 
-<!-- ══════════════════════════════════
-     APP PRINCIPAL
-     ══════════════════════════════════ -->
+<!-- HEADER -->
 <header>
   <div class="hdr-left">
     <div class="hdr-icon">👩‍💼</div>
@@ -462,11 +288,8 @@ body {
   </div>
 </header>
 
-<!-- TABS ELIMINADAS - Ahora usando botones al pie de página -->
-
-<!-- ── VISTA ASISTENCIAS ── -->
+<!-- VISTA ASISTENCIAS -->
 <div class="view" id="view-asistencias">
-
   <div class="top-bar">
     <div class="top-row1">
       <div>
@@ -477,68 +300,66 @@ body {
         <span id="refresh-icon">🔄</span> Actualizar
       </button>
     </div>
-    <!-- Selector de turno -->
     <div class="turno-selector">
       <button class="turno-btn active-all" id="btn-turno-all" onclick="filtrarTurno('all')">🌐 Todos</button>
       <button class="turno-btn" id="btn-turno-mat" onclick="filtrarTurno('mat')">🌅 Matutino</button>
       <button class="turno-btn" id="btn-turno-vesp" onclick="filtrarTurno('vesp')">🌆 Vespertino</button>
     </div>
   </div>
-
   <div class="resumen-bar">
     <div class="res-card"><div class="res-num" id="res-grupos">—</div><div class="res-lbl">Grupos</div></div>
     <div class="res-card"><div class="res-num" style="color:var(--emerald)" id="res-asist">—</div><div class="res-lbl">Asist.</div></div>
     <div class="res-card"><div class="res-num" style="color:var(--amber)" id="res-retard">—</div><div class="res-lbl">Ret.</div></div>
     <div class="res-card"><div class="res-num" style="color:var(--ruby)" id="res-faltas">—</div><div class="res-lbl">Faltas</div></div>
   </div>
-
   <div id="lista-grupos">
-    <div class="loading-state">
-      <div class="loader"></div>
-      <div style="font-size:.82rem;color:var(--slate2);">Cargando asistencias...</div>
-    </div>
+    <div class="loading-state"><div class="loader"></div><div style="font-size:.82rem;color:var(--slate2);">Cargando asistencias...</div></div>
   </div>
 </div>
 
-<!-- ── VISTA ASISTENCIA MANUAL ── -->
+<!-- VISTA ASISTENCIA MANUAL -->
 <div class="view" id="view-manual">
   <div class="config-intro">
     <strong>📝 Asistencia Manual</strong><br>
-    Registra asistencia, retardos o justificaciones para alumnos que aún no han sido registrados.<br><br>
+    Registra asistencia, retardos o justificaciones para alumnos que aún no han sido registrados.
   </div>
-  
+
   <div style="background:var(--white);border-radius:10px;padding:1rem;margin-bottom:1rem;box-shadow:0 1px 3px rgba(0,0,0,.08);">
+
+    <!-- Fila 1: Turno / Grado / Grupo -->
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem;margin-bottom:1rem;">
       <div>
         <label style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--slate2);display:block;margin-bottom:.4rem;">Turno</label>
-        <select id="man-turno" onchange="window.manActualizarGrados()" style="width:100%;padding:.75rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-weight:700;color:var(--navy);background:var(--white);outline:none;font-family:'Nunito',sans-serif;">
-          <option value="">Seleccione turno...</option>
+        <select id="man-turno" class="man-select" onchange="manActualizarGrados()">
+          <option value="">Seleccione...</option>
         </select>
       </div>
       <div>
         <label style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--slate2);display:block;margin-bottom:.4rem;">Grado</label>
-        <select id="man-grado" onchange="window.manActualizarGrupos()" style="width:100%;padding:.75rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-weight:700;color:var(--navy);background:var(--white);outline:none;font-family:'Nunito',sans-serif;">
-          <option value="">Seleccione grado...</option>
+        <select id="man-grado" class="man-select" onchange="manActualizarGrupos()" disabled>
+          <option value="">Turno primero</option>
         </select>
       </div>
       <div>
         <label style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--slate2);display:block;margin-bottom:.4rem;">Grupo</label>
-        <select id="man-grupo" onchange="window.manCargarAlumnos()" style="width:100%;padding:.75rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-weight:700;color:var(--navy);background:var(--white);outline:none;font-family:'Nunito',sans-serif;">
-          <option value="">Seleccione grupo...</option>
+        <select id="man-grupo" class="man-select" onchange="manCargarAlumnos()" disabled>
+          <option value="">Grado primero</option>
         </select>
       </div>
     </div>
 
+    <!-- Alumno -->
     <div style="margin-bottom:1rem;">
       <label style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--slate2);display:block;margin-bottom:.4rem;">Alumno</label>
-      <select id="man-nombre" style="width:100%;padding:.75rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-weight:700;color:var(--navy);background:var(--white);outline:none;font-family:'Nunito',sans-serif;">
+      <select id="man-nombre" class="man-select" disabled>
         <option value="">Seleccione grupo primero...</option>
       </select>
     </div>
 
+    <!-- Estatus -->
     <div style="background:var(--light);padding:1rem;border-radius:9px;border:1.5px solid var(--border);margin-bottom:1rem;">
-      <label style="margin-top:0;font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--slate2);display:block;margin-bottom:.4rem;">Estatus a Aplicar</label>
-      <select id="man-mode" onchange="window.toggleMotive()" style="width:100%;padding:.75rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-weight:700;color:var(--navy);background:var(--white);outline:none;font-family:'Nunito',sans-serif;">
+      <label style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--slate2);display:block;margin-bottom:.4rem;">Estatus a Aplicar</label>
+      <select id="man-mode" class="man-select" onchange="toggleMotive()">
         <option value="asistencia">✅ Asistencia</option>
         <option value="retardo">🕐 Retardo</option>
         <option value="falta">❌ Falta</option>
@@ -546,7 +367,7 @@ body {
       </select>
       <div id="motive-box" style="margin-top:.8rem;display:none;">
         <label style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--slate2);display:block;margin-bottom:.4rem;">Motivo Oficial</label>
-        <select id="man-motive" style="width:100%;padding:.75rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-weight:700;color:var(--navy);background:var(--white);outline:none;font-family:'Nunito',sans-serif;">
+        <select id="man-motive" class="man-select">
           <option value="Receta médica">Enfermedad — Receta Médica</option>
           <option value="Cita médica">Cita Médica Programada</option>
           <option value="Aviso Padre/Tutor">Aviso de Padre / Tutor</option>
@@ -558,19 +379,19 @@ body {
       </div>
     </div>
 
-    <button class="btn btn-ok" onclick="window.procesarManual()" style="width:100%;padding:.85rem;font-size:.95rem;font-weight:700;">✅ Registrar Asistencia Manual</button>
+    <button onclick="procesarManual()" style="width:100%;padding:.85rem;background:linear-gradient(135deg,var(--green),var(--green2));color:var(--white);border:none;border-radius:10px;font-size:.95rem;font-weight:900;cursor:pointer;box-shadow:0 4px 12px rgba(26,107,58,.3);">
+      ✅ Registrar Asistencia Manual
+    </button>
   </div>
 </div>
 
-<!-- ── VISTA EXPORTAR ── -->
+<!-- VISTA EXPORTAR -->
 <div class="view" id="view-exportar">
-
   <div class="config-intro">
     <strong>📊 Exportar Asistencia por Período</strong><br>
     Selecciona el rango de fechas, grado, grupo y alumno. Luego consulta la nube y descarga en PDF o Excel.
   </div>
 
-  <!-- ── TURNO ACTUAL (SOLO LECTURA) ── -->
   <div style="background:var(--white);border-radius:10px;padding:.85rem 1rem;margin-bottom:1rem;box-shadow:0 1px 3px rgba(0,0,0,.08);display:flex;align-items:center;gap:.75rem;">
     <div style="font-size:1.5rem;">🕐</div>
     <div>
@@ -579,10 +400,7 @@ body {
     </div>
   </div>
 
-  <!-- ── FILTROS ── -->
   <div style="background:var(--white);border-radius:10px;padding:1rem;margin-bottom:1rem;box-shadow:0 1px 3px rgba(0,0,0,.08);">
-    
-    <!-- Fila 1: Fechas -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1rem;">
       <div>
         <label style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--slate2);display:block;margin-bottom:.4rem;">Fecha Inicio</label>
@@ -593,8 +411,6 @@ body {
         <input type="date" id="exp-fecha-fin" style="width:100%;padding:.75rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-family:'Nunito',sans-serif;">
       </div>
     </div>
-
-    <!-- Fila 2: Grado y Grupo -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1rem;">
       <div>
         <label style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--slate2);display:block;margin-bottom:.4rem;">Grado</label>
@@ -609,26 +425,20 @@ body {
         </select>
       </div>
     </div>
-
-    <!-- Fila 3: Alumno -->
     <div style="margin-bottom:1rem;">
       <label style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--slate2);display:block;margin-bottom:.4rem;">Alumno</label>
       <select id="exp-alumno" style="width:100%;padding:.75rem 1rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-weight:700;color:var(--navy);background:var(--white);outline:none;font-family:'Nunito',sans-serif;">
         <option value="Todos">Todos</option>
       </select>
     </div>
-
-    <!-- Botón Consultar -->
     <button id="btn-consultar-exp" onclick="consultarNubeExp()" style="width:100%;padding:1rem;background:var(--blue);color:var(--white);border:none;border-radius:10px;font-size:1rem;font-weight:900;cursor:pointer;text-transform:uppercase;letter-spacing:1px;box-shadow:0 4px 12px rgba(2,132,199,.3);transition:all .3s;">🔍 Consultar Nube</button>
   </div>
 
-  <!-- ── BOTONES EXPORTAR ── -->
-  <div id="export-btns" style="display:none;display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1rem;">
-    <button id="btn-pdf-exp" onclick="exportarPDFExp()" style="padding:1rem;background:var(--blue);color:var(--white);border:none;border-radius:10px;font-size:.95rem;font-weight:900;cursor:pointer;text-transform:uppercase;box-shadow:0 4px 12px rgba(2,132,199,.3);transition:all .3s;">📄 PDF</button>
-    <button id="btn-excel-exp" onclick="exportarExcelExp()" style="padding:1rem;background:var(--emerald);color:var(--white);border:none;border-radius:10px;font-size:.95rem;font-weight:900;cursor:pointer;text-transform:uppercase;box-shadow:0 4px 12px rgba(16,185,129,.3);transition:all .3s;">📊 Excel</button>
+  <div id="export-btns" style="display:none;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1rem;">
+    <button id="btn-pdf-exp" onclick="exportarPDFExp()" style="padding:1rem;background:var(--blue);color:var(--white);border:none;border-radius:10px;font-size:.95rem;font-weight:900;cursor:pointer;text-transform:uppercase;box-shadow:0 4px 12px rgba(2,132,199,.3);">📄 PDF</button>
+    <button id="btn-excel-exp" onclick="exportarExcelExp()" style="padding:1rem;background:var(--emerald);color:var(--white);border:none;border-radius:10px;font-size:.95rem;font-weight:900;cursor:pointer;text-transform:uppercase;box-shadow:0 4px 12px rgba(16,185,129,.3);">📊 Excel</button>
   </div>
 
-  <!-- ── VISTA PREVIA TABLA ── -->
   <div style="background:var(--white);border-radius:10px;padding:1rem;box-shadow:0 1px 3px rgba(0,0,0,.08);">
     <div style="font-weight:800;color:var(--navy);margin-bottom:.75rem;">📋 Vista Previa</div>
     <div id="exp-preview-table" style="font-size:.78rem;color:var(--slate2);text-align:center;padding:2rem 1rem;">
@@ -639,8 +449,44 @@ body {
 
 <div id="toast"></div>
 
+<!-- VISTA LINKS WA -->
+<div class="view" id="view-links-wa">
+  <div class="config-intro">
+    <strong>📱 Links de WhatsApp por grupo</strong><br>
+    Pega aquí el link de cada grupo. Al tocar "Enviar", se abrirá WhatsApp con el mensaje listo.<br><br>
+    <strong>¿Cómo obtener el link?</strong><br>
+    Grupo WA → nombre del grupo → <em>Invitar por enlace</em> → copiar.
+  </div>
+  <div class="config-turno-filter">
+    <button class="cfg-turno-btn active-all" id="cfg-btn-all"  onclick="filtrarConfig('all')">🌐 Todos</button>
+    <button class="cfg-turno-btn"            id="cfg-btn-mat"  onclick="filtrarConfig('mat')">🌅 Matutino</button>
+    <button class="cfg-turno-btn"            id="cfg-btn-vesp" onclick="filtrarConfig('vesp')">🌆 Vespertino</button>
+  </div>
+  <div id="config-grupos-container">
+    <div class="loading-state"><div class="loader"></div></div>
+  </div>
+  <button class="btn-save-config" id="btn-save-config">💾 Guardar Links</button>
+</div>
+
+<nav class="bottom-nav">
+  <button class="bottom-nav-btn active" onclick="window.switchView('asistencias')">
+    <span>📋</span><div class="bottom-nav-btn-label">Asistencias</div>
+  </button>
+  <button class="bottom-nav-btn" onclick="window.switchView('exportar')">
+    <span>📤</span><div class="bottom-nav-btn-label">Exportar</div>
+  </button>
+  <button class="bottom-nav-btn" onclick="window.switchView('manual')">
+    <span>📝</span><div class="bottom-nav-btn-label">Manual</div>
+  </button>
+  <button class="bottom-nav-btn" onclick="window.switchView('links-wa')">
+    <span>📱</span><div class="bottom-nav-btn-label">Links WA</div>
+  </button>
+</nav>
+
 <script>
-// Firebase CDN - versión simplificada
+// ══════════════════════════════════════════════
+// FIREBASE
+// ══════════════════════════════════════════════
 const FB = {
   apiKey: "AIzaSyBnlD-4trgGGXXfzHf7FhHDf1cCiaxdMjA",
   authDomain: "ludoasistencia.firebaseapp.com",
@@ -650,52 +496,20 @@ const FB = {
   messagingSenderId: "738361802611",
   appId: "1:738361802611:web:cb13956f002a0e74844f06"
 };
-
-// Esperar a que Firebase esté disponible
 let db = null;
-
-// Wrapper para ref y get compatibles
-const ref = (database, path) => database?.ref(path);
-const get = (reference) => {
-  return new Promise((resolve, reject) => {
-    if (!reference) {
-      reject(new Error('Referencia vacía'));
-      return;
-    }
-    reference.once('value', (snap) => {
-      resolve(snap);
-    }, (err) => {
-      reject(err);
-    });
-  });
-};
-
 const initFirebase = () => {
   if (window.firebase && !window.firebase.apps.length) {
-    try {
-      window.firebase.initializeApp(FB);
-      db = window.firebase.database();
-      console.log('✅ Firebase inicializado');
-    } catch (e) {
-      console.error('Error inicializando Firebase:', e);
-    }
+    try { window.firebase.initializeApp(FB); db = window.firebase.database(); } catch(e){}
   } else if (window.firebase?.apps?.length > 0) {
     db = window.firebase.database();
-    console.log('✅ Firebase ya estaba inicializado');
   }
 };
-
-// Intentar inicializar inmediatamente
 initFirebase();
+if (!db) document.addEventListener('DOMContentLoaded', () => setTimeout(initFirebase, 500));
 
-// Si no funcionó, esperar a que Firebase cargue
-if (!db) {
-  document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(initFirebase, 500);
-  });
-}
-
-// ── ESTADO ──
+// ══════════════════════════════════════════════
+// ESTADO GLOBAL
+// ══════════════════════════════════════════════
 const SK_ESCUELA  = 'ludo_ts_escuela';
 const SK_LINKS    = 'ludo_ts_links';
 const SK_ENVIADOS = 'ludo_ts_enviados';
@@ -703,26 +517,26 @@ const SK_ENVIADOS = 'ludo_ts_enviados';
 let ID_ESCUELA    = localStorage.getItem(SK_ESCUELA) || '';
 let linksWA       = JSON.parse(localStorage.getItem(SK_LINKS)    || '{}');
 let enviados      = JSON.parse(localStorage.getItem(SK_ENVIADOS) || '{}');
-let estructura    = {};
+let estructura    = {};   // { Matutino: { "1": ["A","B",...], "2": [...] }, Vespertino: {...} }
 let asistencias   = {};
 let nombreEscuela = '';
-let turnoFiltro   = 'all'; // 'all' | 'mat' | 'vesp'
+let turnoFiltro   = 'all';
 let cfgTurnoFiltro = 'all';
-let expTurnoFiltro = 'all';
-let perfilEscuela  = {}; // {nombreEscuela, director, cct, logo}
+let perfilEscuela  = {};
 
-// ── HELPERS ──
+// ══════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════
 function toast(msg) {
   const el = document.getElementById('toast');
   el.textContent = msg;
   el.classList.add('show');
   setTimeout(() => el.classList.remove('show'), 2500);
 }
-function hoy() {
-  return new Date().toISOString().split('T')[0];
-}
+function hoy() { return new Date().toISOString().split('T')[0]; }
 function sanitizar(s) {
-  return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,'-').replace(/[^a-z0-9\-]/g,'');
+  return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/\s+/g,'-').replace(/[^a-z0-9\-]/g,'');
 }
 function fechaLegible(iso) {
   const [y,m,d] = iso.split('-');
@@ -731,9 +545,7 @@ function fechaLegible(iso) {
   const dt = new Date(y, m-1, d);
   return `${dias[dt.getDay()]} ${d} de ${meses[m-1]} de ${y}`;
 }
-function nombreLimpio(n) {
-  return (n||'').replace(/^\[ M \] /,'');
-}
+function nombreLimpio(n) { return (n||'').replace(/^\[ M \] /,''); }
 function esTurno(t, filtro) {
   const tl = (t||'').toLowerCase();
   if (filtro === 'mat')  return tl.includes('mat');
@@ -741,76 +553,38 @@ function esTurno(t, filtro) {
   return true;
 }
 
-// ── FUNCIÓN CAMBIAR VISTAS (PRIMERO PARA QUE ESTÉ DISPONIBLE) ──
+// ══════════════════════════════════════════════
+// NAVEGACIÓN
+// ══════════════════════════════════════════════
 window.switchView = function(viewName) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.querySelectorAll('.bottom-nav-btn').forEach(b => b.classList.remove('active'));
   const view = document.getElementById('view-' + viewName);
   if (view) view.classList.add('active');
-  const btn = document.querySelector(`[onclick="window.switchView('${viewName}')"]`);
-  if (btn) btn.classList.add('active');
-  if (viewName === 'links-wa') {
-    setTimeout(() => { if (typeof renderConfig === 'function') renderConfig(); }, 50);
-  }
+  // Marcar botón activo
+  document.querySelectorAll('.bottom-nav-btn').forEach(b => {
+    if (b.getAttribute('onclick')?.includes(`'${viewName}'`)) b.classList.add('active');
+  });
+  if (viewName === 'links-wa') setTimeout(() => renderConfig(), 50);
+  if (viewName === 'manual')   setTimeout(() => cargarTurnosManual(), 50);
 };
+window.addEventListener('DOMContentLoaded', () => setTimeout(() => window.switchView('asistencias'), 100));
 
-// Mostrar primera vista por defecto
-window.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => window.switchView('asistencias'), 100);
-});
-
-// ── FILTRO TURNO ──
+// ══════════════════════════════════════════════
+// FILTRO TURNO
+// ══════════════════════════════════════════════
 window.filtrarTurno = function(f) {
   turnoFiltro = f;
   document.getElementById('btn-turno-all').className  = 'turno-btn' + (f==='all'  ? ' active-all'  : '');
   document.getElementById('btn-turno-mat').className  = 'turno-btn' + (f==='mat'  ? ' active-mat'  : '');
   document.getElementById('btn-turno-vesp').className = 'turno-btn' + (f==='vesp' ? ' active-vesp' : '');
   renderGrupos(hoy());
-  // Actualizar turno mostrado en pestaña Exportar
-  if (window.actualizarTurnoMostrado) actualizarTurnoMostrado();
+  actualizarTurnoMostrado();
 };
 
-// ── TABS ──
-document.querySelectorAll('.tab').forEach(t => {
-  t.addEventListener('click', () => {
-    const id = t.dataset.tab;
-    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
-    document.querySelectorAll('.view').forEach(x => x.classList.remove('active'));
-    document.querySelectorAll('.bottom-nav-btn').forEach(x => x.classList.remove('active'));
-    
-    t.classList.add('active');
-    document.getElementById('view-' + id).classList.add('active');
-    
-    // Sincronizar botón al pie
-    const btn = document.querySelector(`[onclick="window.switchView('${id}')"]`);
-    if (btn) btn.classList.add('active');
-    
-    // Cargar datos
-    if (id === 'manual')  { if (typeof cargarTurnosManual === 'function') cargarTurnosManual(); }
-    if (id === 'exportar') { if (typeof renderExpPreview === 'function') renderExpPreview(); }
-  });
-});
-
-// ── FILTRO CONFIG ──
-window.filtrarConfig = function(f) {
-  cfgTurnoFiltro = f;
-  document.getElementById('cfg-btn-all').className  = 'cfg-turno-btn' + (f==='all'  ? ' active-all'  : '');
-  document.getElementById('cfg-btn-mat').className  = 'cfg-turno-btn' + (f==='mat'  ? ' active-mat'  : '');
-  document.getElementById('cfg-btn-vesp').className = 'cfg-turno-btn' + (f==='vesp' ? ' active-vesp' : '');
-  renderConfig();
-};
-
-// ── FILTRO TURNO EXPORTAR ──
-window.selTurnoExp = function(f) {
-  expTurnoFiltro = f;
-  document.getElementById('exp-btn-all').className  = 'cfg-turno-btn' + (f==='all'  ? ' active-all'  : '');
-  document.getElementById('exp-btn-mat').className  = 'cfg-turno-btn' + (f==='mat'  ? ' active-mat'  : '');
-  document.getElementById('exp-btn-vesp').className = 'cfg-turno-btn' + (f==='vesp' ? ' active-vesp' : '');
-  poblarSelectGrupo();
-  renderExpPreview();
-};
-
-// ── LOGIN ──
+// ══════════════════════════════════════════════
+// LOGIN
+// ══════════════════════════════════════════════
 document.getElementById('btn-login')?.addEventListener('click', async () => {
   const codigo = document.getElementById('login-codigo').value.trim().toLowerCase();
   const errEl  = document.getElementById('login-error');
@@ -819,16 +593,10 @@ document.getElementById('btn-login')?.addEventListener('click', async () => {
   const btn = document.getElementById('btn-login');
   btn.disabled = true; btn.textContent = '⏳ Verificando...';
   try {
-    const snapDataAsync = await new Promise((res) => ref(db, `escuelas/${codigo}/configuracion/perfil`).once("value", (snap) => res(snap)));const snap = snapDataAsync;
-    if (!snap.exists()) {
-      errEl.textContent = '❌ Código no encontrado.';
-      btn.disabled = false; btn.textContent = '✅ Entrar'; return;
-    }
+    const snap = await new Promise((res) => db.ref(`escuelas/${codigo}/configuracion/perfil`).once('value', res));
+    if (!snap.exists()) { errEl.textContent = '❌ Código no encontrado.'; btn.disabled=false; btn.textContent='✅ Entrar'; return; }
     const perfil = snap.val();
-    if (perfil.activa === false) {
-      errEl.textContent = '🔒 Escuela bloqueada.';
-      btn.disabled = false; btn.textContent = '✅ Entrar'; return;
-    }
+    if (perfil.activa === false) { errEl.textContent = '🔒 Escuela bloqueada.'; btn.disabled=false; btn.textContent='✅ Entrar'; return; }
     ID_ESCUELA = codigo;
     nombreEscuela = perfil.nombreEscuela || codigo.toUpperCase();
     localStorage.setItem(SK_ESCUELA, codigo);
@@ -842,7 +610,7 @@ document.getElementById('btn-login')?.addEventListener('click', async () => {
       cargarEstructura();
     } else {
       errEl.textContent = '⚠️ Sin conexión y código no verificado.';
-      btn.disabled = false; btn.textContent = '✅ Entrar';
+      btn.disabled=false; btn.textContent='✅ Entrar';
     }
   }
 });
@@ -850,19 +618,12 @@ document.getElementById('login-codigo')?.addEventListener('keydown', e => {
   if (e.key === 'Enter') document.getElementById('btn-login').click();
 });
 
-// ── LOGOUT ──
-document.getElementById('btn-logout')?.addEventListener('click', () => {
-  if (!confirm('¿Cerrar sesión?')) return;
-  localStorage.removeItem(SK_ESCUELA);
-  location.reload();
-});
-
-// ── AUTO-LOGIN ──
+// AUTO-LOGIN
 if (ID_ESCUELA) {
   document.getElementById('screen-login').classList.add('hidden');
   (async () => {
     try {
-      const snapDataAsync = await new Promise((res) => ref(db, `escuelas/${ID_ESCUELA}/configuracion/perfil`).once("value", (snap) => res(snap)));const snap = snapDataAsync;
+      const snap = await new Promise((res) => db.ref(`escuelas/${ID_ESCUELA}/configuracion/perfil`).once('value', res));
       if (snap.exists()) {
         nombreEscuela = snap.val().nombreEscuela || ID_ESCUELA.toUpperCase();
         document.getElementById('hdr-school').textContent = nombreEscuela;
@@ -872,10 +633,19 @@ if (ID_ESCUELA) {
   })();
 }
 
-// ── CARGAR ESTRUCTURA ──
+// LOGOUT
+document.getElementById('btn-logout')?.addEventListener('click', () => {
+  if (!confirm('¿Cerrar sesión?')) return;
+  localStorage.removeItem(SK_ESCUELA);
+  location.reload();
+});
+
+// ══════════════════════════════════════════════
+// CARGAR ESTRUCTURA
+// ══════════════════════════════════════════════
 async function cargarEstructura() {
   try {
-    const snapDataAsync = await new Promise((res) => ref(db, `escuelas/${ID_ESCUELA}/configuracion`).once("value", (snap) => res(snap)));const snap = snapDataAsync;
+    const snap = await new Promise((res) => db.ref(`escuelas/${ID_ESCUELA}/configuracion`).once('value', res));
     if (snap.exists()) {
       const cfg = snap.val();
       if (cfg.perfil) {
@@ -883,13 +653,11 @@ async function cargarEstructura() {
         nombreEscuela = cfg.perfil.nombreEscuela || ID_ESCUELA.toUpperCase();
         document.getElementById('hdr-school').textContent = nombreEscuela;
       }
-      if (cfg.estructura) {
-        estructura = cfg.estructura;
-      }
+      if (cfg.estructura) estructura = cfg.estructura;
     }
-    // Si no hubo estructura, construir desde directorio
+    // Fallback: construir desde directorio
     if (!Object.keys(estructura).length) {
-      const dirSnap = await get(ref(db, `escuelas/${ID_ESCUELA}/directorio`));
+      const dirSnap = await new Promise((res) => db.ref(`escuelas/${ID_ESCUELA}/directorio`).once('value', res));
       if (dirSnap && dirSnap.exists()) {
         Object.keys(dirSnap.val()).forEach(clave => {
           const partes = clave.split('-');
@@ -903,20 +671,21 @@ async function cargarEstructura() {
         });
       }
     }
-  } catch(e) {}
-  // Actualizar exportar ahora que estructura está lista
-  if (window.actualizarTurnoMostrado) actualizarTurnoMostrado();
+  } catch(e) { console.error('cargarEstructura:', e); }
+  actualizarTurnoMostrado();
   cargarAsistencias();
 }
 
-// ── CARGAR ASISTENCIAS ──
+// ══════════════════════════════════════════════
+// CARGAR ASISTENCIAS
+// ══════════════════════════════════════════════
 async function cargarAsistencias() {
   const fecha = hoy();
   document.getElementById('fecha-txt').textContent = fechaLegible(fecha);
   document.getElementById('fecha-sub').textContent = 'Cargando...';
   document.getElementById('lista-grupos').innerHTML = '<div class="loading-state"><div class="loader"></div><div style="font-size:.82rem;color:var(--slate2);">Cargando asistencias...</div></div>';
   try {
-    const snapDataAsync = await new Promise((res) => ref(db, `escuelas/${ID_ESCUELA}/asistencias`).once("value", (snap) => res(snap)));const snap = snapDataAsync;
+    const snap = await new Promise((res) => db.ref(`escuelas/${ID_ESCUELA}/asistencias`).once('value', res));
     asistencias = {};
     if (snap.exists()) {
       snap.forEach(child => {
@@ -942,7 +711,6 @@ async function cargarAsistencias() {
   }
 }
 
-// ── REFRESH ──
 document.getElementById('btn-refresh')?.addEventListener('click', async () => {
   const icon = document.getElementById('refresh-icon');
   icon.classList.add('spin');
@@ -951,7 +719,9 @@ document.getElementById('btn-refresh')?.addEventListener('click', async () => {
   toast('✅ Datos actualizados');
 });
 
-// ── RENDER GRUPOS ──
+// ══════════════════════════════════════════════
+// RENDER GRUPOS
+// ══════════════════════════════════════════════
 function renderGrupos(fecha) {
   const container   = document.getElementById('lista-grupos');
   const enviadosHoy = enviados[fecha] || {};
@@ -966,16 +736,13 @@ function renderGrupos(fecha) {
   let html = '';
 
   turnos.forEach(turno => {
-    // Aplicar filtro de turno
     if (!esTurno(turno, turnoFiltro)) return;
-
     const grados      = estructura[turno] || {};
     const gradosOrden = Object.keys(grados).sort((a,b)=>Number(a)-Number(b));
     const esMat       = turno.toLowerCase().includes('mat');
     const turnoClass  = esMat ? 'mat' : 'vesp';
     const turnoEmoji  = esMat ? '🌅' : '🌆';
 
-    // Calcular totales del turno para el header
     let gruposTurno=0, asistTurno=0, faltasTurno=0;
     gradosOrden.forEach(grado => {
       (grados[grado]||[]).forEach(grupoLetra => {
@@ -986,8 +753,7 @@ function renderGrupos(fecha) {
       });
     });
 
-    html += `
-    <div class="turno-section ${turnoClass} open" id="sec-${turnoClass}">
+    html += `<div class="turno-section ${turnoClass} open" id="sec-${turnoClass}">
       <div class="turno-section-hdr" onclick="toggleTurnoSec('${turnoClass}')">
         <div>
           <div class="turno-section-title">${turnoEmoji} Turno ${turno}</div>
@@ -1001,29 +767,24 @@ function renderGrupos(fecha) {
       <div class="turno-section-body">`;
 
     gradosOrden.forEach(grado => {
-      const grupos = (grados[grado] || []).sort();
-      grupos.forEach(grupoLetra => {
+      (grados[grado]||[]).sort().forEach(grupoLetra => {
         totalGrupos++;
         const clave        = sanitizar(`${turno}-${grado}-${grupoLetra}`);
         const yaEnviado    = enviadosHoy[clave] || false;
         const alumnosGrupo = filtrarAlumnos(turno, grado, grupoLetra);
-
         const presentes = alumnosGrupo.filter(([,d]) => d.estatus.includes('asist'));
         const retardos  = alumnosGrupo.filter(([,d]) => d.estatus.includes('retard'));
         const faltas    = alumnosGrupo.filter(([,d]) => d.estatus.includes('falt') || d.estatus.includes('ausent'));
         const justif    = alumnosGrupo.filter(([,d]) => d.estatus.includes('justif'));
         const total     = alumnosGrupo.length;
-
         totalAsist  += presentes.length;
         totalRetard += retardos.length;
         totalFaltas += faltas.length;
-
-        const pct    = total > 0 ? Math.round((presentes.length / total)*100) : 0;
-        const msg    = generarMensaje(turno, grado, grupoLetra, fecha, presentes, retardos, faltas, justif, total);
+        const pct = total > 0 ? Math.round((presentes.length/total)*100) : 0;
+        const msg = generarMensaje(turno, grado, grupoLetra, fecha, presentes, retardos, faltas, justif, total);
         const linkWA = linksWA[clave] || '';
 
-        html += `
-        <div class="grupo-card ${turnoClass}-card ${yaEnviado ? 'enviado' : ''}" id="card-${clave}">
+        html += `<div class="grupo-card ${turnoClass}-card ${yaEnviado ? 'enviado' : ''}" id="card-${clave}">
           <div class="grupo-header" onclick="toggleCard('${clave}')">
             <div class="grupo-info">
               <div class="grupo-badge ${turnoClass}-badge">${grado}°${grupoLetra}</div>
@@ -1046,7 +807,7 @@ function renderGrupos(fecha) {
             <div class="detail-actions">
               <button class="btn-wa ${!linkWA ? 'disabled-wa' : ''}"
                 onclick="abrirWA('${clave}','${encodeURIComponent(msg)}')"
-                ${!linkWA ? 'title="Configura el link en ⚙️ Links WA"' : ''}>
+                ${!linkWA ? 'title="Configura el link en 📱 Links WA"' : ''}>
                 ${linkWA ? '📤 Enviar a WhatsApp' : '⚙️ Sin link'}
               </button>
               <button class="btn-copy" onclick="copiarMensaje('${clave}')">📋</button>
@@ -1056,7 +817,6 @@ function renderGrupos(fecha) {
         </div>`;
       });
     });
-
     html += `</div></div>`;
   });
 
@@ -1064,7 +824,6 @@ function renderGrupos(fecha) {
     container.innerHTML = '<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-txt">Sin grupos para este turno</div></div>';
     return;
   }
-
   container.innerHTML = html;
   document.getElementById('res-grupos').textContent  = totalGrupos;
   document.getElementById('res-asist').textContent   = totalAsist;
@@ -1073,7 +832,6 @@ function renderGrupos(fecha) {
   document.getElementById('fecha-sub').textContent   = `${Object.keys(asistencias).length} alumnos registrados hoy`;
 }
 
-// ── FILTRAR ALUMNOS DEL GRUPO ──
 function filtrarAlumnos(turno, grado, grupoLetra) {
   return Object.entries(asistencias).filter(([, data]) => {
     const tMatch = data.turno && data.turno.toLowerCase() === turno.toLowerCase();
@@ -1084,74 +842,64 @@ function filtrarAlumnos(turno, grado, grupoLetra) {
   });
 }
 
-// ── TOGGLE SECCIÓN TURNO ──
-window.toggleTurnoSec = function(cls) {
-  const sec = document.getElementById('sec-' + cls);
-  if (sec) sec.classList.toggle('open');
-};
+window.toggleTurnoSec = function(cls) { document.getElementById('sec-'+cls)?.classList.toggle('open'); };
+window.toggleCard = function(clave) { document.getElementById('card-'+clave)?.classList.toggle('open'); };
 
-// ── TOGGLE CARD ──
-window.toggleCard = function(clave) {
-  document.getElementById('card-' + clave)?.classList.toggle('open');
-};
-
-// ── GENERAR MENSAJE ──
 function generarMensaje(turno, grado, grupoLetra, fecha, presentes, retardos, faltas, justif, total) {
   const [y,m,d] = fecha.split('-');
-  const meses   = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-  const hora    = new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
-  const pct     = total > 0 ? Math.round((presentes.length/total)*100) : 0;
-
+  const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const hora  = new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
+  const pct   = total > 0 ? Math.round((presentes.length/total)*100) : 0;
   let msg = `📋 *Asistencia ${grado}° "${grupoLetra}" — Turno ${turno}*\n`;
-  msg += `📅 ${d} de ${meses[m-1]} · ${hora} hrs\n`;
-  msg += `━━━━━━━━━━━━━━━━━━━━\n`;
-  if (presentes.length)  { msg += `\n✅ *Presentes (${presentes.length}):*\n` + presentes.map(([n])=>`• ${n}`).join('\n'); }
-  if (retardos.length)   { msg += `\n\n⏰ *Retardos (${retardos.length}):*\n`  + retardos.map(([n])=>`• ${n}`).join('\n'); }
-  if (faltas.length)     { msg += `\n\n❌ *Faltas (${faltas.length}):*\n`       + faltas.map(([n])=>`• ${n}`).join('\n'); }
-  if (justif.length)     { msg += `\n\n📝 *Justificados (${justif.length}):*\n` + justif.map(([n])=>`• ${n}`).join('\n'); }
-  msg += `\n\n━━━━━━━━━━━━━━━━━━━━`;
-  msg += `\n📊 *Total: ${total} · Asistencia: ${pct}%*`;
-  msg += `\n_LudoAssist_`;
+  msg += `📅 ${d} de ${meses[m-1]} · ${hora} hrs\n━━━━━━━━━━━━━━━━━━━━`;
+  if (presentes.length) msg += `\n\n✅ *Presentes (${presentes.length}):*\n` + presentes.map(([n])=>`• ${n}`).join('\n');
+  if (retardos.length)  msg += `\n\n⏰ *Retardos (${retardos.length}):*\n`  + retardos.map(([n])=>`• ${n}`).join('\n');
+  if (faltas.length)    msg += `\n\n❌ *Faltas (${faltas.length}):*\n`       + faltas.map(([n])=>`• ${n}`).join('\n');
+  if (justif.length)    msg += `\n\n📝 *Justificados (${justif.length}):*\n` + justif.map(([n])=>`• ${n}`).join('\n');
+  msg += `\n\n━━━━━━━━━━━━━━━━━━━━\n📊 *Total: ${total} · Asistencia: ${pct}%*\n_LudoAssist_`;
   return msg;
 }
 
-// ── ABRIR WHATSAPP ──
 window.abrirWA = function(clave, msgEncoded) {
   const linkWA = linksWA[clave] || '';
   if (!linkWA) { toast('⚙️ Configura el link en Links WA'); return; }
   const msg = decodeURIComponent(msgEncoded);
-
-  // Marcar enviado
   const fecha = hoy();
   if (!enviados[fecha]) enviados[fecha] = {};
   enviados[fecha][clave] = true;
   localStorage.setItem(SK_ENVIADOS, JSON.stringify(enviados));
-  document.getElementById('card-' + clave)?.classList.add('enviado');
-
-  // Abrir WhatsApp con el mensaje
+  document.getElementById('card-'+clave)?.classList.add('enviado');
   const a = document.createElement('a');
   a.href = `whatsapp://send?text=${encodeURIComponent(msg)}`;
   a.click();
-  // Abrir también el link del grupo si existe
-  setTimeout(() => {
-    if (linkWA.includes('chat.whatsapp.com')) window.open(linkWA, '_blank');
-  }, 600);
+  setTimeout(() => { if (linkWA.includes('chat.whatsapp.com')) window.open(linkWA,'_blank'); }, 600);
   toast('📤 Abriendo WhatsApp...');
 };
 
-// ── COPIAR ──
 window.copiarMensaje = function(clave) {
-  const el = document.getElementById('msg-' + clave);
+  const el = document.getElementById('msg-'+clave);
   if (!el) return;
-  navigator.clipboard.writeText(el.textContent).then(() => toast('📋 Copiado')).catch(() => {
-    const ta = document.createElement('textarea');
-    ta.value = el.textContent;
-    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
-    toast('📋 Copiado');
-  });
+  navigator.clipboard.writeText(el.textContent)
+    .then(() => toast('📋 Copiado'))
+    .catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = el.textContent;
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+      toast('📋 Copiado');
+    });
 };
 
-// ── RENDER CONFIG ──
+// ══════════════════════════════════════════════
+// CONFIG / LINKS WA
+// ══════════════════════════════════════════════
+window.filtrarConfig = function(f) {
+  cfgTurnoFiltro = f;
+  document.getElementById('cfg-btn-all').className  = 'cfg-turno-btn' + (f==='all'  ? ' active-all'  : '');
+  document.getElementById('cfg-btn-mat').className  = 'cfg-turno-btn' + (f==='mat'  ? ' active-mat'  : '');
+  document.getElementById('cfg-btn-vesp').className = 'cfg-turno-btn' + (f==='vesp' ? ' active-vesp' : '');
+  renderConfig();
+};
+
 function renderConfig() {
   const container = document.getElementById('config-grupos-container');
   const turnos    = Object.keys(estructura).sort().filter(t => esTurno(t, cfgTurnoFiltro));
@@ -1167,8 +915,7 @@ function renderConfig() {
       (grados[grado]||[]).sort().forEach(grupoLetra => {
         const clave = sanitizar(`${turno}-${grado}-${grupoLetra}`);
         const link  = linksWA[clave] || '';
-        html += `
-        <div class="config-grupo-row">
+        html += `<div class="config-grupo-row">
           <div class="config-grupo-nombre">📌 ${turno} · ${grado}° — Grupo "${grupoLetra}"</div>
           <div class="config-link-wrap">
             <input class="config-link-input" id="link-${clave}" type="url"
@@ -1183,10 +930,9 @@ function renderConfig() {
   container.innerHTML = html;
 }
 
-// ── GUARDAR CONFIG ──
 document.getElementById('btn-save-config')?.addEventListener('click', () => {
   document.querySelectorAll('.config-link-input').forEach(inp => {
-    const clave = inp.id.replace('link-', '');
+    const clave = inp.id.replace('link-','');
     const val   = inp.value.trim();
     if (val) linksWA[clave] = val; else delete linksWA[clave];
   });
@@ -1195,235 +941,171 @@ document.getElementById('btn-save-config')?.addEventListener('click', () => {
   cargarAsistencias();
 });
 
-// ── POBLAR SELECT GRUPO (exportar) ──
-function poblarSelectGrupo() {
-  const sel = document.getElementById('exp-grupo-select');
-  if (!sel) return;
-  const prevVal = sel.value;
-  sel.innerHTML = '<option value="todos">🏫 Toda la escuela</option>';
-  const turnos = Object.keys(estructura).sort().filter(t => esTurno(t, expTurnoFiltro));
-  turnos.forEach(turno => {
-    const grados = estructura[turno] || {};
-    Object.keys(grados).sort((a,b)=>Number(a)-Number(b)).forEach(grado => {
-      (grados[grado]||[]).sort().forEach(grupoLetra => {
-        const val = sanitizar(`${turno}-${grado}-${grupoLetra}`);
-        const opt = document.createElement('option');
-        opt.value = val;
-        opt.textContent = `${turno} · ${grado}° "${grupoLetra}"`;
-        sel.appendChild(opt);
-      });
-    });
+// ══════════════════════════════════════════════
+// ASISTENCIA MANUAL  ← BUG #2 CORREGIDO
+// La estructura real es: { Matutino: { "1": ["A","B"], "2": [...] }, ... }
+// ══════════════════════════════════════════════
+function cargarTurnosManual() {
+  const select = document.getElementById('man-turno');
+  if (!select) return;
+  // Repoblar siempre (por si la estructura cambió)
+  select.innerHTML = '<option value="">Seleccione turno...</option>';
+  Object.keys(estructura).sort().forEach(t => {
+    const opt = document.createElement('option');
+    opt.value = t;
+    const esMat = t.toLowerCase().includes('mat');
+    opt.textContent = esMat ? `🌅 ${t}` : `🌆 ${t}`;
+    select.appendChild(opt);
   });
-  if (prevVal) sel.value = prevVal;
-  sel.onchange = renderExpPreview;
+  // Resetear cascada
+  resetManual('grado');
 }
 
-// ── PREVIEW EXPORTAR ──
-function renderExpPreview() {
-  poblarSelectGrupo();
-  const el = document.getElementById('exp-preview-txt');
-  if (!el) return;
-  if (!Object.keys(asistencias).length) { el.textContent = 'Carga las asistencias primero desde la pestaña Asistencias.'; return; }
-  const grupos = obtenerGruposExportar();
-  if (!grupos.length) { el.textContent = 'Sin datos para el turno seleccionado.'; return; }
-  let txt = '';
-  grupos.forEach(({turno, grado, grupoLetra}) => {
-    const alumnos = filtrarAlumnos(turno, grado, grupoLetra);
-    const p = alumnos.filter(([,d])=>d.estatus.includes('asist')).length;
-    const f = alumnos.filter(([,d])=>d.estatus.includes('falt')||d.estatus.includes('ausent')).length;
-    const r = alumnos.filter(([,d])=>d.estatus.includes('retard')).length;
-    txt += `${turno} · ${grado}° "${grupoLetra}"  →  ✅ ${p}  ❌ ${f}  ⏰ ${r}\n`;
+function resetManual(desde) {
+  const steps = ['grado','grupo','nombre'];
+  const idx   = steps.indexOf(desde);
+  steps.slice(idx).forEach(id => {
+    const el = document.getElementById('man-' + id);
+    if (!el) return;
+    el.innerHTML = `<option value="">Seleccione ${id}...</option>`;
+    el.disabled = true;
   });
-  el.textContent = txt;
 }
 
-// ── OBTENER GRUPOS A EXPORTAR ──
-function obtenerGruposExportar() {
-  const sel = document.getElementById('exp-grupo-select');
-  const val = sel ? sel.value : 'todos';
-  const lista = [];
-  const turnos = Object.keys(estructura).sort().filter(t => esTurno(t, expTurnoFiltro));
-  turnos.forEach(turno => {
-    const grados = estructura[turno] || {};
-    Object.keys(grados).sort((a,b)=>Number(a)-Number(b)).forEach(grado => {
-      (grados[grado]||[]).sort().forEach(grupoLetra => {
-        const clave = sanitizar(`${turno}-${grado}-${grupoLetra}`);
-        if (val === 'todos' || val === clave) lista.push({turno, grado, grupoLetra});
-      });
-    });
+window.manActualizarGrados = function() {
+  const turno = document.getElementById('man-turno').value;
+  resetManual('grado');
+  if (!turno) return;
+  const gradoSel = document.getElementById('man-grado');
+  gradoSel.innerHTML = '<option value="">Seleccione grado...</option>';
+  const grados = Object.keys(estructura[turno] || {}).sort((a,b)=>Number(a)-Number(b));
+  grados.forEach(g => {
+    const opt = document.createElement('option');
+    opt.value = g; opt.textContent = `${g}° Grado`;
+    gradoSel.appendChild(opt);
   });
-  return lista;
-}
-
-// ── EXPORTAR PDF ──
-window.exportarPDF = function() {
-  if (!Object.keys(asistencias).length) { toast('⚠️ Carga las asistencias primero'); return; }
-  const { jsPDF } = window.jspdf;
-  const doc  = new jsPDF({orientation:'portrait', unit:'mm', format:'letter'});
-  const pw   = doc.internal.pageSize.getWidth();
-  const ph   = doc.internal.pageSize.getHeight();
-  const fecha = hoy();
-  const [yy,mm,dd] = fecha.split('-');
-  const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-  const fechaStr = `${dd} de ${meses[mm-1]} de ${yy}`;
-  const grupos = obtenerGruposExportar();
-  if (!grupos.length) { toast('⚠️ Sin grupos para exportar'); return; }
-
-  function encabezado(subtitulo) {
-    doc.setFillColor(10,25,47);
-    doc.rect(0,0,pw,28,'F');
-    if (perfilEscuela.logo) { try { doc.addImage(perfilEscuela.logo,'PNG',8,4,20,20); } catch(e){} }
-    doc.setTextColor(16,185,129); doc.setFontSize(11); doc.setFont('helvetica','bold');
-    doc.text('LudoAssist — Reporte de Asistencia', pw/2, 10, {align:'center'});
-    doc.setTextColor(255,255,255); doc.setFontSize(9); doc.setFont('helvetica','normal');
-    doc.text((perfilEscuela.nombreEscuela||nombreEscuela||'').toUpperCase(), pw/2, 17, {align:'center'});
-    doc.text(subtitulo, pw/2, 23, {align:'center'});
-  }
-
-  grupos.forEach((g, idx) => {
-    if (idx > 0) doc.addPage();
-    const alumnos = filtrarAlumnos(g.turno, g.grado, g.grupoLetra);
-    const pres    = alumnos.filter(([,d])=>d.estatus.includes('asist'));
-    const rets    = alumnos.filter(([,d])=>d.estatus.includes('retard'));
-    const falts   = alumnos.filter(([,d])=>d.estatus.includes('falt')||d.estatus.includes('ausent'));
-    const justs   = alumnos.filter(([,d])=>d.estatus.includes('justif'));
-    const total   = alumnos.length;
-    const pct     = total>0 ? Math.round((pres.length/total)*100) : 0;
-
-    encabezado(`${g.turno} · ${g.grado}° Grado — Grupo "${g.grupoLetra}" · ${fechaStr}`);
-
-    let y2 = 36;
-    // Chips resumen
-    [{lbl:'Presentes',val:pres.length,bg:[220,252,231],tc:[22,101,52]},
-     {lbl:'Retardos', val:rets.length,bg:[254,249,195],tc:[133,77,14]},
-     {lbl:'Faltas',   val:falts.length,bg:[254,226,226],tc:[153,27,27]},
-     {lbl:'Total',    val:total,       bg:[241,245,249],tc:[30,41,59]}
-    ].forEach((c,i) => {
-      const x2 = 14+i*48;
-      doc.setFillColor(...c.bg); doc.roundedRect(x2,y2,44,14,2,2,'F');
-      doc.setTextColor(...c.tc); doc.setFontSize(14); doc.setFont('helvetica','bold');
-      doc.text(String(c.val), x2+22, y2+9, {align:'center'});
-      doc.setFontSize(6); doc.setFont('helvetica','normal');
-      doc.text(c.lbl.toUpperCase(), x2+22, y2+13, {align:'center'});
-    });
-    y2 += 20;
-
-    // Encabezado tabla
-    doc.setFontSize(8); doc.setFont('helvetica','bold'); doc.setTextColor(30,41,59);
-    doc.setFillColor(241,245,249); doc.rect(14,y2,pw-28,7,'F');
-    doc.text('#',17,y2+5); doc.text('Nombre',26,y2+5);
-    doc.text('Hora',pw-55,y2+5); doc.text('Estatus',pw-38,y2+5);
-    y2 += 7;
-
-    [...pres,...rets,...falts,...justs].forEach(([nombre,data],ni) => {
-      if (y2>ph-30) { doc.addPage(); encabezado(`${g.turno} · ${g.grado}° "${g.grupoLetra}" (cont.)`); y2=36; }
-      if (ni%2===0) { doc.setFillColor(248,250,252); doc.rect(14,y2,pw-28,6,'F'); }
-      doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(51,65,85);
-      doc.text(String(ni+1),17,y2+4.5);
-      doc.text((nombre||'').substring(0,38),26,y2+4.5);
-      doc.text(data.hora||'—',pw-55,y2+4.5);
-      const est = data.estatus.includes('asist')?'Asistencia':data.estatus.includes('retard')?'Retardo':data.estatus.includes('falt')||data.estatus.includes('ausent')?'Falta':data.estatus.includes('justif')?'Justif.':'—';
-      const ec  = data.estatus.includes('asist')?[22,163,74]:data.estatus.includes('retard')?[202,138,4]:[220,38,38];
-      doc.setTextColor(...ec); doc.setFont('helvetica','bold');
-      doc.text(est,pw-38,y2+4.5);
-      doc.setTextColor(51,65,85); doc.setFont('helvetica','normal');
-      y2+=6;
-    });
-
-    // Pie
-    doc.setDrawColor(203,213,225); doc.line(14,ph-20,pw-14,ph-20);
-    doc.setFontSize(7); doc.setTextColor(100,116,139);
-    doc.text(`Asistencia: ${pct}% · Total: ${total} · LudoAssist`, 14, ph-15);
-    if (perfilEscuela.director) {
-      doc.text('Director(a): '+(perfilEscuela.director||''), 14, ph-9);
-      doc.line(pw-70,ph-11,pw-14,ph-11);
-      doc.text('Firma y Sello',pw-42,ph-7,{align:'center'});
-    }
-    doc.text(`Pág. ${idx+1}/${grupos.length}`,pw-14,ph-15,{align:'right'});
-  });
-
-  const sel    = document.getElementById('exp-grupo-select');
-  const sufijo = sel?.value==='todos'?'general':sel.value;
-  doc.save(`asistencia_${fecha}_${sufijo}.pdf`);
-  toast('📄 PDF generado');
+  gradoSel.disabled = grados.length === 0;
 };
 
-// ── MOSTRAR TURNO ACTUAL EN EXPORTAR ──
+window.manActualizarGrupos = function() {
+  const turno = document.getElementById('man-turno').value;
+  const grado = document.getElementById('man-grado').value;
+  resetManual('grupo');
+  if (!turno || !grado) return;
+  const grupoSel = document.getElementById('man-grupo');
+  grupoSel.innerHTML = '<option value="">Seleccione grupo...</option>';
+  const grupos = (estructura[turno]?.[grado] || []).slice().sort();
+  grupos.forEach(g => {
+    const opt = document.createElement('option');
+    opt.value = g; opt.textContent = `Grupo "${g}"`;
+    grupoSel.appendChild(opt);
+  });
+  grupoSel.disabled = grupos.length === 0;
+};
+
+window.manCargarAlumnos = function() {
+  const turno = document.getElementById('man-turno').value;
+  const grado = document.getElementById('man-grado').value;
+  const grupo = document.getElementById('man-grupo').value;
+  resetManual('nombre');
+  if (!turno || !grado || !grupo) return;
+
+  const nombreSel = document.getElementById('man-nombre');
+  nombreSel.innerHTML = '<option value="">Seleccione alumno...</option>';
+
+  // Obtener alumnos del grupo desde las asistencias cargadas hoy
+  // (son los que ya registraron con la app del maestro)
+  const alumnosGrupo = filtrarAlumnos(turno, grado, grupo);
+  const yaRegistrados = new Set(alumnosGrupo.map(([n]) => n.toUpperCase()));
+
+  // Mostrar TODOS los alumnos del grupo; los que ya tienen registro los marcamos
+  alumnosGrupo.forEach(([nombre, data]) => {
+    const opt = document.createElement('option');
+    opt.value = nombre;
+    const etiqs = data.estatus.includes('asist') ? ' ✅' : data.estatus.includes('retard') ? ' ⏰' : data.estatus.includes('falt') ? ' ❌' : '';
+    opt.textContent = `${nombre}${etiqs}`;
+    nombreSel.appendChild(opt);
+  });
+
+  if (alumnosGrupo.length === 0) {
+    nombreSel.innerHTML = '<option value="">Sin alumnos registrados hoy en este grupo</option>';
+  }
+  nombreSel.disabled = alumnosGrupo.length === 0;
+};
+
+window.toggleMotive = function() {
+  const mode = document.getElementById('man-mode').value;
+  document.getElementById('motive-box').style.display = mode === 'justificado' ? 'block' : 'none';
+};
+
+window.procesarManual = function() {
+  const turno  = document.getElementById('man-turno').value;
+  const grado  = document.getElementById('man-grado').value;
+  const grupo  = document.getElementById('man-grupo').value;
+  const nombre = document.getElementById('man-nombre').value;
+  const mode   = document.getElementById('man-mode').value;
+  const motive = document.getElementById('man-motive').value;
+
+  if (!turno || !grado || !grupo || !nombre) { toast('⚠️ Completa todos los campos'); return; }
+
+  let estatus = mode;
+  if (mode === 'justificado') estatus = `justificado - ${motive}`;
+
+  const registro = {
+    nombre, turno, grado, grupoLetra: grupo,
+    grupo: `${grado}°${grupo}`,
+    estatus, fecha: hoy(),
+    hora: new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'}),
+    timestamp: Date.now()
+  };
+
+  if (!db) { toast('⚠️ Sin conexión a Firebase'); return; }
+
+  db.ref(`escuelas/${ID_ESCUELA}/asistencias`).push(registro)
+    .then(() => {
+      toast('✅ Asistencia registrada');
+      // Actualizar mapa local y refrescar
+      asistencias[nombre] = { estatus, hora: registro.hora, turno, grado, grupoLetra: grupo, grupo: registro.grupo };
+      document.getElementById('man-nombre').value = '';
+    })
+    .catch(e => toast('❌ Error: ' + e.message));
+};
+
+// ══════════════════════════════════════════════
+// EXPORTAR — SELECTS CASCADA
+// ══════════════════════════════════════════════
 window.actualizarTurnoMostrado = function() {
-  const turnoTexto = turnoFiltro === 'mat' ? '🌅 Matutino' : turnoFiltro === 'vesp' ? '🌆 Vespertino' : '🌐 Todos';
+  const txt = turnoFiltro === 'mat' ? '🌅 Matutino' : turnoFiltro === 'vesp' ? '🌆 Vespertino' : '🌐 Todos';
   const el = document.getElementById('exp-turno-actual');
-  if (el) el.textContent = turnoTexto;
-  // Solo actualizar grados si estructura existe y tiene datos
-  if (Object.keys(estructura).length > 0) {
-    actualizarGradosExp();
-  }
+  if (el) el.textContent = txt;
+  if (Object.keys(estructura).length > 0) actualizarGradosExp();
 };
 
-// ── ACTUALIZAR GRADOS EN EXPORTAR ──
 window.actualizarGradosExp = function() {
-  if (!estructura || Object.keys(estructura).length === 0) {
-    console.warn('estructura no está lista');
-    return;
-  }
-
-  // Determinar turnos según filtro
-  let turnosPermitidos = [];
-  Object.keys(estructura).forEach(t => {
-    if (esTurno(t, turnoFiltro)) turnosPermitidos.push(t);
-  });
-  
   const gradoSel = document.getElementById('exp-grado');
-  if (!gradoSel) {
-    console.warn('exp-grado no existe');
-    return;
-  }
-
+  if (!gradoSel || !Object.keys(estructura).length) return;
   gradoSel.innerHTML = '<option value="Todos">Todos los grados</option>';
-  
-  if (turnosPermitidos.length === 0) {
-    console.warn('No hay turnos permitidos para:', turnoFiltro);
-    return;
-  }
-
+  const turnosPermitidos = Object.keys(estructura).filter(t => esTurno(t, turnoFiltro));
   turnosPermitidos.forEach(turno => {
-    const grados = (estructura[turno] || {});
-    Object.keys(grados).sort((a, b) => Number(a) - Number(b)).forEach(g => {
-      // Verificar si la opción ya existe
-      const existe = Array.from(gradoSel.options).some(opt => opt.value === g);
-      if (!existe) {
-        const opt = document.createElement('option');
-        opt.value = g;
-        opt.textContent = `${g}° Grado`;
-        gradoSel.appendChild(opt);
+    Object.keys(estructura[turno]||{}).sort((a,b)=>Number(a)-Number(b)).forEach(g => {
+      if (!Array.from(gradoSel.options).some(o=>o.value===g)) {
+        const opt = document.createElement('option'); opt.value=g; opt.textContent=`${g}° Grado`; gradoSel.appendChild(opt);
       }
     });
   });
-  
   actualizarGruposExp();
 };
 
-// ── ACTUALIZAR GRUPOS EN EXPORTAR ──
 window.actualizarGruposExp = function() {
-  if (!estructura || Object.keys(estructura).length === 0) return;
-
   const grado = document.getElementById('exp-grado')?.value || 'Todos';
   const grupoSel = document.getElementById('exp-grupo');
   if (!grupoSel) return;
-
   grupoSel.innerHTML = '<option value="Todos">Todos los grupos</option>';
-  
   if (grado !== 'Todos') {
-    // Buscar el grupo en todos los turnos permitidos
-    Object.keys(estructura).forEach(turno => {
-      if (!esTurno(turno, turnoFiltro)) return;
-      const grupos = (estructura[turno]?.[grado] || []).sort();
-      grupos.forEach(g => {
-        const existe = Array.from(grupoSel.options).some(opt => opt.value === g);
-        if (!existe) {
-          const opt = document.createElement('option');
-          opt.value = g;
-          opt.textContent = `Grupo ${g}`;
-          grupoSel.appendChild(opt);
+    Object.keys(estructura).filter(t=>esTurno(t,turnoFiltro)).forEach(turno => {
+      (estructura[turno]?.[grado]||[]).sort().forEach(g => {
+        if (!Array.from(grupoSel.options).some(o=>o.value===g)) {
+          const opt = document.createElement('option'); opt.value=g; opt.textContent=`Grupo ${g}`; grupoSel.appendChild(opt);
         }
       });
     });
@@ -1431,89 +1113,58 @@ window.actualizarGruposExp = function() {
   actualizarAlumnosExp();
 };
 
-// ── ACTUALIZAR ALUMNOS EN EXPORTAR ──
 window.actualizarAlumnosExp = function() {
-  if (!estructura || Object.keys(estructura).length === 0) return;
-
   const grado = document.getElementById('exp-grado')?.value || 'Todos';
   const grupo = document.getElementById('exp-grupo')?.value || 'Todos';
   const alumnoSel = document.getElementById('exp-alumno');
   if (!alumnoSel) return;
-
   alumnoSel.innerHTML = '<option value="Todos">Todos</option>';
-  
   if (grado !== 'Todos' && grupo !== 'Todos') {
-    // Buscar alumnos en todos los turnos permitidos
-    Object.keys(estructura).forEach(turno => {
-      if (!esTurno(turno, turnoFiltro)) return;
-      const alumnos = filtrarAlumnos(turno, grado, grupo);
-      alumnos.forEach(([nombre]) => {
-        const existe = Array.from(alumnoSel.options).some(opt => opt.value === nombre);
-        if (!existe) {
-          const opt = document.createElement('option');
-          opt.value = nombre;
-          opt.textContent = nombre;
-          alumnoSel.appendChild(opt);
+    Object.keys(estructura).filter(t=>esTurno(t,turnoFiltro)).forEach(turno => {
+      filtrarAlumnos(turno, grado, grupo).forEach(([nombre]) => {
+        if (!Array.from(alumnoSel.options).some(o=>o.value===nombre)) {
+          const opt = document.createElement('option'); opt.value=nombre; opt.textContent=nombre; alumnoSel.appendChild(opt);
         }
       });
     });
   }
 };
 
-// ── CONSULTAR NUBE EXPORTAR ──
+// ══════════════════════════════════════════════
+// CONSULTAR NUBE
+// ══════════════════════════════════════════════
 window.consultarNubeExp = async function() {
   const fechaInicio = document.getElementById('exp-fecha-inicio').value;
   const fechaFin    = document.getElementById('exp-fecha-fin').value;
   const grado       = document.getElementById('exp-grado').value;
   const grupo       = document.getElementById('exp-grupo').value;
   const alumno      = document.getElementById('exp-alumno').value;
-
   if (!fechaInicio || !fechaFin) { toast('⚠️ Define rango de fechas'); return; }
-
   const btn = document.getElementById('btn-consultar-exp');
-  btn.disabled = true; btn.textContent = '⏳ Consultando...';
-
+  btn.disabled=true; btn.textContent='⏳ Consultando...';
   try {
-    const snapDataAsync = await new Promise((res) => ref(db, `escuelas/${ID_ESCUELA}/asistencias`).once("value", (snap) => res(snap)));const snap = snapDataAsync;
+    const snap = await new Promise((res) => db.ref(`escuelas/${ID_ESCUELA}/asistencias`).once('value', res));
     const resultado = [];
-
     if (snap.exists()) {
       snap.forEach(child => {
         const r = child.val();
         if (!r?.fecha || r.fecha < fechaInicio || r.fecha > fechaFin) return;
-        
-        // Aplicar filtro turno del filtro actual
         if (!esTurno(r.turno, turnoFiltro)) return;
-        
-        // Parser robusto de grado/grupo
         let gradoReg = r.grado || '';
         let grupoReg = r.grupoLetra || '';
         if (!gradoReg || !grupoReg) {
-          const raw = (r.grupo || '').trim();
+          const raw   = (r.grupo||'').trim();
           const match = raw.match(/^(\d+)\s*°?\s+([A-Z]+)/i);
-          if (match) { gradoReg = match[1]; grupoReg = match[2].toUpperCase(); }
+          if (match) { gradoReg=match[1]; grupoReg=match[2].toUpperCase(); }
         }
-
         if (grado !== 'Todos' && String(gradoReg) !== String(grado)) return;
         if (grupo !== 'Todos' && String(grupoReg).toUpperCase() !== String(grupo).toUpperCase()) return;
-
-        const nombreClean = nombreLimpio(r.nombre || '').toUpperCase();
+        const nombreClean = nombreLimpio(r.nombre||'').toUpperCase();
         if (alumno !== 'Todos' && nombreClean !== alumno.toUpperCase()) return;
-
-        resultado.push({
-          fecha: r.fecha,
-          nombre: nombreClean,
-          hora: r.hora || '—',
-          estatus: r.estatus || '—',
-          turno: r.turno || '—',
-          grado: gradoReg,
-          grupo: grupoReg
-        });
+        resultado.push({ fecha:r.fecha, nombre:nombreClean, hora:r.hora||'—', estatus:r.estatus||'—', turno:r.turno||'—', grado:gradoReg, grupo:grupoReg });
       });
     }
-
     window.expResultados = resultado;
-
     const tableEl = document.getElementById('exp-preview-table');
     if (!resultado.length) {
       tableEl.innerHTML = '<div style="color:var(--slate2);padding:2rem 1rem;">Sin registros en ese rango.</div>';
@@ -1521,16 +1172,17 @@ window.consultarNubeExp = async function() {
     } else {
       let html = `<table style="width:100%;border-collapse:collapse;font-size:.75rem;">
         <thead style="background:var(--light);border-bottom:2px solid var(--border);">
-          <tr><th style="padding:.5rem;text-align:left;font-weight:800;color:var(--navy);">Fecha</th>
-              <th style="padding:.5rem;text-align:left;font-weight:800;color:var(--navy);">Alumno</th>
-              <th style="padding:.5rem;text-align:left;font-weight:800;color:var(--navy);">Hora</th>
-              <th style="padding:.5rem;text-align:left;font-weight:800;color:var(--navy);">Estatus</th></tr>
-        </thead>
-        <tbody>`;
-      resultado.forEach((r, i) => {
+          <tr>
+            <th style="padding:.5rem;text-align:left;font-weight:800;color:var(--navy);">Fecha</th>
+            <th style="padding:.5rem;text-align:left;font-weight:800;color:var(--navy);">Alumno</th>
+            <th style="padding:.5rem;text-align:left;font-weight:800;color:var(--navy);">Hora</th>
+            <th style="padding:.5rem;text-align:left;font-weight:800;color:var(--navy);">Estatus</th>
+          </tr>
+        </thead><tbody>`;
+      resultado.forEach(r => {
         const estColor = r.estatus.toLowerCase().includes('asist') ? 'var(--emerald)' :
                          r.estatus.toLowerCase().includes('retard') ? 'var(--amber)' :
-                         r.estatus.toLowerCase().includes('falt') ? 'var(--ruby)' : 'var(--slate2)';
+                         r.estatus.toLowerCase().includes('falt')   ? 'var(--ruby)' : 'var(--slate2)';
         html += `<tr style="border-bottom:1px solid var(--border);">
           <td style="padding:.4rem .5rem;">${r.fecha}</td>
           <td style="padding:.4rem .5rem;">${r.nombre}</td>
@@ -1542,380 +1194,216 @@ window.consultarNubeExp = async function() {
       tableEl.innerHTML = html;
       document.getElementById('export-btns').style.display = 'grid';
     }
-    toast('✅ Datos cargados: ' + resultado.length + ' registros');
+    toast('✅ ' + resultado.length + ' registros cargados');
   } catch(e) {
     toast('⚠️ Error: ' + e.message);
   } finally {
-    btn.disabled = false; btn.textContent = '🔍 Consultar Nube';
+    btn.disabled=false; btn.textContent='🔍 Consultar Nube';
   }
 };
 
-// ── EXPORTAR PDF EXPORTAR ──
-
-
-
-// ── EXPORTAR EXCEL ──
+// ══════════════════════════════════════════════
+// EXPORTAR EXCEL
+// ══════════════════════════════════════════════
 window.exportarExcelExp = function() {
-  if (!window.expResultados || !window.expResultados.length) { 
-    toast('⚠️ Consulta primero'); 
-    return; 
-  }
-
+  if (!window.expResultados?.length) { toast('⚠️ Consulta primero'); return; }
   const wb = XLSX.utils.book_new();
-  const resultado = window.expResultados;
-
   const fechaInicio = document.getElementById('exp-fecha-inicio').value;
-  const fechaFin = document.getElementById('exp-fecha-fin').value;
-
+  const fechaFin    = document.getElementById('exp-fecha-fin').value;
   const rows = [
     [`REPORTE DE ASISTENCIA - ${nombreEscuela}`],
-    [`CCT: ${perfilEscuela?.cct || '—'}  ·  Zona: ${perfilEscuela?.zona || '—'}`],
+    [`CCT: ${perfilEscuela?.cct||'—'}  ·  Zona: ${perfilEscuela?.zona||'—'}`],
     [`Período: ${fechaInicio} al ${fechaFin}`],
     [],
-    ['Fecha', 'Alumno', 'Hora', 'Estatus', 'Turno', 'Grado', 'Grupo'],
-    ...resultado.map(r => [r.fecha, r.nombre, r.hora, r.estatus, r.turno, r.grado, r.grupo])
+    ['Fecha','Alumno','Hora','Estatus','Turno','Grado','Grupo'],
+    ...window.expResultados.map(r => [r.fecha,r.nombre,r.hora,r.estatus,r.turno,r.grado,r.grupo])
   ];
-
   const ws = XLSX.utils.aoa_to_sheet(rows);
-  ws['!cols'] = [{ wch: 12 }, { wch: 40 }, { wch: 10 }, { wch: 12 }, { wch: 12 }, { wch: 8 }, { wch: 8 }];
+  ws['!cols'] = [{wch:12},{wch:40},{wch:10},{wch:12},{wch:12},{wch:8},{wch:8}];
   XLSX.utils.book_append_sheet(wb, ws, 'Asistencia');
-
   XLSX.writeFile(wb, `asistencia_${fechaInicio}_${fechaFin}.xlsx`);
   toast('📊 Excel generado');
 };
 
-// ── EXPORTAR PDF ──
+// ══════════════════════════════════════════════
+// EXPORTAR PDF  ← BUG #1 CORREGIDO
+// Cada fecha ocupa 2 columnas: Hora | Est
+// Se usa colSpan en el encabezado de la fecha
+// ══════════════════════════════════════════════
 window.exportarPDFExp = async function() {
-  if (!window.expResultados || !window.expResultados.length) { 
-    toast('⚠️ Consulta primero'); 
-    return; 
-  }
-  
+  if (!window.expResultados?.length) { toast('⚠️ Consulta primero'); return; }
+
   const btn = document.getElementById('btn-pdf-exp');
-  btn.disabled = true;
-  btn.textContent = '⏳ Generando PDF...';
+  btn.disabled=true; btn.textContent='⏳ Generando PDF...';
 
   try {
-    if (typeof window.jspdf === 'undefined') {
+    // Cargar jsPDF si no está
+    if (!window.jspdf?.jsPDF) {
       await new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-        script.onload = () => setTimeout(resolve, 100);
-        script.onerror = reject;
-        document.head.appendChild(script);
+        const s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+        s.onload = () => setTimeout(resolve,100); s.onerror = reject;
+        document.head.appendChild(s);
       });
     }
-
+    // Cargar autoTable si no está
+    if (!window.jspdf?.jsPDF?.prototype?.autoTable) {
+      await new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js';
+        s.onload = () => setTimeout(resolve,100); s.onerror = reject;
+        document.head.appendChild(s);
+      });
+    }
     if (!window.jspdf?.jsPDF) throw new Error('jsPDF no disponible');
 
     const { jsPDF } = window.jspdf;
+    const resultado  = window.expResultados;
 
-    if (!jsPDF.prototype.autoTable) {
-      await new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js';
-        script.onload = () => setTimeout(resolve, 100);
-        script.onerror = reject;
-        document.head.appendChild(script);
-      });
-    }
-
-    const resultado = window.expResultados;
-    const porAlumno = {};
-
+    // Agrupar por alumno y obtener fechas únicas
+    const porAlumno  = {};
     resultado.forEach(r => {
-      if (!porAlumno[r.nombre]) porAlumno[r.nombre] = [];
-      porAlumno[r.nombre].push(r);
+      if (!porAlumno[r.nombre]) porAlumno[r.nombre] = {};
+      porAlumno[r.nombre][r.fecha] = r; // última entrada por fecha
     });
-
-    const alumnos = Object.keys(porAlumno).sort();
+    const alumnos    = Object.keys(porAlumno).sort();
     const todasFechas = [...new Set(resultado.map(r => r.fecha))].sort();
 
-    const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'letter' });
-    const pw = doc.internal.pageSize.getWidth();
-    const ph = doc.internal.pageSize.getHeight();
+    const doc = new jsPDF({ orientation:'landscape', unit:'mm', format:'letter' });
+    const pw  = doc.internal.pageSize.getWidth();
+    const ph  = doc.internal.pageSize.getHeight();
 
-    // ENCABEZADO DEL DOCUMENTO
-    doc.setFillColor(26, 107, 58);
-    doc.rect(0, 0, pw, 18, 'F');
-
-    if (perfilEscuela?.logo) {
-      try { doc.addImage(perfilEscuela.logo, 'PNG', 5, 1, 10, 10); } catch (e) {}
-    }
-
-    doc.setTextColor(0, 200, 100);
-    doc.setFontSize(11);
-    doc.setFont('helvetica', 'bold');
-    const grado = resultado[0]?.grado || '—';
-    const grupo = resultado[0]?.grupo || '—';
-    doc.text(`REPORTE DE ASISTENCIA - ${grado}° GRADO GRUPO "${grupo}"`, pw / 2, 6, { align: 'center' });
-
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(8);
-    doc.setFont('helvetica', 'normal');
-    const nombreEsc = perfilEscuela?.nombreEscuela || nombreEscuela || 'Escuela';
-    doc.text(nombreEsc.toUpperCase(), pw / 2, 11, { align: 'center' });
-
+    // ── ENCABEZADO ──
+    doc.setFillColor(26,107,58);
+    doc.rect(0,0,pw,18,'F');
+    if (perfilEscuela?.logo) { try { doc.addImage(perfilEscuela.logo,'PNG',5,1,10,10); } catch(e){} }
+    doc.setTextColor(0,200,100); doc.setFontSize(11); doc.setFont('helvetica','bold');
+    const expGrado = document.getElementById('exp-grado')?.value || '—';
+    const expGrupo = document.getElementById('exp-grupo')?.value || '—';
+    const tituloGrupo = (expGrado!=='Todos' && expGrupo!=='Todos')
+      ? `${expGrado}° GRADO GRUPO "${expGrupo}"`
+      : 'TODOS LOS GRUPOS';
+    doc.text(`REPORTE DE ASISTENCIA — ${tituloGrupo}`, pw/2, 6, {align:'center'});
+    doc.setTextColor(255,255,255); doc.setFontSize(8); doc.setFont('helvetica','normal');
+    doc.text((perfilEscuela?.nombreEscuela||nombreEscuela||'').toUpperCase(), pw/2, 11, {align:'center'});
     const fechaInicio = document.getElementById('exp-fecha-inicio').value;
-    const fechaFin = document.getElementById('exp-fecha-fin').value;
-    const turno = document.getElementById('exp-turno-actual')?.textContent || '—';
-    doc.text(`${turno} · Período: ${fechaInicio} al ${fechaFin}`, pw / 2, 15, { align: 'center' });
+    const fechaFin    = document.getElementById('exp-fecha-fin').value;
+    const turnoLabel  = document.getElementById('exp-turno-actual')?.textContent || '—';
+    doc.text(`${turnoLabel} · Período: ${fechaInicio} al ${fechaFin}`, pw/2, 15, {align:'center'});
 
-    // CONSTRUCCIÓN CORRECTA DE HEADERS
-    // headRow1: Nombre Alumno + TODAS las fechas
-    const headRow1 = ['Nombre Alumno'];
+    // ════════════════════════════════════════════
+    // CONSTRUCCIÓN DE ENCABEZADOS CON colSpan
+    //
+    // Fila 1:  [ "Nombre Alumno" (rowSpan 2) | "06/04" (colSpan 2) | "06/05" (colSpan 2) | ... ]
+    // Fila 2:  [                              |   Hora  |   Est   |   Hora  |   Est   | ... ]
+    // ════════════════════════════════════════════
+    const headRow1 = [
+      { content: 'Nombre Alumno', rowSpan: 2, styles: { valign:'middle', halign:'left', fontStyle:'bold' } }
+    ];
     todasFechas.forEach(f => {
-      const fechaCorta = f.split('-').slice(1).join('/');
-      headRow1.push(fechaCorta); // Agregar fecha una sola vez
+      const partes     = f.split('-'); // ["2026","06","04"]
+      const fechaCorta = `${partes[2]}/${partes[1]}`; // "04/06"
+      headRow1.push({
+        content: fechaCorta,
+        colSpan: 2,
+        styles: { halign:'center', fontStyle:'bold' }
+      });
     });
 
-    // headRow2: vacío para nombre + Hora|Est para CADA fecha
-    const headRow2 = [''];
-    todasFechas.forEach(f => {
-      headRow2.push('Hora');
-      headRow2.push('Est');
+    const headRow2 = []; // La celda de "Nombre" ya tiene rowSpan:2, no se repite
+    todasFechas.forEach(() => {
+      headRow2.push({ content:'Hora', styles:{ halign:'center', fontStyle:'bold', fontSize:6 } });
+      headRow2.push({ content:'Est',  styles:{ halign:'center', fontStyle:'bold', fontSize:6 } });
     });
 
-    // BODY: UNA FILA POR ALUMNO
-    const body = [];
-
-    alumnos.forEach((alumno) => {
-      const registros = porAlumno[alumno];
-      const row = [alumno];
-
+    // ── BODY: una fila por alumno ──
+    const body = alumnos.map(alumno => {
+      const row = [{ content: alumno, styles:{ halign:'left', fontStyle:'bold', fontSize:6.5 } }];
       todasFechas.forEach(fecha => {
-        const reg = registros.find(r => r.fecha === fecha);
-        
+        const reg = porAlumno[alumno]?.[fecha];
         if (reg) {
           const hora = reg.hora || '—';
-          const est = reg.estatus.toLowerCase().includes('asist') ? 'A' :
-                     reg.estatus.toLowerCase().includes('retard') ? 'R' :
-                     reg.estatus.toLowerCase().includes('justif') ? 'J' :
-                     reg.estatus.toLowerCase().includes('falt') || reg.estatus.toLowerCase().includes('ausent') ? 'F' : 'SR';
-          row.push(hora);
-          row.push(est);
+          const e    = reg.estatus.toLowerCase();
+          const est  = e.includes('asist')  ? 'A' :
+                       e.includes('retard') ? 'R' :
+                       e.includes('justif') ? 'J' :
+                       (e.includes('falt') || e.includes('ausent')) ? 'F' : 'SR';
+          const estColor = est==='A' ? [0,168,84] : est==='R' ? [200,150,0] : est==='F' ? [200,0,0] : [150,130,100];
+          row.push({ content: hora, styles:{ halign:'center', fontSize:6 } });
+          row.push({ content: est,  styles:{ halign:'center', fontSize:6.5, fontStyle:'bold', textColor: estColor } });
         } else {
-          row.push('');
-          row.push('');
+          row.push({ content:'', styles:{ halign:'center' } });
+          row.push({ content:'', styles:{ halign:'center' } });
         }
       });
-
-      body.push(row);
+      return row;
     });
 
-    // TABLA autoTable
+    // Calcular ancho de columna de nombre
+    const colNombreWidth = Math.min(60, Math.max(40, pw * 0.18));
+    const colFechaWidth  = Math.max(8, (pw - colNombreWidth - 10) / (todasFechas.length * 2));
+
+    const columnStyles = { 0: { cellWidth: colNombreWidth } };
+    todasFechas.forEach((_, i) => {
+      columnStyles[1 + i*2]     = { cellWidth: colFechaWidth };     // Hora
+      columnStyles[1 + i*2 + 1] = { cellWidth: colFechaWidth - 2 }; // Est
+    });
+
     doc.autoTable({
       startY: 20,
       head: [headRow1, headRow2],
       body: body,
+      theme: 'grid',
       styles: {
         fontSize: 6.5,
-        cellPadding: 2,
-        halign: 'center',
+        cellPadding: 1.5,
         valign: 'middle',
-        lineColor: [150, 150, 150],
-        lineWidth: 0.3
+        lineColor: [180,180,180],
+        lineWidth: 0.2
       },
       headStyles: {
-        fillColor: [44, 62, 80],
+        fillColor: [44,62,80],
         textColor: 255,
         fontStyle: 'bold',
         halign: 'center',
-        lineWidth: 0.4
-      },
-      bodyStyles: {
-        textColor: 51,
         lineWidth: 0.3
       },
-      alternateRowStyles: {
-        fillColor: [248, 250, 252]
-      },
-      columnStyles: {
-        0: { cellWidth: 50, halign: 'left', fontStyle: 'bold' }
-      },
-      margin: { left: 5, right: 5, top: 5 },
-      didDrawCell: (data) => {
-        const content = data.cell.text?.[0];
-        const rowIndex = data.rowIndex;
-        
-        if (rowIndex < 2) return; // No colorear headers
-
-        if (content === 'A') {
-          data.cell.styles.textColor = [0, 168, 84];
-          data.cell.styles.fontStyle = 'bold';
-        } else if (content === 'R') {
-          data.cell.styles.textColor = [240, 173, 78];
-          data.cell.styles.fontStyle = 'bold';
-        } else if (content === 'F') {
-          data.cell.styles.textColor = [217, 83, 79];
-          data.cell.styles.fontStyle = 'bold';
-        } else if (content === 'SR') {
-          data.cell.styles.textColor = [180, 140, 100];
-          data.cell.styles.fontStyle = 'bold';
-        }
-      }
+      alternateRowStyles: { fillColor: [248,250,252] },
+      columnStyles,
+      margin: { left:5, right:5, top:5 }
     });
 
-    // PIE DE PÁGINA
+    // ── PIE DE PÁGINA ──
     const finalY = doc.lastAutoTable?.finalY || 100;
-    
-    doc.setFontSize(6);
-    doc.setTextColor(100, 100, 100);
-    doc.text('A=Asistencia  R=Retardo  F=Falta  SR=Sin Registro  J=Justificado', 5, finalY + 5);
+    doc.setFontSize(6); doc.setTextColor(100,100,100);
+    doc.text('A=Asistencia  R=Retardo  F=Falta  SR=Sin Registro  J=Justificado', 5, finalY+5);
+    doc.setFontSize(7); doc.setTextColor(60,60,60);
+    doc.text('Director(a): _________________     Firma y Sello', 5, finalY+13);
+    doc.setFontSize(6); doc.setTextColor(150,150,150);
+    doc.text(`Generado: ${new Date().toLocaleDateString('es-MX')} · LudoAssist`, pw-5, ph-3, {align:'right'});
 
-    doc.setFontSize(7);
-    doc.text('Director(a): _________________     Firma y Sello', 5, finalY + 15);
-
-    doc.setFontSize(6);
-    doc.setTextColor(150, 150, 150);
-    const pageCount = doc.internal.getNumberOfPages();
-    doc.text(`Pág. ${pageCount} · ${new Date().toLocaleDateString('es-MX')}`, pw - 25, ph - 3);
-
-    // DESCARGAR
     doc.save(`asistencia_${fechaInicio}_${fechaFin}.pdf`);
     toast('📄 PDF generado correctamente');
 
-  } catch (e) {
+  } catch(e) {
     console.error('Error PDF:', e);
     toast('❌ Error: ' + e.message);
   } finally {
-    btn.disabled = false;
-    btn.textContent = '📄 PDF';
+    btn.disabled=false; btn.textContent='📄 PDF';
   }
 };
 
+// ══════════════════════════════════════════════
+// INIT FECHAS
+// ══════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
   const hoyISO = hoy();
-  const hace7 = new Date(); hace7.setDate(hace7.getDate()-7);
-  const finEl = document.getElementById('exp-fecha-fin');
-  const iniEl = document.getElementById('exp-fecha-inicio');
+  const hace7  = new Date(); hace7.setDate(hace7.getDate()-7);
+  const finEl  = document.getElementById('exp-fecha-fin');
+  const iniEl  = document.getElementById('exp-fecha-inicio');
   if (finEl) finEl.value = hoyISO;
   if (iniEl) iniEl.value = hace7.toISOString().split('T')[0];
 });
-
-// ── ASISTENCIA MANUAL ──
-window.cargarTurnosManual = function() {
-  const select = document.getElementById('man-turno');
-  if (!select) {
-    console.warn('⚠️ man-turno no encontrado');
-    return;
-  }
-  if (select.children.length > 1) {
-    console.log('✅ Turnos ya cargados');
-    return;
-  }
-  
-  console.log('📋 Estructura:', estructura);
-  console.log('📋 Turnos:', estructura?.turnos);
-  
-  if (estructura?.turnos) {
-    estructura.turnos.forEach(t => {
-      const opt = document.createElement('option');
-      opt.value = t;
-      opt.textContent = t === 'mat' ? '🌅 Matutino' : '🌆 Vespertino';
-      select.appendChild(opt);
-    });
-    console.log('✅ Turnos cargados');
-  } else {
-    console.warn('⚠️ No hay turnos en estructura');
-  }
-};
-
-window.manActualizarGrados = function() {
-  const turno = document.getElementById('man-turno').value;
-  const grado = document.getElementById('man-grado');
-  grado.innerHTML = '<option value="">Cargando...</option>';
-  if (!turno) { grado.innerHTML = '<option value="">Seleccione turno primero</option>'; return; }
-  const grados = estructura?.grados?.[turno] || [];
-  grado.innerHTML = '<option value="">Seleccione grado...</option>';
-  grados.forEach(g => { const opt = document.createElement('option'); opt.value = g; opt.textContent = g + '°'; grado.appendChild(opt); });
-};
-
-window.manActualizarGrupos = function() {
-  const turno = document.getElementById('man-turno').value;
-  const grado = document.getElementById('man-grado').value;
-  const grupo = document.getElementById('man-grupo');
-  grupo.innerHTML = '<option value="">Cargando...</option>';
-  if (!turno || !grado) { grupo.innerHTML = '<option value="">Seleccione grado primero</option>'; return; }
-  const grupos = estructura?.grupos?.[turno]?.[grado] || [];
-  grupo.innerHTML = '<option value="">Seleccione grupo...</option>';
-  grupos.forEach(g => { const opt = document.createElement('option'); opt.value = g; opt.textContent = 'Grupo "' + g + '"'; grupo.appendChild(opt); });
-};
-
-window.manCargarAlumnos = function() {
-  const turno = document.getElementById('man-turno').value;
-  const grado = document.getElementById('man-grado').value;
-  const grupo = document.getElementById('man-grupo').value;
-  const nombre = document.getElementById('man-nombre');
-  nombre.innerHTML = '<option value="">Cargando...</option>';
-  if (!turno || !grado || !grupo) { nombre.innerHTML = '<option value="">Seleccione grupo primero</option>'; return; }
-  const hoyISO = hoy();
-  const hoyData = asistenciasPorFecha?.[hoyISO] || {};
-  const alumnos = estructura?.alumnos?.[turno]?.[grado]?.[grupo] || [];
-  nombre.innerHTML = '<option value="">Seleccione alumno...</option>';
-  alumnos.forEach(a => { if (!hoyData[a]) { const opt = document.createElement('option'); opt.value = a; opt.textContent = a; nombre.appendChild(opt); } });
-};
-
-window.toggleMotive = function() {
-  const mode = document.getElementById('man-mode').value;
-  const motiveBox = document.getElementById('motive-box');
-  motiveBox.style.display = mode === 'justificado' ? 'block' : 'none';
-};
-
-window.procesarManual = function() {
-  const turno = document.getElementById('man-turno').value;
-  const grado = document.getElementById('man-grado').value;
-  const grupo = document.getElementById('man-grupo').value;
-  const nombre = document.getElementById('man-nombre').value;
-  const mode = document.getElementById('man-mode').value;
-  const motive = document.getElementById('man-motive').value;
-  if (!turno || !grado || !grupo || !nombre) { toast('⚠️ Completa todos los campos'); return; }
-  let estatus = mode;
-  if (mode === 'justificado') estatus = `justificado - ${motive}`;
-  const registro = { nombre, turno, grado, grupoLetra: grupo, grupo: `${grado}°${grupo}`, estatus, hora: new Date().toLocaleTimeString('es-MX', {hour:'2-digit', minute:'2-digit'}), fecha: hoy(), timestamp: Date.now() };
-  const ref = db?.ref(`escuelas/${escuelaID}/asistencias`).push();
-  ref.set(registro).then(() => { toast('✅ Asistencia registrada'); document.getElementById('man-nombre').value = ''; document.getElementById('man-turno').value = ''; document.getElementById('man-grado').value = ''; document.getElementById('man-grupo').value = ''; window.cargarTurnosManual(); }).catch(e => toast('❌ Error: ' + e.message));
-};
-
 </script>
-<nav class="bottom-nav">
-  <button class="bottom-nav-btn active" data-tab="asistencias" onclick="window.switchView('asistencias')">
-    <span>📋</span>
-    <div class="bottom-nav-btn-label">Asistencias</div>
-  </button>
-  <button class="bottom-nav-btn" data-tab="exportar" onclick="window.switchView('exportar')">
-    <span>📤</span>
-    <div class="bottom-nav-btn-label">Exportar</div>
-  </button>
-  <button class="bottom-nav-btn" data-tab="manual" onclick="window.switchView('manual')">
-    <span>📝</span>
-    <div class="bottom-nav-btn-label">Manual</div>
-  </button>
-  <button class="bottom-nav-btn" id="btn-links-wa" onclick="window.switchView('links-wa')">
-    <span>📱</span>
-    <div class="bottom-nav-btn-label">Links WA</div>
-  </button>
-</nav>
-
-<!-- VISTA LINKS WA (FLOTANTE) -->
-<div class="view" id="view-links-wa">
-  <div class="config-intro">
-    <strong>📱 Links de WhatsApp por grupo</strong><br>
-    Pega aquí el link de cada grupo. Al tocar "Enviar", se abrirá WhatsApp con el mensaje listo.<br><br>
-    <strong>¿Cómo obtener el link?</strong><br>
-    Grupo WA → nombre del grupo → <em>Invitar por enlace</em> → copiar.
-  </div>
-  <!-- Filtro turno en config -->
-  <div class="config-turno-filter">
-    <button class="cfg-turno-btn active-all" id="cfg-btn-all"  onclick="filtrarConfig('all')">🌐 Todos</button>
-    <button class="cfg-turno-btn"            id="cfg-btn-mat"  onclick="filtrarConfig('mat')">🌅 Matutino</button>
-    <button class="cfg-turno-btn"            id="cfg-btn-vesp" onclick="filtrarConfig('vesp')">🌆 Vespertino</button>
-  </div>
-  <div id="config-grupos-container">
-    <div class="loading-state"><div class="loader"></div></div>
-  </div>
-  <button class="btn-save-config" id="btn-save-config">💾 Guardar Links</button>
-</div>
-
 </body>
 </html>

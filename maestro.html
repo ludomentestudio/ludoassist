@@ -22,9 +22,6 @@
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif;-webkit-tap-highlight-color:transparent;}
 body{background:var(--light);color:var(--slate);min-height:100dvh;display:flex;flex-direction:column;}
 
-/* ══════════════════════════════
-   PANTALLA LOGIN — estilo escolar
-   ══════════════════════════════ */
 #screen-login{
   position:fixed;inset:0;
   background:linear-gradient(160deg,#1a4a2a 0%,#0d2b1a 55%,#071a10 100%);
@@ -106,9 +103,6 @@ body{background:var(--light);color:var(--slate);min-height:100dvh;display:flex;f
 .login-error{color:#ff8a80;font-size:.82rem;text-align:center;font-weight:700;min-height:18px;}
 .login-hint{font-size:.7rem;color:rgba(255,255,255,.4);text-align:center;line-height:1.6;}
 
-/* ══════════════════
-   HEADER
-   ══════════════════ */
 header{
   background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);
   color:var(--white);padding:.7rem 1rem;
@@ -120,15 +114,9 @@ header{
 .hdr-right{display:flex;gap:.4rem;align-items:center;}
 .hdr-sub{font-size:.6rem;color:rgba(255,255,255,.7);font-weight:700;letter-spacing:.5px;}
 
-/* ══════════════════
-   MAIN
-   ══════════════════ */
 main{padding:1rem 1rem 5rem 1rem;max-width:600px;margin:0 auto;width:100%;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
-/* ══════════════════
-   CHIPS ESCUELA
-   ══════════════════ */
 .escuelas-bar{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.75rem;}
 .chip-escuela{
   background:var(--white);border:2px solid var(--border);border-radius:20px;
@@ -145,9 +133,6 @@ main{padding:1rem 1rem 5rem 1rem;max-width:600px;margin:0 auto;width:100%;}
 }
 .btn-agregar-escuela:active{transform:scale(.98);}
 
-/* ══════════════════
-   SELECTOR CARD
-   ══════════════════ */
 .selector-card{
   background:var(--white);border-radius:14px;padding:1rem;margin-bottom:1rem;
   box-shadow:0 2px 8px rgba(0,0,0,.08);border-top:4px solid var(--green);
@@ -169,9 +154,6 @@ main{padding:1rem 1rem 5rem 1rem;max-width:600px;margin:0 auto;width:100%;}
 .btn-cargar:active{transform:scale(.98);}
 .btn-cargar:disabled{background:var(--slate2);box-shadow:none;cursor:not-allowed;}
 
-/* ══════════════════
-   SESIÓN INFO
-   ══════════════════ */
 .sesion-info{
   background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);
   border-radius:12px;padding:.85rem 1rem;margin-bottom:.85rem;
@@ -182,9 +164,6 @@ main{padding:1rem 1rem 5rem 1rem;max-width:600px;margin:0 auto;width:100%;}
 .sesion-dato strong{color:var(--yellow);}
 .sesion-hora{font-size:.68rem;color:rgba(255,255,255,.55);}
 
-/* ══════════════════
-   LISTA HEADER
-   ══════════════════ */
 .lista-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.85rem;}
 .lista-titulo{font-size:.95rem;font-weight:900;color:var(--navy);}
 .lista-stats{display:flex;gap:.4rem;}
@@ -194,18 +173,11 @@ main{padding:1rem 1rem 5rem 1rem;max-width:600px;margin:0 auto;width:100%;}
 .stat-t{background:#FEF9C3;color:#854D0E;}
 .stat-j{background:#CFFAFE;color:#164E63;}
 
-/* ══════════════════
-   NOTA DIFERENCIA
-   ══════════════════ */
 .nota-diferencia{
   background:#FFFBEB;border:1.5px solid #FDE68A;
   border-radius:10px;padding:.75rem 1rem;margin-bottom:.85rem;
   font-size:.75rem;color:#92400E;line-height:1.6;
 }
-
-/* ══════════════════
-   GUÍA BOTONES
-   ══════════════════ */
 .guia-botones{
   background:var(--white);border:1.5px solid var(--border);border-radius:10px;
   padding:.75rem 1rem;margin-bottom:.85rem;
@@ -213,13 +185,11 @@ main{padding:1rem 1rem 5rem 1rem;max-width:600px;margin:0 auto;width:100%;}
 }
 .guia-botones strong{color:var(--navy);}
 
-/* ══════════════════
-   TARJETA ALUMNO
-   ══════════════════ */
+/* ── Tarjeta alumno ── */
 .alumno-card{
   background:var(--white);border-radius:11px;
   padding:.75rem 1rem;margin-bottom:.5rem;
-  display:flex;align-items:center;gap:.75rem;
+  display:flex;align-items:flex-start;gap:.75rem;
   box-shadow:0 1px 4px rgba(0,0,0,.07);
   border-left:4px solid var(--border);
   transition:border-color .2s;
@@ -231,7 +201,7 @@ main{padding:1rem 1rem 5rem 1rem;max-width:600px;margin:0 auto;width:100%;}
 
 .alumno-num{
   font-size:.68rem;font-weight:800;color:var(--slate2);
-  min-width:20px;text-align:center;flex-shrink:0;
+  min-width:20px;text-align:center;flex-shrink:0;padding-top:.15rem;
 }
 .alumno-info{flex:1;min-width:0;}
 .alumno-nombre{
@@ -239,7 +209,6 @@ main{padding:1rem 1rem 5rem 1rem;max-width:600px;margin:0 auto;width:100%;}
   white-space:normal;word-break:break-word;
   text-transform:uppercase;letter-spacing:.2px;line-height:1.3;
 }
-/* Bolita de estatus debajo del nombre */
 .alumno-estatus-dot{
   display:flex;align-items:center;gap:.3rem;
   font-size:.62rem;font-weight:700;margin-top:.25rem;
@@ -250,9 +219,15 @@ main{padding:1rem 1rem 5rem 1rem;max-width:600px;margin:0 auto;width:100%;}
 .dot-F{background:var(--ruby);}
 .dot-J{background:var(--cyan);}
 .dot-none{background:#CBD5E1;}
-.alumno-scanner{font-size:.62rem;font-weight:700;margin-top:.1rem;}
-.escaner-si{color:var(--emerald);}
-.escaner-tarde{color:var(--amber);}
+
+/* ── NUEVO: chip de justificado con motivo ── */
+.justif-chip{
+  display:inline-flex;align-items:center;gap:.3rem;
+  background:#CFFAFE;color:#164E63;border:1px solid #A5F3FC;
+  border-radius:6px;padding:.2rem .55rem;
+  font-size:.62rem;font-weight:800;margin-top:.35rem;
+  line-height:1.3;
+}
 
 .btns-estatus{display:flex;gap:.25rem;flex-shrink:0;}
 .btn-est{
@@ -272,9 +247,6 @@ main{padding:1rem 1rem 5rem 1rem;max-width:600px;margin:0 auto;width:100%;}
 .btn-j{background:rgba(6,182,212,.15);color:#164E63;}
 .btn-j.active{background:var(--cyan);color:var(--navy);}
 
-/* ══════════════════
-   ACCIONES
-   ══════════════════ */
 .acciones-finales{margin-top:1.2rem;display:flex;gap:.7rem;}
 .btn-guardar{
   background:linear-gradient(135deg,var(--green),var(--green2));
@@ -291,9 +263,6 @@ main{padding:1rem 1rem 5rem 1rem;max-width:600px;margin:0 auto;width:100%;}
 }
 .btn-nueva:active{transform:scale(.98);}
 
-/* ══════════════════
-   MODAL
-   ══════════════════ */
 #modal-escuela{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:flex-end;justify-content:center;z-index:200;padding:0;}
 #modal-escuela.show{display:flex;}
 .modal-box{
@@ -315,9 +284,6 @@ main{padding:1rem 1rem 5rem 1rem;max-width:600px;margin:0 auto;width:100%;}
 .btn-modal-ok{background:linear-gradient(135deg,var(--green),var(--green2));color:var(--white);border:none;border-radius:9px;padding:.8rem;font-size:.88rem;font-weight:900;cursor:pointer;flex:1;font-family:'Nunito',sans-serif;}
 .btn-modal-cancel{background:var(--light);border:1.5px solid var(--border);color:var(--slate);border-radius:9px;padding:.8rem;font-size:.88rem;font-weight:700;cursor:pointer;flex:1;font-family:'Nunito',sans-serif;}
 
-/* ══════════════════
-   TOAST
-   ══════════════════ */
 #toast{
   position:fixed;bottom:5rem;left:50%;transform:translateX(-50%) translateY(20px);
   background:var(--navy);color:var(--white);
@@ -327,9 +293,6 @@ main{padding:1rem 1rem 5rem 1rem;max-width:600px;margin:0 auto;width:100%;}
 }
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
-/* ══════════════════
-   NAV
-   ══════════════════ */
 .nav-bottom{
   position:fixed;bottom:0;left:0;right:0;
   background:var(--white);border-top:2px solid var(--border);
@@ -345,40 +308,25 @@ main{padding:1rem 1rem 5rem 1rem;max-width:600px;margin:0 auto;width:100%;}
 .nav-tab .nav-icon{font-size:1.3rem;}
 .nav-tab.active{color:var(--green);}
 
-/* ══════════════════
-   VACÍO / CARGA
-   ══════════════════ */
 .empty{text-align:center;padding:3rem 1rem;color:var(--slate2);}
 .empty-icon{font-size:3rem;margin-bottom:.8rem;}
 .empty p{font-size:.88rem;font-weight:700;color:var(--slate);}
 
-/* ══════════════════
-   HISTORIAL
-   ══════════════════ */
-.hist-card{
-  background:var(--white);border-radius:12px;margin-bottom:.6rem;
-  box-shadow:0 1px 4px rgba(0,0,0,.07);overflow:hidden;
-}
-.hist-header{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:.85rem 1rem;cursor:pointer;user-select:none;
-  border-left:4px solid var(--green);
-}
+.hist-card{background:var(--white);border-radius:12px;margin-bottom:.6rem;box-shadow:0 1px 4px rgba(0,0,0,.07);overflow:hidden;}
+.hist-header{display:flex;justify-content:space-between;align-items:center;padding:.85rem 1rem;cursor:pointer;user-select:none;border-left:4px solid var(--green);}
 .hist-grupo{font-size:.92rem;font-weight:900;color:var(--navy);}
 .hist-fecha{font-size:.68rem;color:var(--slate2);margin-top:.15rem;}
 .hist-chips{display:flex;gap:.3rem;flex-wrap:wrap;}
 .hist-chip{font-size:.65rem;font-weight:800;padding:.18rem .45rem;border-radius:6px;}
 .hist-body{display:none;border-top:1px solid var(--border);}
 .hist-body.open{display:block;}
-.hist-alumno-row{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:.45rem 1rem;border-bottom:1px solid #F1F5F9;font-size:.82rem;
-}
+.hist-alumno-row{display:flex;justify-content:space-between;align-items:center;padding:.45rem 1rem;border-bottom:1px solid #F1F5F9;font-size:.82rem;flex-wrap:wrap;gap:.3rem;}
 .hist-alumno-row:last-child{border-bottom:none;}
 .hist-nombre{color:var(--navy);font-weight:700;text-transform:uppercase;letter-spacing:.2px;}
 .hist-est{font-size:.75rem;font-weight:800;}
+/* Motivo en historial */
+.hist-motivo{font-size:.68rem;color:#164E63;background:#CFFAFE;border-radius:5px;padding:.1rem .4rem;font-weight:700;}
 
-/* Spinner */
 .loader{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 1rem;}
 @keyframes spin{to{transform:rotate(360deg)}}
 </style>
@@ -387,7 +335,6 @@ main{padding:1rem 1rem 5rem 1rem;max-width:600px;margin:0 auto;width:100%;}
 
 <div id="toast"></div>
 
-<!-- MODAL AGREGAR ESCUELA -->
 <div id="modal-escuela">
   <div class="modal-box">
     <div class="modal-title">➕ Agregar Escuela</div>
@@ -400,7 +347,6 @@ main{padding:1rem 1rem 5rem 1rem;max-width:600px;margin:0 auto;width:100%;}
   </div>
 </div>
 
-<!-- LOGIN -->
 <div id="screen-login">
   <div class="utensilios">
     <span class="util">✏️</span><span class="util">📏</span>
@@ -412,13 +358,11 @@ main{padding:1rem 1rem 5rem 1rem;max-width:600px;margin:0 auto;width:100%;}
   </div>
   <span class="corner-deco tl">📐</span>
   <span class="corner-deco br">📏</span>
-
   <div class="login-logo-wrap">
     <div class="login-icon">📋</div>
     <div class="login-app">LudoAssist</div>
     <div class="login-role">Lista Docente</div>
   </div>
-
   <div class="login-card">
     <div>
       <div class="login-label">Código de tu escuela</div>
@@ -440,7 +384,6 @@ main{padding:1rem 1rem 5rem 1rem;max-width:600px;margin:0 auto;width:100%;}
   </div>
 </div>
 
-<!-- APP -->
 <header>
   <div>
     <div class="hdr-brand">Ludo<span>Assist</span> · Docente</div>
@@ -452,7 +395,6 @@ main{padding:1rem 1rem 5rem 1rem;max-width:600px;margin:0 auto;width:100%;}
 <main>
   <div class="escuelas-bar" id="escuelas-bar"></div>
   <button class="btn-agregar-escuela" id="btn-agregar-visible">➕ Agregar otra escuela</button>
-
   <div class="selector-card">
     <div class="selector-title">Seleccionar grupo para pasar lista</div>
     <div class="selector-row">
@@ -462,7 +404,6 @@ main{padding:1rem 1rem 5rem 1rem;max-width:600px;margin:0 auto;width:100%;}
     </div>
     <button class="btn-cargar" id="btn-cargar">📋 Cargar Lista</button>
   </div>
-
   <div id="contenido"></div>
 </main>
 
@@ -477,7 +418,7 @@ main{padding:1rem 1rem 5rem 1rem;max-width:600px;margin:0 auto;width:100%;}
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getDatabase, ref, get, push, set, serverTimestamp }
+import { getDatabase, ref, get, push, serverTimestamp }
   from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
 const firebaseConfig = {
@@ -506,7 +447,9 @@ let turnoActual   = '';
 let gradoActual   = '';
 let sesionGuardada= false;
 
-// ── HELPERS ──
+// ─────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────
 function toast(msg) {
   const el = document.getElementById('toast');
   el.textContent = msg; el.classList.add('show');
@@ -514,16 +457,45 @@ function toast(msg) {
 }
 function hoy()  { return new Date().toISOString().split('T')[0]; }
 function horaActual() { return new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'}); }
-function sanitizar(s) { return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,'-').replace(/[^a-z0-9\-]/g,''); }
-// Normaliza nombre para comparación limpia
+function sanitizar(s) {
+  return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/\s+/g,'-').replace(/[^a-z0-9\-]/g,'');
+}
 function normNombre(n) { return (n||'').replace(/^\[ [AM] \] /,'').toUpperCase().trim(); }
-
 function actualizarNombreHeader() {
   const el = document.getElementById('hdr-nombre-doc');
   if (el && nombreDoc) el.textContent = `👤 ${nombreDoc}`;
 }
 
-// ── LOGIN ──
+// ─────────────────────────────────────────────
+// FIX: Mapear estatus del escáner/TS a código interno
+// "asistencia"              -> 'P'
+// "retardo"                 -> 'T'
+// "justificado - <motivo>"  -> 'J'   ← NUEVO
+// "falta" / null / otro     -> 'F'
+// ─────────────────────────────────────────────
+function mapearEstatus(est) {
+  if (!est) return 'F';
+  const e = est.toLowerCase();
+  if (e === 'asistencia')        return 'P';
+  if (e === 'retardo')           return 'T';
+  if (e.startsWith('justificado')) return 'J';
+  if (e === 'falta')             return 'F';
+  return 'F';
+}
+
+// Extrae el motivo del string "justificado - Receta médica" -> "Receta médica"
+function extraerMotivo(est) {
+  if (!est) return null;
+  const e = est.toLowerCase();
+  if (!e.startsWith('justificado')) return null;
+  const idx = est.indexOf(' - ');
+  return idx !== -1 ? est.slice(idx + 3).trim() : null;
+}
+
+// ─────────────────────────────────────────────
+// LOGIN
+// ─────────────────────────────────────────────
 document.getElementById('btn-login').addEventListener('click', async () => {
   const codigo = document.getElementById('login-codigo').value.trim().toLowerCase();
   const nombre = document.getElementById('login-nombre').value.trim();
@@ -550,7 +522,9 @@ document.getElementById('btn-login').addEventListener('click', async () => {
   } catch(e) { errEl.textContent = '⚠️ Sin conexión. Verifica internet.'; }
   finally { btn.textContent = '✅ Entrar'; btn.disabled = false; }
 });
-document.getElementById('login-codigo').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('btn-login').click(); });
+document.getElementById('login-codigo').addEventListener('keydown', e => {
+  if (e.key==='Enter') document.getElementById('btn-login').click();
+});
 
 async function iniciar() {
   if (escuelas.length === 0 || !escuelaActiva) return;
@@ -561,7 +535,9 @@ async function iniciar() {
 }
 if (escuelas.length > 0 && nombreDoc && escuelaActiva) iniciar();
 
-// ── CHIPS ──
+// ─────────────────────────────────────────────
+// CHIPS
+// ─────────────────────────────────────────────
 function renderChips() {
   document.getElementById('escuelas-bar').innerHTML = escuelas.map(e =>
     `<div class="chip-escuela ${e.codigo===escuelaActiva?'active':''}" onclick="cambiarEscuela('${e.codigo}')">🏫 ${e.nombre}</div>`
@@ -572,7 +548,9 @@ window.cambiarEscuela = async function(codigo) {
   renderChips(); limpiarLista(); await cargarEstructura(); toast('🏫 Escuela cambiada');
 };
 
-// ── MODAL ──
+// ─────────────────────────────────────────────
+// MODAL AGREGAR ESCUELA
+// ─────────────────────────────────────────────
 function abrirModalEscuela() {
   document.getElementById('modal-codigo').value = '';
   document.getElementById('modal-error').textContent = '';
@@ -603,7 +581,9 @@ document.getElementById('btn-modal-ok').addEventListener('click', async () => {
   finally { document.getElementById('btn-modal-ok').textContent = '✅ Verificar'; }
 });
 
-// ── CARGAR ESTRUCTURA ──
+// ─────────────────────────────────────────────
+// CARGAR ESTRUCTURA
+// ─────────────────────────────────────────────
 async function cargarEstructura() {
   try {
     const snapPerfil = await get(ref(db,`escuelas/${escuelaActiva}/configuracion/perfil`));
@@ -618,7 +598,10 @@ async function cargarEstructura() {
             Esta escuela no tiene licencia activa.<br>Comunícate con el administrador de LudoAssist.
           </div>
         </div>`;
-      ['sel-turno','sel-grado','sel-grupo'].forEach(id => { document.getElementById(id).disabled=true; document.getElementById(id).innerHTML='<option>—</option>'; });
+      ['sel-turno','sel-grado','sel-grupo'].forEach(id => {
+        document.getElementById(id).disabled=true;
+        document.getElementById(id).innerHTML='<option>—</option>';
+      });
       document.getElementById('btn-cargar').disabled = true;
       return;
     }
@@ -636,7 +619,9 @@ async function cargarEstructura() {
         if (!estructura[turno][grado]) estructura[turno][grado]=[];
         if (!estructura[turno][grado].includes(grupo)) estructura[turno][grado].push(grupo);
       });
-      Object.keys(estructura).forEach(t => Object.keys(estructura[t]).forEach(g => estructura[t][g].sort()));
+      Object.keys(estructura).forEach(t =>
+        Object.keys(estructura[t]).forEach(g => estructura[t][g].sort())
+      );
     } else estructura={};
     llenarTurnos();
   } catch(e) { toast('⚠️ Error cargando estructura.'); }
@@ -647,83 +632,126 @@ function llenarTurnos() {
   sel.innerHTML = '<option value="">Turno</option>';
   Object.keys(estructura).forEach(t => { sel.innerHTML += `<option value="${t}">${t}</option>`; });
   document.getElementById('sel-grado').innerHTML = '<option value="">Grado</option>';
-  document.getElementById('sel-grupo').innerHTML = '<option value="">Grupo</option>';
+  document.getElementById('sel-grupo').innerHTML  = '<option value="">Grupo</option>';
 }
+
 document.getElementById('sel-turno').addEventListener('change', () => {
-  const turno=document.getElementById('sel-turno').value;
-  const selG=document.getElementById('sel-grado');
-  selG.innerHTML='<option value="">Grado</option>';
-  document.getElementById('sel-grupo').innerHTML='<option value="">Grupo</option>';
+  const turno = document.getElementById('sel-turno').value;
+  const selG  = document.getElementById('sel-grado');
+  selG.innerHTML = '<option value="">Grado</option>';
+  document.getElementById('sel-grupo').innerHTML = '<option value="">Grupo</option>';
   if (!turno) return;
-  Object.keys(estructura[turno]||{}).sort((a,b)=>Number(a)-Number(b)).forEach(g => { selG.innerHTML+=`<option value="${g}">${g}° Grado</option>`; });
-});
-document.getElementById('sel-grado').addEventListener('change', () => {
-  const turno=document.getElementById('sel-turno').value;
-  const grado=document.getElementById('sel-grado').value;
-  const selGr=document.getElementById('sel-grupo');
-  selGr.innerHTML='<option value="">Grupo</option>';
-  if (!turno||!grado) return;
-  (estructura[turno]?.[grado]||[]).forEach(g => { selGr.innerHTML+=`<option value="${g}">${g}</option>`; });
+  Object.keys(estructura[turno]||{}).sort((a,b)=>Number(a)-Number(b)).forEach(g => {
+    selG.innerHTML += `<option value="${g}">${g}° Grado</option>`;
+  });
 });
 
-// ── CARGAR LISTA ──
+document.getElementById('sel-grado').addEventListener('change', () => {
+  const turno = document.getElementById('sel-turno').value;
+  const grado = document.getElementById('sel-grado').value;
+  const selGr = document.getElementById('sel-grupo');
+  selGr.innerHTML = '<option value="">Grupo</option>';
+  if (!turno||!grado) return;
+  (estructura[turno]?.[grado]||[]).forEach(g => {
+    selGr.innerHTML += `<option value="${g}">${g}</option>`;
+  });
+});
+
+// ─────────────────────────────────────────────
+// CARGAR LISTA
+// ─────────────────────────────────────────────
 document.getElementById('btn-cargar').addEventListener('click', async () => {
-  turnoActual=document.getElementById('sel-turno').value;
-  gradoActual=document.getElementById('sel-grado').value;
-  const grupo=document.getElementById('sel-grupo').value;
+  turnoActual = document.getElementById('sel-turno').value;
+  gradoActual = document.getElementById('sel-grado').value;
+  const grupo = document.getElementById('sel-grupo').value;
   if (!turnoActual||!gradoActual||!grupo) { toast('⚠️ Selecciona turno, grado y grupo.'); return; }
-  grupoActual=grupo; sesionGuardada=false;
-  const btn=document.getElementById('btn-cargar');
-  btn.textContent='⏳ Cargando...'; btn.disabled=true;
+  grupoActual = grupo; sesionGuardada = false;
+  const btn = document.getElementById('btn-cargar');
+  btn.textContent = '⏳ Cargando...'; btn.disabled = true;
+
   try {
-    const clave=`${turnoActual}-${gradoActual}-${grupoActual}`;
-    const grupoDisplay=`${gradoActual}° ${grupoActual}`;
-    const snapDir=await get(ref(db,`escuelas/${escuelaActiva}/directorio/${clave}`));
-    let nombres=[];
-    if (snapDir.exists()) { const val=snapDir.val(); nombres=Array.isArray(val)?val:Object.values(val); nombres=nombres.filter(Boolean); }
+    const clave        = `${turnoActual}-${gradoActual}-${grupoActual}`;
+    const grupoDisplay = `${gradoActual}° ${grupoActual}`;
+    const snapDir      = await get(ref(db,`escuelas/${escuelaActiva}/directorio/${clave}`));
+    let nombres = [];
+    if (snapDir.exists()) {
+      const val = snapDir.val();
+      nombres = Array.isArray(val) ? val : Object.values(val);
+      nombres = nombres.filter(Boolean);
+    }
     if (!nombres.length) {
-      document.getElementById('contenido').innerHTML=`<div class="empty"><div class="empty-icon">📭</div><p>No hay alumnos en este grupo.</p></div>`;
+      document.getElementById('contenido').innerHTML =
+        `<div class="empty"><div class="empty-icon">📭</div><p>No hay alumnos en este grupo.</p></div>`;
       return;
     }
-    // Cargar asistencias de hoy del escáner
-    const snapAs=await get(ref(db,`escuelas/${escuelaActiva}/asistencias`));
-    const asistenciasHoy={};
+
+    // Cargar asistencias hoy — incluyendo las registradas por la TS
+    const snapAs = await get(ref(db,`escuelas/${escuelaActiva}/asistencias`));
+    // estatusScanner guarda el string RAW completo (puede ser "justificado - Receta médica")
+    const asistenciasHoy = {};
     if (snapAs.exists()) {
       Object.values(snapAs.val()).forEach(r => {
-        if (r.fecha===hoy() && r.turno===turnoActual && r.grado===gradoActual && r.grupoLetra===grupoActual) {
+        if (
+          r.fecha === hoy() &&
+          r.turno === turnoActual &&
+          r.grado === gradoActual &&
+          r.grupoLetra === grupoActual
+        ) {
+          // Guardar el estatus raw completo para poder extraer motivo
           asistenciasHoy[normNombre(r.nombre)] = r.estatus;
         }
       });
     }
-    listaActual=nombres.map(nombre => {
-      const est=asistenciasHoy[normNombre(nombre)]||null;
+
+    listaActual = nombres.map(nombre => {
+      const estatusRaw = asistenciasHoy[normNombre(nombre)] || null;
       return {
         nombre,
-        estatusScanner:est,
-        estatusMaestro:est==='asistencia'?'P':est==='retardo'?'T':'F'
+        estatusRaw,                         // string completo, ej: "justificado - Receta médica"
+        estatusMaestro: mapearEstatus(estatusRaw) // 'P' | 'T' | 'J' | 'F'
       };
     });
+
     renderLista(grupoDisplay);
   } catch(e) { toast('❌ Error cargando lista.'); }
-  finally { btn.textContent='📋 Cargar Lista'; btn.disabled=false; }
+  finally { btn.textContent = '📋 Cargar Lista'; btn.disabled = false; }
 });
 
-// ── RENDER LISTA ──
+// ─────────────────────────────────────────────
+// RENDER LISTA
+// ─────────────────────────────────────────────
 function renderLista(grupoDisplay) {
-  const cont=document.getElementById('contenido');
-  const p=listaActual.filter(a=>a.estatusMaestro==='P').length;
-  const t=listaActual.filter(a=>a.estatusMaestro==='T').length;
-  const f=listaActual.filter(a=>a.estatusMaestro==='F').length;
-  const j=listaActual.filter(a=>a.estatusMaestro==='J').length;
-  cont.innerHTML=`
+  const cont = document.getElementById('contenido');
+  const p  = listaActual.filter(a=>a.estatusMaestro==='P').length;
+  const t  = listaActual.filter(a=>a.estatusMaestro==='T').length;
+  const f  = listaActual.filter(a=>a.estatusMaestro==='F').length;
+  const j  = listaActual.filter(a=>a.estatusMaestro==='J').length;
+
+  cont.innerHTML = `
     <div class="nota-diferencia">
-      ⚠️ <strong>Registro del escáner vs tu clase:</strong> La bolita muestra si el alumno pasó por el escáner del plantel. Tu lista es independiente — registra asistencia a <strong>tu clase</strong>.<br><br>
+      ⚠️ <strong>Registro del escáner / T. Social vs tu clase:</strong>
+      La bolita muestra si el alumno pasó por el escáner <em>o</em> fue registrado por la Trabajadora Social.
+      Tu lista es independiente — registra asistencia a <strong>tu clase</strong>.<br><br>
       <span style="display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;margin-top:.2rem;">
-        <span style="display:flex;align-items:center;gap:.3rem;"><span style="width:9px;height:9px;border-radius:50%;background:var(--emerald);display:inline-block;"></span><strong>Verde</strong> — Entró al plantel</span>
+        <span style="display:flex;align-items:center;gap:.3rem;">
+          <span style="width:9px;height:9px;border-radius:50%;background:var(--emerald);display:inline-block;"></span>
+          <strong>Verde</strong> — Entró al plantel
+        </span>
         <span style="margin:0 .2rem;color:#D97706;">·</span>
-        <span style="display:flex;align-items:center;gap:.3rem;"><span style="width:9px;height:9px;border-radius:50%;background:var(--amber);display:inline-block;"></span><strong>Amarilla</strong> — Llegó tarde</span>
+        <span style="display:flex;align-items:center;gap:.3rem;">
+          <span style="width:9px;height:9px;border-radius:50%;background:var(--amber);display:inline-block;"></span>
+          <strong>Amarilla</strong> — Llegó tarde
+        </span>
         <span style="margin:0 .2rem;color:#D97706;">·</span>
-        <span style="display:flex;align-items:center;gap:.3rem;"><span style="width:9px;height:9px;border-radius:50%;background:var(--ruby);display:inline-block;"></span><strong>Roja</strong> — Sin registro</span>
+        <span style="display:flex;align-items:center;gap:.3rem;">
+          <span style="width:9px;height:9px;border-radius:50%;background:var(--cyan);display:inline-block;"></span>
+          <strong>Cyan</strong> — Justificado por T. Social
+        </span>
+        <span style="margin:0 .2rem;color:#D97706;">·</span>
+        <span style="display:flex;align-items:center;gap:.3rem;">
+          <span style="width:9px;height:9px;border-radius:50%;background:var(--ruby);display:inline-block;"></span>
+          <strong>Roja</strong> — Sin registro
+        </span>
       </span>
     </div>
     <div class="sesion-info">
@@ -755,22 +783,35 @@ function renderLista(grupoDisplay) {
   `;
   document.getElementById('btn-guardar-lista').addEventListener('click', guardarLista);
   document.getElementById('btn-nueva-lista').addEventListener('click', () => { limpiarLista(); window.scrollTo(0,0); });
-  cont.style.animation='fadeIn .2s ease';
+  cont.style.animation = 'fadeIn .2s ease';
 }
 
+// ─────────────────────────────────────────────
+// RENDER ALUMNO — FIX principal aquí
+// ─────────────────────────────────────────────
 function renderAlumno(a, i) {
-  const estCls = {P:'est-P',T:'est-T',F:'est-F',J:'est-J'}[a.estatusMaestro]||'';
+  const estCls = {P:'est-P',T:'est-T',F:'est-F',J:'est-J'}[a.estatusMaestro] || '';
   const nombreMostrar = (a.nombre||'').toUpperCase();
+  const motivo = extraerMotivo(a.estatusRaw); // null si no es justificado
 
-  // Bolita escáner — siempre visible
+  // ── Bolita del escáner / T.Social ──
   let dotCls, dotLbl, dotClr;
-  if (a.estatusScanner === 'asistencia') {
-    dotCls='dot-P'; dotLbl='Entró al plantel'; dotClr='color:var(--emerald)';
-  } else if (a.estatusScanner === 'retardo') {
-    dotCls='dot-T'; dotLbl='Llegó tarde al plantel'; dotClr='color:var(--amber)';
+  const codigoEscaner = mapearEstatus(a.estatusRaw);
+
+  if (codigoEscaner === 'P') {
+    dotCls = 'dot-P'; dotLbl = 'Entró al plantel'; dotClr = 'color:var(--emerald)';
+  } else if (codigoEscaner === 'T') {
+    dotCls = 'dot-T'; dotLbl = 'Llegó tarde al plantel'; dotClr = 'color:var(--amber)';
+  } else if (codigoEscaner === 'J') {
+    dotCls = 'dot-J'; dotLbl = 'Justificado por T. Social'; dotClr = 'color:var(--cyan)';
   } else {
-    dotCls='dot-F'; dotLbl='Sin registro en escáner'; dotClr='color:var(--ruby)';
+    dotCls = 'dot-F'; dotLbl = 'Sin registro en escáner'; dotClr = 'color:var(--ruby)';
   }
+
+  // Chip con motivo de justificación (solo si aplica)
+  const chipMotivo = motivo
+    ? `<div class="justif-chip">📋 Motivo: <strong>${motivo}</strong></div>`
+    : '';
 
   return `
     <div class="alumno-card ${estCls}" id="card-${i}">
@@ -781,6 +822,7 @@ function renderAlumno(a, i) {
           <span class="dot ${dotCls}"></span>
           <span style="${dotClr};font-weight:800;font-size:.62rem;">${dotLbl}</span>
         </div>
+        ${chipMotivo}
       </div>
       <div class="btns-estatus">
         <button class="btn-est btn-p ${a.estatusMaestro==='P'?'active':''}" onclick="setEstatus(${i},'P')" title="Presente">✅</button>
@@ -791,85 +833,112 @@ function renderAlumno(a, i) {
     </div>`;
 }
 
+// ─────────────────────────────────────────────
+// SET ESTATUS (botones del maestro)
+// ─────────────────────────────────────────────
 window.setEstatus = function(i, est) {
-  listaActual[i].estatusMaestro=est; sesionGuardada=false;
-  const card=document.getElementById(`card-${i}`);
-  card.className='alumno-card '+({P:'est-P',T:'est-T',F:'est-F',J:'est-J'}[est]||'');
+  listaActual[i].estatusMaestro = est;
+  sesionGuardada = false;
+  const card = document.getElementById(`card-${i}`);
+  card.className = 'alumno-card ' + ({P:'est-P',T:'est-T',F:'est-F',J:'est-J'}[est]||'');
   card.querySelectorAll('.btn-est').forEach(b=>b.classList.remove('active'));
   card.querySelector(`.btn-${{P:'p',T:'t',F:'f',J:'j'}[est]}`).classList.add('active');
-  const p=listaActual.filter(a=>a.estatusMaestro==='P').length;
-  const t=listaActual.filter(a=>a.estatusMaestro==='T').length;
-  const f=listaActual.filter(a=>a.estatusMaestro==='F').length;
-  const jj=listaActual.filter(a=>a.estatusMaestro==='J').length;
-  document.querySelector('.stat-p').textContent=`✅ ${p}`;
-  document.querySelector('.stat-t').textContent=`⏰ ${t}`;
-  document.querySelector('.stat-f').textContent=`❌ ${f}`;
-  const sj=document.querySelector('.stat-j');
-  if(sj) sj.textContent=`📝 ${jj}`;
+
+  // Actualizar contadores
+  const p  = listaActual.filter(a=>a.estatusMaestro==='P').length;
+  const t  = listaActual.filter(a=>a.estatusMaestro==='T').length;
+  const f  = listaActual.filter(a=>a.estatusMaestro==='F').length;
+  const jj = listaActual.filter(a=>a.estatusMaestro==='J').length;
+  document.querySelector('.stat-p').textContent = `✅ ${p}`;
+  document.querySelector('.stat-t').textContent = `⏰ ${t}`;
+  document.querySelector('.stat-f').textContent = `❌ ${f}`;
+  const sj = document.querySelector('.stat-j');
+  if (sj) sj.textContent = `📝 ${jj}`;
 };
 
-// ── GUARDAR ──
+// ─────────────────────────────────────────────
+// GUARDAR LISTA
+// ─────────────────────────────────────────────
 async function guardarLista() {
-  const btn=document.getElementById('btn-guardar-lista');
-  btn.textContent='⏳ Guardando...'; btn.disabled=true;
-  const fecha=hoy(), hora=horaActual();
-  const grupoDisplay=`${gradoActual}° ${grupoActual}`;
-  const clave=sanitizar(`${turnoActual}-${gradoActual}-${grupoActual}`);
-  const registro={
-    fecha,hora,maestro:nombreDoc,escuela:escuelaActiva,
-    turno:turnoActual,grado:gradoActual,grupo:grupoActual,grupoDisplay,
-    alumnos:listaActual.map(a=>({nombre:a.nombre,estatusMaestro:a.estatusMaestro,estatusScanner:a.estatusScanner||null})),
-    timestamp:serverTimestamp()
+  const btn = document.getElementById('btn-guardar-lista');
+  btn.textContent = '⏳ Guardando...'; btn.disabled = true;
+  const fecha = hoy(), hora = horaActual();
+  const grupoDisplay = `${gradoActual}° ${grupoActual}`;
+  const clave = sanitizar(`${turnoActual}-${gradoActual}-${grupoActual}`);
+  const registro = {
+    fecha, hora, maestro: nombreDoc, escuela: escuelaActiva,
+    turno: turnoActual, grado: gradoActual, grupo: grupoActual, grupoDisplay,
+    alumnos: listaActual.map(a => ({
+      nombre: a.nombre,
+      estatusMaestro: a.estatusMaestro,
+      estatusScanner: a.estatusRaw || null,   // guardamos el raw completo
+      motivo: extraerMotivo(a.estatusRaw)      // guardamos el motivo también
+    })),
+    timestamp: serverTimestamp()
   };
   try {
-    await push(ref(db,`escuelas/${escuelaActiva}/listas-maestro/${fecha}/${clave}`),registro);
-    sesionGuardada=true; toast('✅ Lista guardada correctamente');
-    btn.textContent='✅ Lista Guardada';
+    await push(ref(db,`escuelas/${escuelaActiva}/listas-maestro/${fecha}/${clave}`), registro);
+    sesionGuardada = true; toast('✅ Lista guardada correctamente');
+    btn.textContent = '✅ Lista Guardada';
   } catch(e) {
-    toast('❌ Error al guardar.'); btn.textContent='💾 Guardar Lista'; btn.disabled=false;
+    toast('❌ Error al guardar.'); btn.textContent = '💾 Guardar Lista'; btn.disabled = false;
   }
 }
 
-// ── NAVEGACIÓN ──
-let vistaActual='lista';
+// ─────────────────────────────────────────────
+// NAVEGACIÓN
+// ─────────────────────────────────────────────
+let vistaActual = 'lista';
 window.cambiarVista = async function(vista) {
-  vistaActual=vista;
-  document.getElementById('nav-lista').classList.toggle('active',vista==='lista');
-  document.getElementById('nav-historial').classList.toggle('active',vista==='historial');
+  vistaActual = vista;
+  document.getElementById('nav-lista').classList.toggle('active', vista==='lista');
+  document.getElementById('nav-historial').classList.toggle('active', vista==='historial');
   if (vista==='historial') await verHistorial(); else limpiarLista();
 };
 
-// ── HISTORIAL ──
-let registrosHistorial=[];
+// ─────────────────────────────────────────────
+// HISTORIAL
+// ─────────────────────────────────────────────
+let registrosHistorial = [];
 async function verHistorial() {
-  const cont=document.getElementById('contenido');
-  cont.innerHTML='<div style="text-align:center;padding:2rem;"><div class="loader"></div><div style="font-size:.82rem;color:var(--slate2);">Cargando historial...</div></div>';
+  const cont = document.getElementById('contenido');
+  cont.innerHTML = '<div style="text-align:center;padding:2rem;"><div class="loader"></div><div style="font-size:.82rem;color:var(--slate2);">Cargando historial...</div></div>';
   try {
-    const snap=await get(ref(db,`escuelas/${escuelaActiva}/listas-maestro`));
-    if (!snap.exists()) { cont.innerHTML='<div class="empty"><div class="empty-icon">📭</div><p>No tienes listas guardadas aún.</p></div>'; return; }
-    registrosHistorial=[];
-    Object.entries(snap.val()).forEach(([fecha,grupos])=>{
-      Object.values(grupos).forEach(sesiones=>{
-        Object.values(sesiones).forEach(r=>{ if(r.maestro===nombreDoc) registrosHistorial.push(r); });
+    const snap = await get(ref(db,`escuelas/${escuelaActiva}/listas-maestro`));
+    if (!snap.exists()) {
+      cont.innerHTML = '<div class="empty"><div class="empty-icon">📭</div><p>No tienes listas guardadas aún.</p></div>';
+      return;
+    }
+    registrosHistorial = [];
+    Object.entries(snap.val()).forEach(([fecha,grupos]) => {
+      Object.values(grupos).forEach(sesiones => {
+        Object.values(sesiones).forEach(r => {
+          if (r.maestro === nombreDoc) registrosHistorial.push(r);
+        });
       });
     });
-    registrosHistorial.sort((a,b)=>(b.fecha+b.hora).localeCompare(a.fecha+a.hora));
-    if (!registrosHistorial.length) { cont.innerHTML='<div class="empty"><div class="empty-icon">📭</div><p>No tienes listas guardadas aún.</p></div>'; return; }
+    registrosHistorial.sort((a,b) => (b.fecha+b.hora).localeCompare(a.fecha+a.hora));
+    if (!registrosHistorial.length) {
+      cont.innerHTML = '<div class="empty"><div class="empty-icon">📭</div><p>No tienes listas guardadas aún.</p></div>';
+      return;
+    }
     renderHistorial(cont);
-  } catch(e) { cont.innerHTML='<div class="empty"><div class="empty-icon">⚠️</div><p>Error cargando historial.</p></div>'; }
+  } catch(e) {
+    cont.innerHTML = '<div class="empty"><div class="empty-icon">⚠️</div><p>Error cargando historial.</p></div>';
+  }
 }
 
 function renderHistorial(cont) {
-  cont.innerHTML=`
+  cont.innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.85rem;">
       <div style="font-size:.95rem;font-weight:900;color:var(--navy);">📂 Mi Historial</div>
       <button id="btn-cerrar-historial" style="background:var(--light);border:1.5px solid var(--border);color:var(--slate);border-radius:8px;padding:.35rem .8rem;font-size:.78rem;cursor:pointer;font-weight:800;font-family:'Nunito',sans-serif;">← Regresar</button>
     </div>
-    ${registrosHistorial.slice(0,30).map((r,i)=>{
-      const p=r.alumnos?r.alumnos.filter(a=>a.estatusMaestro==='P').length:0;
-      const f=r.alumnos?r.alumnos.filter(a=>a.estatusMaestro==='F').length:0;
-      const t=r.alumnos?r.alumnos.filter(a=>a.estatusMaestro==='T').length:0;
-      const j=r.alumnos?r.alumnos.filter(a=>a.estatusMaestro==='J').length:0;
+    ${registrosHistorial.slice(0,30).map((r,i) => {
+      const p  = r.alumnos ? r.alumnos.filter(a=>a.estatusMaestro==='P').length : 0;
+      const f  = r.alumnos ? r.alumnos.filter(a=>a.estatusMaestro==='F').length : 0;
+      const t  = r.alumnos ? r.alumnos.filter(a=>a.estatusMaestro==='T').length : 0;
+      const j  = r.alumnos ? r.alumnos.filter(a=>a.estatusMaestro==='J').length : 0;
       return `<div class="hist-card">
         <div class="hist-header" onclick="toggleDetalle(${i})">
           <div>
@@ -887,33 +956,40 @@ function renderHistorial(cont) {
           </div>
         </div>
         <div class="hist-body" id="detalle-${i}">
-          ${r.alumnos?r.alumnos.map(a=>{
-            const ico=a.estatusMaestro==='P'?'✅':a.estatusMaestro==='T'?'⏰':a.estatusMaestro==='J'?'📝':'❌';
-            const col=a.estatusMaestro==='P'?'color:#166534':a.estatusMaestro==='T'?'color:#92400E':a.estatusMaestro==='J'?'color:#164E63':'color:#991B1B';
-            const etq=a.estatusMaestro==='P'?'Presente':a.estatusMaestro==='T'?'Tarde':a.estatusMaestro==='J'?'Justificado':'Falta';
+          ${r.alumnos ? r.alumnos.map(a => {
+            const ico = a.estatusMaestro==='P'?'✅':a.estatusMaestro==='T'?'⏰':a.estatusMaestro==='J'?'📝':'❌';
+            const col = a.estatusMaestro==='P'?'color:#166534':a.estatusMaestro==='T'?'color:#92400E':a.estatusMaestro==='J'?'color:#164E63':'color:#991B1B';
+            const etq = a.estatusMaestro==='P'?'Presente':a.estatusMaestro==='T'?'Tarde':a.estatusMaestro==='J'?'Justificado':'Falta';
+            // Mostrar motivo en historial si existe
+            const motivoHist = a.motivo
+              ? `<span class="hist-motivo">📋 ${a.motivo}</span>`
+              : '';
             return `<div class="hist-alumno-row">
               <div class="hist-nombre">${(a.nombre||'').toUpperCase()}</div>
-              <div class="hist-est" style="${col}">${ico} ${etq}</div>
+              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.2rem;">
+                <div class="hist-est" style="${col}">${ico} ${etq}</div>
+                ${motivoHist}
+              </div>
             </div>`;
-          }).join(''):'<div style="padding:.8rem;font-size:.8rem;color:var(--slate2);">Sin detalle.</div>'}
+          }).join('') : '<div style="padding:.8rem;font-size:.8rem;color:var(--slate2);">Sin detalle.</div>'}
         </div>
       </div>`;
     }).join('')}`;
-  document.getElementById('btn-cerrar-historial').addEventListener('click',()=>{ limpiarLista(); window.scrollTo(0,0); });
+  document.getElementById('btn-cerrar-historial').addEventListener('click', () => {
+    limpiarLista(); window.scrollTo(0,0);
+  });
 }
 
 window.toggleDetalle = function(i) {
-  const el=document.getElementById('detalle-'+i);
-  if (!el) return;
-  el.classList.toggle('open');
+  document.getElementById('detalle-'+i)?.classList.toggle('open');
 };
 
 function limpiarLista() {
-  listaActual=[]; grupoActual=''; sesionGuardada=false;
-  document.getElementById('contenido').innerHTML='';
-  document.getElementById('sel-turno').value='';
-  document.getElementById('sel-grado').innerHTML='<option value="">Grado</option>';
-  document.getElementById('sel-grupo').innerHTML='<option value="">Grupo</option>';
+  listaActual = []; grupoActual = ''; sesionGuardada = false;
+  document.getElementById('contenido').innerHTML = '';
+  document.getElementById('sel-turno').value = '';
+  document.getElementById('sel-grado').innerHTML = '<option value="">Grado</option>';
+  document.getElementById('sel-grupo').innerHTML  = '<option value="">Grupo</option>';
   document.getElementById('nav-lista').classList.add('active');
   document.getElementById('nav-historial').classList.remove('active');
 }

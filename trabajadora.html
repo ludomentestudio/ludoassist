@@ -876,12 +876,24 @@ window.copiarMensaje = function(clave) {
 function cargarTurnosManual() {
   const sel = document.getElementById('man-turno');
   sel.innerHTML = '<option value="">Seleccione turno...</option>';
-  Object.keys(estructura).sort().forEach(t => {
+  const turnos = Object.keys(estructura).sort();
+  turnos.forEach(t => {
     const opt=document.createElement('option'); opt.value=t;
     opt.textContent=t.toLowerCase().includes('mat')?`🌅 ${t}`:`🌆 ${t}`;
     sel.appendChild(opt);
   });
-  resetManual('grado');
+  // ── Preseleccionar turno según el filtro activo en Asistencias ──
+  if (turnoFiltro !== 'all') {
+    const turnoMatch = turnos.find(t =>
+      (turnoFiltro==='mat'  && t.toLowerCase().includes('mat')) ||
+      (turnoFiltro==='vesp' && t.toLowerCase().includes('vesp'))
+    );
+    if (turnoMatch) {
+      sel.value = turnoMatch;
+      manActualizarGrados();
+    }
+  }
+  if (!sel.value) resetManual('grado');
 }
 
 function resetManual(desde) {
@@ -943,12 +955,17 @@ window.manCargarAlumnos = function() {
     sel.disabled=false;
   }
 
+  console.log('🔍 Buscando alumnos - clave1:', clave1, '| clave2:', clave2, '| escuela:', ID_ESC);
   db.ref('escuelas/'+ID_ESC+'/directorio/'+clave1).once('value', snap => {
+    console.log('📦 clave1 existe:', snap.exists(), '| val:', snap.val());
     if(snap.exists()) {
       poblarSelect(snap);
     } else {
       // Fallback clave todo minúsculas
-      db.ref('escuelas/'+ID_ESC+'/directorio/'+clave2).once('value', snap2 => poblarSelect(snap2));
+      db.ref('escuelas/'+ID_ESC+'/directorio/'+clave2).once('value', snap2 => {
+        console.log('📦 clave2 existe:', snap2.exists(), '| val:', snap2.val());
+        poblarSelect(snap2);
+      });
     }
   });
 };

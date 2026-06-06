@@ -571,6 +571,12 @@ function horaActual() {
 function sanitizar(s) {
   return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,'-').replace(/[^a-z0-9\-]/g,'');
 }
+// Genera la clave del directorio igual que el escáner: turno-grado-grupo
+// El grupo se mantiene en MAYÚSCULAS porque así se guarda en Firebase
+function claveDirectorio(turno, grado, grupo) {
+  const t = turno.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,'-').replace(/[^a-z0-9\-]/g,'');
+  return `${t}-${grado}-${grupo.toUpperCase()}`;
+}
 function fechaLegible(iso) {
   if (!iso) return '—';
   const [y,m,d] = iso.split('-');
@@ -921,10 +927,13 @@ window.manCargarAlumnos = function() {
   sel.innerHTML='<option value="">Cargando...</option>';
   sel.disabled=true;
   if(!turno||!grado||!grupo) return;
-  const clave=sanitizar(`${turno}-${grado}-${grupo}`);
-  db.ref(`escuelas/${ID_ESC}/directorio/${clave}`).once('value', snap => {
+  // Probar ambas variantes de clave: con grupo en MAYÚSCULAS (correcto) y todo minúsculas (fallback)
+  const clave1 = claveDirectorio(turno, grado, grupo);
+  const clave2 = sanitizar(turno+'-'+grado+'-'+grupo);
+
+  function poblarSelect(snap) {
     sel.innerHTML='<option value="">Seleccione alumno...</option>';
-    if(snap.exists()) {
+    if(snap && snap.exists()) {
       const data=snap.val();
       const lista=Array.isArray(data)?data:Object.values(data);
       lista.filter(Boolean).sort().forEach(n=>{
@@ -932,6 +941,15 @@ window.manCargarAlumnos = function() {
       });
     }
     sel.disabled=false;
+  }
+
+  db.ref('escuelas/'+ID_ESC+'/directorio/'+clave1).once('value', snap => {
+    if(snap.exists()) {
+      poblarSelect(snap);
+    } else {
+      // Fallback clave todo minúsculas
+      db.ref('escuelas/'+ID_ESC+'/directorio/'+clave2).once('value', snap2 => poblarSelect(snap2));
+    }
   });
 };
 

@@ -12,6 +12,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-database-compat.js"></script>
 
 <style>
 :root {
@@ -324,6 +326,73 @@ header{
    ════════════════════ */
 #toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--navy);color:var(--white);padding:.7rem 1.5rem;border-radius:50px;font-size:.82rem;font-weight:800;z-index:9999;transition:transform .3s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.3);}
 #toast.show{transform:translateX(-50%) translateY(0);}
+/* ════════════════════════════════
+   BOTONES FLOTANTES AL PIE
+   ════════════════════════════════ */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 90px;
+  background: linear-gradient(180deg, rgba(240, 247, 242, 0.95) 0%, rgba(240, 247, 242, 0.98) 100%);
+  border-top: 2px solid var(--border);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding-bottom: 12px;
+  padding-top: 8px;
+  gap: 8px;
+  z-index: 100;
+  backdrop-filter: blur(8px);
+}
+
+.bottom-nav-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.8rem;
+  text-align: center;
+  border-radius: 12px;
+  transition: all 0.2s;
+  flex: 1;
+  max-width: 70px;
+  position: relative;
+}
+
+.bottom-nav-btn:hover {
+  background: rgba(26, 107, 58, 0.08);
+  transform: translateY(-2px);
+}
+
+.bottom-nav-btn:active {
+  transform: translateY(0);
+}
+
+.bottom-nav-btn-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--slate);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1.1;
+}
+
+.bottom-nav-btn.active {
+  background: rgba(26, 107, 58, 0.12);
+  border-bottom: 3px solid var(--green);
+}
+
+body {
+  padding-bottom: 110px;
+}
+
 </style>
 </head>
 <body>
@@ -393,14 +462,10 @@ header{
   </div>
 </header>
 
-<div class="tabs">
-  <div class="tab active" data-tab="asistencias">📋 Asistencias</div>
-  <div class="tab" data-tab="config">⚙️ Links WA</div>
-  <div class="tab" data-tab="exportar">📤 Exportar</div>
-</div>
+<!-- TABS ELIMINADAS - Ahora usando botones al pie de página -->
 
 <!-- ── VISTA ASISTENCIAS ── -->
-<div class="view active" id="view-asistencias">
+<div class="view" id="view-asistencias">
 
   <div class="top-bar">
     <div class="top-row1">
@@ -435,24 +500,66 @@ header{
   </div>
 </div>
 
-<!-- ── VISTA CONFIG ── -->
-<div class="view" id="view-config">
+<!-- ── VISTA ASISTENCIA MANUAL ── -->
+<div class="view" id="view-manual">
   <div class="config-intro">
-    <strong>📱 Links de WhatsApp por grupo</strong><br>
-    Pega aquí el link de cada grupo. Al tocar "Enviar", se abrirá WhatsApp con el mensaje listo.<br><br>
-    <strong>¿Cómo obtener el link?</strong><br>
-    Grupo WA → nombre del grupo → <em>Invitar por enlace</em> → copiar.
+    <strong>📝 Asistencia Manual</strong><br>
+    Registra asistencia, retardos o justificaciones para alumnos que aún no han sido registrados.<br><br>
   </div>
-  <!-- Filtro turno en config -->
-  <div class="config-turno-filter">
-    <button class="cfg-turno-btn active-all" id="cfg-btn-all"  onclick="filtrarConfig('all')">🌐 Todos</button>
-    <button class="cfg-turno-btn"            id="cfg-btn-mat"  onclick="filtrarConfig('mat')">🌅 Matutino</button>
-    <button class="cfg-turno-btn"            id="cfg-btn-vesp" onclick="filtrarConfig('vesp')">🌆 Vespertino</button>
+  
+  <div style="background:var(--white);border-radius:10px;padding:1rem;margin-bottom:1rem;box-shadow:0 1px 3px rgba(0,0,0,.08);">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem;margin-bottom:1rem;">
+      <div>
+        <label style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--slate2);display:block;margin-bottom:.4rem;">Turno</label>
+        <select id="man-turno" onchange="window.manActualizarGrados()" style="width:100%;padding:.75rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-weight:700;color:var(--navy);background:var(--white);outline:none;font-family:'Nunito',sans-serif;">
+          <option value="">Seleccione turno...</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--slate2);display:block;margin-bottom:.4rem;">Grado</label>
+        <select id="man-grado" onchange="window.manActualizarGrupos()" style="width:100%;padding:.75rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-weight:700;color:var(--navy);background:var(--white);outline:none;font-family:'Nunito',sans-serif;">
+          <option value="">Seleccione grado...</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--slate2);display:block;margin-bottom:.4rem;">Grupo</label>
+        <select id="man-grupo" onchange="window.manCargarAlumnos()" style="width:100%;padding:.75rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-weight:700;color:var(--navy);background:var(--white);outline:none;font-family:'Nunito',sans-serif;">
+          <option value="">Seleccione grupo...</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="margin-bottom:1rem;">
+      <label style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--slate2);display:block;margin-bottom:.4rem;">Alumno</label>
+      <select id="man-nombre" style="width:100%;padding:.75rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-weight:700;color:var(--navy);background:var(--white);outline:none;font-family:'Nunito',sans-serif;">
+        <option value="">Seleccione grupo primero...</option>
+      </select>
+    </div>
+
+    <div style="background:var(--light);padding:1rem;border-radius:9px;border:1.5px solid var(--border);margin-bottom:1rem;">
+      <label style="margin-top:0;font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--slate2);display:block;margin-bottom:.4rem;">Estatus a Aplicar</label>
+      <select id="man-mode" onchange="window.toggleMotive()" style="width:100%;padding:.75rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-weight:700;color:var(--navy);background:var(--white);outline:none;font-family:'Nunito',sans-serif;">
+        <option value="asistencia">✅ Asistencia</option>
+        <option value="retardo">🕐 Retardo</option>
+        <option value="falta">❌ Falta</option>
+        <option value="justificado">📋 Justificado</option>
+      </select>
+      <div id="motive-box" style="margin-top:.8rem;display:none;">
+        <label style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--slate2);display:block;margin-bottom:.4rem;">Motivo Oficial</label>
+        <select id="man-motive" style="width:100%;padding:.75rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-weight:700;color:var(--navy);background:var(--white);outline:none;font-family:'Nunito',sans-serif;">
+          <option value="Receta médica">Enfermedad — Receta Médica</option>
+          <option value="Cita médica">Cita Médica Programada</option>
+          <option value="Aviso Padre/Tutor">Aviso de Padre / Tutor</option>
+          <option value="Comisión escolar">Comisión Escolar o Deportiva</option>
+          <option value="Trámite legal">Trámite Legal</option>
+          <option value="Permiso Dirección">Permiso de Dirección</option>
+          <option value="Fuerza mayor">Fuerza Mayor</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn btn-ok" onclick="window.procesarManual()" style="width:100%;padding:.85rem;font-size:.95rem;font-weight:700;">✅ Registrar Asistencia Manual</button>
   </div>
-  <div id="config-grupos-container">
-    <div class="loading-state"><div class="loader"></div></div>
-  </div>
-  <button class="btn-save-config" id="btn-save-config">💾 Guardar Links</button>
 </div>
 
 <!-- ── VISTA EXPORTAR ── -->
@@ -532,10 +639,8 @@ header{
 
 <div id="toast"></div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
-
+<script>
+// Firebase CDN - versión simplificada
 const FB = {
   apiKey: "AIzaSyBnlD-4trgGGXXfzHf7FhHDf1cCiaxdMjA",
   authDomain: "ludoasistencia.firebaseapp.com",
@@ -545,8 +650,11 @@ const FB = {
   messagingSenderId: "738361802611",
   appId: "1:738361802611:web:cb13956f002a0e74844f06"
 };
-const app = initializeApp(FB);
-const db  = getDatabase(app);
+// Usar Firebase compat (CDN global)
+if (window.firebase && !window.firebase.apps.length) {
+  window.firebase.initializeApp(FB);
+}
+const db = window.firebase?.database ? window.firebase.database() : null;
 
 // ── ESTADO ──
 const SK_ESCUELA  = 'ludo_ts_escuela';
@@ -594,6 +702,24 @@ function esTurno(t, filtro) {
   return true;
 }
 
+// ── FUNCIÓN CAMBIAR VISTAS (PRIMERO PARA QUE ESTÉ DISPONIBLE) ──
+window.switchView = function(viewName) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.bottom-nav-btn').forEach(b => b.classList.remove('active'));
+  const view = document.getElementById('view-' + viewName);
+  if (view) view.classList.add('active');
+  const btn = document.querySelector(`[onclick="window.switchView('${viewName}')"]`);
+  if (btn) btn.classList.add('active');
+  if (viewName === 'links-wa') {
+    setTimeout(() => { if (typeof renderConfig === 'function') renderConfig(); }, 50);
+  }
+};
+
+// Mostrar primera vista por defecto
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => window.switchView('asistencias'), 100);
+});
+
 // ── FILTRO TURNO ──
 window.filtrarTurno = function(f) {
   turnoFiltro = f;
@@ -611,10 +737,18 @@ document.querySelectorAll('.tab').forEach(t => {
     const id = t.dataset.tab;
     document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
     document.querySelectorAll('.view').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.bottom-nav-btn').forEach(x => x.classList.remove('active'));
+    
     t.classList.add('active');
     document.getElementById('view-' + id).classList.add('active');
-    if (id === 'config')   renderConfig();
-    if (id === 'exportar') renderExpPreview();
+    
+    // Sincronizar botón al pie
+    const btn = document.querySelector(`[onclick="window.switchView('${id}')"]`);
+    if (btn) btn.classList.add('active');
+    
+    // Cargar datos
+    if (id === 'manual')  { if (typeof cargarTurnosManual === 'function') cargarTurnosManual(); }
+    if (id === 'exportar') { if (typeof renderExpPreview === 'function') renderExpPreview(); }
   });
 });
 
@@ -638,7 +772,7 @@ window.selTurnoExp = function(f) {
 };
 
 // ── LOGIN ──
-document.getElementById('btn-login').addEventListener('click', async () => {
+document.getElementById('btn-login')?.addEventListener('click', async () => {
   const codigo = document.getElementById('login-codigo').value.trim().toLowerCase();
   const errEl  = document.getElementById('login-error');
   errEl.textContent = '';
@@ -673,12 +807,12 @@ document.getElementById('btn-login').addEventListener('click', async () => {
     }
   }
 });
-document.getElementById('login-codigo').addEventListener('keydown', e => {
+document.getElementById('login-codigo')?.addEventListener('keydown', e => {
   if (e.key === 'Enter') document.getElementById('btn-login').click();
 });
 
 // ── LOGOUT ──
-document.getElementById('btn-logout').addEventListener('click', () => {
+document.getElementById('btn-logout')?.addEventListener('click', () => {
   if (!confirm('¿Cerrar sesión?')) return;
   localStorage.removeItem(SK_ESCUELA);
   location.reload();
@@ -770,7 +904,7 @@ async function cargarAsistencias() {
 }
 
 // ── REFRESH ──
-document.getElementById('btn-refresh').addEventListener('click', async () => {
+document.getElementById('btn-refresh')?.addEventListener('click', async () => {
   const icon = document.getElementById('refresh-icon');
   icon.classList.add('spin');
   await cargarAsistencias();
@@ -1011,7 +1145,7 @@ function renderConfig() {
 }
 
 // ── GUARDAR CONFIG ──
-document.getElementById('btn-save-config').addEventListener('click', () => {
+document.getElementById('btn-save-config')?.addEventListener('click', () => {
   document.querySelectorAll('.config-link-input').forEach(inp => {
     const clave = inp.id.replace('link-', '');
     const val   = inp.value.trim();
@@ -1381,8 +1515,37 @@ window.consultarNubeExp = async function() {
 
 
 
-// ── EXPORTAR EXCEL EXPORTAR ──
+// ── EXPORTAR EXCEL ──
 window.exportarExcelExp = function() {
+  if (!window.expResultados || !window.expResultados.length) { 
+    toast('⚠️ Consulta primero'); 
+    return; 
+  }
+
+  const wb = XLSX.utils.book_new();
+  const resultado = window.expResultados;
+
+  const fechaInicio = document.getElementById('exp-fecha-inicio').value;
+  const fechaFin = document.getElementById('exp-fecha-fin').value;
+
+  const rows = [
+    [`REPORTE DE ASISTENCIA - ${nombreEscuela}`],
+    [`CCT: ${perfilEscuela?.cct || '—'}  ·  Zona: ${perfilEscuela?.zona || '—'}`],
+    [`Período: ${fechaInicio} al ${fechaFin}`],
+    [],
+    ['Fecha', 'Alumno', 'Hora', 'Estatus', 'Turno', 'Grado', 'Grupo'],
+    ...resultado.map(r => [r.fecha, r.nombre, r.hora, r.estatus, r.turno, r.grado, r.grupo])
+  ];
+
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols'] = [{ wch: 12 }, { wch: 40 }, { wch: 10 }, { wch: 12 }, { wch: 12 }, { wch: 8 }, { wch: 8 }];
+  XLSX.utils.book_append_sheet(wb, ws, 'Asistencia');
+
+  XLSX.writeFile(wb, `asistencia_${fechaInicio}_${fechaFin}.xlsx`);
+  toast('📊 Excel generado');
+};
+
+// ── EXPORTAR PDF ──
 window.exportarPDFExp = async function() {
   if (!window.expResultados || !window.expResultados.length) { 
     toast('⚠️ Consulta primero'); 
@@ -1581,32 +1744,7 @@ window.exportarPDFExp = async function() {
     btn.textContent = '📄 PDF';
   }
 };
-  if (!window.expResultados || !window.expResultados.length) { toast('⚠️ Consulta primero'); return; }
 
-  const wb = XLSX.utils.book_new();
-  const resultado = window.expResultados;
-
-  const fechaInicio = document.getElementById('exp-fecha-inicio').value;
-  const fechaFin = document.getElementById('exp-fecha-fin').value;
-
-  const rows = [
-    [`REPORTE DE ASISTENCIA - ${nombreEscuela}`],
-    [`CCT: ${perfilEscuela?.cct || '—'}  ·  Zona: ${perfilEscuela?.zona || '—'}`],
-    [`Período: ${fechaInicio} al ${fechaFin}`],
-    [],
-    ['Fecha', 'Alumno', 'Hora', 'Estatus', 'Turno', 'Grado', 'Grupo'],
-    ...resultado.map(r => [r.fecha, r.nombre, r.hora, r.estatus, r.turno, r.grado, r.grupo])
-  ];
-
-  const ws = XLSX.utils.aoa_to_sheet(rows);
-  ws['!cols'] = [{ wch: 12 }, { wch: 40 }, { wch: 10 }, { wch: 12 }, { wch: 12 }, { wch: 8 }, { wch: 8 }];
-  XLSX.utils.book_append_sheet(wb, ws, 'Asistencia');
-
-  XLSX.writeFile(wb, `asistencia_${fechaInicio}_${fechaFin}.xlsx`);
-  toast('📊 Excel generado');
-};
-
-// Inicializar fechas por defecto
 document.addEventListener('DOMContentLoaded', () => {
   const hoyISO = hoy();
   const hace7 = new Date(); hace7.setDate(hace7.getDate()-7);
@@ -1615,6 +1753,116 @@ document.addEventListener('DOMContentLoaded', () => {
   if (finEl) finEl.value = hoyISO;
   if (iniEl) iniEl.value = hace7.toISOString().split('T')[0];
 });
+
+// ── ASISTENCIA MANUAL ──
+window.cargarTurnosManual = function() {
+  const select = document.getElementById('man-turno');
+  if (!select || select.children.length > 1) return;
+  if (estructura?.turnos) {
+    estructura.turnos.forEach(t => {
+      const opt = document.createElement('option');
+      opt.value = t;
+      opt.textContent = t === 'mat' ? '🌅 Matutino' : '🌆 Vespertino';
+      select.appendChild(opt);
+    });
+  }
+};
+
+window.manActualizarGrados = function() {
+  const turno = document.getElementById('man-turno').value;
+  const grado = document.getElementById('man-grado');
+  grado.innerHTML = '<option value="">Cargando...</option>';
+  if (!turno) { grado.innerHTML = '<option value="">Seleccione turno primero</option>'; return; }
+  const grados = estructura?.grados?.[turno] || [];
+  grado.innerHTML = '<option value="">Seleccione grado...</option>';
+  grados.forEach(g => { const opt = document.createElement('option'); opt.value = g; opt.textContent = g + '°'; grado.appendChild(opt); });
+};
+
+window.manActualizarGrupos = function() {
+  const turno = document.getElementById('man-turno').value;
+  const grado = document.getElementById('man-grado').value;
+  const grupo = document.getElementById('man-grupo');
+  grupo.innerHTML = '<option value="">Cargando...</option>';
+  if (!turno || !grado) { grupo.innerHTML = '<option value="">Seleccione grado primero</option>'; return; }
+  const grupos = estructura?.grupos?.[turno]?.[grado] || [];
+  grupo.innerHTML = '<option value="">Seleccione grupo...</option>';
+  grupos.forEach(g => { const opt = document.createElement('option'); opt.value = g; opt.textContent = 'Grupo "' + g + '"'; grupo.appendChild(opt); });
+};
+
+window.manCargarAlumnos = function() {
+  const turno = document.getElementById('man-turno').value;
+  const grado = document.getElementById('man-grado').value;
+  const grupo = document.getElementById('man-grupo').value;
+  const nombre = document.getElementById('man-nombre');
+  nombre.innerHTML = '<option value="">Cargando...</option>';
+  if (!turno || !grado || !grupo) { nombre.innerHTML = '<option value="">Seleccione grupo primero</option>'; return; }
+  const hoyISO = hoy();
+  const hoyData = asistenciasPorFecha?.[hoyISO] || {};
+  const alumnos = estructura?.alumnos?.[turno]?.[grado]?.[grupo] || [];
+  nombre.innerHTML = '<option value="">Seleccione alumno...</option>';
+  alumnos.forEach(a => { if (!hoyData[a]) { const opt = document.createElement('option'); opt.value = a; opt.textContent = a; nombre.appendChild(opt); } });
+};
+
+window.toggleMotive = function() {
+  const mode = document.getElementById('man-mode').value;
+  const motiveBox = document.getElementById('motive-box');
+  motiveBox.style.display = mode === 'justificado' ? 'block' : 'none';
+};
+
+window.procesarManual = function() {
+  const turno = document.getElementById('man-turno').value;
+  const grado = document.getElementById('man-grado').value;
+  const grupo = document.getElementById('man-grupo').value;
+  const nombre = document.getElementById('man-nombre').value;
+  const mode = document.getElementById('man-mode').value;
+  const motive = document.getElementById('man-motive').value;
+  if (!turno || !grado || !grupo || !nombre) { toast('⚠️ Completa todos los campos'); return; }
+  let estatus = mode;
+  if (mode === 'justificado') estatus = `justificado - ${motive}`;
+  const registro = { nombre, turno, grado, grupoLetra: grupo, grupo: `${grado}°${grupo}`, estatus, hora: new Date().toLocaleTimeString('es-MX', {hour:'2-digit', minute:'2-digit'}), fecha: hoy(), timestamp: Date.now() };
+  const ref = firebase.database().ref(`escuelas/${escuelaID}/asistencias`).push();
+  ref.set(registro).then(() => { toast('✅ Asistencia registrada'); document.getElementById('man-nombre').value = ''; document.getElementById('man-turno').value = ''; document.getElementById('man-grado').value = ''; document.getElementById('man-grupo').value = ''; window.cargarTurnosManual(); }).catch(e => toast('❌ Error: ' + e.message));
+};
+
 </script>
+<nav class="bottom-nav">
+  <button class="bottom-nav-btn active" data-tab="asistencias" onclick="window.switchView('asistencias')">
+    <span>📋</span>
+    <div class="bottom-nav-btn-label">Asistencias</div>
+  </button>
+  <button class="bottom-nav-btn" data-tab="exportar" onclick="window.switchView('exportar')">
+    <span>📤</span>
+    <div class="bottom-nav-btn-label">Exportar</div>
+  </button>
+  <button class="bottom-nav-btn" data-tab="manual" onclick="window.switchView('manual')">
+    <span>📝</span>
+    <div class="bottom-nav-btn-label">Manual</div>
+  </button>
+  <button class="bottom-nav-btn" id="btn-links-wa" onclick="window.switchView('links-wa')">
+    <span>📱</span>
+    <div class="bottom-nav-btn-label">Links WA</div>
+  </button>
+</nav>
+
+<!-- VISTA LINKS WA (FLOTANTE) -->
+<div class="view" id="view-links-wa">
+  <div class="config-intro">
+    <strong>📱 Links de WhatsApp por grupo</strong><br>
+    Pega aquí el link de cada grupo. Al tocar "Enviar", se abrirá WhatsApp con el mensaje listo.<br><br>
+    <strong>¿Cómo obtener el link?</strong><br>
+    Grupo WA → nombre del grupo → <em>Invitar por enlace</em> → copiar.
+  </div>
+  <!-- Filtro turno en config -->
+  <div class="config-turno-filter">
+    <button class="cfg-turno-btn active-all" id="cfg-btn-all"  onclick="filtrarConfig('all')">🌐 Todos</button>
+    <button class="cfg-turno-btn"            id="cfg-btn-mat"  onclick="filtrarConfig('mat')">🌅 Matutino</button>
+    <button class="cfg-turno-btn"            id="cfg-btn-vesp" onclick="filtrarConfig('vesp')">🌆 Vespertino</button>
+  </div>
+  <div id="config-grupos-container">
+    <div class="loading-state"><div class="loader"></div></div>
+  </div>
+  <button class="btn-save-config" id="btn-save-config">💾 Guardar Links</button>
+</div>
+
 </body>
 </html>

@@ -12,8 +12,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-database-compat.js"></script>
 <style>
 :root {
   --green:#1a6b3a; --green2:#2d8a52; --green3:#e8f5ed;
@@ -511,10 +509,14 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
   <button class="bnav-btn" onclick="switchView('links-wa')"><span>📱</span><div class="bnav-label">Links WA</div></button>
 </nav>
 
-<script>
+<script type="module">
 // ══════════════════════════════════════════════
-// FIREBASE
+// FIREBASE MODULAR — igual que el escáner
 // ══════════════════════════════════════════════
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+import { getDatabase, ref, get, push, set, onValue }
+  from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
 const FB_CFG = {
   apiKey:"AIzaSyBnlD-4trgGGXXfzHf7FhHDf1cCiaxdMjA",
   authDomain:"ludoasistencia.firebaseapp.com",
@@ -524,14 +526,19 @@ const FB_CFG = {
   messagingSenderId:"738361802611",
   appId:"1:738361802611:web:cb13956f002a0e74844f06"
 };
-let db = null;
-const initFB = () => {
-  if (window.firebase && !window.firebase.apps.length) {
-    try { window.firebase.initializeApp(FB_CFG); db = window.firebase.database(); } catch(e){}
-  } else if (window.firebase?.apps?.length > 0) { db = window.firebase.database(); }
-};
-initFB();
-if (!db) document.addEventListener('DOMContentLoaded', () => setTimeout(initFB, 500));
+const app = initializeApp(FB_CFG);
+const db  = getDatabase(app);
+
+// Wrapper compatible — convierte ref+get al estilo compat que usa el resto del código
+function dbOnce(path) {
+  return get(ref(db, path));
+}
+function dbPush(path, data) {
+  return push(ref(db, path), data);
+}
+function dbSet(path, data) {
+  return set(ref(db, path), data);
+}
 
 // ══════════════════════════════════════════════
 // ESTADO
@@ -571,23 +578,8 @@ function hoy() {
 function horaActual() {
   return new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
 }
-function sanitizar(s) {
-  return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,'-').replace(/[^a-z0-9\-]/g,'');
-}
-// Genera la clave del directorio igual que el escáner: turno-grado-grupo
-// El grupo se mantiene en MAYÚSCULAS porque así se guarda en Firebase
-function claveDirectorio(turno, grado, grupo) {
-  // Firebase guarda: "Vespertino-1-G" — turno exacto + grado + grupo MAYÚSCULA
-  return turno + '-' + grado + '-' + grupo.toUpperCase();
-}
-function todasClaves(turno, grado, grupo) {
-  const g = grupo.toUpperCase();
-  return [
-    turno + '-' + grado + '-' + g,
-    turno.toLowerCase() + '-' + grado + '-' + g,
-    turno.toLowerCase() + '-' + grado + '-' + g.toLowerCase()
-  ];
-}
+// sanitizar — IGUAL que el escáner: solo escapa caracteres especiales de Firebase
+function sanitizar(s) { return s.replace(/[.#$\[\]/]/g,'_'); }
 function fechaLegible(iso) {
   if (!iso) return '—';
   const [y,m,d] = iso.split('-');
@@ -660,7 +652,7 @@ document.getElementById('btn-login')?.addEventListener('click', async () => {
   const btn = document.getElementById('btn-login');
   btn.disabled=true; btn.textContent='⏳ Verificando...';
   try {
-    const snap = await new Promise(res => db.ref(`escuelas/${codigo}/configuracion/perfil`).once('value', res));
+    const snap = await dbOnce(`escuelas/${codigo}/configuracion/perfil`);
     if (!snap.exists()) { errEl.textContent='❌ Código no encontrado.'; btn.disabled=false; btn.textContent='✅ Entrar'; return; }
     const p = snap.val();
     if (p.activa===false) { errEl.textContent='🔒 Escuela bloqueada.'; btn.disabled=false; btn.textContent='✅ Entrar'; return; }
@@ -689,7 +681,7 @@ if (ID_ESC) {
   document.getElementById('screen-login').classList.add('hidden');
   (async()=>{
     try {
-      const snap = await new Promise(res => db.ref(`escuelas/${ID_ESC}/configuracion/perfil`).once('value',res));
+      const snap = await dbOnce(`escuelas/${ID_ESC}/configuracion/perfil`);
       if (snap.exists()) { nombreEsc=snap.val().nombreEscuela||ID_ESC.toUpperCase(); document.getElementById('hdr-school').textContent=nombreEsc; }
     } catch(e){}
     cargarEstructura();
@@ -701,14 +693,14 @@ if (ID_ESC) {
 // ══════════════════════════════════════════════
 async function cargarEstructura() {
   try {
-    const snap = await new Promise(res => db.ref(`escuelas/${ID_ESC}/configuracion`).once('value',res));
+    const snap = await dbOnce(`escuelas/${ID_ESC}/configuracion`);
     if (snap.exists()) {
       const cfg = snap.val();
       if (cfg.perfil) { perfilEsc=cfg.perfil; nombreEsc=cfg.perfil.nombreEscuela||ID_ESC.toUpperCase(); document.getElementById('hdr-school').textContent=nombreEsc; }
       if (cfg.estructura) estructura = cfg.estructura;
     }
     if (!Object.keys(estructura).length) {
-      const dirSnap = await new Promise(res => db.ref(`escuelas/${ID_ESC}/directorio`).once('value',res));
+      const dirSnap = await dbOnce(`escuelas/${ID_ESC}/directorio`);
       if (dirSnap?.exists()) {
         Object.keys(dirSnap.val()).forEach(clave => {
           const p=clave.split('-'); if(p.length<3) return;
@@ -733,7 +725,7 @@ async function cargarAsistencias() {
   document.getElementById('fecha-sub').textContent = 'Cargando...';
   document.getElementById('lista-grupos').innerHTML = '<div class="loading-state"><div class="loader"></div><div style="font-size:.82rem;color:var(--slate2);">Cargando asistencias...</div></div>';
   try {
-    const snap = await new Promise(res => db.ref(`escuelas/${ID_ESC}/asistencias`).once('value',res));
+    const snap = await dbOnce(`escuelas/${ID_ESC}/asistencias`);
     asistencias = {};
     if (snap.exists()) {
       snap.forEach(child => {
@@ -957,36 +949,33 @@ window.manActualizarGrupos = function() {
   sel.disabled=false;
 };
 
-window.manCargarAlumnos = function() {
-  const turno=document.getElementById('man-turno').value;
-  const grado=document.getElementById('man-grado').value;
-  const grupo=document.getElementById('man-grupo').value;
-  const sel=document.getElementById('man-nombre');
-  sel.innerHTML='<option value="">Cargando...</option>';
-  sel.disabled=true;
-  if(!turno||!grado||!grupo) return;
-  // Probar las 3 variantes de clave en orden hasta encontrar la correcta
-  // Firebase guarda: "Vespertino-1-G" (turno con mayúscula inicial)
-  const claves = todasClaves(turno, grado, grupo);
-  console.log('🔍 Claves a probar:', claves, '| escuela:', ID_ESC);
-
-  function buscarEnClave(idx) {
-    if (idx >= claves.length) {
-      // Ninguna clave encontró datos
+window.manCargarAlumnos = async function() {
+  const turno = document.getElementById('man-turno').value;
+  const grado = document.getElementById('man-grado').value;
+  const grupo = document.getElementById('man-grupo').value;
+  const sel   = document.getElementById('man-nombre');
+  sel.innerHTML = '<option value="">Cargando...</option>';
+  sel.disabled  = true;
+  if (!turno || !grado || !grupo) return;
+  const clave = sanitizar(turno + '-' + grado + '-' + grupo);
+  try {
+    const snap = await dbOnce('escuelas/' + ID_ESC + '/directorio/' + clave);
+    sel.innerHTML = '<option value="">Seleccione alumno...</option>';
+    if (snap.exists()) {
+      const data  = snap.val();
+      const lista = Array.isArray(data) ? data : Object.values(data);
+      lista.filter(Boolean).sort().forEach(n => {
+        const o = document.createElement('option');
+        o.value = n; o.textContent = n; sel.appendChild(o);
+      });
+    } else {
       sel.innerHTML = '<option value="">Sin alumnos en este grupo</option>';
-      sel.disabled = false;
-      return;
     }
-    db.ref('escuelas/' + ID_ESC + '/directorio/' + claves[idx]).once('value', snap => {
-      console.log('Clave', claves[idx], '→ existe:', snap.exists());
-      if (snap.exists()) {
-        poblarSelect(snap);
-      } else {
-        buscarEnClave(idx + 1); // probar siguiente variante
-      }
-    });
+  } catch(e) {
+    sel.innerHTML = '<option value="">Error de conexión</option>';
+    console.error('manCargarAlumnos:', e.message);
   }
-  buscarEnClave(0);
+  sel.disabled = false;
 };
 
 // ── ESTATUS ──
@@ -1143,9 +1132,7 @@ window.procesarManual = async function() {
       for(const fecha of fechas) {
         // Buscar si ya existe registro del alumno en esa fecha (del escáner)
         const snapBuscar = await new Promise(res =>
-          db.ref(`escuelas/${ID_ESC}/asistencias`)
-            .orderByChild('fecha').equalTo(fecha)
-            .once('value',res)
+          dbOnce(`escuelas/${ID_ESC}/asistencias`).then(snap => res(snap)).catch(rej)
         );
         let keyExistente=null, horaEntradaOriginal=null;
         if(snapBuscar.exists()) {
@@ -1167,12 +1154,12 @@ window.procesarManual = async function() {
         if(keyExistente) {
           // Sobreescribir registro existente
           await new Promise((res,rej)=>
-            db.ref(`escuelas/${ID_ESC}/asistencias/${keyExistente}`).set(registro,e=>e?rej(e):res())
+            dbSet(`escuelas/${ID_ESC}/asistencias/${keyExistente}`, registro).then(res).catch(rej)
           );
         } else {
           // Crear nuevo registro
           await new Promise((res,rej)=>
-            db.ref(`escuelas/${ID_ESC}/asistencias`).push(registro,e=>e?rej(e):res())
+            dbPush(`escuelas/${ID_ESC}/asistencias`, registro).then(res).catch(rej)
           );
         }
         ok++;
@@ -1184,9 +1171,7 @@ window.procesarManual = async function() {
       const registro={...baseRegistro, fecha, hora:horaActual(), horaEntradaOriginal:null};
       // Buscar si existe registro previo hoy
       const snapBuscar = await new Promise(res =>
-        db.ref(`escuelas/${ID_ESC}/asistencias`)
-          .orderByChild('fecha').equalTo(fecha)
-          .once('value',res)
+        dbOnce(`escuelas/${ID_ESC}/asistencias`).then(snap => res(snap)).catch(rej)
       );
       let keyExistente=null, horaOriginal=null;
       if(snapBuscar.exists()) {
@@ -1201,11 +1186,11 @@ window.procesarManual = async function() {
       registro.horaEntradaOriginal=horaOriginal;
       if(keyExistente) {
         await new Promise((res,rej)=>
-          db.ref(`escuelas/${ID_ESC}/asistencias/${keyExistente}`).set(registro,e=>e?rej(e):res())
+          dbSet(`escuelas/${ID_ESC}/asistencias/${keyExistente}`, registro).then(res).catch(rej)
         );
       } else {
         await new Promise((res,rej)=>
-          db.ref(`escuelas/${ID_ESC}/asistencias`).push(registro,e=>e?rej(e):res())
+          dbPush(`escuelas/${ID_ESC}/asistencias`, registro).then(res).catch(rej)
         );
       }
       toast('✅ Asistencia registrada');
@@ -1341,7 +1326,7 @@ window.consultarNubeExp = async function() {
   const btn=document.getElementById('btn-consultar-exp');
   btn.disabled=true; btn.textContent='⏳ Consultando...';
   try {
-    const snap=await new Promise(res=>db.ref(`escuelas/${ID_ESC}/asistencias`).once('value',res));
+    const snap=await dbOnce(`escuelas/${ID_ESC}/asistencias`);
     expResultados=[];
     if(snap.exists()) {
       snap.forEach(child=>{

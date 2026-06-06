@@ -336,6 +336,9 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
     Registra asistencia, retardos, justificaciones o retiros tempranos. Las justificaciones pueden aplicarse a múltiples días a la vez.
   </div>
 
+  <!-- Chip turno activo — mismo estilo que Exportar -->
+  <div id="man-turno-chip" style="display:none;align-items:center;gap:.75rem;background:var(--white);border-radius:10px;padding:.85rem 1rem;margin-bottom:1rem;box-shadow:0 1px 3px rgba(0,0,0,.08);"></div>
+
   <div class="man-card">
     <!-- FILA 1: Turno / Grado / Grupo -->
     <div class="man-grid3">
@@ -574,8 +577,16 @@ function sanitizar(s) {
 // Genera la clave del directorio igual que el escáner: turno-grado-grupo
 // El grupo se mantiene en MAYÚSCULAS porque así se guarda en Firebase
 function claveDirectorio(turno, grado, grupo) {
-  const t = turno.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,'-').replace(/[^a-z0-9\-]/g,'');
-  return `${t}-${grado}-${grupo.toUpperCase()}`;
+  // Firebase guarda: "Vespertino-1-G" — turno exacto + grado + grupo MAYÚSCULA
+  return turno + '-' + grado + '-' + grupo.toUpperCase();
+}
+function todasClaves(turno, grado, grupo) {
+  const g = grupo.toUpperCase();
+  return [
+    turno + '-' + grado + '-' + g,
+    turno.toLowerCase() + '-' + grado + '-' + g,
+    turno.toLowerCase() + '-' + grado + '-' + g.toLowerCase()
+  ];
 }
 function fechaLegible(iso) {
   if (!iso) return '—';
@@ -894,6 +905,21 @@ function cargarTurnosManual() {
     }
   }
   if (!sel.value) resetManual('grado');
+  // Actualizar chip visual de turno activo
+  actualizarChipTurnoManual();
+}
+
+function actualizarChipTurnoManual() {
+  const chip = document.getElementById('man-turno-chip');
+  if (!chip) return;
+  if (turnoFiltro === 'all') { chip.style.display='none'; return; }
+  const esMat = turnoFiltro === 'mat';
+  chip.style.display = 'flex';
+  chip.innerHTML = `<span style="font-size:1.4rem;">${esMat?'🌅':'🏙️'}</span>
+    <div>
+      <div style="font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--slate2);">Turno Activo</div>
+      <div style="font-size:.95rem;font-weight:900;color:var(--navy);">${esMat?'Matutino':'Vespertino'}</div>
+    </div>`;
 }
 
 function resetManual(desde) {
@@ -939,35 +965,28 @@ window.manCargarAlumnos = function() {
   sel.innerHTML='<option value="">Cargando...</option>';
   sel.disabled=true;
   if(!turno||!grado||!grupo) return;
-  // Probar ambas variantes de clave: con grupo en MAYÚSCULAS (correcto) y todo minúsculas (fallback)
-  const clave1 = claveDirectorio(turno, grado, grupo);
-  const clave2 = sanitizar(turno+'-'+grado+'-'+grupo);
+  // Probar las 3 variantes de clave en orden hasta encontrar la correcta
+  // Firebase guarda: "Vespertino-1-G" (turno con mayúscula inicial)
+  const claves = todasClaves(turno, grado, grupo);
+  console.log('🔍 Claves a probar:', claves, '| escuela:', ID_ESC);
 
-  function poblarSelect(snap) {
-    sel.innerHTML='<option value="">Seleccione alumno...</option>';
-    if(snap && snap.exists()) {
-      const data=snap.val();
-      const lista=Array.isArray(data)?data:Object.values(data);
-      lista.filter(Boolean).sort().forEach(n=>{
-        const o=document.createElement('option'); o.value=n; o.textContent=n; sel.appendChild(o);
-      });
+  function buscarEnClave(idx) {
+    if (idx >= claves.length) {
+      // Ninguna clave encontró datos
+      sel.innerHTML = '<option value="">Sin alumnos en este grupo</option>';
+      sel.disabled = false;
+      return;
     }
-    sel.disabled=false;
+    db.ref('escuelas/' + ID_ESC + '/directorio/' + claves[idx]).once('value', snap => {
+      console.log('Clave', claves[idx], '→ existe:', snap.exists());
+      if (snap.exists()) {
+        poblarSelect(snap);
+      } else {
+        buscarEnClave(idx + 1); // probar siguiente variante
+      }
+    });
   }
-
-  console.log('🔍 Buscando alumnos - clave1:', clave1, '| clave2:', clave2, '| escuela:', ID_ESC);
-  db.ref('escuelas/'+ID_ESC+'/directorio/'+clave1).once('value', snap => {
-    console.log('📦 clave1 existe:', snap.exists(), '| val:', snap.val());
-    if(snap.exists()) {
-      poblarSelect(snap);
-    } else {
-      // Fallback clave todo minúsculas
-      db.ref('escuelas/'+ID_ESC+'/directorio/'+clave2).once('value', snap2 => {
-        console.log('📦 clave2 existe:', snap2.exists(), '| val:', snap2.val());
-        poblarSelect(snap2);
-      });
-    }
-  });
+  buscarEnClave(0);
 };
 
 // ── ESTATUS ──

@@ -650,11 +650,50 @@ const FB = {
   messagingSenderId: "738361802611",
   appId: "1:738361802611:web:cb13956f002a0e74844f06"
 };
-// Usar Firebase compat (CDN global)
-if (window.firebase && !window.firebase.apps.length) {
-  window.firebase.initializeApp(FB);
+
+// Esperar a que Firebase esté disponible
+let db = null;
+
+// Wrapper para ref y get compatibles
+const ref = (database, path) => database?.ref(path);
+const get = (reference) => {
+  return new Promise((resolve, reject) => {
+    if (!reference) {
+      reject(new Error('Referencia vacía'));
+      return;
+    }
+    reference.once('value', (snap) => {
+      resolve(snap);
+    }, (err) => {
+      reject(err);
+    });
+  });
+};
+
+const initFirebase = () => {
+  if (window.firebase && !window.firebase.apps.length) {
+    try {
+      window.firebase.initializeApp(FB);
+      db = window.firebase.database();
+      console.log('✅ Firebase inicializado');
+    } catch (e) {
+      console.error('Error inicializando Firebase:', e);
+    }
+  } else if (window.firebase?.apps?.length > 0) {
+    db = window.firebase.database();
+    console.log('✅ Firebase ya estaba inicializado');
+  }
+};
+
+// Intentar inicializar inmediatamente
+initFirebase();
+
+// Si no funcionó, esperar a que Firebase cargue
+if (!db) {
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(initFirebase, 500);
+  });
 }
-const db = window.firebase?.database ? window.firebase.database() : null;
 
 // ── ESTADO ──
 const SK_ESCUELA  = 'ludo_ts_escuela';
@@ -780,7 +819,7 @@ document.getElementById('btn-login')?.addEventListener('click', async () => {
   const btn = document.getElementById('btn-login');
   btn.disabled = true; btn.textContent = '⏳ Verificando...';
   try {
-    const snap = await get(ref(db, `escuelas/${codigo}/configuracion/perfil`));
+    const snapDataAsync = await new Promise((res) => ref(db, `escuelas/${codigo}/configuracion/perfil`).once("value", (snap) => res(snap)));const snap = snapDataAsync;
     if (!snap.exists()) {
       errEl.textContent = '❌ Código no encontrado.';
       btn.disabled = false; btn.textContent = '✅ Entrar'; return;
@@ -823,7 +862,7 @@ if (ID_ESCUELA) {
   document.getElementById('screen-login').classList.add('hidden');
   (async () => {
     try {
-      const snap = await get(ref(db, `escuelas/${ID_ESCUELA}/configuracion/perfil`));
+      const snapDataAsync = await new Promise((res) => ref(db, `escuelas/${ID_ESCUELA}/configuracion/perfil`).once("value", (snap) => res(snap)));const snap = snapDataAsync;
       if (snap.exists()) {
         nombreEscuela = snap.val().nombreEscuela || ID_ESCUELA.toUpperCase();
         document.getElementById('hdr-school').textContent = nombreEscuela;
@@ -836,7 +875,7 @@ if (ID_ESCUELA) {
 // ── CARGAR ESTRUCTURA ──
 async function cargarEstructura() {
   try {
-    const snap = await get(ref(db, `escuelas/${ID_ESCUELA}/configuracion`));
+    const snapDataAsync = await new Promise((res) => ref(db, `escuelas/${ID_ESCUELA}/configuracion`).once("value", (snap) => res(snap)));const snap = snapDataAsync;
     if (snap.exists()) {
       const cfg = snap.val();
       if (cfg.perfil) {
@@ -877,7 +916,7 @@ async function cargarAsistencias() {
   document.getElementById('fecha-sub').textContent = 'Cargando...';
   document.getElementById('lista-grupos').innerHTML = '<div class="loading-state"><div class="loader"></div><div style="font-size:.82rem;color:var(--slate2);">Cargando asistencias...</div></div>';
   try {
-    const snap = await get(ref(db, `escuelas/${ID_ESCUELA}/asistencias`));
+    const snapDataAsync = await new Promise((res) => ref(db, `escuelas/${ID_ESCUELA}/asistencias`).once("value", (snap) => res(snap)));const snap = snapDataAsync;
     asistencias = {};
     if (snap.exists()) {
       snap.forEach(child => {
@@ -1435,7 +1474,7 @@ window.consultarNubeExp = async function() {
   btn.disabled = true; btn.textContent = '⏳ Consultando...';
 
   try {
-    const snap = await get(ref(db, `escuelas/${ID_ESCUELA}/asistencias`));
+    const snapDataAsync = await new Promise((res) => ref(db, `escuelas/${ID_ESCUELA}/asistencias`).once("value", (snap) => res(snap)));const snap = snapDataAsync;
     const resultado = [];
 
     if (snap.exists()) {
@@ -1757,7 +1796,18 @@ document.addEventListener('DOMContentLoaded', () => {
 // ── ASISTENCIA MANUAL ──
 window.cargarTurnosManual = function() {
   const select = document.getElementById('man-turno');
-  if (!select || select.children.length > 1) return;
+  if (!select) {
+    console.warn('⚠️ man-turno no encontrado');
+    return;
+  }
+  if (select.children.length > 1) {
+    console.log('✅ Turnos ya cargados');
+    return;
+  }
+  
+  console.log('📋 Estructura:', estructura);
+  console.log('📋 Turnos:', estructura?.turnos);
+  
   if (estructura?.turnos) {
     estructura.turnos.forEach(t => {
       const opt = document.createElement('option');
@@ -1765,6 +1815,9 @@ window.cargarTurnosManual = function() {
       opt.textContent = t === 'mat' ? '🌅 Matutino' : '🌆 Vespertino';
       select.appendChild(opt);
     });
+    console.log('✅ Turnos cargados');
+  } else {
+    console.warn('⚠️ No hay turnos en estructura');
   }
 };
 
@@ -1820,7 +1873,7 @@ window.procesarManual = function() {
   let estatus = mode;
   if (mode === 'justificado') estatus = `justificado - ${motive}`;
   const registro = { nombre, turno, grado, grupoLetra: grupo, grupo: `${grado}°${grupo}`, estatus, hora: new Date().toLocaleTimeString('es-MX', {hour:'2-digit', minute:'2-digit'}), fecha: hoy(), timestamp: Date.now() };
-  const ref = firebase.database().ref(`escuelas/${escuelaID}/asistencias`).push();
+  const ref = db?.ref(`escuelas/${escuelaID}/asistencias`).push();
   ref.set(registro).then(() => { toast('✅ Asistencia registrada'); document.getElementById('man-nombre').value = ''; document.getElementById('man-turno').value = ''; document.getElementById('man-grado').value = ''; document.getElementById('man-grupo').value = ''; window.cargarTurnosManual(); }).catch(e => toast('❌ Error: ' + e.message));
 };
 

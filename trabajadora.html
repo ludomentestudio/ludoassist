@@ -256,6 +256,71 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
 .bnav-btn:active{transform:translateY(0);}
 .bnav-label{font-size:.62rem;font-weight:700;color:var(--slate);text-transform:uppercase;letter-spacing:.5px;line-height:1.1;}
 .bnav-btn.active{background:rgba(26,107,58,.12);border-bottom:3px solid var(--green);}
+/* ══ MÓDULO HORARIOS (solo lectura) ══ */
+.hor-reloj-ts{background:linear-gradient(135deg,#0A192F,#1E293B);border-radius:10px;padding:.85rem 1rem;margin-bottom:.65rem;display:flex;justify-content:space-between;align-items:center;}
+.hor-hora-ts{font-family:'Nunito',sans-serif;font-size:1.9rem;font-weight:900;color:#FFD600;line-height:1;}
+.hor-sub-ts{font-size:.65rem;color:rgba(255,255,255,.55);margin-top:.2rem;font-weight:700;}
+.hor-bloque-lbl{font-size:.6rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1px;font-weight:800;text-align:right;}
+.hor-bloque-val{font-size:.92rem;font-weight:900;color:#10B981;margin-top:.15rem;text-align:right;}
+/* Selector turno */
+.hor-turno-sel-ts{display:flex;gap:.5rem;margin-bottom:.65rem;}
+.hor-turno-btn-ts{flex:1;padding:.55rem .4rem;border-radius:8px;font-size:.78rem;font-weight:900;cursor:pointer;transition:all .2s;border:2px solid #334155;background:#1E293B;color:#94A3B8;text-align:center;}
+.hor-turno-btn-ts.active-mat{background:#92400E;border-color:#F59E0B;color:#FEF3C7;box-shadow:0 0 10px rgba(245,158,11,.35);}
+.hor-turno-btn-ts.active-vesp{background:#3730A3;border-color:#818CF8;color:#E0E7FF;box-shadow:0 0 10px rgba(129,140,248,.35);}
+/* Badge día */
+.hor-dia-badge-ts{display:inline-flex;align-items:center;gap:.4rem;background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.4);border-radius:8px;padding:.35rem .75rem;font-size:.7rem;font-weight:900;color:#FCD34D;margin-bottom:.6rem;text-transform:uppercase;letter-spacing:.5px;}
+/* Macrohorario */
+.hor-macro-wrap-ts{overflow-x:auto;margin-bottom:.8rem;border-radius:10px;}
+.hor-macro-ts{width:100%;border-collapse:collapse;min-width:420px;font-size:.62rem;}
+.hor-macro-ts th{background:#0F172A;color:#94A3B8;font-weight:800;text-transform:uppercase;font-size:.56rem;letter-spacing:.5px;padding:.55rem .35rem;text-align:center;white-space:nowrap;border-bottom:2px solid #1E293B;}
+.hor-macro-ts th.th-h{text-align:left;padding-left:.65rem;width:52px;color:#10B981;}
+.hor-macro-ts td{padding:.4rem .25rem;border-bottom:1px solid #1E293B;text-align:center;vertical-align:middle;background:#0A192F;}
+.hor-macro-ts td.td-h{font-weight:900;color:#475569;font-size:.6rem;padding-left:.65rem;text-align:left;white-space:nowrap;background:#050F1A;}
+.hor-macro-ts tr.mac-ahora td{background:rgba(245,158,11,.1)!important;border-bottom:1px solid rgba(245,158,11,.2);}
+.hor-macro-ts tr.mac-ahora td.td-h{color:#F59E0B;}
+.hor-macro-ts tr.mac-receso td{background:#0A192F!important;}
+.mac-cel{border-radius:5px;padding:.28rem .3rem;margin:.08rem;}
+.mac-mat{font-weight:800;color:#1a1a1a;font-size:.6rem;line-height:1.2;}
+.mac-mstr{font-size:.52rem;color:#374151;margin-top:.1rem;font-weight:600;}
+.mac-sin{font-size:.54rem;color:#1E3A5F;font-style:italic;}
+.mac-badge{display:inline-block;background:#F59E0B;color:white;font-size:.46rem;font-weight:900;border-radius:3px;padding:.02rem .22rem;margin-left:.2rem;vertical-align:middle;}
+.h-rango{font-size:.54rem;color:#64748B;font-weight:600;display:block;margin-top:1px;}
+/* Chips grupos */
+.hor-chips-ts{display:flex;gap:.5rem;overflow-x:auto;padding-bottom:.4rem;margin-bottom:.8rem;scrollbar-width:none;}
+.hor-chips-ts::-webkit-scrollbar{display:none;}
+.hor-chip-ts{background:white;border:2px solid #CBD5E1;border-radius:20px;padding:.32rem .85rem;font-size:.73rem;font-weight:800;color:#334155;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0;}
+.hor-chip-ts.active{background:#EFF6FF;border-color:#0284C7;color:#0284C7;}
+/* Horario semanal */
+.hor-sem-ts{background:white;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);overflow:hidden;display:none;margin-bottom:.8rem;}
+.hor-sem-ts.visible{display:block;}
+.hor-sem-hdr-ts{background:linear-gradient(135deg,#0A192F,#1E293B);padding:.75rem 1rem;display:flex;justify-content:space-between;align-items:center;}
+.hor-sem-tit{font-weight:900;font-size:1rem;color:#FFD600;}
+.hor-sem-sub{font-size:.6rem;color:rgba(255,255,255,.55);font-weight:700;margin-top:.1rem;}
+.hor-btn-cer{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:white;border-radius:7px;padding:.3rem .65rem;font-size:.7rem;font-weight:800;cursor:pointer;}
+.hor-tabla-ts{width:100%;border-collapse:collapse;font-size:.65rem;min-width:420px;}
+.hor-tabla-ts th{background:#F1F5F9;color:#334155;font-weight:800;text-transform:uppercase;font-size:.56rem;padding:.5rem .35rem;border-bottom:2px solid #CBD5E1;text-align:center;}
+.hor-tabla-ts th.th-h2{text-align:left;padding-left:.75rem;width:60px;}
+.hor-tabla-ts td{padding:.4rem .35rem;border-bottom:1px solid #F1F5F9;text-align:center;vertical-align:middle;}
+.hor-tabla-ts td.td-h2{font-weight:800;color:#334155;font-size:.6rem;padding-left:.75rem;text-align:left;white-space:nowrap;line-height:1.3;}
+.hor-tabla-ts tr.fil-ahora td{background:#FEFCE8;border-bottom:1px solid #FDE68A;}
+.hor-tabla-ts tr.fil-ahora td.td-h2{color:#F59E0B;font-weight:900;}
+.hor-tabla-ts tr.fil-rec td{background:#F8FAFC;color:#334155;font-style:italic;text-align:center;}
+.h-cel-in{border-radius:5px;padding:.28rem .3rem;}
+.h-mat{font-weight:800;color:#1a1a1a;line-height:1.2;font-size:.64rem;}
+.h-mstr{font-size:.56rem;color:#374151;font-weight:600;margin-top:.1rem;}
+.h-sin{font-size:.6rem;color:#CBD5E1;font-style:italic;}
+.h-ahora{display:inline-block;background:#F59E0B;color:white;font-size:.5rem;font-weight:900;border-radius:4px;padding:.04rem .28rem;margin-left:.25rem;vertical-align:middle;}
+/* Consulta maestro */
+.hor-mae-card{background:white;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);overflow:hidden;margin-bottom:.8rem;}
+.hor-mae-hdr{background:linear-gradient(135deg,#0F4C81,#1E3A5F);padding:.75rem 1rem;}
+.hor-mae-tit{font-size:.73rem;font-weight:800;color:#67E8F9;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.45rem;}
+.hor-mae-sel{width:100%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:.52rem .75rem;color:white;font-size:.83rem;font-weight:700;outline:none;font-family:'Nunito',sans-serif;}
+.hor-mae-sel option{background:#1E293B;color:white;}
+.hor-mae-tabla{width:100%;border-collapse:collapse;}
+.hor-mae-tabla th{background:#F1F5F9;color:#334155;font-weight:800;text-transform:uppercase;font-size:.6rem;padding:.48rem .7rem;border-bottom:2px solid #CBD5E1;text-align:left;}
+.hor-mae-tabla td{padding:.48rem .7rem;border-bottom:1px solid #F1F5F9;font-size:.78rem;color:#0A192F;}
+.hor-mae-tabla tr.mae-ah td{background:#FEFCE8;}
+.hor-mae-vacio{text-align:center;padding:1.5rem;color:#334155;font-size:.8rem;}
 </style>
 </head>
 <body>
@@ -500,12 +565,72 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
   <button class="btn-save-cfg" id="btn-save-config">💾 Guardar Links</button>
 </div>
 
+<div class="view" id="view-horarios">
+  <!-- Reloj -->
+  <div class="hor-reloj-ts">
+    <div>
+      <div class="hor-hora-ts" id="ts-hor-hora">--:--</div>
+      <div class="hor-sub-ts" id="ts-hor-dia">—</div>
+    </div>
+    <div>
+      <div class="hor-bloque-lbl">Bloque actual</div>
+      <div class="hor-bloque-val" id="ts-hor-bloque">—</div>
+    </div>
+  </div>
+  <!-- Selector turno -->
+  <div class="hor-turno-sel-ts" id="ts-turno-btns"></div>
+  <!-- Macrohorario -->
+  <div style="font-size:.62rem;color:#64748B;text-transform:uppercase;letter-spacing:1.5px;font-weight:800;margin-bottom:.45rem;">📋 Macrohorario del día</div>
+  <div class="hor-dia-badge-ts" id="ts-dia-badge">📅 —</div>
+  <div class="hor-macro-wrap-ts">
+    <table class="hor-macro-ts">
+      <thead id="ts-macro-thead"></thead>
+      <tbody id="ts-macro-tbody"></tbody>
+    </table>
+  </div>
+  <!-- Semanal por grupo -->
+  <div style="font-size:.62rem;color:#64748B;text-transform:uppercase;letter-spacing:1.5px;font-weight:800;margin-bottom:.45rem;">📚 Horario semanal — toca un grupo</div>
+  <div class="hor-chips-ts" id="ts-chips-grupos"></div>
+  <div class="hor-sem-ts" id="ts-sem-card">
+    <div class="hor-sem-hdr-ts">
+      <div>
+        <div class="hor-sem-tit" id="ts-sem-titulo">—</div>
+        <div class="hor-sem-sub" id="ts-sem-sub">Horario semanal completo</div>
+      </div>
+      <button class="hor-btn-cer" onclick="window.tsCerrarSemanal()">✕ Cerrar</button>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="hor-tabla-ts">
+        <thead><tr>
+          <th class="th-h2">Hora</th>
+          <th>Lunes</th><th>Martes</th><th>Miércoles</th><th>Jueves</th><th>Viernes</th>
+        </tr></thead>
+        <tbody id="ts-sem-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+  <!-- Consulta maestro -->
+  <div class="hor-mae-card">
+    <div class="hor-mae-hdr">
+      <div class="hor-mae-tit">🧑‍🏫 Consultar horario de un maestro</div>
+      <select class="hor-mae-sel" id="ts-mae-sel" onchange="window.tsConsultarMaestro()">
+        <option value="">— Selecciona un maestro —</option>
+      </select>
+    </div>
+    <div id="ts-mae-resultado">
+      <div class="hor-mae-vacio">Selecciona un maestro para ver su horario</div>
+    </div>
+  </div>
+  <div style="height:.5rem;"></div>
+</div>
+
 <div id="toast"></div>
 
 <nav class="bottom-nav">
   <button class="bnav-btn active" onclick="switchView('asistencias')"><span>📋</span><div class="bnav-label">Asistencias</div></button>
   <button class="bnav-btn" onclick="switchView('exportar')"><span>📤</span><div class="bnav-label">Exportar</div></button>
   <button class="bnav-btn" onclick="switchView('manual')"><span>📝</span><div class="bnav-label">Manual</div></button>
+  <button class="bnav-btn" onclick="switchView('horarios');window.tsAbrirHorarios()"><span>📅</span><div class="bnav-label">Horarios</div></button>
   <button class="bnav-btn" onclick="switchView('links-wa')"><span>📱</span><div class="bnav-label">Links WA</div></button>
 </nav>
 
@@ -1421,6 +1546,106 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(fi) fi.value=hoyISO;
   if(ii) ii.value=hace7.toISOString().split('T')[0];
 });
+
+// ══════════════════════════════════════════════
+// MÓDULO HORARIOS — SOLO LECTURA
+// ══════════════════════════════════════════════
+let tsHorarios={},tsTurno='',tsGrupoSel=null,tsRelojTimer=null;
+const tsColorCache={};let tsColorIdx=0;
+const tsColoresBase=Array.from({length:20},(_,i)=>Math.round(i*18));
+function tsColorMaestro(n){if(!n||n.toUpperCase()==='SIN DOCENTE')return null;const k=n.trim().toUpperCase();if(tsColorCache[k])return tsColorCache[k];let h;if(tsColorIdx<tsColoresBase.length){h=tsColoresBase[tsColorIdx++];}else{let hash=0;for(let i=0;i<k.length;i++)hash=(hash*31+k.charCodeAt(i))&0xFFFFFF;h=Math.abs(hash)%360;}const c={bg:`hsl(${h},55%,87%)`,border:`hsl(${h},55%,72%)`,text:`hsl(${h},40%,25%)`};tsColorCache[k]=c;return c;}
+function tsGetMin(){const d=new Date();return d.getHours()*60+d.getMinutes();}
+function tsGetDia(){const m={1:'lunes',2:'martes',3:'miercoles',4:'jueves',5:'viernes'};return m[new Date().getDay()]||'lunes';}
+function tsHhMm(s){const[h,m]=(s||'0:0').split(':').map(Number);return h*60+m;}
+function tsEsReceso(b){return b.receso===true;}
+function tsRango(bloques,i){const b=bloques[i],sig=bloques[i+1];if(sig)return`${b.hora}–${sig.hora}`;if(b.horaFin)return`${b.hora}–${b.horaFin}`;const[h,m]=b.hora.split(':').map(Number);const t=h*60+m+50;return`${b.hora}–${String(Math.floor(t/60)).padStart(2,'0')}:${String(t%60).padStart(2,'0')}`;}
+
+async function tsCargarHorarios(){
+    tsHorarios={};
+    try{const snap=await dbOnce(`escuelas/${ID_ESC}/horarios`);if(snap.exists()){const d=snap.val();if(d.Matutino)tsHorarios['Matutino']=d.Matutino;if(d.Vespertino)tsHorarios['Vespertino']=d.Vespertino;if(d.vigente&&!tsHorarios['Vespertino'])tsHorarios['Vespertino']=d.vigente;}}catch(e){console.warn('tsHorarios:',e.message);}
+    const turnos=Object.keys(estructura||{});
+    if(!tsTurno||!tsHorarios[tsTurno])tsTurno=turnos.find(t=>tsHorarios[t])||Object.keys(tsHorarios)[0]||turnos[0]||'';
+    tsRenderHorarios();
+}
+
+function tsRenderHorarios(){
+    tsConstruirTurnoBtns();tsActualizarReloj();
+    const grupos=tsHorarios[tsTurno]||{};
+    if(!Object.keys(grupos).length){document.getElementById('ts-macro-thead').innerHTML='';document.getElementById('ts-macro-tbody').innerHTML=`<tr><td colspan="2" style="text-align:center;padding:2rem;color:#64748B;font-size:.8rem;">Sin horario cargado para este turno</td></tr>`;document.getElementById('ts-chips-grupos').innerHTML='';document.getElementById('ts-mae-sel').innerHTML='<option value="">— Sin datos —</option>';return;}
+    tsMacrohorario();tsChipsGrupos();tsPoblarMaestros();
+    if(tsRelojTimer)clearInterval(tsRelojTimer);
+    tsRelojTimer=setInterval(()=>{tsActualizarReloj();tsMacrohorario();if(tsGrupoSel)tsSemanal(tsGrupoSel);},30000);
+}
+
+function tsConstruirTurnoBtns(){
+    const cont=document.getElementById('ts-turno-btns');if(!cont)return;
+    const turnos=Object.keys(estructura||{});if(turnos.length<=1){cont.innerHTML='';return;}
+    cont.innerHTML=turnos.map(t=>{const isMat=t==='Matutino';const cls=tsTurno===t?(isMat?'active-mat':'active-vesp'):'';return`<button class="hor-turno-btn-ts ${cls}" onclick="window.tsSelTurno('${t}')">${isMat?'☀️':'🌆'} ${t}</button>`;}).join('');
+}
+window.tsSelTurno=function(t){tsTurno=t;tsGrupoSel=null;document.getElementById('ts-sem-card').classList.remove('visible');tsRenderHorarios();};
+
+function tsActualizarReloj(){
+    const d=new Date();const h=String(d.getHours()).padStart(2,'0'),m=String(d.getMinutes()).padStart(2,'0');
+    const dias=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+    const el=document.getElementById('ts-hor-hora'),el2=document.getElementById('ts-hor-dia'),el3=document.getElementById('ts-hor-bloque');
+    if(el)el.textContent=`${h}:${m}`;
+    if(el2)el2.textContent=`${dias[d.getDay()]} · ${tsTurno||'—'}`;
+    if(el3){const p=Object.values(tsHorarios[tsTurno]||{})[0];if(p?.bloques){const now=tsGetMin();let found=false;for(let i=0;i<p.bloques.length;i++){const b=p.bloques[i],sig=p.bloques[i+1];const ini=tsHhMm(b.hora),fin=sig?tsHhMm(sig.hora):ini+50;if(now>=ini&&now<fin){el3.textContent=tsEsReceso(b)?'☕ Receso':b.hora;found=true;break;}}if(!found)el3.textContent='Fuera de horario';}else el3.textContent='—';}
+    const badge=document.getElementById('ts-dia-badge');
+    if(badge){const dIdx=d.getDay();const esH=dIdx>=1&&dIdx<=5;badge.textContent=`📅 HOY: ${dias[dIdx].toUpperCase()}`;badge.style.color=esH?'#FCD34D':'#94A3B8';badge.style.borderColor=esH?'rgba(245,158,11,.4)':'rgba(100,116,139,.3)';badge.style.background=esH?'rgba(245,158,11,.15)':'rgba(100,116,139,.15)';}
+}
+
+function tsMacrohorario(){
+    const grupos=tsHorarios[tsTurno]||{};const claves=Object.keys(grupos);if(!claves.length)return;
+    const dia=tsGetDia(),now=tsGetMin();const bloquesRef=grupos[claves[0]]?.bloques||[];
+    document.getElementById('ts-macro-thead').innerHTML=`<tr><th class="th-h">Hora</th>${claves.map(g=>`<th>${g}</th>`).join('')}</tr>`;
+    document.getElementById('ts-macro-tbody').innerHTML=bloquesRef.map((bRef,i)=>{
+        const sig=bloquesRef[i+1];const ini=tsHhMm(bRef.hora),fin=sig?tsHhMm(sig.hora):ini+50;const esAhora=now>=ini&&now<fin;const rango=tsRango(bloquesRef,i);
+        if(tsEsReceso(bRef))return`<tr class="mac-receso"><td class="td-h" style="color:#1E3A5F;">☕<br><span style="font-size:.52rem;">${rango}</span></td>${claves.map(()=>`<td style="text-align:center;font-size:.56rem;color:#1E3A5F;font-style:italic;">receso</td>`).join('')}</tr>`;
+        const celdas=claves.map(g=>{const bG=grupos[g]?.bloques?.[i];if(!bG||tsEsReceso(bG))return`<td><span class="mac-sin">—</span></td>`;const info=bG[dia]||{};const mat=(info.materia||'').replace(/^,/,'').trim();const mstr=info.maestro||'';if(!mat)return`<td><span class="mac-sin">—</span></td>`;const col=tsColorMaestro(mstr);const fondo=col?`background:${col.bg};border:1px solid ${col.border};`:'background:#1E293B;border:1px solid #334155;';const cMat=col?`color:${col.text};`:'color:#E2E8F0;';const cMstr=col?`color:${col.text};opacity:.8;`:'color:#94A3B8;';return`<td style="padding:.22rem;"><div class="mac-cel" style="${fondo}"><div class="mac-mat" style="${cMat}">${mat}</div>${mstr?`<div class="mac-mstr" style="${cMstr}">${mstr}</div>`:''}</div></td>`;}).join('');
+        return`<tr class="${esAhora?'mac-ahora':''}"><td class="td-h">${bRef.hora}${esAhora?`<span class="mac-badge">AHORA</span>`:''}<br><span class="h-rango">${rango}</span></td>${celdas}</tr>`;
+    }).join('');
+}
+
+function tsChipsGrupos(){const cont=document.getElementById('ts-chips-grupos');if(!cont)return;cont.innerHTML=Object.keys(tsHorarios[tsTurno]||{}).map(g=>`<div class="hor-chip-ts ${g===tsGrupoSel?'active':''}" onclick="window.tsSelGrupo('${g}')">${g}</div>`).join('');}
+window.tsSelGrupo=function(g){tsGrupoSel=g;tsChipsGrupos();tsSemanal(g);document.getElementById('ts-sem-card').scrollIntoView({behavior:'smooth',block:'start'});};
+window.tsCerrarSemanal=function(){tsGrupoSel=null;tsChipsGrupos();document.getElementById('ts-sem-card').classList.remove('visible');};
+
+function tsSemanal(g){
+    const datos=(tsHorarios[tsTurno]||{})[g];const card=document.getElementById('ts-sem-card');if(!datos?.bloques||!card)return;
+    const now=tsGetMin();document.getElementById('ts-sem-titulo').textContent=`${datos.grado}° Grupo ${datos.grupo}`;
+    document.getElementById('ts-sem-sub').textContent='Horario semanal completo · fila amarilla = ahora';
+    const DIAS=['lunes','martes','miercoles','jueves','viernes'];
+    document.getElementById('ts-sem-tbody').innerHTML=datos.bloques.map((b,i)=>{
+        const sig=datos.bloques[i+1];const ini=tsHhMm(b.hora),fin=sig?tsHhMm(sig.hora):ini+50;const esAhora=now>=ini&&now<fin;const rango=tsRango(datos.bloques,i);
+        if(tsEsReceso(b))return`<tr class="fil-rec"><td class="td-h2">${b.hora}<span class="h-rango">${rango}</span></td><td colspan="5" style="text-align:center;font-weight:700;color:#F59E0B;">— RECESO —</td></tr>`;
+        const celdas=DIAS.map(d=>{const info=b[d]||{};const mat=(info.materia||'').replace(/^,/,'').trim();const mstr=info.maestro||'';if(!mat)return`<td><span class="h-sin">—</span></td>`;const col=tsColorMaestro(mstr);const estilo=col?`background:${col.bg};border:1px solid ${col.border};`:'';return`<td style="padding:.28rem;"><div class="h-cel-in" style="${estilo}"><div class="h-mat" style="${col?'color:'+col.text+';':''}">${mat}</div>${mstr?`<div class="h-mstr" style="${col?'color:'+col.text+';opacity:.75;':''}">${mstr}</div>`:`<div class="h-sin">Sin asignar</div>`}</div></td>`;}).join('');
+        return`<tr class="${esAhora?'fil-ahora':''}"><td class="td-h2">${b.hora}${esAhora?'<span class="h-ahora">AHORA</span>':''}<span class="h-rango">${rango}</span></td>${celdas}</tr>`;
+    }).join('');
+    card.classList.add('visible');
+}
+
+function tsPoblarMaestros(){
+    const sel=document.getElementById('ts-mae-sel');if(!sel)return;
+    const grupos=tsHorarios[tsTurno]||{};const DIAS=['lunes','martes','miercoles','jueves','viernes'];const maestros=new Set();
+    Object.values(grupos).forEach(d=>{(d.bloques||[]).forEach(b=>{if(tsEsReceso(b))return;DIAS.forEach(dia=>{const m=(b[dia]?.maestro||'').trim();if(m&&m.toUpperCase()!=='SIN DOCENTE')maestros.add(m);});});});
+    sel.innerHTML='<option value="">— Selecciona un maestro —</option>'+[...maestros].sort().map(m=>`<option value="${m}">${m}</option>`).join('');
+    document.getElementById('ts-mae-resultado').innerHTML='<div class="hor-mae-vacio">Selecciona un maestro para ver su horario</div>';
+}
+
+window.tsConsultarMaestro=function(){
+    const maestro=document.getElementById('ts-mae-sel')?.value;const res=document.getElementById('ts-mae-resultado');
+    if(!maestro){if(res)res.innerHTML='<div class="hor-mae-vacio">Selecciona un maestro</div>';return;}
+    const grupos=tsHorarios[tsTurno]||{};const DIAS=['lunes','martes','miercoles','jueves','viernes'];const DIAS_L=['Lunes','Martes','Miércoles','Jueves','Viernes'];const ORD={lunes:0,martes:1,miercoles:2,jueves:3,viernes:4};
+    const now=tsGetMin();const diaHoy=tsGetDia();const rows=[];
+    Object.entries(grupos).forEach(([ng,datosG])=>{(datosG.bloques||[]).forEach((b,i)=>{if(tsEsReceso(b))return;DIAS.forEach((d,di)=>{const info=b[d]||{};if((info.maestro||'').trim().toUpperCase()===maestro.trim().toUpperCase()){const sig=datosG.bloques[i+1];const ini=tsHhMm(b.hora),fin=sig?tsHhMm(sig.hora):ini+50;const esAhora=now>=ini&&now<fin&&diaHoy===d;const rango=tsRango(datosG.bloques,i);rows.push({dia:DIAS_L[di],diaKey:d,hora:b.hora,rango,grupo:ng,mat:(info.materia||'').replace(/^,/,'').trim(),esAhora});}});});});
+    if(!rows.length){res.innerHTML='<div class="hor-mae-vacio">Este maestro no tiene clases en el turno activo</div>';return;}
+    rows.sort((a,b)=>(ORD[a.diaKey]-ORD[b.diaKey])||a.hora.localeCompare(b.hora));
+    const col=tsColorMaestro(maestro);const hdrStyle=col?`background:${col.bg};border-left:4px solid ${col.border};padding:8px 12px;margin-bottom:8px;border-radius:6px;font-size:.75rem;font-weight:800;color:${col.text};`:'';const hdr=hdrStyle?`<div style="${hdrStyle}">🧑‍🏫 ${maestro} · ${rows.length} clase${rows.length!==1?'s':''}</div>`:'';
+    res.innerHTML=`${hdr}<table class="hor-mae-tabla"><thead><tr><th>Día</th><th>Hora</th><th>Grupo</th><th>Materia</th></tr></thead><tbody>${rows.map(r=>{const bg=col?`background:${col.bg};`:(r.esAhora?'background:#FEFCE8;':'');return`<tr class="${r.esAhora?'mae-ah':''}" style="${bg}"><td>${r.dia}${r.esAhora?' 🟡':''}</td><td style="white-space:nowrap;">${r.hora}<br><span style="font-size:.6rem;color:#94A3B8;">${r.rango}</span></td><td><strong>${r.grupo}</strong></td><td>${r.mat}</td></tr>`;}).join('')}</tbody></table>`;
+};
+
+window.tsAbrirHorarios=function(){if(!Object.keys(tsHorarios).length&&ID_ESC)tsCargarHorarios();else tsRenderHorarios();};
 </script>
 </body>
 </html>

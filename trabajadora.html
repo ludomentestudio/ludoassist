@@ -63,8 +63,6 @@ body{background:var(--light);color:var(--slate);min-height:100dvh;display:flex;f
 .login-btn:active{transform:scale(.97);}
 .login-btn:disabled{background:rgba(255,255,255,.2);color:rgba(255,255,255,.4);cursor:not-allowed;box-shadow:none;}
 .login-error{color:#ff8a80;font-size:.82rem;text-align:center;font-weight:700;min-height:18px;}
-
-/* ── HEADER ── */
 header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);color:var(--white);padding:.75rem 1rem;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 12px rgba(0,0,0,.2);flex-shrink:0;}
 .hdr-left{display:flex;align-items:center;gap:.6rem;}
 .hdr-icon{font-size:1.5rem;}
@@ -72,13 +70,9 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
 .hdr-school{font-size:.62rem;color:rgba(255,255,255,.75);font-weight:700;letter-spacing:.5px;}
 .hdr-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:var(--white);padding:.35rem .65rem;border-radius:6px;cursor:pointer;font-size:.7rem;font-weight:700;transition:all .3s;}
 .hdr-btn:active{background:rgba(255,255,255,.25);}
-
-/* ── VISTAS ── */
 .view{flex:1;overflow-y:auto;padding:1rem;display:none;padding-bottom:110px;}
 .view.active{display:block;animation:fadeIn .2s ease;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-
-/* ── TOP BAR ── */
 .top-bar{background:var(--white);border-radius:12px;padding:.85rem 1rem;margin-bottom:.85rem;box-shadow:0 2px 6px rgba(0,0,0,.08);display:flex;flex-direction:column;gap:.75rem;}
 .top-row1{display:flex;justify-content:space-between;align-items:center;}
 .fecha-txt{font-size:.88rem;font-weight:800;color:var(--navy);}
@@ -90,14 +84,10 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
 .turno-btn.active-mat{background:#FFF8E1;border-color:#F59E0B;color:#92400E;}
 .turno-btn.active-vesp{background:#EEF2FF;border-color:#6366F1;color:#3730A3;}
 .turno-btn.active-all{background:#ECFDF5;border-color:var(--emerald);color:#065F46;}
-
-/* ── RESUMEN ── */
 .resumen-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin-bottom:.85rem;}
 .res-card{background:var(--white);border-radius:10px;padding:.7rem .4rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.07);}
 .res-num{font-size:1.3rem;font-weight:900;color:var(--navy);}
 .res-lbl{font-size:.58rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--slate2);margin-top:.1rem;}
-
-/* ── SECCIÓN TURNO ── */
 .turno-section{margin-bottom:.75rem;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08);}
 .turno-section-hdr{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1rem;cursor:pointer;user-select:none;transition:filter .2s;}
 .turno-section.mat .turno-section-hdr{background:linear-gradient(135deg,#F59E0B,#D97706);}
@@ -109,8 +99,6 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
 .turno-section.open .turno-chevron{transform:rotate(180deg);}
 .turno-section-body{display:none;background:#F8FAFC;padding:.75rem;}
 .turno-section.open .turno-section-body{display:block;}
-
-/* ── GRUPO CARD ── */
 .grupo-card{background:var(--white);border-radius:10px;margin-bottom:.65rem;box-shadow:0 1px 4px rgba(0,0,0,.07);overflow:hidden;border-left:4px solid var(--border);}
 .grupo-card.mat-card{border-left-color:#F59E0B;}
 .grupo-card.vesp-card{border-left-color:#6366F1;}
@@ -135,12 +123,9 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
 .detail-actions{display:flex;gap:.6rem;padding:.85rem 1rem;}
 .btn-wa{flex:1;background:var(--wa);color:var(--white);border:none;border-radius:9px;padding:.85rem;font-size:.85rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.5rem;transition:all .3s;}
 .btn-wa:active{transform:scale(.97);}
-.btn-wa.disabled-wa{background:#94A3B8;cursor:not-allowed;}
 .btn-copy{background:var(--navy2);color:var(--white);border:none;border-radius:9px;padding:.85rem 1rem;font-size:.85rem;font-weight:800;cursor:pointer;transition:all .3s;}
 .sent-badge{display:none;align-items:center;gap:.4rem;font-size:.72rem;font-weight:800;color:var(--emerald);padding:.4rem 1rem .7rem;}
 .grupo-card.enviado .sent-badge{display:flex;}
-
-/* ── MANUAL ── */
 .config-intro{background:var(--white);border-radius:10px;padding:1rem;margin-bottom:1rem;box-shadow:0 1px 3px rgba(0,0,0,.08);font-size:.8rem;color:var(--slate);line-height:1.65;}
 .config-intro strong{color:var(--navy);}
 .man-card{background:var(--white);border-radius:10px;padding:1rem;margin-bottom:1rem;box-shadow:0 1px 3px rgba(0,0,0,.08);}
@@ -151,8 +136,6 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
 .man-group{margin-bottom:.85rem;}
 .man-grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.65rem;margin-bottom:.85rem;}
 .man-grid2{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-bottom:.85rem;}
-
-/* ── ESTATUS BOX ── */
 .estatus-box{background:var(--light);padding:1rem;border-radius:9px;border:1.5px solid var(--border);margin-bottom:.85rem;}
 .estatus-btns{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.5rem;}
 .est-btn{border:2px solid var(--border);border-radius:9px;padding:.65rem .5rem;background:var(--white);font-size:.78rem;font-weight:800;cursor:pointer;text-align:center;transition:all .2s;font-family:'Nunito',sans-serif;color:var(--slate);}
@@ -161,21 +144,13 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
 .est-btn.sel-r{background:#FEF9C3;border-color:var(--amber);color:#92400E;}
 .est-btn.sel-f{background:#FEE2E2;border-color:var(--ruby);color:#991B1B;}
 .est-btn.sel-j{background:var(--cyan2);border-color:var(--cyan);color:var(--cyan3);}
-
-/* ── MOTIVO ── */
 #motive-box{display:none;margin-top:.85rem;padding-top:.85rem;border-top:1px solid var(--border);}
-
-/* ── RETIRO TEMPRANO ── */
 .retiro-toggle{display:flex;align-items:center;gap:.75rem;background:#FFF8E1;border:1.5px solid var(--amber);border-radius:9px;padding:.75rem 1rem;margin-bottom:.85rem;cursor:pointer;}
 .retiro-toggle input[type=checkbox]{width:18px;height:18px;cursor:pointer;accent-color:var(--amber);}
 .retiro-label{font-size:.82rem;font-weight:800;color:#92400E;flex:1;}
 #retiro-hora-wrap{display:none;margin-bottom:.85rem;}
 .man-time-input{width:100%;padding:.75rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-weight:700;color:var(--navy);background:var(--white);outline:none;font-family:'Nunito',sans-serif;}
 .man-time-input:focus{border-color:var(--amber);}
-
-/* ══════════════════════════════════════════════
-   CALENDARIO MULTI-DÍA
-   ══════════════════════════════════════════════ */
 #cal-wrap{display:none;margin-bottom:.85rem;}
 .cal-box{background:var(--navy);border-radius:14px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.2);}
 .cal-header{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1rem;background:rgba(255,255,255,.07);}
@@ -194,17 +169,12 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
 .cal-dia.finde.seleccionado{background:rgba(6,182,212,.6);color:var(--navy);}
 .cal-contador{text-align:center;padding:.6rem;font-size:.75rem;color:rgba(255,255,255,.5);border-top:1px solid rgba(255,255,255,.06);}
 .cal-contador strong{color:var(--cyan);font-weight:900;}
-/* Días seleccionados chips */
 .dias-sel-wrap{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.6rem;min-height:24px;}
 .dia-chip{background:var(--cyan2);color:var(--cyan3);border-radius:20px;padding:.2rem .6rem;font-size:.68rem;font-weight:800;display:flex;align-items:center;gap:.3rem;}
 .dia-chip-x{background:none;border:none;color:var(--cyan3);cursor:pointer;font-size:.85rem;line-height:1;padding:0;}
-
-/* ── BTN GUARDAR ── */
 .btn-guardar-man{width:100%;padding:.9rem;background:linear-gradient(135deg,var(--green),var(--green2));color:var(--white);border:none;border-radius:10px;font-size:.95rem;font-weight:900;cursor:pointer;box-shadow:0 4px 12px rgba(26,107,58,.3);transition:all .3s;font-family:'Nunito',sans-serif;}
 .btn-guardar-man:active{transform:scale(.97);}
 .btn-guardar-man:disabled{background:#94A3B8;box-shadow:none;cursor:not-allowed;}
-
-/* ── EXPORTAR ── */
 .exp-card{background:var(--white);border-radius:10px;padding:1rem;margin-bottom:1rem;box-shadow:0 1px 3px rgba(0,0,0,.08);}
 .turno-actual-chip{display:flex;align-items:center;gap:.75rem;background:var(--white);border-radius:10px;padding:.85rem 1rem;margin-bottom:1rem;box-shadow:0 1px 3px rgba(0,0,0,.08);}
 .exp-grid2{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1rem;}
@@ -220,8 +190,6 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
 .exp-table{width:100%;border-collapse:collapse;font-size:.75rem;}
 .exp-table th{background:var(--light);border-bottom:2px solid var(--border);padding:.5rem;text-align:left;font-weight:800;color:var(--navy);}
 .exp-table td{padding:.4rem .5rem;border-bottom:1px solid var(--border);}
-
-/* ── CONFIG WA ── */
 .cfg-card{background:var(--white);border-radius:8px;padding:.85rem 1rem;margin-bottom:.5rem;box-shadow:0 1px 3px rgba(0,0,0,.06);display:flex;flex-direction:column;gap:.5rem;}
 .cfg-nombre{font-size:.82rem;font-weight:800;color:var(--navy);}
 .cfg-link-wrap{display:flex;gap:.5rem;}
@@ -234,8 +202,6 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
 .cfg-btn.active-mat{background:#FFF8E1;border-color:#F59E0B;color:#92400E;}
 .cfg-btn.active-vesp{background:#EEF2FF;border-color:#6366F1;color:#3730A3;}
 .cfg-btn.active-all{background:#ECFDF5;border-color:var(--emerald);color:#065F46;}
-
-/* ── ESTADOS ── */
 .empty-state{text-align:center;padding:3rem 1rem;color:var(--slate2);}
 .empty-icon{font-size:3rem;margin-bottom:.75rem;}
 .empty-txt{font-size:.9rem;font-weight:800;color:var(--navy);}
@@ -244,32 +210,24 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
 .loader{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 1rem;}
 .spin{animation:spin .7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-/* ── TOAST ── */
 #toast{position:fixed;bottom:6rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--navy);color:var(--white);padding:.7rem 1.5rem;border-radius:50px;font-size:.82rem;font-weight:800;z-index:9999;transition:transform .3s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.3);}
 #toast.show{transform:translateX(-50%) translateY(0);}
-
-/* ── BOTTOM NAV ── */
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;height:90px;background:linear-gradient(180deg,rgba(240,247,242,.95) 0%,rgba(240,247,242,.98) 100%);border-top:2px solid var(--border);display:flex;justify-content:space-around;align-items:center;padding-bottom:12px;padding-top:8px;gap:8px;z-index:100;backdrop-filter:blur(8px);}
 .bnav-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px 12px;background:transparent;border:none;cursor:pointer;font-size:1.8rem;text-align:center;border-radius:12px;transition:all .2s;flex:1;max-width:70px;}
 .bnav-btn:hover{background:rgba(26,107,58,.08);transform:translateY(-2px);}
 .bnav-btn:active{transform:translateY(0);}
 .bnav-label{font-size:.62rem;font-weight:700;color:var(--slate);text-transform:uppercase;letter-spacing:.5px;line-height:1.1;}
 .bnav-btn.active{background:rgba(26,107,58,.12);border-bottom:3px solid var(--green);}
-/* ══ MÓDULO HORARIOS (solo lectura) ══ */
 .hor-reloj-ts{background:linear-gradient(135deg,#0A192F,#1E293B);border-radius:10px;padding:.85rem 1rem;margin-bottom:.65rem;display:flex;justify-content:space-between;align-items:center;}
 .hor-hora-ts{font-family:'Nunito',sans-serif;font-size:1.9rem;font-weight:900;color:#FFD600;line-height:1;}
 .hor-sub-ts{font-size:.65rem;color:rgba(255,255,255,.55);margin-top:.2rem;font-weight:700;}
 .hor-bloque-lbl{font-size:.6rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1px;font-weight:800;text-align:right;}
 .hor-bloque-val{font-size:.92rem;font-weight:900;color:#10B981;margin-top:.15rem;text-align:right;}
-/* Selector turno */
 .hor-turno-sel-ts{display:flex;gap:.5rem;margin-bottom:.65rem;}
 .hor-turno-btn-ts{flex:1;padding:.55rem .4rem;border-radius:8px;font-size:.78rem;font-weight:900;cursor:pointer;transition:all .2s;border:2px solid #334155;background:#1E293B;color:#94A3B8;text-align:center;}
 .hor-turno-btn-ts.active-mat{background:#92400E;border-color:#F59E0B;color:#FEF3C7;box-shadow:0 0 10px rgba(245,158,11,.35);}
 .hor-turno-btn-ts.active-vesp{background:#3730A3;border-color:#818CF8;color:#E0E7FF;box-shadow:0 0 10px rgba(129,140,248,.35);}
-/* Badge día */
 .hor-dia-badge-ts{display:inline-flex;align-items:center;gap:.4rem;background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.4);border-radius:8px;padding:.35rem .75rem;font-size:.7rem;font-weight:900;color:#FCD34D;margin-bottom:.6rem;text-transform:uppercase;letter-spacing:.5px;}
-/* Macrohorario */
 .hor-macro-wrap-ts{overflow-x:auto;margin-bottom:.8rem;border-radius:10px;}
 .hor-macro-ts{width:100%;border-collapse:collapse;min-width:420px;font-size:.62rem;}
 .hor-macro-ts th{background:#0F172A;color:#94A3B8;font-weight:800;text-transform:uppercase;font-size:.56rem;letter-spacing:.5px;padding:.55rem .35rem;text-align:center;white-space:nowrap;border-bottom:2px solid #1E293B;}
@@ -285,12 +243,10 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
 .mac-sin{font-size:.54rem;color:#1E3A5F;font-style:italic;}
 .mac-badge{display:inline-block;background:#F59E0B;color:white;font-size:.46rem;font-weight:900;border-radius:3px;padding:.02rem .22rem;margin-left:.2rem;vertical-align:middle;}
 .h-rango{font-size:.54rem;color:#64748B;font-weight:600;display:block;margin-top:1px;}
-/* Chips grupos */
 .hor-chips-ts{display:flex;gap:.5rem;overflow-x:auto;padding-bottom:.4rem;margin-bottom:.8rem;scrollbar-width:none;}
 .hor-chips-ts::-webkit-scrollbar{display:none;}
 .hor-chip-ts{background:white;border:2px solid #CBD5E1;border-radius:20px;padding:.32rem .85rem;font-size:.73rem;font-weight:800;color:#334155;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0;}
 .hor-chip-ts.active{background:#EFF6FF;border-color:#0284C7;color:#0284C7;}
-/* Horario semanal */
 .hor-sem-ts{background:white;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);overflow:hidden;display:none;margin-bottom:.8rem;}
 .hor-sem-ts.visible{display:block;}
 .hor-sem-hdr-ts{background:linear-gradient(135deg,#0A192F,#1E293B);padding:.75rem 1rem;display:flex;justify-content:space-between;align-items:center;}
@@ -310,7 +266,6 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
 .h-mstr{font-size:.56rem;color:#374151;font-weight:600;margin-top:.1rem;}
 .h-sin{font-size:.6rem;color:#CBD5E1;font-style:italic;}
 .h-ahora{display:inline-block;background:#F59E0B;color:white;font-size:.5rem;font-weight:900;border-radius:4px;padding:.04rem .28rem;margin-left:.25rem;vertical-align:middle;}
-/* Consulta maestro */
 .hor-mae-card{background:white;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);overflow:hidden;margin-bottom:.8rem;}
 .hor-mae-hdr{background:linear-gradient(135deg,#0F4C81,#1E3A5F);padding:.75rem 1rem;}
 .hor-mae-tit{font-size:.73rem;font-weight:800;color:#67E8F9;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.45rem;}
@@ -321,11 +276,109 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
 .hor-mae-tabla td{padding:.48rem .7rem;border-bottom:1px solid #F1F5F9;font-size:.78rem;color:#0A192F;}
 .hor-mae-tabla tr.mae-ah td{background:#FEFCE8;}
 .hor-mae-vacio{text-align:center;padding:1.5rem;color:#334155;font-size:.8rem;}
+
+
+/* ══════════════════════════════════════
+   MÓDULO REPORTES
+   ══════════════════════════════════════ */
+.rep-sub-tabs{display:flex;gap:.5rem;margin-bottom:1rem;background:var(--white);border-radius:12px;padding:.5rem;box-shadow:0 2px 6px rgba(0,0,0,.08);}
+.rep-sub-tab{flex:1;padding:.6rem .5rem;border:none;border-radius:8px;font-size:.78rem;font-weight:800;cursor:pointer;transition:all .2s;font-family:'Nunito',sans-serif;background:transparent;color:var(--slate2);}
+.rep-sub-tab.active{background:linear-gradient(135deg,var(--green),var(--green2));color:var(--white);box-shadow:0 2px 8px rgba(26,107,58,.3);}
+.rep-sub-view{display:none;}
+.rep-sub-view.active{display:block;animation:fadeIn .2s ease;}
+
+/* Formulario nuevo reporte */
+.rep-card{background:var(--white);border-radius:12px;padding:1rem;margin-bottom:1rem;box-shadow:0 2px 6px rgba(0,0,0,.08);}
+.rep-tipo-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.85rem;}
+.rep-tipo-btn{border:2px solid var(--border);border-radius:9px;padding:.65rem .4rem;background:var(--white);font-size:.75rem;font-weight:800;cursor:pointer;text-align:center;transition:all .2s;font-family:'Nunito',sans-serif;color:var(--slate);}
+.rep-tipo-btn:active{transform:scale(.97);}
+.rep-tipo-btn.sel-conducta{background:#FEE2E2;border-color:var(--ruby);color:#991B1B;}
+.rep-tipo-btn.sel-academico{background:#FEF9C3;border-color:var(--amber);color:#92400E;}
+.rep-tipo-btn.sel-asistencia{background:#DCFCE7;border-color:var(--emerald);color:#166534;}
+.rep-tipo-btn.sel-salud{background:#DBEAFE;border-color:var(--blue);color:#1E40AF;}
+.rep-tipo-btn.sel-familiar{background:#EDE9FE;border-color:#7C3AED;color:#5B21B6;}
+.rep-tipo-btn.sel-otro{background:#F1F5F9;border-color:#64748B;color:#334155;}
+.rep-textarea{width:100%;padding:.85rem;border:1.5px solid var(--border);border-radius:10px;font-size:.88rem;font-family:'Nunito',sans-serif;color:var(--navy);resize:vertical;min-height:110px;outline:none;line-height:1.6;}
+.rep-textarea:focus{border-color:var(--green);}
+/* Toggle avisar padre */
+.rep-padre-toggle{display:flex;align-items:center;gap:.75rem;background:#FFF8E1;border:2px solid var(--amber);border-radius:10px;padding:.8rem 1rem;margin-bottom:.85rem;cursor:pointer;transition:all .2s;}
+.rep-padre-toggle.activo{background:#FFF3CD;border-color:#D97706;}
+.rep-padre-chk{width:20px;height:20px;accent-color:var(--amber);cursor:pointer;flex-shrink:0;}
+.rep-padre-lbl{font-size:.82rem;font-weight:800;color:#92400E;flex:1;line-height:1.3;}
+.rep-padre-sub{font-size:.68rem;color:#B45309;margin-top:.15rem;}
+/* Botón guardar reporte */
+.btn-guardar-rep{width:100%;padding:.9rem;background:linear-gradient(135deg,var(--green),var(--green2));color:var(--white);border:none;border-radius:10px;font-size:.95rem;font-weight:900;cursor:pointer;box-shadow:0 4px 12px rgba(26,107,58,.3);transition:all .3s;font-family:'Nunito',sans-serif;}
+.btn-guardar-rep:active{transform:scale(.97);}
+.btn-guardar-rep:disabled{background:#94A3B8;box-shadow:none;cursor:not-allowed;}
+
+/* Historial */
+.hist-search{display:flex;gap:.5rem;margin-bottom:1rem;}
+.hist-input{flex:1;padding:.75rem;border:1.5px solid var(--border);border-radius:9px;font-size:.88rem;font-family:'Nunito',sans-serif;outline:none;}
+.hist-input:focus{border-color:var(--green);}
+.btn-hist-buscar{background:var(--green);color:var(--white);border:none;border-radius:9px;padding:.75rem 1.1rem;font-size:.88rem;font-weight:800;cursor:pointer;}
+
+/* Card de reporte en historial */
+.rep-item{background:var(--white);border-radius:12px;margin-bottom:.75rem;box-shadow:0 2px 6px rgba(0,0,0,.08);overflow:hidden;border-left:4px solid var(--border);}
+.rep-item.conducta{border-left-color:var(--ruby);}
+.rep-item.academico{border-left-color:var(--amber);}
+.rep-item.asistencia{border-left-color:var(--emerald);}
+.rep-item.salud{border-left-color:var(--blue);}
+.rep-item.familiar{border-left-color:#7C3AED;}
+.rep-item.otro{border-left-color:#64748B;}
+.rep-item-hdr{display:flex;align-items:center;justify-content:space-between;padding:.75rem .9rem;cursor:pointer;user-select:none;}
+.rep-item-left{display:flex;align-items:center;gap:.6rem;}
+.rep-tipo-icon{font-size:1.3rem;}
+.rep-item-titulo{font-size:.85rem;font-weight:800;color:var(--navy);}
+.rep-item-meta{font-size:.65rem;color:var(--slate2);margin-top:.1rem;}
+.rep-item-badges{display:flex;gap:.3rem;align-items:center;flex-wrap:wrap;}
+.rep-badge{font-size:.6rem;font-weight:800;padding:.18rem .45rem;border-radius:4px;}
+.rep-badge-padre{background:#FEF9C3;color:#92400E;}
+.rep-badge-citado{background:#DBEAFE;color:#1E40AF;}
+.rep-badge-asistio{background:#DCFCE7;color:#166534;}
+.rep-badge-noasistio{background:#FEE2E2;color:#991B1B;}
+.rep-badge-acuerdos{background:#EDE9FE;color:#5B21B6;}
+.rep-item-body{display:none;border-top:1px solid var(--border);padding:.85rem .9rem;}
+.rep-item.open .rep-item-body{display:block;}
+.rep-item-chevron{font-size:.75rem;color:var(--slate2);transition:transform .3s;}
+.rep-item.open .rep-item-chevron{transform:rotate(180deg);}
+.rep-desc{font-size:.82rem;color:var(--slate);line-height:1.65;background:#F8FAFC;border-radius:8px;padding:.75rem;margin-bottom:.75rem;white-space:pre-wrap;}
+/* Sección citatorio */
+.cit-section{border:1.5px solid var(--amber);border-radius:10px;padding:.85rem;margin-bottom:.75rem;background:#FFFBEB;}
+.cit-titulo{font-size:.75rem;font-weight:900;color:#92400E;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.65rem;display:flex;align-items:center;gap:.4rem;}
+.cit-estado{display:flex;align-items:center;gap:.5rem;margin-bottom:.65rem;}
+.cit-est-badge{font-size:.75rem;font-weight:800;padding:.25rem .65rem;border-radius:20px;}
+.cit-est-pendiente{background:#FEF9C3;color:#92400E;}
+.cit-est-asistio{background:#DCFCE7;color:#166534;}
+.cit-est-noasistio{background:#FEE2E2;color:#991B1B;}
+.cit-est-cerrado{background:#F1F5F9;color:#475569;}
+.cit-btns{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.6rem;}
+.cit-btn{border:2px solid var(--border);border-radius:8px;padding:.6rem .5rem;font-size:.78rem;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;}
+.cit-btn:active{transform:scale(.97);}
+.cit-btn-asistio{background:#DCFCE7;border-color:var(--emerald);color:#166534;}
+.cit-btn-noasistio{background:#FEE2E2;border-color:var(--ruby);color:#991B1B;}
+.cit-btn-cerrar{background:#F1F5F9;border-color:#94A3B8;color:#475569;grid-column:span 2;}
+/* Acuerdos */
+.acuerdos-section{border:1.5px solid #7C3AED;border-radius:10px;padding:.85rem;margin-bottom:.75rem;background:#F5F3FF;}
+.acuerdos-textarea{width:100%;padding:.65rem;border:1.5px solid #C4B5FD;border-radius:8px;font-size:.82rem;font-family:'Nunito',sans-serif;resize:vertical;min-height:80px;outline:none;background:var(--white);}
+.acuerdos-textarea:focus{border-color:#7C3AED;}
+.btn-guardar-acuerdos{width:100%;padding:.65rem;background:#7C3AED;color:var(--white);border:none;border-radius:8px;font-size:.82rem;font-weight:800;cursor:pointer;margin-top:.5rem;font-family:'Nunito',sans-serif;}
+/* Acciones del reporte */
+.rep-acciones{display:flex;gap:.5rem;}
+.btn-rep-wa{flex:1;background:var(--wa);color:var(--white);border:none;border-radius:8px;padding:.65rem;font-size:.78rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.4rem;}
+.btn-rep-copy{background:var(--navy2);color:var(--white);border:none;border-radius:8px;padding:.65rem .85rem;font-size:.78rem;font-weight:800;cursor:pointer;}
+.btn-rep-pdf{background:var(--blue);color:var(--white);border:none;border-radius:8px;padding:.65rem .85rem;font-size:.78rem;font-weight:800;cursor:pointer;}
+/* Pendientes de citatorio */
+.cit-pendientes-banner{background:linear-gradient(135deg,#92400E,#B45309);border-radius:12px;padding:1rem;margin-bottom:1rem;color:var(--white);}
+.cit-pend-titulo{font-size:.88rem;font-weight:900;margin-bottom:.6rem;display:flex;align-items:center;gap:.5rem;}
+.cit-pend-item{background:rgba(255,255,255,.15);border-radius:8px;padding:.6rem .75rem;margin-bottom:.4rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;}
+.cit-pend-nombre{font-size:.8rem;font-weight:800;}
+.cit-pend-meta{font-size:.62rem;color:rgba(255,255,255,.7);}
+.cit-pend-btn{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);color:var(--white);border-radius:6px;padding:.3rem .7rem;font-size:.68rem;font-weight:800;cursor:pointer;}
+
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
 <div id="screen-login">
   <div class="utensilios">
     <span class="util">✏️</span><span class="util">📏</span><span class="util">📐</span>
@@ -353,7 +406,6 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
   </div>
 </div>
 
-<!-- HEADER -->
 <header>
   <div class="hdr-left">
     <div class="hdr-icon">👩‍💼</div>
@@ -398,12 +450,8 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
     <strong>📝 Registro Manual</strong><br>
     Registra asistencia, retardos, justificaciones o retiros tempranos. Las justificaciones pueden aplicarse a múltiples días a la vez.
   </div>
-
-  <!-- Chip turno activo — mismo estilo que Exportar -->
   <div id="man-turno-chip" style="display:none;align-items:center;gap:.75rem;background:var(--white);border-radius:10px;padding:.85rem 1rem;margin-bottom:1rem;box-shadow:0 1px 3px rgba(0,0,0,.08);"></div>
-
   <div class="man-card">
-    <!-- FILA 1: Turno / Grado / Grupo -->
     <div class="man-grid3">
       <div>
         <label class="man-label">Turno</label>
@@ -424,16 +472,12 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
         </select>
       </div>
     </div>
-
-    <!-- Alumno -->
     <div class="man-group">
       <label class="man-label">Alumno</label>
       <select id="man-nombre" class="man-select" disabled>
         <option value="">Seleccione grupo primero...</option>
       </select>
     </div>
-
-    <!-- ESTATUS -->
     <div class="estatus-box">
       <label class="man-label">Estatus a Aplicar</label>
       <div class="estatus-btns">
@@ -442,8 +486,6 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
         <button class="est-btn" id="est-f" onclick="selEstatus('falta')">❌ Falta</button>
         <button class="est-btn" id="est-j" onclick="selEstatus('justificado')">📋 Justificado</button>
       </div>
-
-      <!-- MOTIVO (solo justificado) -->
       <div id="motive-box">
         <label class="man-label" style="margin-bottom:.5rem;">Motivo Oficial</label>
         <select id="man-motive" class="man-select">
@@ -455,8 +497,6 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
           <option value="Permiso Dirección">📋 Permiso de Dirección</option>
           <option value="Fuerza mayor">🌪️ Fuerza Mayor</option>
         </select>
-
-        <!-- CALENDARIO MULTI-DÍA -->
         <div id="cal-wrap" style="margin-top:.85rem;">
           <label class="man-label" style="margin-bottom:.5rem;">📅 Selecciona los días a justificar</label>
           <div class="cal-box">
@@ -466,10 +506,8 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
               <button class="cal-nav" id="cal-next">›</button>
             </div>
             <div class="cal-dias-semana">
-              <div class="cal-dia-lbl">Lun</div>
-              <div class="cal-dia-lbl">Mar</div>
-              <div class="cal-dia-lbl">Mié</div>
-              <div class="cal-dia-lbl">Jue</div>
+              <div class="cal-dia-lbl">Lun</div><div class="cal-dia-lbl">Mar</div>
+              <div class="cal-dia-lbl">Mié</div><div class="cal-dia-lbl">Jue</div>
               <div class="cal-dia-lbl">Vie</div>
               <div class="cal-dia-lbl" style="color:rgba(255,255,255,.25);">Sáb</div>
               <div class="cal-dia-lbl" style="color:rgba(255,255,255,.25);">Dom</div>
@@ -477,13 +515,20 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
             <div class="cal-grid" id="cal-grid"></div>
             <div class="cal-contador" id="cal-contador">Toca los días a justificar</div>
           </div>
-          <!-- Chips de días seleccionados -->
           <div class="dias-sel-wrap" id="dias-sel-wrap"></div>
         </div>
       </div>
     </div>
+    <!-- Hora de entrada manual -->
+    <div style="margin-bottom:.85rem;">
+      <label class="man-label">🕐 Hora de entrada real (opcional)</label>
+      <div style="display:flex;align-items:center;gap:.65rem;background:#F0F7F2;border:1.5px solid var(--border);border-radius:9px;padding:.65rem .85rem;">
+        <input type="time" id="man-hora-entrada" class="man-time-input" style="flex:1;border:none;background:transparent;padding:0;font-size:1rem;font-weight:900;color:var(--navy);">
+        <button onclick="document.getElementById('man-hora-entrada').value=''" style="background:none;border:none;color:var(--slate2);font-size:.75rem;cursor:pointer;font-weight:700;">✕ Auto</button>
+      </div>
+      <div style="font-size:.64rem;color:var(--slate2);margin-top:.3rem;">Si se deja vacío se registra la hora actual automáticamente</div>
+    </div>
 
-    <!-- RETIRO TEMPRANO -->
     <label class="retiro-toggle" id="retiro-toggle-lbl">
       <input type="checkbox" id="chk-retiro" onchange="toggleRetiro()">
       <span class="retiro-label">🚪 Retiro Temprano — El alumno se retiró antes de terminar</span>
@@ -492,17 +537,13 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
       <label class="man-label">Hora en que se retiró</label>
       <input type="time" id="retiro-hora" class="man-time-input">
     </div>
-
-    <button class="btn-guardar-man" id="btn-guardar-man" onclick="procesarManual()">
-      ✅ Registrar
-    </button>
+    <button class="btn-guardar-man" id="btn-guardar-man" onclick="procesarManual()">✅ Registrar</button>
   </div>
 </div>
 
 <!-- VISTA EXPORTAR -->
 <div class="view" id="view-exportar">
   <div class="config-intro"><strong>📊 Exportar Asistencia por Período</strong><br>Selecciona rango de fechas, grado, grupo y alumno.</div>
-
   <div class="turno-actual-chip">
     <div style="font-size:1.5rem;">🕐</div>
     <div>
@@ -510,7 +551,6 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
       <div style="font-size:1rem;font-weight:900;color:var(--navy);" id="exp-turno-actual">—</div>
     </div>
   </div>
-
   <div class="exp-card">
     <div class="exp-grid2">
       <div><label class="man-label">Fecha Inicio</label><input type="date" id="exp-fecha-inicio" class="exp-input"></div>
@@ -536,37 +576,20 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
     </div>
     <button class="btn-consultar" id="btn-consultar-exp" onclick="consultarNubeExp()">🔍 Consultar Nube</button>
   </div>
-
   <div class="export-btns-grid" id="export-btns">
     <button class="btn-exp btn-exp-pdf" id="btn-pdf-exp" onclick="exportarPDFExp()">📄 PDF</button>
     <button class="btn-exp btn-exp-excel" id="btn-excel-exp" onclick="exportarExcelExp()">📊 Excel</button>
   </div>
-
   <div class="preview-card">
     <div class="preview-title">📋 Vista Previa</div>
     <div id="exp-preview-table">Defina filtros y consulte la nube.</div>
   </div>
 </div>
 
-<!-- VISTA LINKS WA -->
-<div class="view" id="view-links-wa">
-  <div class="config-intro">
-    <strong>📱 Links de WhatsApp por grupo</strong><br>
-    Pega el link de cada grupo para enviar reportes de asistencia.
-  </div>
-  <div class="cfg-filter">
-    <button class="cfg-btn active-all" id="cfg-btn-all"  onclick="filtrarConfig('all')">🌐 Todos</button>
-    <button class="cfg-btn"            id="cfg-btn-mat"  onclick="filtrarConfig('mat')">🌅 Matutino</button>
-    <button class="cfg-btn"            id="cfg-btn-vesp" onclick="filtrarConfig('vesp')">🌆 Vespertino</button>
-  </div>
-  <div id="config-grupos-container">
-    <div class="loading-state"><div class="loader"></div></div>
-  </div>
-  <button class="btn-save-cfg" id="btn-save-config">💾 Guardar Links</button>
-</div>
+<!-- Vista links-wa removida -->
 
+<!-- VISTA HORARIOS -->
 <div class="view" id="view-horarios">
-  <!-- Reloj -->
   <div class="hor-reloj-ts">
     <div>
       <div class="hor-hora-ts" id="ts-hor-hora">--:--</div>
@@ -577,9 +600,7 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
       <div class="hor-bloque-val" id="ts-hor-bloque">—</div>
     </div>
   </div>
-  <!-- Selector turno -->
   <div class="hor-turno-sel-ts" id="ts-turno-btns"></div>
-  <!-- Macrohorario -->
   <div style="font-size:.62rem;color:#64748B;text-transform:uppercase;letter-spacing:1.5px;font-weight:800;margin-bottom:.45rem;">📋 Macrohorario del día</div>
   <div class="hor-dia-badge-ts" id="ts-dia-badge">📅 —</div>
   <div class="hor-macro-wrap-ts">
@@ -588,7 +609,6 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
       <tbody id="ts-macro-tbody"></tbody>
     </table>
   </div>
-  <!-- Semanal por grupo -->
   <div style="font-size:.62rem;color:#64748B;text-transform:uppercase;letter-spacing:1.5px;font-weight:800;margin-bottom:.45rem;">📚 Horario semanal — toca un grupo</div>
   <div class="hor-chips-ts" id="ts-chips-grupos"></div>
   <div class="hor-sem-ts" id="ts-sem-card">
@@ -609,7 +629,6 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
       </table>
     </div>
   </div>
-  <!-- Consulta maestro -->
   <div class="hor-mae-card">
     <div class="hor-mae-hdr">
       <div class="hor-mae-tit">🧑‍🏫 Consultar horario de un maestro</div>
@@ -624,20 +643,150 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
   <div style="height:.5rem;"></div>
 </div>
 
+
+<!-- VISTA REPORTES -->
+<div class="view" id="view-reportes">
+
+  <!-- Sub-pestañas -->
+  <div class="rep-sub-tabs">
+    <button class="rep-sub-tab active" id="rsub-nuevo" onclick="repSubTab('nuevo')">✏️ Nuevo Reporte</button>
+    <button class="rep-sub-tab" id="rsub-historial" onclick="repSubTab('historial')">📂 Historial</button>
+    <button class="rep-sub-tab" id="rsub-pendientes" onclick="repSubTab('pendientes')">⏳ Pendientes</button>
+  </div>
+
+  <!-- SUB-VISTA: NUEVO REPORTE -->
+  <div class="rep-sub-view active" id="rsv-nuevo">
+    <div class="config-intro">
+      <strong>✏️ Nuevo Reporte</strong><br>
+      Selecciona el alumno, tipo de situación y describe lo ocurrido. Si es necesario citar al padre, activa la opción correspondiente.
+    </div>
+
+    <div class="rep-card">
+      <!-- Turno / Grado / Grupo / Alumno -->
+      <div class="man-grid3" style="margin-bottom:.85rem;">
+        <div>
+          <label class="man-label">Turno</label>
+          <select id="rep-turno" class="man-select" onchange="repActualizarGrados()">
+            <option value="">Seleccione...</option>
+          </select>
+        </div>
+        <div>
+          <label class="man-label">Grado</label>
+          <select id="rep-grado" class="man-select" onchange="repActualizarGrupos()" disabled>
+            <option value="">Turno primero</option>
+          </select>
+        </div>
+        <div>
+          <label class="man-label">Grupo</label>
+          <select id="rep-grupo" class="man-select" onchange="repCargarAlumnos()" disabled>
+            <option value="">Grado primero</option>
+          </select>
+        </div>
+      </div>
+      <div class="man-group">
+        <label class="man-label">Alumno</label>
+        <select id="rep-alumno" class="man-select" disabled>
+          <option value="">Seleccione grupo primero...</option>
+        </select>
+      </div>
+
+      <!-- Tipo de reporte -->
+      <div style="margin-bottom:.85rem;">
+        <label class="man-label">Tipo de Situación</label>
+        <div class="rep-tipo-grid">
+          <button class="rep-tipo-btn" id="rtp-conducta"   onclick="repSelTipo('conducta')">😤 Conducta</button>
+          <button class="rep-tipo-btn" id="rtp-academico"  onclick="repSelTipo('academico')">📚 Académico</button>
+          <button class="rep-tipo-btn" id="rtp-asistencia" onclick="repSelTipo('asistencia')">📋 Asistencia</button>
+          <button class="rep-tipo-btn" id="rtp-salud"      onclick="repSelTipo('salud')">🏥 Salud</button>
+          <button class="rep-tipo-btn" id="rtp-familiar"   onclick="repSelTipo('familiar')">👨‍👩‍👧 Familiar</button>
+          <button class="rep-tipo-btn" id="rtp-otro"       onclick="repSelTipo('otro')">📌 Otro</button>
+        </div>
+      </div>
+
+      <!-- Docente que reporta -->
+      <div style="margin-bottom:.85rem;">
+        <label class="man-label">👩‍🏫 Reportado por (docente)</label>
+        <select id="rep-docente" class="man-select">
+          <option value="">Cargando docentes...</option>
+        </select>
+      </div>
+
+      <!-- Descripción -->
+      <div style="margin-bottom:.85rem;">
+        <label class="man-label">Descripción del reporte</label>
+        <textarea id="rep-desc" class="rep-textarea" placeholder="Describe la situación con detalle: fecha del incidente, personas involucradas, acciones tomadas..."></textarea>
+      </div>
+
+      <!-- Avisar al padre -->
+      <label class="rep-padre-toggle" id="rep-padre-toggle-lbl" onclick="repTogglePadre()">
+        <input type="checkbox" id="rep-chk-padre" class="rep-padre-chk" onclick="event.stopPropagation();repTogglePadre()">
+        <div>
+          <div class="rep-padre-lbl">👨‍👩‍👧 Notificar y citar al padre/tutor</div>
+          <div class="rep-padre-sub">Se generará un seguimiento de citatorio para esta situación</div>
+        </div>
+      </label>
+
+      <!-- Fecha cita (aparece si se activa padre) -->
+      <div id="rep-fecha-cita-wrap" style="display:none;margin-bottom:.85rem;">
+        <label class="man-label">Fecha tentativa de cita (opcional)</label>
+        <input type="date" id="rep-fecha-cita" class="man-time-input" style="border-color:var(--amber);">
+      </div>
+
+      <button class="btn-guardar-rep" id="btn-guardar-rep" onclick="repGuardar()">
+        💾 Guardar Reporte
+      </button>
+    </div>
+  </div><!-- /rsv-nuevo -->
+
+  <!-- SUB-VISTA: HISTORIAL -->
+  <div class="rep-sub-view" id="rsv-historial">
+    <div class="hist-search">
+      <select id="hist-turno-fil" class="man-select" style="max-width:110px;" onchange="histBuscar()">
+        <option value="">Todos</option>
+      </select>
+      <input id="hist-buscar-input" class="hist-input" type="text" placeholder="Buscar alumno...">
+      <button class="btn-hist-buscar" onclick="histBuscar()">🔍</button>
+      <button class="btn-hist-buscar" style="background:var(--blue);" onclick="histPDFAlumno()" title="PDF historial completo del alumno">📄</button>
+    </div>
+    <div id="hist-resultados">
+      <div class="empty-state">
+        <div class="empty-icon">📂</div>
+        <div class="empty-txt">Sin reportes aún</div>
+        <div class="empty-sub">Los reportes guardados aparecerán aquí</div>
+      </div>
+    </div>
+  </div><!-- /rsv-historial -->
+
+  <!-- SUB-VISTA: PENDIENTES (citatorios sin resolver) -->
+  <div class="rep-sub-view" id="rsv-pendientes">
+    <div class="config-intro">
+      <strong>⏳ Citatorios Pendientes</strong><br>
+      Padres citados que aún no han confirmado asistencia o cuya visita está pendiente de registrar.
+    </div>
+    <div id="pend-lista">
+      <div class="empty-state">
+        <div class="empty-icon">✅</div>
+        <div class="empty-txt">Sin pendientes</div>
+        <div class="empty-sub">Cuando se cite a un padre aparecerá aquí hasta resolverse</div>
+      </div>
+    </div>
+  </div><!-- /rsv-pendientes -->
+
+</div><!-- /view-reportes -->
+
+
 <div id="toast"></div>
 
+<!-- BOTTOM NAV — Reportes reemplaza Links WA -->
 <nav class="bottom-nav">
   <button class="bnav-btn active" onclick="switchView('asistencias')"><span>📋</span><div class="bnav-label">Asistencias</div></button>
   <button class="bnav-btn" onclick="switchView('exportar')"><span>📤</span><div class="bnav-label">Exportar</div></button>
   <button class="bnav-btn" onclick="switchView('manual')"><span>📝</span><div class="bnav-label">Manual</div></button>
   <button class="bnav-btn" onclick="switchView('horarios');window.tsAbrirHorarios()"><span>📅</span><div class="bnav-label">Horarios</div></button>
-  <button class="bnav-btn" onclick="switchView('links-wa')"><span>📱</span><div class="bnav-label">Links WA</div></button>
+  <button class="bnav-btn" onclick="switchView('reportes');window.abrirReportes()"><span>📋</span><div class="bnav-label">Reportes</div></button>
 </nav>
 
 <script type="module">
-// ══════════════════════════════════════════════
-// FIREBASE MODULAR — igual que el escáner
-// ══════════════════════════════════════════════
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import { getDatabase, ref, get, push, set, onValue }
   from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
@@ -654,262 +803,122 @@ const FB_CFG = {
 const app = initializeApp(FB_CFG);
 const db  = getDatabase(app);
 
-// Wrapper compatible — convierte ref+get al estilo compat que usa el resto del código
-function dbOnce(path) {
-  return get(ref(db, path));
-}
-function dbPush(path, data) {
-  return push(ref(db, path), data);
-}
-function dbSet(path, data) {
-  return set(ref(db, path), data);
-}
+function dbOnce(path) { return get(ref(db, path)); }
+function dbPush(path, data) { return push(ref(db, path), data); }
+function dbSet(path, data) { return set(ref(db, path), data); }
 
-// ══════════════════════════════════════════════
-// ESTADO
-// ══════════════════════════════════════════════
-const SK_ESC     = 'ludo_ts_escuela';
-const SK_LINKS   = 'ludo_ts_links';
-const SK_ENVIOS  = 'ludo_ts_enviados';
+const SK_ESC='ludo_ts_escuela',SK_LINKS='ludo_ts_links',SK_ENVIOS='ludo_ts_enviados';
+let ID_ESC=localStorage.getItem(SK_ESC)||'';
+let linksWA=JSON.parse(localStorage.getItem(SK_LINKS)||'{}');
+let enviados=JSON.parse(localStorage.getItem(SK_ENVIOS)||'{}');
+let estructura={},asistencias={},nombreEsc='',turnoFiltro='all',cfgTurnoFiltro='all',perfilEsc={},expResultados=[];
+let estatusSeleccionado='',diasSeleccionados=new Set(),calMesActual=new Date();
 
-let ID_ESC       = localStorage.getItem(SK_ESC) || '';
-let linksWA      = JSON.parse(localStorage.getItem(SK_LINKS)  || '{}');
-let enviados     = JSON.parse(localStorage.getItem(SK_ENVIOS) || '{}');
-let estructura   = {};
-let asistencias  = {};
-let nombreEsc    = '';
-let turnoFiltro  = 'all';
-let cfgTurnoFiltro = 'all';
-let perfilEsc    = {};
-let expResultados = [];
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2800);}
+function hoy(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function horaActual(){return new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});}
+function sanitizar(s){return s.replace(/[.#$\[\]/]/g,'_');}
+function fechaLegible(iso){if(!iso)return'—';const[y,m,d]=iso.split('-');const dias=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];const meses=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];const dt=new Date(y,m-1,d);return`${dias[dt.getDay()]} ${d} de ${meses[m-1]} de ${y}`;}
+function fechaCorta(iso){if(!iso)return'';const[y,m,d]=iso.split('-');const dias=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];const meses=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];const dt=new Date(y,m-1,d);return`${dias[dt.getDay()]} ${d} ${meses[m-1]}`;}
+function nombreLimpio(n){return(n||'').replace(/^\[ [AM] \] /,'');}
+function esTurno(t,filtro){const tl=(t||'').toLowerCase();if(filtro==='mat')return tl.includes('mat');if(filtro==='vesp')return tl.includes('vesp');return true;}
 
-// Estado manual
-let estatusSeleccionado = '';
-let diasSeleccionados   = new Set(); // ISO strings "YYYY-MM-DD"
-let calMesActual        = new Date();
-
-// ══════════════════════════════════════════════
-// HELPERS
-// ══════════════════════════════════════════════
-function toast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg; el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 2800);
-}
-function hoy() {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-}
-function horaActual() {
-  return new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
-}
-// sanitizar — IGUAL que el escáner: solo escapa caracteres especiales de Firebase
-function sanitizar(s) { return s.replace(/[.#$\[\]/]/g,'_'); }
-function fechaLegible(iso) {
-  if (!iso) return '—';
-  const [y,m,d] = iso.split('-');
-  const dias  = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
-  const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-  const dt = new Date(y, m-1, d);
-  return `${dias[dt.getDay()]} ${d} de ${meses[m-1]} de ${y}`;
-}
-function fechaCorta(iso) {
-  if (!iso) return '';
-  const [y,m,d] = iso.split('-');
-  const dias = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
-  const meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-  const dt = new Date(y, m-1, d);
-  return `${dias[dt.getDay()]} ${d} ${meses[m-1]}`;
-}
-function nombreLimpio(n) { return (n||'').replace(/^\[ [AM] \] /,''); }
-function esTurno(t, filtro) {
-  const tl = (t||'').toLowerCase();
-  if (filtro==='mat')  return tl.includes('mat');
-  if (filtro==='vesp') return tl.includes('vesp');
-  return true;
-}
-function mapearEstatus(est) {
-  if (!est) return 'F';
-  const e = est.toLowerCase();
-  if (e==='asistencia')          return 'P';
-  if (e==='retardo')             return 'T';
-  if (e.startsWith('justificado')) return 'J';
-  return 'F';
-}
-
-// ══════════════════════════════════════════════
-// NAVEGACIÓN
-// ══════════════════════════════════════════════
-function switchView(v) {
-  document.querySelectorAll('.view').forEach(x => x.classList.remove('active'));
-  document.querySelectorAll('.bnav-btn').forEach(x => x.classList.remove('active'));
+function switchView(v){
+  document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.bnav-btn').forEach(x=>x.classList.remove('active'));
   document.getElementById('view-'+v).classList.add('active');
-  document.querySelectorAll('.bnav-btn').forEach(b => {
-    if (b.getAttribute('onclick')?.includes(`'${v}'`)) b.classList.add('active');
-  });
-  if (v==='links-wa') setTimeout(renderConfig, 50);
-  if (v==='manual')   setTimeout(cargarTurnosManual, 50);
+  document.querySelectorAll('.bnav-btn').forEach(b=>{if(b.getAttribute('onclick')?.includes(`'${v}'`))b.classList.add('active');});
+  if(v==='manual')setTimeout(cargarTurnosManual,50);
+  if(v==='reportes')setTimeout(window.abrirReportes,50);
 }
-window.switchView = switchView;
-window.addEventListener('DOMContentLoaded', () => setTimeout(() => switchView('asistencias'), 100));
+window.switchView=switchView;
+window.addEventListener('DOMContentLoaded',()=>setTimeout(()=>switchView('asistencias'),100));
 
-// ══════════════════════════════════════════════
-// FILTRO TURNO
-// ══════════════════════════════════════════════
-function filtrarTurno(f) {
-  turnoFiltro = f;
-  document.getElementById('btn-turno-all').className  = 'turno-btn'+(f==='all' ?' active-all':'');
-  document.getElementById('btn-turno-mat').className  = 'turno-btn'+(f==='mat' ?' active-mat':'');
-  document.getElementById('btn-turno-vesp').className = 'turno-btn'+(f==='vesp'?' active-vesp':'');
-  renderGrupos(hoy());
-  actualizarTurnoMostrado();
+function filtrarTurno(f){
+  turnoFiltro=f;
+  document.getElementById('btn-turno-all').className='turno-btn'+(f==='all'?' active-all':'');
+  document.getElementById('btn-turno-mat').className='turno-btn'+(f==='mat'?' active-mat':'');
+  document.getElementById('btn-turno-vesp').className='turno-btn'+(f==='vesp'?' active-vesp':'');
+  renderGrupos(hoy());actualizarTurnoMostrado();
 }
-window.filtrarTurno = filtrarTurno;
+window.filtrarTurno=filtrarTurno;
 
-// ══════════════════════════════════════════════
-// LOGIN
-// ══════════════════════════════════════════════
-document.getElementById('btn-login')?.addEventListener('click', async () => {
-  const codigo = document.getElementById('login-codigo').value.trim().toLowerCase();
-  const errEl  = document.getElementById('login-error');
-  errEl.textContent = '';
-  if (!codigo) { errEl.textContent = 'Ingresa el código de tu escuela.'; return; }
-  const btn = document.getElementById('btn-login');
-  btn.disabled=true; btn.textContent='⏳ Verificando...';
-  try {
-    const snap = await dbOnce(`escuelas/${codigo}/configuracion/perfil`);
-    if (!snap.exists()) { errEl.textContent='❌ Código no encontrado.'; btn.disabled=false; btn.textContent='✅ Entrar'; return; }
-    const p = snap.val();
-    if (p.activa===false) { errEl.textContent='🔒 Escuela bloqueada.'; btn.disabled=false; btn.textContent='✅ Entrar'; return; }
-    ID_ESC = codigo; nombreEsc = p.nombreEscuela||codigo.toUpperCase();
-    localStorage.setItem(SK_ESC, codigo);
+document.getElementById('btn-login')?.addEventListener('click',async()=>{
+  const codigo=document.getElementById('login-codigo').value.trim().toLowerCase();
+  const errEl=document.getElementById('login-error');errEl.textContent='';
+  if(!codigo){errEl.textContent='Ingresa el código de tu escuela.';return;}
+  const btn=document.getElementById('btn-login');btn.disabled=true;btn.textContent='⏳ Verificando...';
+  try{
+    const snap=await dbOnce(`escuelas/${codigo}/configuracion/perfil`);
+    if(!snap.exists()){errEl.textContent='❌ Código no encontrado.';btn.disabled=false;btn.textContent='✅ Entrar';return;}
+    const p=snap.val();
+    if(p.activa===false){errEl.textContent='🔒 Escuela bloqueada.';btn.disabled=false;btn.textContent='✅ Entrar';return;}
+    ID_ESC=codigo;nombreEsc=p.nombreEscuela||codigo.toUpperCase();
+    localStorage.setItem(SK_ESC,codigo);
     document.getElementById('screen-login').classList.add('hidden');
-    document.getElementById('hdr-school').textContent = nombreEsc;
+    document.getElementById('hdr-school').textContent=nombreEsc;
     cargarEstructura();
-  } catch(e) {
-    if (localStorage.getItem(SK_ESC)===codigo) {
-      ID_ESC=codigo; document.getElementById('screen-login').classList.add('hidden'); cargarEstructura();
-    } else { errEl.textContent='⚠️ Sin conexión.'; btn.disabled=false; btn.textContent='✅ Entrar'; }
+  }catch(e){
+    if(localStorage.getItem(SK_ESC)===codigo){ID_ESC=codigo;document.getElementById('screen-login').classList.add('hidden');cargarEstructura();}
+    else{errEl.textContent='⚠️ Sin conexión.';btn.disabled=false;btn.textContent='✅ Entrar';}
   }
 });
-document.getElementById('login-codigo')?.addEventListener('keydown', e => {
-  if (e.key==='Enter') document.getElementById('btn-login').click();
-});
+document.getElementById('login-codigo')?.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('btn-login').click();});
+document.getElementById('btn-logout')?.addEventListener('click',()=>{if(!confirm('¿Cerrar sesión?'))return;localStorage.removeItem(SK_ESC);location.reload();});
 
-document.getElementById('btn-logout')?.addEventListener('click', () => {
-  if (!confirm('¿Cerrar sesión?')) return;
-  localStorage.removeItem(SK_ESC); location.reload();
-});
-
-// AUTO-LOGIN
-if (ID_ESC) {
+if(ID_ESC){
   document.getElementById('screen-login').classList.add('hidden');
   (async()=>{
-    try {
-      const snap = await dbOnce(`escuelas/${ID_ESC}/configuracion/perfil`);
-      if (snap.exists()) { nombreEsc=snap.val().nombreEscuela||ID_ESC.toUpperCase(); document.getElementById('hdr-school').textContent=nombreEsc; }
-    } catch(e){}
+    try{const snap=await dbOnce(`escuelas/${ID_ESC}/configuracion/perfil`);if(snap.exists()){nombreEsc=snap.val().nombreEscuela||ID_ESC.toUpperCase();document.getElementById('hdr-school').textContent=nombreEsc;}}catch(e){}
     cargarEstructura();
   })();
 }
 
-// ══════════════════════════════════════════════
-// ESTRUCTURA
-// ══════════════════════════════════════════════
-async function cargarEstructura() {
-  try {
-    const snap = await dbOnce(`escuelas/${ID_ESC}/configuracion`);
-    if (snap.exists()) {
-      const cfg = snap.val();
-      if (cfg.perfil) { perfilEsc=cfg.perfil; nombreEsc=cfg.perfil.nombreEscuela||ID_ESC.toUpperCase(); document.getElementById('hdr-school').textContent=nombreEsc; }
-      if (cfg.estructura) estructura = cfg.estructura;
-    }
-    if (!Object.keys(estructura).length) {
-      const dirSnap = await dbOnce(`escuelas/${ID_ESC}/directorio`);
-      if (dirSnap?.exists()) {
-        Object.keys(dirSnap.val()).forEach(clave => {
-          const p=clave.split('-'); if(p.length<3) return;
-          const turno=p[0].charAt(0).toUpperCase()+p[0].slice(1), grado=p[1], grupo=p[2].toUpperCase();
-          if(!estructura[turno]) estructura[turno]={};
-          if(!estructura[turno][grado]) estructura[turno][grado]=[];
-          if(!estructura[turno][grado].includes(grupo)) estructura[turno][grado].push(grupo);
-        });
-      }
-    }
-  } catch(e){}
-  actualizarTurnoMostrado();
-  cargarAsistencias();
+async function cargarEstructura(){
+  try{
+    const snap=await dbOnce(`escuelas/${ID_ESC}/configuracion`);
+    if(snap.exists()){const cfg=snap.val();if(cfg.perfil){perfilEsc=cfg.perfil;nombreEsc=cfg.perfil.nombreEscuela||ID_ESC.toUpperCase();document.getElementById('hdr-school').textContent=nombreEsc;}if(cfg.estructura)estructura=cfg.estructura;}
+    if(!Object.keys(estructura).length){const dirSnap=await dbOnce(`escuelas/${ID_ESC}/directorio`);if(dirSnap?.exists()){Object.keys(dirSnap.val()).forEach(clave=>{const p=clave.split('-');if(p.length<3)return;const turno=p[0].charAt(0).toUpperCase()+p[0].slice(1),grado=p[1],grupo=p[2].toUpperCase();if(!estructura[turno])estructura[turno]={};if(!estructura[turno][grado])estructura[turno][grado]=[];if(!estructura[turno][grado].includes(grupo))estructura[turno][grado].push(grupo);});}}
+  }catch(e){}
+  actualizarTurnoMostrado();cargarAsistencias();
 }
 
-// ══════════════════════════════════════════════
-// CARGAR ASISTENCIAS
-// ══════════════════════════════════════════════
-async function cargarAsistencias() {
-  const fecha = hoy();
-  document.getElementById('fecha-txt').textContent = fechaLegible(fecha);
-  document.getElementById('fecha-sub').textContent = 'Cargando...';
-  document.getElementById('lista-grupos').innerHTML = '<div class="loading-state"><div class="loader"></div><div style="font-size:.82rem;color:var(--slate2);">Cargando asistencias...</div></div>';
-  try {
-    const snap = await dbOnce(`escuelas/${ID_ESC}/asistencias`);
-    asistencias = {};
-    if (snap.exists()) {
-      snap.forEach(child => {
-        const r = child.val();
-        if (r.fecha!==fecha) return;
-        const nombre = nombreLimpio(r.nombre||'');
-        if (!nombre) return;
-        if (!asistencias[nombre]) {
-          asistencias[nombre] = { estatus:(r.estatus||'').toLowerCase(), hora:r.hora||'', turno:r.turno||'', grado:r.grado||'', grupoLetra:r.grupoLetra||'', grupo:r.grupo||'' };
-        }
-      });
-    }
+async function cargarAsistencias(){
+  const fecha=hoy();
+  document.getElementById('fecha-txt').textContent=fechaLegible(fecha);
+  document.getElementById('fecha-sub').textContent='Cargando...';
+  document.getElementById('lista-grupos').innerHTML='<div class="loading-state"><div class="loader"></div><div style="font-size:.82rem;color:var(--slate2);">Cargando asistencias...</div></div>';
+  try{
+    const snap=await dbOnce(`escuelas/${ID_ESC}/asistencias`);
+    asistencias={};
+    if(snap.exists()){snap.forEach(child=>{const r=child.val();if(r.fecha!==fecha)return;const nombre=nombreLimpio(r.nombre||'');if(!nombre)return;if(!asistencias[nombre]){asistencias[nombre]={estatus:(r.estatus||'').toLowerCase(),hora:r.hora||'',turno:r.turno||'',grado:r.grado||'',grupoLetra:r.grupoLetra||'',grupo:r.grupo||''};}}); }
     renderGrupos(fecha);
-  } catch(e) {
-    document.getElementById('lista-grupos').innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-txt">Sin conexión</div></div>';
-  }
+  }catch(e){document.getElementById('lista-grupos').innerHTML='<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-txt">Sin conexión</div></div>';}
 }
 
-document.getElementById('btn-refresh')?.addEventListener('click', async () => {
-  const icon = document.getElementById('refresh-icon');
-  icon.classList.add('spin');
-  await cargarAsistencias();
-  setTimeout(()=>icon.classList.remove('spin'),500);
-  toast('✅ Datos actualizados');
+document.getElementById('btn-refresh')?.addEventListener('click',async()=>{
+  const icon=document.getElementById('refresh-icon');icon.classList.add('spin');
+  await cargarAsistencias();setTimeout(()=>icon.classList.remove('spin'),500);toast('✅ Datos actualizados');
 });
 
-// ══════════════════════════════════════════════
-// RENDER GRUPOS
-// ══════════════════════════════════════════════
-function renderGrupos(fecha) {
-  const container = document.getElementById('lista-grupos');
-  const envHoy    = enviados[fecha]||{};
-  const turnos    = Object.keys(estructura).sort();
-  if (!turnos.length) {
-    container.innerHTML='<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-txt">Sin estructura configurada</div></div>';
-    return;
-  }
+function renderGrupos(fecha){
+  const container=document.getElementById('lista-grupos');const envHoy=enviados[fecha]||{};const turnos=Object.keys(estructura).sort();
+  if(!turnos.length){container.innerHTML='<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-txt">Sin estructura configurada</div></div>';return;}
   let totA=0,totR=0,totF=0,totG=0,html='';
-  turnos.forEach(turno => {
-    if (!esTurno(turno,turnoFiltro)) return;
-    const grados=estructura[turno]||{};
-    const gradosOrden=Object.keys(grados).sort((a,b)=>Number(a)-Number(b));
-    const esMat=turno.toLowerCase().includes('mat');
-    const tc=esMat?'mat':'vesp', te=esMat?'🌅':'🌆';
+  turnos.forEach(turno=>{
+    if(!esTurno(turno,turnoFiltro))return;
+    const grados=estructura[turno]||{};const gradosOrden=Object.keys(grados).sort((a,b)=>Number(a)-Number(b));
+    const esMat=turno.toLowerCase().includes('mat');const tc=esMat?'mat':'vesp',te=esMat?'🌅':'🌆';
     let gT=0,aT=0,fT=0;
     gradosOrden.forEach(g=>{(grados[g]||[]).forEach(gl=>{gT++;const al=filtrarAlumnos(turno,g,gl);aT+=al.filter(([,d])=>d.estatus.includes('asist')).length;fT+=al.filter(([,d])=>d.estatus.includes('falt')||d.estatus.includes('ausent')).length;});});
     html+=`<div class="turno-section ${tc} open" id="sec-${tc}"><div class="turno-section-hdr" onclick="toggleSec('${tc}')"><div><div class="turno-section-title">${te} Turno ${turno}</div><div class="turno-section-meta">${gT} grupos · ✅${aT} asistencias · ❌${fT} faltas</div></div><div style="display:flex;align-items:center;gap:.5rem;"><span class="turno-total-chip">${gT} grupos</span><span class="turno-chevron">▼</span></div></div><div class="turno-section-body">`;
     gradosOrden.forEach(grado=>{
       (grados[grado]||[]).sort().forEach(grupoLetra=>{
-        totG++;
-        const clave=sanitizar(`${turno}-${grado}-${grupoLetra}`);
-        const yaEnv=envHoy[clave]||false;
+        totG++;const clave=sanitizar(`${turno}-${grado}-${grupoLetra}`);const yaEnv=envHoy[clave]||false;
         const al=filtrarAlumnos(turno,grado,grupoLetra);
-        const pres=al.filter(([,d])=>d.estatus.includes('asist'));
-        const rets=al.filter(([,d])=>d.estatus.includes('retard'));
-        const falt=al.filter(([,d])=>d.estatus.includes('falt')||d.estatus.includes('ausent'));
-        const just=al.filter(([,d])=>d.estatus.includes('justif'));
-        const total=al.length;
-        totA+=pres.length; totR+=rets.length; totF+=falt.length;
+        const pres=al.filter(([,d])=>d.estatus.includes('asist'));const rets=al.filter(([,d])=>d.estatus.includes('retard'));
+        const falt=al.filter(([,d])=>d.estatus.includes('falt')||d.estatus.includes('ausent'));const just=al.filter(([,d])=>d.estatus.includes('justif'));
+        const total=al.length;totA+=pres.length;totR+=rets.length;totF+=falt.length;
         const pct=total>0?Math.round((pres.length/total)*100):0;
         const msg=generarMensaje(turno,grado,grupoLetra,fecha,pres,rets,falt,just,total);
         const lk=linksWA[clave]||'';
@@ -920,19 +929,14 @@ function renderGrupos(fecha) {
               <div><div class="grupo-nombre">${grado}° Grado — Grupo "${grupoLetra}"</div><div class="grupo-meta">${total} registrados · ${pct}% asistencia</div></div>
             </div>
             <div style="display:flex;align-items:center;gap:.35rem;">
-              <div class="grupo-stats">
-                <span class="stat-chip stat-a">✅${pres.length}</span>
-                ${rets.length?`<span class="stat-chip stat-r">⏰${rets.length}</span>`:''}
-                ${falt.length?`<span class="stat-chip stat-f">❌${falt.length}</span>`:''}
-                ${just.length?`<span style="font-size:.65rem;font-weight:800;padding:.18rem .42rem;border-radius:4px;background:var(--cyan2);color:var(--cyan3);">📋${just.length}</span>`:''}
-              </div>
+              <div class="grupo-stats"><span class="stat-chip stat-a">✅${pres.length}</span>${rets.length?`<span class="stat-chip stat-r">⏰${rets.length}</span>`:''}${falt.length?`<span class="stat-chip stat-f">❌${falt.length}</span>`:''}${just.length?`<span style="font-size:.65rem;font-weight:800;padding:.18rem .42rem;border-radius:4px;background:var(--cyan2);color:var(--cyan3);">📋${just.length}</span>`:''}</div>
               <span class="grupo-chevron">▼</span>
             </div>
           </div>
           <div class="grupo-detail">
             <div class="detail-msg" id="msg-${clave}">${msg}</div>
             <div class="detail-actions">
-              <button class="btn-wa ${!lk?'disabled-wa':''}" onclick="abrirWA('${clave}','${encodeURIComponent(msg)}')">${lk?'📤 Enviar a WhatsApp':'⚙️ Sin link'}</button>
+              <button class="btn-wa" onclick="abrirWA('${clave}','${encodeURIComponent(msg)}')">📤 Enviar a WhatsApp</button>
               <button class="btn-copy" onclick="copiarMensaje('${clave}')">📋</button>
             </div>
             <div class="sent-badge">✅ Enviado hoy</div>
@@ -942,614 +946,162 @@ function renderGrupos(fecha) {
     });
     html+=`</div></div>`;
   });
-  if (!html) { container.innerHTML='<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-txt">Sin grupos para este turno</div></div>'; return; }
+  if(!html){container.innerHTML='<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-txt">Sin grupos para este turno</div></div>';return;}
   container.innerHTML=html;
-  document.getElementById('res-grupos').textContent=totG;
-  document.getElementById('res-asist').textContent=totA;
-  document.getElementById('res-retard').textContent=totR;
-  document.getElementById('res-faltas').textContent=totF;
+  document.getElementById('res-grupos').textContent=totG;document.getElementById('res-asist').textContent=totA;
+  document.getElementById('res-retard').textContent=totR;document.getElementById('res-faltas').textContent=totF;
   document.getElementById('fecha-sub').textContent=`${Object.keys(asistencias).length} alumnos registrados hoy`;
 }
 
-function filtrarAlumnos(turno,grado,grupoLetra) {
-  return Object.entries(asistencias).filter(([,data])=>{
-    const tM=data.turno&&data.turno.toLowerCase()===turno.toLowerCase();
-    const gM=data.grado&&String(data.grado)===String(grado);
-    const grM=data.grupoLetra&&data.grupoLetra.toUpperCase()===grupoLetra.toUpperCase();
-    const lgM=data.grupo&&data.grupo.replace(/\s/g,'')===`${grado}°${grupoLetra}`;
-    return (tM&&gM&&grM)||lgM;
-  });
-}
+function filtrarAlumnos(turno,grado,grupoLetra){return Object.entries(asistencias).filter(([,data])=>{const tM=data.turno&&data.turno.toLowerCase()===turno.toLowerCase();const gM=data.grado&&String(data.grado)===String(grado);const grM=data.grupoLetra&&data.grupoLetra.toUpperCase()===grupoLetra.toUpperCase();const lgM=data.grupo&&data.grupo.replace(/\s/g,'')===`${grado}°${grupoLetra}`;return(tM&&gM&&grM)||lgM;});}
+window.toggleSec=cls=>document.getElementById('sec-'+cls)?.classList.toggle('open');
+window.toggleCard=clave=>document.getElementById('card-'+clave)?.classList.toggle('open');
 
-window.toggleSec  = cls => document.getElementById('sec-'+cls)?.classList.toggle('open');
-window.toggleCard = clave => document.getElementById('card-'+clave)?.classList.toggle('open');
-
-function generarMensaje(turno,grado,grupoLetra,fecha,pres,rets,falt,just,total) {
-  const [y,m,d]=fecha.split('-');
-  const meses=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-  const hora=new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
-  const pct=total>0?Math.round((pres.length/total)*100):0;
+function generarMensaje(turno,grado,grupoLetra,fecha,pres,rets,falt,just,total){
+  const[y,m,d]=fecha.split('-');const meses=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];const hora=new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});const pct=total>0?Math.round((pres.length/total)*100):0;
   let msg=`📋 *Asistencia ${grado}° "${grupoLetra}" — Turno ${turno}*\n📅 ${d} de ${meses[m-1]} · ${hora} hrs\n━━━━━━━━━━━━━━━━━━━━`;
-  if(pres.length) msg+=`\n\n✅ *Presentes (${pres.length}):*\n`+pres.map(([n])=>`• ${n}`).join('\n');
-  if(rets.length) msg+=`\n\n⏰ *Retardos (${rets.length}):*\n`+rets.map(([n])=>`• ${n}`).join('\n');
-  if(falt.length) msg+=`\n\n❌ *Faltas (${falt.length}):*\n`+falt.map(([n])=>`• ${n}`).join('\n');
-  if(just.length) msg+=`\n\n📋 *Justificados (${just.length}):*\n`+just.map(([n])=>`• ${n}`).join('\n');
+  if(pres.length)msg+=`\n\n✅ *Presentes (${pres.length}):*\n`+pres.map(([n])=>`• ${n}`).join('\n');
+  if(rets.length)msg+=`\n\n⏰ *Retardos (${rets.length}):*\n`+rets.map(([n])=>`• ${n}`).join('\n');
+  if(falt.length)msg+=`\n\n❌ *Faltas (${falt.length}):*\n`+falt.map(([n])=>`• ${n}`).join('\n');
+  if(just.length)msg+=`\n\n📋 *Justificados (${just.length}):*\n`+just.map(([n])=>`• ${n}`).join('\n');
   msg+=`\n\n━━━━━━━━━━━━━━━━━━━━\n📊 *Total: ${total} · Asistencia: ${pct}%*\n_LudoAssist_`;
   return msg;
 }
 
-window.abrirWA = function(clave,msgEnc) {
-  const lk=linksWA[clave]||''; if(!lk){toast('⚙️ Configura el link en Links WA');return;}
+window.abrirWAdirecto=function(msgEnc){
   const msg=decodeURIComponent(msgEnc);
-  const fecha=hoy(); if(!enviados[fecha]) enviados[fecha]={};
-  enviados[fecha][clave]=true; localStorage.setItem(SK_ENVIOS,JSON.stringify(enviados));
-  document.getElementById('card-'+clave)?.classList.add('enviado');
-  const a=document.createElement('a'); a.href=`whatsapp://send?text=${encodeURIComponent(msg)}`; a.click();
-  setTimeout(()=>{ if(lk.includes('chat.whatsapp.com')) window.open(lk,'_blank'); },600);
+  window.open('whatsapp://send?text='+encodeURIComponent(msg),'_blank');
   toast('📤 Abriendo WhatsApp...');
 };
 
-window.copiarMensaje = function(clave) {
-  const el=document.getElementById('msg-'+clave); if(!el) return;
-  navigator.clipboard.writeText(el.textContent).then(()=>toast('📋 Copiado')).catch(()=>{
-    const ta=document.createElement('textarea'); ta.value=el.textContent;
-    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
-    toast('📋 Copiado');
-  });
+window.abrirWA=function(clave,msgEnc){
+  const msg=decodeURIComponent(msgEnc);
+  const fecha=hoy();if(!enviados[fecha])enviados[fecha]={};
+  enviados[fecha][clave]=true;localStorage.setItem(SK_ENVIOS,JSON.stringify(enviados));
+  document.getElementById('card-'+clave)?.classList.add('enviado');
+  // Abrir WhatsApp directo con el mensaje — el usuario elige el grupo/contacto
+  const waUrl='whatsapp://send?text='+encodeURIComponent(msg);
+  const a=document.createElement('a');a.href=waUrl;a.click();
+  // Fallback web
+  setTimeout(()=>{ try{window.open('https://web.whatsapp.com/send?text='+encodeURIComponent(msg),'_blank');}catch(e){} },1200);
+  toast('📤 Abriendo WhatsApp...');
 };
 
-// ══════════════════════════════════════════════
-// ASISTENCIA MANUAL
-// ══════════════════════════════════════════════
-function cargarTurnosManual() {
-  const sel = document.getElementById('man-turno');
-  sel.innerHTML = '<option value="">Seleccione turno...</option>';
-  const turnos = Object.keys(estructura).sort();
-  turnos.forEach(t => {
-    const opt=document.createElement('option'); opt.value=t;
-    opt.textContent=t.toLowerCase().includes('mat')?`🌅 ${t}`:`🌆 ${t}`;
-    sel.appendChild(opt);
-  });
-  // ── Preseleccionar turno según el filtro activo en Asistencias ──
-  if (turnoFiltro !== 'all') {
-    const turnoMatch = turnos.find(t =>
-      (turnoFiltro==='mat'  && t.toLowerCase().includes('mat')) ||
-      (turnoFiltro==='vesp' && t.toLowerCase().includes('vesp'))
-    );
-    if (turnoMatch) {
-      sel.value = turnoMatch;
-      manActualizarGrados();
-    }
-  }
-  if (!sel.value) resetManual('grado');
-  // Actualizar chip visual de turno activo
-  actualizarChipTurnoManual();
+window.copiarMensaje=function(clave){
+  const el=document.getElementById('msg-'+clave);if(!el)return;
+  navigator.clipboard.writeText(el.textContent).then(()=>toast('📋 Copiado')).catch(()=>{const ta=document.createElement('textarea');ta.value=el.textContent;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);toast('📋 Copiado');});
+};
+
+function cargarTurnosManual(){
+  const sel=document.getElementById('man-turno');sel.innerHTML='<option value="">Seleccione turno...</option>';
+  const turnos=Object.keys(estructura).sort();
+  turnos.forEach(t=>{const opt=document.createElement('option');opt.value=t;opt.textContent=t.toLowerCase().includes('mat')?`🌅 ${t}`:`🌆 ${t}`;sel.appendChild(opt);});
+  if(turnoFiltro!=='all'){const turnoMatch=turnos.find(t=>(turnoFiltro==='mat'&&t.toLowerCase().includes('mat'))||(turnoFiltro==='vesp'&&t.toLowerCase().includes('vesp')));if(turnoMatch){sel.value=turnoMatch;manActualizarGrados();}}
+  if(!sel.value)resetManual('grado');actualizarChipTurnoManual();
 }
+function actualizarChipTurnoManual(){const chip=document.getElementById('man-turno-chip');if(!chip)return;if(turnoFiltro==='all'){chip.style.display='none';return;}const esMat=turnoFiltro==='mat';chip.style.display='flex';chip.innerHTML=`<span style="font-size:1.4rem;">${esMat?'🌅':'🏙️'}</span><div><div style="font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--slate2);">Turno Activo</div><div style="font-size:.95rem;font-weight:900;color:var(--navy);">${esMat?'Matutino':'Vespertino'}</div></div>`;}
+function resetManual(desde){const steps=['grado','grupo','nombre'];steps.slice(steps.indexOf(desde)).forEach(id=>{const el=document.getElementById('man-'+id);if(!el)return;el.innerHTML=`<option value="">Seleccione ${id}...</option>`;el.disabled=true;});}
+window.manActualizarGrados=function(){const turno=document.getElementById('man-turno').value;resetManual('grado');if(!turno)return;const sel=document.getElementById('man-grado');sel.innerHTML='<option value="">Seleccione grado...</option>';Object.keys(estructura[turno]||{}).sort((a,b)=>Number(a)-Number(b)).forEach(g=>{const o=document.createElement('option');o.value=g;o.textContent=`${g}° Grado`;sel.appendChild(o);});sel.disabled=false;};
+window.manActualizarGrupos=function(){const turno=document.getElementById('man-turno').value;const grado=document.getElementById('man-grado').value;resetManual('grupo');if(!turno||!grado)return;const sel=document.getElementById('man-grupo');sel.innerHTML='<option value="">Seleccione grupo...</option>';(estructura[turno]?.[grado]||[]).slice().sort().forEach(g=>{const o=document.createElement('option');o.value=g;o.textContent=`Grupo "${g}"`;sel.appendChild(o);});sel.disabled=false;};
+window.manCargarAlumnos=async function(){const turno=document.getElementById('man-turno').value;const grado=document.getElementById('man-grado').value;const grupo=document.getElementById('man-grupo').value;const sel=document.getElementById('man-nombre');sel.innerHTML='<option value="">Cargando...</option>';sel.disabled=true;if(!turno||!grado||!grupo)return;const clave=sanitizar(turno+'-'+grado+'-'+grupo);try{const snap=await dbOnce('escuelas/'+ID_ESC+'/directorio/'+clave);sel.innerHTML='<option value="">Seleccione alumno...</option>';if(snap.exists()){const data=snap.val();const lista=Array.isArray(data)?data:Object.values(data);lista.filter(Boolean).sort().forEach(n=>{const o=document.createElement('option');o.value=n;o.textContent=n;sel.appendChild(o);});}else{sel.innerHTML='<option value="">Sin alumnos en este grupo</option>';}}catch(e){sel.innerHTML='<option value="">Error de conexión</option>';}sel.disabled=false;};
 
-function actualizarChipTurnoManual() {
-  const chip = document.getElementById('man-turno-chip');
-  if (!chip) return;
-  if (turnoFiltro === 'all') { chip.style.display='none'; return; }
-  const esMat = turnoFiltro === 'mat';
-  chip.style.display = 'flex';
-  chip.innerHTML = `<span style="font-size:1.4rem;">${esMat?'🌅':'🏙️'}</span>
-    <div>
-      <div style="font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--slate2);">Turno Activo</div>
-      <div style="font-size:.95rem;font-weight:900;color:var(--navy);">${esMat?'Matutino':'Vespertino'}</div>
-    </div>`;
-}
-
-function resetManual(desde) {
-  const steps=['grado','grupo','nombre'];
-  steps.slice(steps.indexOf(desde)).forEach(id=>{
-    const el=document.getElementById('man-'+id);
-    if(!el) return;
-    el.innerHTML=`<option value="">Seleccione ${id}...</option>`;
-    el.disabled=true;
-  });
-}
-
-window.manActualizarGrados = function() {
-  const turno=document.getElementById('man-turno').value;
-  resetManual('grado');
-  if(!turno) return;
-  const sel=document.getElementById('man-grado');
-  sel.innerHTML='<option value="">Seleccione grado...</option>';
-  Object.keys(estructura[turno]||{}).sort((a,b)=>Number(a)-Number(b)).forEach(g=>{
-    const o=document.createElement('option'); o.value=g; o.textContent=`${g}° Grado`; sel.appendChild(o);
-  });
-  sel.disabled=false;
+window.selEstatus=function(est){
+  estatusSeleccionado=est;['p','r','f','j'].forEach(k=>document.getElementById('est-'+k).className='est-btn');
+  const map={asistencia:'p',retardo:'r',falta:'f',justificado:'j'};document.getElementById('est-'+map[est]).classList.add('sel-'+map[est]);
+  const calWrap=document.getElementById('cal-wrap');const motBox=document.getElementById('motive-box');
+  if(est==='justificado'){motBox.style.display='block';calWrap.style.display='block';renderCalendario();}
+  else{motBox.style.display='none';calWrap.style.display='none';diasSeleccionados.clear();renderChipsDias();}
 };
+window.toggleRetiro=function(){const chk=document.getElementById('chk-retiro');document.getElementById('retiro-hora-wrap').style.display=chk.checked?'block':'none';};
 
-window.manActualizarGrupos = function() {
-  const turno=document.getElementById('man-turno').value;
-  const grado=document.getElementById('man-grado').value;
-  resetManual('grupo');
-  if(!turno||!grado) return;
-  const sel=document.getElementById('man-grupo');
-  sel.innerHTML='<option value="">Seleccione grupo...</option>';
-  (estructura[turno]?.[grado]||[]).slice().sort().forEach(g=>{
-    const o=document.createElement('option'); o.value=g; o.textContent=`Grupo "${g}"`; sel.appendChild(o);
-  });
-  sel.disabled=false;
-};
-
-window.manCargarAlumnos = async function() {
-  const turno = document.getElementById('man-turno').value;
-  const grado = document.getElementById('man-grado').value;
-  const grupo = document.getElementById('man-grupo').value;
-  const sel   = document.getElementById('man-nombre');
-  sel.innerHTML = '<option value="">Cargando...</option>';
-  sel.disabled  = true;
-  if (!turno || !grado || !grupo) return;
-  const clave = sanitizar(turno + '-' + grado + '-' + grupo);
-  try {
-    const snap = await dbOnce('escuelas/' + ID_ESC + '/directorio/' + clave);
-    sel.innerHTML = '<option value="">Seleccione alumno...</option>';
-    if (snap.exists()) {
-      const data  = snap.val();
-      const lista = Array.isArray(data) ? data : Object.values(data);
-      lista.filter(Boolean).sort().forEach(n => {
-        const o = document.createElement('option');
-        o.value = n; o.textContent = n; sel.appendChild(o);
-      });
-    } else {
-      sel.innerHTML = '<option value="">Sin alumnos en este grupo</option>';
-    }
-  } catch(e) {
-    sel.innerHTML = '<option value="">Error de conexión</option>';
-    console.error('manCargarAlumnos:', e.message);
-  }
-  sel.disabled = false;
-};
-
-// ── ESTATUS ──
-window.selEstatus = function(est) {
-  estatusSeleccionado = est;
-  // Botones visuales
-  ['p','r','f','j'].forEach(k=>document.getElementById('est-'+k).className='est-btn');
-  const map={asistencia:'p',retardo:'r',falta:'f',justificado:'j'};
-  document.getElementById('est-'+map[est]).classList.add('sel-'+map[est]);
-  // Mostrar/ocultar calendario
-  const calWrap=document.getElementById('cal-wrap');
-  const motBox=document.getElementById('motive-box');
-  if(est==='justificado') {
-    motBox.style.display='block';
-    calWrap.style.display='block';
-    renderCalendario();
-  } else {
-    motBox.style.display='none';
-    calWrap.style.display='none';
-    diasSeleccionados.clear();
-    renderChipsDias();
-  }
-};
-
-// ── RETIRO TEMPRANO ──
-window.toggleRetiro = function() {
-  const chk=document.getElementById('chk-retiro');
-  document.getElementById('retiro-hora-wrap').style.display=chk.checked?'block':'none';
-};
-
-// ══════════════════════════════════════════════
-// CALENDARIO MULTI-DÍA
-// ══════════════════════════════════════════════
-const MESES_ES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-
-function isoDeDate(d) {
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-}
-
-function renderCalendario() {
-  const y=calMesActual.getFullYear(), m=calMesActual.getMonth();
-  document.getElementById('cal-mes-lbl').textContent=`${MESES_ES[m]} ${y}`;
-  const grid=document.getElementById('cal-grid');
-  grid.innerHTML='';
-  const hoyISO=hoy();
-  // Primer día del mes (lunes=0 en nuestra grilla, domingo=6)
-  const primerDia=new Date(y,m,1);
-  // getDay(): 0=dom,1=lun,...,6=sab → convertir a lun=0
-  let offset=(primerDia.getDay()+6)%7; // lunes=0
-  for(let i=0;i<offset;i++) {
-    const v=document.createElement('div'); v.className='cal-dia vacio'; grid.appendChild(v);
-  }
+const MESES_ES=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+function isoDeDate(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function renderCalendario(){
+  const y=calMesActual.getFullYear(),m=calMesActual.getMonth();
+  document.getElementById('cal-mes-lbl').textContent=`${MESES_ES[m]} ${y}`;const grid=document.getElementById('cal-grid');grid.innerHTML='';const hoyISO=hoy();
+  const primerDia=new Date(y,m,1);let offset=(primerDia.getDay()+6)%7;
+  for(let i=0;i<offset;i++){const v=document.createElement('div');v.className='cal-dia vacio';grid.appendChild(v);}
   const diasMes=new Date(y,m+1,0).getDate();
-  for(let d=1;d<=diasMes;d++) {
-    const fecha=new Date(y,m,d);
-    const iso=isoDeDate(fecha);
-    const diaSem=fecha.getDay(); // 0=dom,6=sab
-    const esFinde=diaSem===0||diaSem===6;
-    const esSel=diasSeleccionados.has(iso);
-    const esHoy=iso===hoyISO;
-    const div=document.createElement('div');
-    div.className='cal-dia'+(esFinde?' finde':'')+(esSel?' seleccionado':'')+(esHoy?' hoy':'');
-    div.textContent=d;
-    div.onclick=()=>toggleDia(iso,div);
-    grid.appendChild(div);
-  }
-  actualizarContador();
-  renderChipsDias();
+  for(let d=1;d<=diasMes;d++){const fecha=new Date(y,m,d);const iso=isoDeDate(fecha);const diaSem=fecha.getDay();const esFinde=diaSem===0||diaSem===6;const esSel=diasSeleccionados.has(iso);const esHoy=iso===hoyISO;const div=document.createElement('div');div.className='cal-dia'+(esFinde?' finde':'')+(esSel?' seleccionado':'')+(esHoy?' hoy':'');div.textContent=d;div.onclick=()=>toggleDia(iso,div);grid.appendChild(div);}
+  actualizarContador();renderChipsDias();
 }
+function toggleDia(iso,el){if(diasSeleccionados.has(iso)){diasSeleccionados.delete(iso);el.classList.remove('seleccionado');}else{diasSeleccionados.add(iso);el.classList.add('seleccionado');}actualizarContador();renderChipsDias();}
+function actualizarContador(){const n=diasSeleccionados.size;document.getElementById('cal-contador').innerHTML=n===0?'Toca los días a justificar':`<strong>${n}</strong> día${n!==1?'s':''} seleccionado${n!==1?'s':''}`;}
+function renderChipsDias(){const wrap=document.getElementById('dias-sel-wrap');wrap.innerHTML='';const sorted=[...diasSeleccionados].sort();sorted.forEach(iso=>{const chip=document.createElement('div');chip.className='dia-chip';chip.innerHTML=`${fechaCorta(iso)}<button class="dia-chip-x" onclick="quitarDia('${iso}')">×</button>`;wrap.appendChild(chip);});}
+window.quitarDia=function(iso){diasSeleccionados.delete(iso);renderCalendario();};
+document.getElementById('cal-prev')?.addEventListener('click',()=>{calMesActual=new Date(calMesActual.getFullYear(),calMesActual.getMonth()-1,1);renderCalendario();});
+document.getElementById('cal-next')?.addEventListener('click',()=>{calMesActual=new Date(calMesActual.getFullYear(),calMesActual.getMonth()+1,1);renderCalendario();});
 
-function toggleDia(iso,el) {
-  if(diasSeleccionados.has(iso)) {
-    diasSeleccionados.delete(iso);
-    el.classList.remove('seleccionado');
-  } else {
-    diasSeleccionados.add(iso);
-    el.classList.add('seleccionado');
-  }
-  actualizarContador();
-  renderChipsDias();
-}
-
-function actualizarContador() {
-  const n=diasSeleccionados.size;
-  document.getElementById('cal-contador').innerHTML=
-    n===0?'Toca los días a justificar':`<strong>${n}</strong> día${n!==1?'s':''} seleccionado${n!==1?'s':''}`;
-}
-
-function renderChipsDias() {
-  const wrap=document.getElementById('dias-sel-wrap');
-  wrap.innerHTML='';
-  const sorted=[...diasSeleccionados].sort();
-  sorted.forEach(iso=>{
-    const chip=document.createElement('div'); chip.className='dia-chip';
-    chip.innerHTML=`${fechaCorta(iso)}<button class="dia-chip-x" onclick="quitarDia('${iso}')">×</button>`;
-    wrap.appendChild(chip);
-  });
-}
-
-window.quitarDia = function(iso) {
-  diasSeleccionados.delete(iso);
-  renderCalendario();
-};
-
-document.getElementById('cal-prev')?.addEventListener('click',()=>{
-  calMesActual=new Date(calMesActual.getFullYear(),calMesActual.getMonth()-1,1);
-  renderCalendario();
-});
-document.getElementById('cal-next')?.addEventListener('click',()=>{
-  calMesActual=new Date(calMesActual.getFullYear(),calMesActual.getMonth()+1,1);
-  renderCalendario();
-});
-
-// ══════════════════════════════════════════════
-// PROCESAR MANUAL
-// ══════════════════════════════════════════════
-window.procesarManual = async function() {
-  const turno  = document.getElementById('man-turno').value;
-  const grado  = document.getElementById('man-grado').value;
-  const grupo  = document.getElementById('man-grupo').value;
-  const nombre = document.getElementById('man-nombre').value;
-  const motive = document.getElementById('man-motive').value;
-  const chkRet = document.getElementById('chk-retiro').checked;
-  const hRet   = document.getElementById('retiro-hora').value;
-
-  if(!turno||!grado||!grupo||!nombre) { toast('⚠️ Completa todos los campos'); return; }
-  if(!estatusSeleccionado) { toast('⚠️ Selecciona un estatus'); return; }
-  if(estatusSeleccionado==='justificado'&&diasSeleccionados.size===0) {
-    toast('⚠️ Selecciona al menos un día en el calendario'); return;
-  }
-
-  const btn=document.getElementById('btn-guardar-man');
-  btn.disabled=true; btn.textContent='⏳ Guardando...';
-
-  const estatus = estatusSeleccionado==='justificado'
-    ? `justificado - ${motive}`
-    : estatusSeleccionado;
-
-  const baseRegistro = {
-    nombre, turno, grado, grupoLetra:grupo,
-    grupo:`${grado}°${grupo}`,
-    estatus,
-    registradoPor:'TS',
-    retiroTemprano: chkRet,
-    horaRetiro: chkRet ? hRet : null,
-    timestamp: Date.now()
-  };
-
-  // Función auxiliar: buscar key existente de un alumno en una fecha
-  async function buscarKeyExistente(nombreBuscar, fechaBuscar) {
-    const snap = await dbOnce(`escuelas/${ID_ESC}/asistencias`);
-    let key = null, horaOriginal = null;
-    if (snap.exists()) {
-      snap.forEach(child => {
-        const r = child.val();
-        if (r.fecha !== fechaBuscar) return;
-        const nL = nombreLimpio(r.nombre||'').toUpperCase();
-        if (nL === nombreBuscar.toUpperCase() && r.turno === turno &&
-            r.grado === String(grado) && r.grupoLetra === grupo) {
-          key = child.key;
-          horaOriginal = r.hora || null;
-        }
-      });
-    }
-    return { key, horaOriginal };
-  }
-
-  try {
-    if (estatusSeleccionado==='justificado') {
-      const fechas = [...diasSeleccionados].sort();
-      let ok = 0;
-      for (const fecha of fechas) {
-        const { key: keyExistente, horaOriginal } = await buscarKeyExistente(nombre, fecha);
-        const registro = { ...baseRegistro, fecha, hora: horaActual(), horaEntradaOriginal: horaOriginal };
-        if (keyExistente) {
-          await dbSet(`escuelas/${ID_ESC}/asistencias/${keyExistente}`, registro);
-        } else {
-          await dbPush(`escuelas/${ID_ESC}/asistencias`, registro);
-        }
-        ok++;
-      }
-      toast(`✅ Justificación registrada en ${ok} día${ok!==1?'s':''}`);
-    } else {
-      const fecha = hoy();
-      const { key: keyExistente, horaOriginal } = await buscarKeyExistente(nombre, fecha);
-      const registro = { ...baseRegistro, fecha, hora: horaActual(), horaEntradaOriginal: horaOriginal };
-      if (keyExistente) {
-        await dbSet(`escuelas/${ID_ESC}/asistencias/${keyExistente}`, registro);
-      } else {
-        await dbPush(`escuelas/${ID_ESC}/asistencias`, registro);
-      }
-      toast('✅ Asistencia registrada');
-    }
-
-    // Limpiar formulario
-    document.getElementById('man-nombre').value='';
-    estatusSeleccionado='';
-    diasSeleccionados.clear();
+window.procesarManual=async function(){
+  const turno=document.getElementById('man-turno').value;const grado=document.getElementById('man-grado').value;const grupo=document.getElementById('man-grupo').value;const nombre=document.getElementById('man-nombre').value;const motive=document.getElementById('man-motive').value;const chkRet=document.getElementById('chk-retiro').checked;const hRet=document.getElementById('retiro-hora').value;
+  if(!turno||!grado||!grupo||!nombre){toast('⚠️ Completa todos los campos');return;}if(!estatusSeleccionado){toast('⚠️ Selecciona un estatus');return;}
+  if(estatusSeleccionado==='justificado'&&diasSeleccionados.size===0){toast('⚠️ Selecciona al menos un día en el calendario');return;}
+  const btn=document.getElementById('btn-guardar-man');btn.disabled=true;btn.textContent='⏳ Guardando...';
+  const estatus=estatusSeleccionado==='justificado'?`justificado - ${motive}`:estatusSeleccionado;
+  const horaEntradaManual=document.getElementById('man-hora-entrada').value||'';
+  const horaFinal=horaEntradaManual||horaActual();
+  const baseRegistro={nombre,turno,grado,grupoLetra:grupo,grupo:`${grado}°${grupo}`,estatus,registradoPor:'TS',retiroTemprano:chkRet,horaRetiro:chkRet?hRet:null,timestamp:Date.now()};
+  async function buscarKeyExistente(nombreBuscar,fechaBuscar){const snap=await dbOnce(`escuelas/${ID_ESC}/asistencias`);let key=null,horaOriginal=null;if(snap.exists()){snap.forEach(child=>{const r=child.val();if(r.fecha!==fechaBuscar)return;const nL=nombreLimpio(r.nombre||'').toUpperCase();if(nL===nombreBuscar.toUpperCase()&&r.turno===turno&&r.grado===String(grado)&&r.grupoLetra===grupo){key=child.key;horaOriginal=r.hora||null;}});}return{key,horaOriginal};}
+  try{
+    if(estatusSeleccionado==='justificado'){const fechas=[...diasSeleccionados].sort();let ok=0;for(const fecha of fechas){const{key:keyExistente,horaOriginal}=await buscarKeyExistente(nombre,fecha);const registro={...baseRegistro,fecha,hora:horaFinal,horaEntradaOriginal:horaOriginal};if(keyExistente){await dbSet(`escuelas/${ID_ESC}/asistencias/${keyExistente}`,registro);}else{await dbPush(`escuelas/${ID_ESC}/asistencias`,registro);}ok++;}toast(`✅ Justificación registrada en ${ok} día${ok!==1?'s':''}`);}
+    else{const fecha=hoy();const{key:keyExistente,horaOriginal}=await buscarKeyExistente(nombre,fecha);const registro={...baseRegistro,fecha,hora:horaFinal,horaEntradaOriginal:horaOriginal};if(keyExistente){await dbSet(`escuelas/${ID_ESC}/asistencias/${keyExistente}`,registro);}else{await dbPush(`escuelas/${ID_ESC}/asistencias`,registro);}toast('✅ Asistencia registrada');}
+    document.getElementById('man-nombre').value='';document.getElementById('man-hora-entrada').value='';estatusSeleccionado='';diasSeleccionados.clear();
     ['p','r','f','j'].forEach(k=>document.getElementById('est-'+k).className='est-btn');
-    document.getElementById('motive-box').style.display='none';
-    document.getElementById('cal-wrap').style.display='none';
-    document.getElementById('chk-retiro').checked=false;
-    document.getElementById('retiro-hora-wrap').style.display='none';
-    renderChipsDias();
-    // Refrescar vista de asistencias
-    await cargarAsistencias();
-
-  } catch(e) {
-    toast('❌ Error: '+e.message);
-  } finally {
-    btn.disabled=false; btn.textContent='✅ Registrar';
-  }
+    document.getElementById('motive-box').style.display='none';document.getElementById('cal-wrap').style.display='none';
+    document.getElementById('chk-retiro').checked=false;document.getElementById('retiro-hora-wrap').style.display='none';
+    renderChipsDias();await cargarAsistencias();
+  }catch(e){toast('❌ Error: '+e.message);}finally{btn.disabled=false;btn.textContent='✅ Registrar';}
 };
 
-// ══════════════════════════════════════════════
-// CONFIG LINKS WA
-// ══════════════════════════════════════════════
-function filtrarConfig(f) {
-  cfgTurnoFiltro=f;
-  document.getElementById('cfg-btn-all').className ='cfg-btn'+(f==='all' ?' active-all':'');
-  document.getElementById('cfg-btn-mat').className ='cfg-btn'+(f==='mat' ?' active-mat':'');
-  document.getElementById('cfg-btn-vesp').className='cfg-btn'+(f==='vesp'?' active-vesp':'');
-  renderConfig();
-}
-window.filtrarConfig=filtrarConfig;
+// WA directo — filtrarConfig/renderConfig eliminados
+window.filtrarConfig=function(){};
 
-function renderConfig() {
-  const container=document.getElementById('config-grupos-container');
-  const turnos=Object.keys(estructura).sort().filter(t=>esTurno(t,cfgTurnoFiltro));
-  if(!turnos.length) { container.innerHTML='<div class="empty-state"><div class="empty-icon">⚙️</div><div class="empty-txt">Sin grupos</div></div>'; return; }
-  let html='';
-  turnos.forEach(turno=>{
-    html+=`<div style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--slate2);margin:.75rem 0 .4rem .25rem;">🕐 Turno ${turno}</div>`;
-    const grados=estructura[turno]||{};
-    Object.keys(grados).sort((a,b)=>Number(a)-Number(b)).forEach(grado=>{
-      (grados[grado]||[]).sort().forEach(grupoLetra=>{
-        const clave=sanitizar(`${turno}-${grado}-${grupoLetra}`);
-        const link=linksWA[clave]||'';
-        html+=`<div class="cfg-card"><div class="cfg-nombre">📌 ${turno} · ${grado}° — Grupo "${grupoLetra}"</div>
-          <div class="cfg-link-wrap">
-            <input class="cfg-link-input" id="link-${clave}" type="url" placeholder="https://chat.whatsapp.com/..." value="${link}">
-            ${link?`<button class="btn-test-wa" onclick="window.open('${link}','_blank')">🔗</button>`:''}
-          </div></div>`;
-      });
-    });
-  });
-  container.innerHTML=html;
-}
-
-document.getElementById('btn-save-config')?.addEventListener('click',()=>{
-  document.querySelectorAll('.cfg-link-input').forEach(inp=>{
-    const clave=inp.id.replace('link-',''), val=inp.value.trim();
-    if(val) linksWA[clave]=val; else delete linksWA[clave];
-  });
-  localStorage.setItem(SK_LINKS,JSON.stringify(linksWA));
-  toast('💾 Links guardados');
-  cargarAsistencias();
-});
-
-// ══════════════════════════════════════════════
-// EXPORTAR
-// ══════════════════════════════════════════════
-function actualizarTurnoMostrado() {
-  const txt=turnoFiltro==='mat'?'🌅 Matutino':turnoFiltro==='vesp'?'🌆 Vespertino':'🌐 Todos';
-  const el=document.getElementById('exp-turno-actual'); if(el) el.textContent=txt;
-  if(Object.keys(estructura).length>0) actualizarGradosExp();
-}
+function actualizarTurnoMostrado(){const txt=turnoFiltro==='mat'?'🌅 Matutino':turnoFiltro==='vesp'?'🌆 Vespertino':'🌐 Todos';const el=document.getElementById('exp-turno-actual');if(el)el.textContent=txt;if(Object.keys(estructura).length>0)actualizarGradosExp();}
 window.actualizarTurnoMostrado=actualizarTurnoMostrado;
+window.actualizarGradosExp=function(){const sel=document.getElementById('exp-grado');if(!sel)return;sel.innerHTML='<option value="Todos">Todos los grados</option>';Object.keys(estructura).filter(t=>esTurno(t,turnoFiltro)).forEach(turno=>{Object.keys(estructura[turno]||{}).sort((a,b)=>Number(a)-Number(b)).forEach(g=>{if(!Array.from(sel.options).some(o=>o.value===g)){const o=document.createElement('option');o.value=g;o.textContent=`${g}° Grado`;sel.appendChild(o);}});});actualizarGruposExp();};
+window.actualizarGruposExp=function(){const grado=document.getElementById('exp-grado')?.value||'Todos';const sel=document.getElementById('exp-grupo');if(!sel)return;sel.innerHTML='<option value="Todos">Todos los grupos</option>';if(grado!=='Todos'){Object.keys(estructura).filter(t=>esTurno(t,turnoFiltro)).forEach(turno=>{(estructura[turno]?.[grado]||[]).sort().forEach(g=>{if(!Array.from(sel.options).some(o=>o.value===g)){const o=document.createElement('option');o.value=g;o.textContent=`Grupo ${g}`;sel.appendChild(o);}});}); }actualizarAlumnosExp();};
+window.actualizarAlumnosExp=function(){const grado=document.getElementById('exp-grado')?.value||'Todos';const grupo=document.getElementById('exp-grupo')?.value||'Todos';const sel=document.getElementById('exp-alumno');if(!sel)return;sel.innerHTML='<option value="Todos">Todos</option>';if(grado!=='Todos'&&grupo!=='Todos'){Object.keys(estructura).filter(t=>esTurno(t,turnoFiltro)).forEach(turno=>{filtrarAlumnos(turno,grado,grupo).forEach(([nombre])=>{if(!Array.from(sel.options).some(o=>o.value===nombre)){const o=document.createElement('option');o.value=nombre;o.textContent=nombre;sel.appendChild(o);}});});}};
 
-window.actualizarGradosExp = function() {
-  const sel=document.getElementById('exp-grado'); if(!sel) return;
-  sel.innerHTML='<option value="Todos">Todos los grados</option>';
-  Object.keys(estructura).filter(t=>esTurno(t,turnoFiltro)).forEach(turno=>{
-    Object.keys(estructura[turno]||{}).sort((a,b)=>Number(a)-Number(b)).forEach(g=>{
-      if(!Array.from(sel.options).some(o=>o.value===g)){
-        const o=document.createElement('option'); o.value=g; o.textContent=`${g}° Grado`; sel.appendChild(o);
-      }
-    });
-  });
-  actualizarGruposExp();
-};
-
-window.actualizarGruposExp = function() {
-  const grado=document.getElementById('exp-grado')?.value||'Todos';
-  const sel=document.getElementById('exp-grupo'); if(!sel) return;
-  sel.innerHTML='<option value="Todos">Todos los grupos</option>';
-  if(grado!=='Todos') {
-    Object.keys(estructura).filter(t=>esTurno(t,turnoFiltro)).forEach(turno=>{
-      (estructura[turno]?.[grado]||[]).sort().forEach(g=>{
-        if(!Array.from(sel.options).some(o=>o.value===g)){
-          const o=document.createElement('option'); o.value=g; o.textContent=`Grupo ${g}`; sel.appendChild(o);
-        }
-      });
-    });
-  }
-  actualizarAlumnosExp();
-};
-
-window.actualizarAlumnosExp = function() {
-  const grado=document.getElementById('exp-grado')?.value||'Todos';
-  const grupo=document.getElementById('exp-grupo')?.value||'Todos';
-  const sel=document.getElementById('exp-alumno'); if(!sel) return;
-  sel.innerHTML='<option value="Todos">Todos</option>';
-  if(grado!=='Todos'&&grupo!=='Todos') {
-    Object.keys(estructura).filter(t=>esTurno(t,turnoFiltro)).forEach(turno=>{
-      filtrarAlumnos(turno,grado,grupo).forEach(([nombre])=>{
-        if(!Array.from(sel.options).some(o=>o.value===nombre)){
-          const o=document.createElement('option'); o.value=nombre; o.textContent=nombre; sel.appendChild(o);
-        }
-      });
-    });
-  }
-};
-
-window.consultarNubeExp = async function() {
-  const fi=document.getElementById('exp-fecha-inicio').value;
-  const ff=document.getElementById('exp-fecha-fin').value;
-  const grado=document.getElementById('exp-grado').value;
-  const grupo=document.getElementById('exp-grupo').value;
-  const alumno=document.getElementById('exp-alumno').value;
-  if(!fi||!ff){toast('⚠️ Define rango de fechas');return;}
-  const btn=document.getElementById('btn-consultar-exp');
-  btn.disabled=true; btn.textContent='⏳ Consultando...';
-  try {
-    const snap=await dbOnce(`escuelas/${ID_ESC}/asistencias`);
-    expResultados=[];
-    if(snap.exists()) {
-      snap.forEach(child=>{
-        const r=child.val();
-        if(!r?.fecha||r.fecha<fi||r.fecha>ff) return;
-        if(!esTurno(r.turno,turnoFiltro)) return;
-        let gradoR=r.grado||'', grupoR=r.grupoLetra||'';
-        if(!gradoR||!grupoR){const raw=(r.grupo||'').trim(),match=raw.match(/^(\d+)\s*°?\s+([A-Z]+)/i);if(match){gradoR=match[1];grupoR=match[2].toUpperCase();}}
-        if(grado!=='Todos'&&String(gradoR)!==String(grado)) return;
-        if(grupo!=='Todos'&&String(grupoR).toUpperCase()!==String(grupo).toUpperCase()) return;
-        const nLimpio=nombreLimpio(r.nombre||'').toUpperCase();
-        if(alumno!=='Todos'&&nLimpio!==alumno.toUpperCase()) return;
-        expResultados.push({fecha:r.fecha,nombre:nLimpio,hora:r.hora||'—',estatus:r.estatus||'—',turno:r.turno||'—',grado:gradoR,grupo:grupoR,retiroTemprano:r.retiroTemprano||false,horaRetiro:r.horaRetiro||null,registradoPor:r.registradoPor||'Escáner'});
-      });
-    }
-    const tbl=document.getElementById('exp-preview-table');
-    const btns=document.getElementById('export-btns');
+window.consultarNubeExp=async function(){
+  const fi=document.getElementById('exp-fecha-inicio').value;const ff=document.getElementById('exp-fecha-fin').value;const grado=document.getElementById('exp-grado').value;const grupo=document.getElementById('exp-grupo').value;const alumno=document.getElementById('exp-alumno').value;
+  if(!fi||!ff){toast('⚠️ Define rango de fechas');return;}const btn=document.getElementById('btn-consultar-exp');btn.disabled=true;btn.textContent='⏳ Consultando...';
+  try{
+    const snap=await dbOnce(`escuelas/${ID_ESC}/asistencias`);expResultados=[];
+    if(snap.exists()){snap.forEach(child=>{const r=child.val();if(!r?.fecha||r.fecha<fi||r.fecha>ff)return;if(!esTurno(r.turno,turnoFiltro))return;let gradoR=r.grado||'',grupoR=r.grupoLetra||'';if(!gradoR||!grupoR){const raw=(r.grupo||'').trim(),match=raw.match(/^(\d+)\s*°?\s+([A-Z]+)/i);if(match){gradoR=match[1];grupoR=match[2].toUpperCase();}}if(grado!=='Todos'&&String(gradoR)!==String(grado))return;if(grupo!=='Todos'&&String(grupoR).toUpperCase()!==String(grupo).toUpperCase())return;const nLimpio=nombreLimpio(r.nombre||'').toUpperCase();if(alumno!=='Todos'&&nLimpio!==alumno.toUpperCase())return;expResultados.push({fecha:r.fecha,nombre:nLimpio,hora:r.hora||'—',estatus:r.estatus||'—',turno:r.turno||'—',grado:gradoR,grupo:grupoR,retiroTemprano:r.retiroTemprano||false,horaRetiro:r.horaRetiro||null,registradoPor:r.registradoPor||'Escáner'});});}
+    const tbl=document.getElementById('exp-preview-table');const btns=document.getElementById('export-btns');
     if(!expResultados.length){tbl.innerHTML='<div style="color:var(--slate2);padding:2rem;">Sin registros en ese rango.</div>';btns.style.display='none';}
-    else {
-      let html=`<table class="exp-table"><thead><tr><th>Fecha</th><th>Alumno</th><th>Hora</th><th>Estatus</th><th>Por</th></tr></thead><tbody>`;
-      expResultados.forEach(r=>{
-        const eColor=r.estatus.toLowerCase().includes('asist')?'var(--emerald)':r.estatus.toLowerCase().includes('retard')?'var(--amber)':r.estatus.toLowerCase().includes('justif')?'var(--cyan)':'var(--ruby)';
-        const retInfo=r.retiroTemprano?` <span style="font-size:.6rem;background:#FEF9C3;color:#92400E;padding:1px 5px;border-radius:4px;">🚪${r.horaRetiro||''}</span>`:'';
-        html+=`<tr><td>${r.fecha}</td><td>${r.nombre}</td><td>${r.hora}</td><td style="color:${eColor};font-weight:700;">${r.estatus}${retInfo}</td><td style="font-size:.65rem;color:var(--slate2);">${r.registradoPor==='TS'?'👩‍💼 TS':'🔍 Esc.'}</td></tr>`;
-      });
-      html+=`</tbody></table>`;
-      tbl.innerHTML=html;
-      btns.style.display='grid';
-    }
+    else{let html=`<table class="exp-table"><thead><tr><th>Fecha</th><th>Alumno</th><th>Hora</th><th>Estatus</th><th>Por</th></tr></thead><tbody>`;expResultados.forEach(r=>{const eColor=r.estatus.toLowerCase().includes('asist')?'var(--emerald)':r.estatus.toLowerCase().includes('retard')?'var(--amber)':r.estatus.toLowerCase().includes('justif')?'var(--cyan)':'var(--ruby)';const retInfo=r.retiroTemprano?` <span style="font-size:.6rem;background:#FEF9C3;color:#92400E;padding:1px 5px;border-radius:4px;">🚪${r.horaRetiro||''}</span>`:'';html+=`<tr><td>${r.fecha}</td><td>${r.nombre}</td><td>${r.hora}</td><td style="color:${eColor};font-weight:700;">${r.estatus}${retInfo}</td><td style="font-size:.65rem;color:var(--slate2);">${r.registradoPor==='TS'?'👩‍💼 TS':'🔍 Esc.'}</td></tr>`;});html+=`</tbody></table>`;tbl.innerHTML=html;btns.style.display='grid';}
     toast('✅ '+expResultados.length+' registros');
-  } catch(e){toast('⚠️ Error: '+e.message);}
-  finally{btn.disabled=false;btn.textContent='🔍 Consultar Nube';}
+  }catch(e){toast('⚠️ Error: '+e.message);}finally{btn.disabled=false;btn.textContent='🔍 Consultar Nube';}
 };
 
-window.exportarExcelExp = function() {
-  if(!expResultados.length){toast('⚠️ Consulta primero');return;}
-  const wb=XLSX.utils.book_new();
-  const fi=document.getElementById('exp-fecha-inicio').value;
-  const ff=document.getElementById('exp-fecha-fin').value;
-  const rows=[
-    [`REPORTE DE ASISTENCIA - ${nombreEsc}`],
-    [`Período: ${fi} al ${ff}`],
-    [],
-    ['Fecha','Alumno','Hora','Estatus','Turno','Grado','Grupo','Registrado por','Retiro Temprano','Hora Retiro'],
-    ...expResultados.map(r=>[r.fecha,r.nombre,r.hora,r.estatus,r.turno,r.grado,r.grupo,r.registradoPor==='TS'?'Trabajadora Social':'Escáner',r.retiroTemprano?'Sí':'No',r.horaRetiro||''])
-  ];
-  const ws=XLSX.utils.aoa_to_sheet(rows);
-  ws['!cols']=[{wch:12},{wch:40},{wch:10},{wch:30},{wch:12},{wch:8},{wch:8},{wch:20},{wch:15},{wch:12}];
-  XLSX.utils.book_append_sheet(wb,ws,'Asistencia');
-  XLSX.writeFile(wb,`asistencia_${fi}_${ff}.xlsx`);
-  toast('📊 Excel generado');
-};
+window.exportarExcelExp=function(){if(!expResultados.length){toast('⚠️ Consulta primero');return;}const wb=XLSX.utils.book_new();const fi=document.getElementById('exp-fecha-inicio').value;const ff=document.getElementById('exp-fecha-fin').value;const rows=[[`REPORTE DE ASISTENCIA - ${nombreEsc}`],[`Período: ${fi} al ${ff}`],[],['Fecha','Alumno','Hora','Estatus','Turno','Grado','Grupo','Registrado por','Retiro Temprano','Hora Retiro'],...expResultados.map(r=>[r.fecha,r.nombre,r.hora,r.estatus,r.turno,r.grado,r.grupo,r.registradoPor==='TS'?'Trabajadora Social':'Escáner',r.retiroTemprano?'Sí':'No',r.horaRetiro||''])];const ws=XLSX.utils.aoa_to_sheet(rows);ws['!cols']=[{wch:12},{wch:40},{wch:10},{wch:30},{wch:12},{wch:8},{wch:8},{wch:20},{wch:15},{wch:12}];XLSX.utils.book_append_sheet(wb,ws,'Asistencia');XLSX.writeFile(wb,`asistencia_${fi}_${ff}.xlsx`);toast('📊 Excel generado');};
 
-window.exportarPDFExp = async function() {
-  if(!expResultados.length){toast('⚠️ Consulta primero');return;}
-  const btn=document.getElementById('btn-pdf-exp');
-  btn.disabled=true; btn.textContent='⏳ Generando...';
-  try {
-    if(!window.jspdf?.jsPDF){ await new Promise((res,rej)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';s.onload=()=>setTimeout(res,100);s.onerror=rej;document.head.appendChild(s);}); }
-    if(!window.jspdf?.jsPDF?.prototype?.autoTable){ await new Promise((res,rej)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js';s.onload=()=>setTimeout(res,100);s.onerror=rej;document.head.appendChild(s);}); }
-    const {jsPDF}=window.jspdf;
-    const porAlumno={};
-    expResultados.forEach(r=>{if(!porAlumno[r.nombre]) porAlumno[r.nombre]=[];porAlumno[r.nombre].push(r);});
-    const alumnos=Object.keys(porAlumno).sort();
-    const todasFechas=[...new Set(expResultados.map(r=>r.fecha))].sort();
-    const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'letter'});
-    const pw=doc.internal.pageSize.getWidth(), ph=doc.internal.pageSize.getHeight();
-    doc.setFillColor(26,107,58); doc.rect(0,0,pw,18,'F');
-    doc.setTextColor(0,200,100); doc.setFontSize(11); doc.setFont('helvetica','bold');
-    const fi=document.getElementById('exp-fecha-inicio').value, ff=document.getElementById('exp-fecha-fin').value;
-    doc.text(`REPORTE DE ASISTENCIA`, pw/2,6,{align:'center'});
-    doc.setTextColor(255,255,255); doc.setFontSize(8); doc.setFont('helvetica','normal');
-    doc.text((perfilEsc?.nombreEscuela||nombreEsc||'').toUpperCase(),pw/2,11,{align:'center'});
-    doc.text(`Período: ${fi} al ${ff}`,pw/2,15,{align:'center'});
-    const headRow1=[{content:'Nombre Alumno',rowSpan:2,styles:{valign:'middle',halign:'left',fontStyle:'bold'}}];
-    todasFechas.forEach(f=>{const p=f.split('-');headRow1.push({content:`${p[2]}/${p[1]}`,colSpan:2,styles:{halign:'center',fontStyle:'bold'}});});
-    const headRow2=[];
-    todasFechas.forEach(()=>{headRow2.push({content:'Hora',styles:{halign:'center',fontStyle:'bold',fontSize:6}});headRow2.push({content:'Est',styles:{halign:'center',fontStyle:'bold',fontSize:6}});});
-    const body=alumnos.map(alumno=>{
-      const row=[{content:alumno,styles:{halign:'left',fontStyle:'bold',fontSize:6.5}}];
-      const regs=porAlumno[alumno]||[];
-      todasFechas.forEach(fecha=>{
-        const reg=regs.find(r=>r.fecha===fecha);
-        if(reg){
-          const e=reg.estatus.toLowerCase();
-          const est=e.includes('asist')?'A':e.includes('retard')?'R':e.includes('justif')?'J':e.includes('falt')||e.includes('ausent')?'F':'SR';
-          const eColor=est==='A'?[0,168,84]:est==='R'?[200,150,0]:est==='J'?[6,182,212]:est==='F'?[200,0,0]:[150,130,100];
-          const retLabel=reg.retiroTemprano?` 🚪`:'';
-          row.push({content:reg.hora||'—',styles:{halign:'center',fontSize:6}});
-          row.push({content:est+retLabel,styles:{halign:'center',fontSize:6.5,fontStyle:'bold',textColor:eColor}});
-        } else {
-          row.push({content:'',styles:{halign:'center'}});
-          row.push({content:'',styles:{halign:'center'}});
-        }
-      });
-      return row;
-    });
-    const colNombreW=Math.min(60,Math.max(40,pw*0.18));
-    const colFechaW=Math.max(8,(pw-colNombreW-10)/(todasFechas.length*2));
-    const colStyles={0:{cellWidth:colNombreW}};
-    todasFechas.forEach((_,i)=>{colStyles[1+i*2]={cellWidth:colFechaW};colStyles[1+i*2+1]={cellWidth:colFechaW-2};});
+window.exportarPDFExp=async function(){
+  if(!expResultados.length){toast('⚠️ Consulta primero');return;}const btn=document.getElementById('btn-pdf-exp');btn.disabled=true;btn.textContent='⏳ Generando...';
+  try{
+    if(!window.jspdf?.jsPDF){await new Promise((res,rej)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';s.onload=()=>setTimeout(res,100);s.onerror=rej;document.head.appendChild(s);});}
+    if(!window.jspdf?.jsPDF?.prototype?.autoTable){await new Promise((res,rej)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js';s.onload=()=>setTimeout(res,100);s.onerror=rej;document.head.appendChild(s);});}
+    const{jsPDF}=window.jspdf;const porAlumno={};expResultados.forEach(r=>{if(!porAlumno[r.nombre])porAlumno[r.nombre]=[];porAlumno[r.nombre].push(r);});const alumnos=Object.keys(porAlumno).sort();const todasFechas=[...new Set(expResultados.map(r=>r.fecha))].sort();
+    const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'letter'});const pw=doc.internal.pageSize.getWidth(),ph=doc.internal.pageSize.getHeight();
+    doc.setFillColor(26,107,58);doc.rect(0,0,pw,18,'F');doc.setTextColor(0,200,100);doc.setFontSize(11);doc.setFont('helvetica','bold');const fi=document.getElementById('exp-fecha-inicio').value,ff=document.getElementById('exp-fecha-fin').value;
+    doc.text(`REPORTE DE ASISTENCIA`,pw/2,6,{align:'center'});doc.setTextColor(255,255,255);doc.setFontSize(8);doc.setFont('helvetica','normal');doc.text((perfilEsc?.nombreEscuela||nombreEsc||'').toUpperCase(),pw/2,11,{align:'center'});doc.text(`Período: ${fi} al ${ff}`,pw/2,15,{align:'center'});
+    const headRow1=[{content:'Nombre Alumno',rowSpan:2,styles:{valign:'middle',halign:'left',fontStyle:'bold'}}];todasFechas.forEach(f=>{const p=f.split('-');headRow1.push({content:`${p[2]}/${p[1]}`,colSpan:2,styles:{halign:'center',fontStyle:'bold'}});});
+    const headRow2=[];todasFechas.forEach(()=>{headRow2.push({content:'Hora',styles:{halign:'center',fontStyle:'bold',fontSize:6}});headRow2.push({content:'Est',styles:{halign:'center',fontStyle:'bold',fontSize:6}});});
+    const body=alumnos.map(alumno=>{const row=[{content:alumno,styles:{halign:'left',fontStyle:'bold',fontSize:6.5}}];const regs=porAlumno[alumno]||[];todasFechas.forEach(fecha=>{const reg=regs.find(r=>r.fecha===fecha);if(reg){const e=reg.estatus.toLowerCase();const est=e.includes('asist')?'A':e.includes('retard')?'R':e.includes('justif')?'J':e.includes('falt')||e.includes('ausent')?'F':'SR';const eColor=est==='A'?[0,168,84]:est==='R'?[200,150,0]:est==='J'?[6,182,212]:est==='F'?[200,0,0]:[150,130,100];const retLabel=reg.retiroTemprano?` 🚪`:'';row.push({content:reg.hora||'—',styles:{halign:'center',fontSize:6}});row.push({content:est+retLabel,styles:{halign:'center',fontSize:6.5,fontStyle:'bold',textColor:eColor}});}else{row.push({content:'',styles:{halign:'center'}});row.push({content:'',styles:{halign:'center'}});}});return row;});
+    const colNombreW=Math.min(60,Math.max(40,pw*0.18));const colFechaW=Math.max(8,(pw-colNombreW-10)/(todasFechas.length*2));const colStyles={0:{cellWidth:colNombreW}};todasFechas.forEach((_,i)=>{colStyles[1+i*2]={cellWidth:colFechaW};colStyles[1+i*2+1]={cellWidth:colFechaW-2};});
     doc.autoTable({startY:20,head:[headRow1,headRow2],body,theme:'grid',styles:{fontSize:6.5,cellPadding:1.5,valign:'middle',lineColor:[180,180,180],lineWidth:.2},headStyles:{fillColor:[44,62,80],textColor:255,fontStyle:'bold',halign:'center',lineWidth:.3},alternateRowStyles:{fillColor:[248,250,252]},columnStyles:colStyles,margin:{left:5,right:5,top:5}});
-    const finalY=doc.lastAutoTable?.finalY||100;
-    doc.setFontSize(6); doc.setTextColor(100,100,100);
-    doc.text('A=Asistencia  R=Retardo  F=Falta  SR=Sin Registro  J=Justificado  🚪=Retiro Temprano',5,finalY+5);
-    doc.text(`Generado: ${new Date().toLocaleDateString('es-MX')} · LudoAssist`,pw-5,ph-3,{align:'right'});
-    doc.save(`asistencia_${fi}_${ff}.pdf`);
-    toast('📄 PDF generado');
-  } catch(e){toast('❌ Error: '+e.message);}
-  finally{btn.disabled=false;btn.textContent='📄 PDF';}
+    const finalY=doc.lastAutoTable?.finalY||100;doc.setFontSize(6);doc.setTextColor(100,100,100);doc.text('A=Asistencia  R=Retardo  F=Falta  SR=Sin Registro  J=Justificado  🚪=Retiro Temprano',5,finalY+5);doc.text(`Generado: ${new Date().toLocaleDateString('es-MX')} · LudoAssist`,pw-5,ph-3,{align:'right'});doc.save(`asistencia_${fi}_${ff}.pdf`);toast('📄 PDF generado');
+  }catch(e){toast('❌ Error: '+e.message);}finally{btn.disabled=false;btn.textContent='📄 PDF';}
 };
 
-// INIT FECHAS
 document.addEventListener('DOMContentLoaded',()=>{
-  const hoyISO=hoy();
-  const hace7=new Date(); hace7.setDate(hace7.getDate()-7);
-  const fi=document.getElementById('exp-fecha-fin'), ii=document.getElementById('exp-fecha-inicio');
-  if(fi) fi.value=hoyISO;
-  if(ii) ii.value=hace7.toISOString().split('T')[0];
+  const hoyISO=hoy();const hace7=new Date();hace7.setDate(hace7.getDate()-7);
+  const fi=document.getElementById('exp-fecha-fin'),ii=document.getElementById('exp-fecha-inicio');
+  if(fi)fi.value=hoyISO;if(ii)ii.value=hace7.toISOString().split('T')[0];
 });
 
-// ══════════════════════════════════════════════
-// MÓDULO HORARIOS — SOLO LECTURA
-// ══════════════════════════════════════════════
+
 let tsHorarios={},tsTurno='',tsGrupoSel=null,tsRelojTimer=null;
 const tsColorCache={};let tsColorIdx=0;
 const tsColoresBase=Array.from({length:20},(_,i)=>Math.round(i*18));
@@ -1560,92 +1112,669 @@ function tsHhMm(s){const[h,m]=(s||'0:0').split(':').map(Number);return h*60+m;}
 function tsEsReceso(b){return b.receso===true;}
 function tsRango(bloques,i){const b=bloques[i],sig=bloques[i+1];if(sig)return`${b.hora}–${sig.hora}`;if(b.horaFin)return`${b.hora}–${b.horaFin}`;const[h,m]=b.hora.split(':').map(Number);const t=h*60+m+50;return`${b.hora}–${String(Math.floor(t/60)).padStart(2,'0')}:${String(t%60).padStart(2,'0')}`;}
 
-async function tsCargarHorarios(){
-    tsHorarios={};
-    try{const snap=await dbOnce(`escuelas/${ID_ESC}/horarios`);if(snap.exists()){const d=snap.val();if(d.Matutino)tsHorarios['Matutino']=d.Matutino;if(d.Vespertino)tsHorarios['Vespertino']=d.Vespertino;if(d.vigente&&!tsHorarios['Vespertino'])tsHorarios['Vespertino']=d.vigente;}}catch(e){console.warn('tsHorarios:',e.message);}
-    const turnos=Object.keys(estructura||{});
-    if(!tsTurno||!tsHorarios[tsTurno])tsTurno=turnos.find(t=>tsHorarios[t])||Object.keys(tsHorarios)[0]||turnos[0]||'';
-    tsRenderHorarios();
-}
+async function tsCargarHorarios(){tsHorarios={};try{const snap=await dbOnce(`escuelas/${ID_ESC}/horarios`);if(snap.exists()){const d=snap.val();if(d.Matutino)tsHorarios['Matutino']=d.Matutino;if(d.Vespertino)tsHorarios['Vespertino']=d.Vespertino;if(d.vigente&&!tsHorarios['Vespertino'])tsHorarios['Vespertino']=d.vigente;}}catch(e){console.warn('tsHorarios:',e.message);}const turnos=Object.keys(estructura||{});if(!tsTurno||!tsHorarios[tsTurno])tsTurno=turnos.find(t=>tsHorarios[t])||Object.keys(tsHorarios)[0]||turnos[0]||'';tsRenderHorarios();}
 
-function tsRenderHorarios(){
-    tsConstruirTurnoBtns();tsActualizarReloj();
-    const grupos=tsHorarios[tsTurno]||{};
-    if(!Object.keys(grupos).length){document.getElementById('ts-macro-thead').innerHTML='';document.getElementById('ts-macro-tbody').innerHTML=`<tr><td colspan="2" style="text-align:center;padding:2rem;color:#64748B;font-size:.8rem;">Sin horario cargado para este turno</td></tr>`;document.getElementById('ts-chips-grupos').innerHTML='';document.getElementById('ts-mae-sel').innerHTML='<option value="">— Sin datos —</option>';return;}
-    tsMacrohorario();tsChipsGrupos();tsPoblarMaestros();
-    if(tsRelojTimer)clearInterval(tsRelojTimer);
-    tsRelojTimer=setInterval(()=>{tsActualizarReloj();tsMacrohorario();if(tsGrupoSel)tsSemanal(tsGrupoSel);},30000);
-}
+function tsRenderHorarios(){tsConstruirTurnoBtns();tsActualizarReloj();const grupos=tsHorarios[tsTurno]||{};if(!Object.keys(grupos).length){document.getElementById('ts-macro-thead').innerHTML='';document.getElementById('ts-macro-tbody').innerHTML=`<tr><td colspan="2" style="text-align:center;padding:2rem;color:#64748B;font-size:.8rem;">Sin horario cargado para este turno</td></tr>`;document.getElementById('ts-chips-grupos').innerHTML='';document.getElementById('ts-mae-sel').innerHTML='<option value="">— Sin datos —</option>';return;}tsMacrohorario();tsChipsGrupos();tsPoblarMaestros();if(tsRelojTimer)clearInterval(tsRelojTimer);tsRelojTimer=setInterval(()=>{tsActualizarReloj();tsMacrohorario();if(tsGrupoSel)tsSemanal(tsGrupoSel);},30000);}
 
-function tsConstruirTurnoBtns(){
-    const cont=document.getElementById('ts-turno-btns');if(!cont)return;
-    const turnos=Object.keys(estructura||{});if(turnos.length<=1){cont.innerHTML='';return;}
-    cont.innerHTML=turnos.map(t=>{const isMat=t==='Matutino';const cls=tsTurno===t?(isMat?'active-mat':'active-vesp'):'';return`<button class="hor-turno-btn-ts ${cls}" onclick="window.tsSelTurno('${t}')">${isMat?'☀️':'🌆'} ${t}</button>`;}).join('');
-}
+function tsConstruirTurnoBtns(){const cont=document.getElementById('ts-turno-btns');if(!cont)return;const turnos=Object.keys(estructura||{});if(turnos.length<=1){cont.innerHTML='';return;}cont.innerHTML=turnos.map(t=>{const isMat=t==='Matutino';const cls=tsTurno===t?(isMat?'active-mat':'active-vesp'):'';return`<button class="hor-turno-btn-ts ${cls}" onclick="window.tsSelTurno('${t}')">${isMat?'☀️':'🌆'} ${t}</button>`;}).join('');}
 window.tsSelTurno=function(t){tsTurno=t;tsGrupoSel=null;document.getElementById('ts-sem-card').classList.remove('visible');tsRenderHorarios();};
 
-function tsActualizarReloj(){
-    const d=new Date();const h=String(d.getHours()).padStart(2,'0'),m=String(d.getMinutes()).padStart(2,'0');
-    const dias=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
-    const el=document.getElementById('ts-hor-hora'),el2=document.getElementById('ts-hor-dia'),el3=document.getElementById('ts-hor-bloque');
-    if(el)el.textContent=`${h}:${m}`;
-    if(el2)el2.textContent=`${dias[d.getDay()]} · ${tsTurno||'—'}`;
-    if(el3){const p=Object.values(tsHorarios[tsTurno]||{})[0];if(p?.bloques){const now=tsGetMin();let found=false;for(let i=0;i<p.bloques.length;i++){const b=p.bloques[i],sig=p.bloques[i+1];const ini=tsHhMm(b.hora),fin=sig?tsHhMm(sig.hora):ini+50;if(now>=ini&&now<fin){el3.textContent=tsEsReceso(b)?'☕ Receso':b.hora;found=true;break;}}if(!found)el3.textContent='Fuera de horario';}else el3.textContent='—';}
-    const badge=document.getElementById('ts-dia-badge');
-    if(badge){const dIdx=d.getDay();const esH=dIdx>=1&&dIdx<=5;badge.textContent=`📅 HOY: ${dias[dIdx].toUpperCase()}`;badge.style.color=esH?'#FCD34D':'#94A3B8';badge.style.borderColor=esH?'rgba(245,158,11,.4)':'rgba(100,116,139,.3)';badge.style.background=esH?'rgba(245,158,11,.15)':'rgba(100,116,139,.15)';}
-}
+function tsActualizarReloj(){const d=new Date();const h=String(d.getHours()).padStart(2,'0'),m=String(d.getMinutes()).padStart(2,'0');const dias=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];const el=document.getElementById('ts-hor-hora'),el2=document.getElementById('ts-hor-dia'),el3=document.getElementById('ts-hor-bloque');if(el)el.textContent=`${h}:${m}`;if(el2)el2.textContent=`${dias[d.getDay()]} · ${tsTurno||'—'}`;if(el3){const p=Object.values(tsHorarios[tsTurno]||{})[0];if(p?.bloques){const now=tsGetMin();let found=false;for(let i=0;i<p.bloques.length;i++){const b=p.bloques[i],sig=p.bloques[i+1];const ini=tsHhMm(b.hora),fin=sig?tsHhMm(sig.hora):ini+50;if(now>=ini&&now<fin){el3.textContent=tsEsReceso(b)?'☕ Receso':b.hora;found=true;break;}}if(!found)el3.textContent='Fuera de horario';}else el3.textContent='—';}const badge=document.getElementById('ts-dia-badge');if(badge){const dIdx=d.getDay();const esH=dIdx>=1&&dIdx<=5;badge.textContent=`📅 HOY: ${dias[dIdx].toUpperCase()}`;badge.style.color=esH?'#FCD34D':'#94A3B8';badge.style.borderColor=esH?'rgba(245,158,11,.4)':'rgba(100,116,139,.3)';badge.style.background=esH?'rgba(245,158,11,.15)':'rgba(100,116,139,.15)';}}
 
-function tsMacrohorario(){
-    const grupos=tsHorarios[tsTurno]||{};const claves=Object.keys(grupos);if(!claves.length)return;
-    const dia=tsGetDia(),now=tsGetMin();const bloquesRef=grupos[claves[0]]?.bloques||[];
-    document.getElementById('ts-macro-thead').innerHTML=`<tr><th class="th-h">Hora</th>${claves.map(g=>`<th>${g}</th>`).join('')}</tr>`;
-    document.getElementById('ts-macro-tbody').innerHTML=bloquesRef.map((bRef,i)=>{
-        const sig=bloquesRef[i+1];const ini=tsHhMm(bRef.hora),fin=sig?tsHhMm(sig.hora):ini+50;const esAhora=now>=ini&&now<fin;const rango=tsRango(bloquesRef,i);
-        if(tsEsReceso(bRef))return`<tr class="mac-receso"><td class="td-h" style="color:#1E3A5F;">☕<br><span style="font-size:.52rem;">${rango}</span></td>${claves.map(()=>`<td style="text-align:center;font-size:.56rem;color:#1E3A5F;font-style:italic;">receso</td>`).join('')}</tr>`;
-        const celdas=claves.map(g=>{const bG=grupos[g]?.bloques?.[i];if(!bG||tsEsReceso(bG))return`<td><span class="mac-sin">—</span></td>`;const info=bG[dia]||{};const mat=(info.materia||'').replace(/^,/,'').trim();const mstr=info.maestro||'';if(!mat)return`<td><span class="mac-sin">—</span></td>`;const col=tsColorMaestro(mstr);const fondo=col?`background:${col.bg};border:1px solid ${col.border};`:'background:#1E293B;border:1px solid #334155;';const cMat=col?`color:${col.text};`:'color:#E2E8F0;';const cMstr=col?`color:${col.text};opacity:.8;`:'color:#94A3B8;';return`<td style="padding:.22rem;"><div class="mac-cel" style="${fondo}"><div class="mac-mat" style="${cMat}">${mat}</div>${mstr?`<div class="mac-mstr" style="${cMstr}">${mstr}</div>`:''}</div></td>`;}).join('');
-        return`<tr class="${esAhora?'mac-ahora':''}"><td class="td-h">${bRef.hora}${esAhora?`<span class="mac-badge">AHORA</span>`:''}<br><span class="h-rango">${rango}</span></td>${celdas}</tr>`;
-    }).join('');
-}
+function tsMacrohorario(){const grupos=tsHorarios[tsTurno]||{};const claves=Object.keys(grupos);if(!claves.length)return;const dia=tsGetDia(),now=tsGetMin();const bloquesRef=grupos[claves[0]]?.bloques||[];document.getElementById('ts-macro-thead').innerHTML=`<tr><th class="th-h">Hora</th>${claves.map(g=>`<th>${g}</th>`).join('')}</tr>`;document.getElementById('ts-macro-tbody').innerHTML=bloquesRef.map((bRef,i)=>{const sig=bloquesRef[i+1];const ini=tsHhMm(bRef.hora),fin=sig?tsHhMm(sig.hora):ini+50;const esAhora=now>=ini&&now<fin;const rango=tsRango(bloquesRef,i);if(tsEsReceso(bRef))return`<tr class="mac-receso"><td class="td-h" style="color:#1E3A5F;">☕<br><span style="font-size:.52rem;">${rango}</span></td>${claves.map(()=>`<td style="text-align:center;font-size:.56rem;color:#1E3A5F;font-style:italic;">receso</td>`).join('')}</tr>`;const celdas=claves.map(g=>{const bG=grupos[g]?.bloques?.[i];if(!bG||tsEsReceso(bG))return`<td><span class="mac-sin">—</span></td>`;const info=bG[dia]||{};const mat=(info.materia||'').replace(/^,/,'').trim();const mstr=info.maestro||'';if(!mat)return`<td><span class="mac-sin">—</span></td>`;const col=tsColorMaestro(mstr);const fondo=col?`background:${col.bg};border:1px solid ${col.border};`:'background:#1E293B;border:1px solid #334155;';const cMat=col?`color:${col.text};`:'color:#E2E8F0;';const cMstr=col?`color:${col.text};opacity:.8;`:'color:#94A3B8;';return`<td style="padding:.22rem;"><div class="mac-cel" style="${fondo}"><div class="mac-mat" style="${cMat}">${mat}</div>${mstr?`<div class="mac-mstr" style="${cMstr}">${mstr}</div>`:''}</div></td>`;}).join('');return`<tr class="${esAhora?'mac-ahora':''}"><td class="td-h">${bRef.hora}${esAhora?`<span class="mac-badge">AHORA</span>`:''}<br><span class="h-rango">${rango}</span></td>${celdas}</tr>`;}).join('');}
 
 function tsChipsGrupos(){const cont=document.getElementById('ts-chips-grupos');if(!cont)return;cont.innerHTML=Object.keys(tsHorarios[tsTurno]||{}).map(g=>`<div class="hor-chip-ts ${g===tsGrupoSel?'active':''}" onclick="window.tsSelGrupo('${g}')">${g}</div>`).join('');}
 window.tsSelGrupo=function(g){tsGrupoSel=g;tsChipsGrupos();tsSemanal(g);document.getElementById('ts-sem-card').scrollIntoView({behavior:'smooth',block:'start'});};
 window.tsCerrarSemanal=function(){tsGrupoSel=null;tsChipsGrupos();document.getElementById('ts-sem-card').classList.remove('visible');};
 
-function tsSemanal(g){
-    const datos=(tsHorarios[tsTurno]||{})[g];const card=document.getElementById('ts-sem-card');if(!datos?.bloques||!card)return;
-    const now=tsGetMin();document.getElementById('ts-sem-titulo').textContent=`${datos.grado}° Grupo ${datos.grupo}`;
-    document.getElementById('ts-sem-sub').textContent='Horario semanal completo · fila amarilla = ahora';
-    const DIAS=['lunes','martes','miercoles','jueves','viernes'];
-    document.getElementById('ts-sem-tbody').innerHTML=datos.bloques.map((b,i)=>{
-        const sig=datos.bloques[i+1];const ini=tsHhMm(b.hora),fin=sig?tsHhMm(sig.hora):ini+50;const esAhora=now>=ini&&now<fin;const rango=tsRango(datos.bloques,i);
-        if(tsEsReceso(b))return`<tr class="fil-rec"><td class="td-h2">${b.hora}<span class="h-rango">${rango}</span></td><td colspan="5" style="text-align:center;font-weight:700;color:#F59E0B;">— RECESO —</td></tr>`;
-        const celdas=DIAS.map(d=>{const info=b[d]||{};const mat=(info.materia||'').replace(/^,/,'').trim();const mstr=info.maestro||'';if(!mat)return`<td><span class="h-sin">—</span></td>`;const col=tsColorMaestro(mstr);const estilo=col?`background:${col.bg};border:1px solid ${col.border};`:'';return`<td style="padding:.28rem;"><div class="h-cel-in" style="${estilo}"><div class="h-mat" style="${col?'color:'+col.text+';':''}">${mat}</div>${mstr?`<div class="h-mstr" style="${col?'color:'+col.text+';opacity:.75;':''}">${mstr}</div>`:`<div class="h-sin">Sin asignar</div>`}</div></td>`;}).join('');
-        return`<tr class="${esAhora?'fil-ahora':''}"><td class="td-h2">${b.hora}${esAhora?'<span class="h-ahora">AHORA</span>':''}<span class="h-rango">${rango}</span></td>${celdas}</tr>`;
-    }).join('');
-    card.classList.add('visible');
-}
+function tsSemanal(g){const datos=(tsHorarios[tsTurno]||{})[g];const card=document.getElementById('ts-sem-card');if(!datos?.bloques||!card)return;const now=tsGetMin();document.getElementById('ts-sem-titulo').textContent=`${datos.grado}° Grupo ${datos.grupo}`;document.getElementById('ts-sem-sub').textContent='Horario semanal completo · fila amarilla = ahora';const DIAS=['lunes','martes','miercoles','jueves','viernes'];document.getElementById('ts-sem-tbody').innerHTML=datos.bloques.map((b,i)=>{const sig=datos.bloques[i+1];const ini=tsHhMm(b.hora),fin=sig?tsHhMm(sig.hora):ini+50;const esAhora=now>=ini&&now<fin;const rango=tsRango(datos.bloques,i);if(tsEsReceso(b))return`<tr class="fil-rec"><td class="td-h2">${b.hora}<span class="h-rango">${rango}</span></td><td colspan="5" style="text-align:center;font-weight:700;color:#F59E0B;">— RECESO —</td></tr>`;const celdas=DIAS.map(d=>{const info=b[d]||{};const mat=(info.materia||'').replace(/^,/,'').trim();const mstr=info.maestro||'';if(!mat)return`<td><span class="h-sin">—</span></td>`;const col=tsColorMaestro(mstr);const estilo=col?`background:${col.bg};border:1px solid ${col.border};`:'';return`<td style="padding:.28rem;"><div class="h-cel-in" style="${estilo}"><div class="h-mat" style="${col?'color:'+col.text+';':''}">${mat}</div>${mstr?`<div class="h-mstr" style="${col?'color:'+col.text+';opacity:.75;':''}">${mstr}</div>`:`<div class="h-sin">Sin asignar</div>`}</div></td>`;}).join('');return`<tr class="${esAhora?'fil-ahora':''}"><td class="td-h2">${b.hora}${esAhora?'<span class="h-ahora">AHORA</span>':''}<span class="h-rango">${rango}</span></td>${celdas}</tr>`;}).join('');card.classList.add('visible');}
 
-function tsPoblarMaestros(){
-    const sel=document.getElementById('ts-mae-sel');if(!sel)return;
-    const grupos=tsHorarios[tsTurno]||{};const DIAS=['lunes','martes','miercoles','jueves','viernes'];const maestros=new Set();
-    Object.values(grupos).forEach(d=>{(d.bloques||[]).forEach(b=>{if(tsEsReceso(b))return;DIAS.forEach(dia=>{const m=(b[dia]?.maestro||'').trim();if(m&&m.toUpperCase()!=='SIN DOCENTE')maestros.add(m);});});});
-    sel.innerHTML='<option value="">— Selecciona un maestro —</option>'+[...maestros].sort().map(m=>`<option value="${m}">${m}</option>`).join('');
-    document.getElementById('ts-mae-resultado').innerHTML='<div class="hor-mae-vacio">Selecciona un maestro para ver su horario</div>';
-}
+function tsPoblarMaestros(){const sel=document.getElementById('ts-mae-sel');if(!sel)return;const grupos=tsHorarios[tsTurno]||{};const DIAS=['lunes','martes','miercoles','jueves','viernes'];const maestros=new Set();Object.values(grupos).forEach(d=>{(d.bloques||[]).forEach(b=>{if(tsEsReceso(b))return;DIAS.forEach(dia=>{const m=(b[dia]?.maestro||'').trim();if(m&&m.toUpperCase()!=='SIN DOCENTE')maestros.add(m);});});});sel.innerHTML='<option value="">— Selecciona un maestro —</option>'+[...maestros].sort().map(m=>`<option value="${m}">${m}</option>`).join('');document.getElementById('ts-mae-resultado').innerHTML='<div class="hor-mae-vacio">Selecciona un maestro para ver su horario</div>';}
 
-window.tsConsultarMaestro=function(){
-    const maestro=document.getElementById('ts-mae-sel')?.value;const res=document.getElementById('ts-mae-resultado');
-    if(!maestro){if(res)res.innerHTML='<div class="hor-mae-vacio">Selecciona un maestro</div>';return;}
-    const grupos=tsHorarios[tsTurno]||{};const DIAS=['lunes','martes','miercoles','jueves','viernes'];const DIAS_L=['Lunes','Martes','Miércoles','Jueves','Viernes'];const ORD={lunes:0,martes:1,miercoles:2,jueves:3,viernes:4};
-    const now=tsGetMin();const diaHoy=tsGetDia();const rows=[];
-    Object.entries(grupos).forEach(([ng,datosG])=>{(datosG.bloques||[]).forEach((b,i)=>{if(tsEsReceso(b))return;DIAS.forEach((d,di)=>{const info=b[d]||{};if((info.maestro||'').trim().toUpperCase()===maestro.trim().toUpperCase()){const sig=datosG.bloques[i+1];const ini=tsHhMm(b.hora),fin=sig?tsHhMm(sig.hora):ini+50;const esAhora=now>=ini&&now<fin&&diaHoy===d;const rango=tsRango(datosG.bloques,i);rows.push({dia:DIAS_L[di],diaKey:d,hora:b.hora,rango,grupo:ng,mat:(info.materia||'').replace(/^,/,'').trim(),esAhora});}});});});
-    if(!rows.length){res.innerHTML='<div class="hor-mae-vacio">Este maestro no tiene clases en el turno activo</div>';return;}
-    rows.sort((a,b)=>(ORD[a.diaKey]-ORD[b.diaKey])||a.hora.localeCompare(b.hora));
-    const col=tsColorMaestro(maestro);const hdrStyle=col?`background:${col.bg};border-left:4px solid ${col.border};padding:8px 12px;margin-bottom:8px;border-radius:6px;font-size:.75rem;font-weight:800;color:${col.text};`:'';const hdr=hdrStyle?`<div style="${hdrStyle}">🧑‍🏫 ${maestro} · ${rows.length} clase${rows.length!==1?'s':''}</div>`:'';
-    res.innerHTML=`${hdr}<table class="hor-mae-tabla"><thead><tr><th>Día</th><th>Hora</th><th>Grupo</th><th>Materia</th></tr></thead><tbody>${rows.map(r=>{const bg=col?`background:${col.bg};`:(r.esAhora?'background:#FEFCE8;':'');return`<tr class="${r.esAhora?'mae-ah':''}" style="${bg}"><td>${r.dia}${r.esAhora?' 🟡':''}</td><td style="white-space:nowrap;">${r.hora}<br><span style="font-size:.6rem;color:#94A3B8;">${r.rango}</span></td><td><strong>${r.grupo}</strong></td><td>${r.mat}</td></tr>`;}).join('')}</tbody></table>`;
-};
+window.tsConsultarMaestro=function(){const maestro=document.getElementById('ts-mae-sel')?.value;const res=document.getElementById('ts-mae-resultado');if(!maestro){if(res)res.innerHTML='<div class="hor-mae-vacio">Selecciona un maestro</div>';return;}const grupos=tsHorarios[tsTurno]||{};const DIAS=['lunes','martes','miercoles','jueves','viernes'];const DIAS_L=['Lunes','Martes','Miércoles','Jueves','Viernes'];const ORD={lunes:0,martes:1,miercoles:2,jueves:3,viernes:4};const now=tsGetMin();const diaHoy=tsGetDia();const rows=[];Object.entries(grupos).forEach(([ng,datosG])=>{(datosG.bloques||[]).forEach((b,i)=>{if(tsEsReceso(b))return;DIAS.forEach((d,di)=>{const info=b[d]||{};if((info.maestro||'').trim().toUpperCase()===maestro.trim().toUpperCase()){const sig=datosG.bloques[i+1];const ini=tsHhMm(b.hora),fin=sig?tsHhMm(sig.hora):ini+50;const esAhora=now>=ini&&now<fin&&diaHoy===d;const rango=tsRango(datosG.bloques,i);rows.push({dia:DIAS_L[di],diaKey:d,hora:b.hora,rango,grupo:ng,mat:(info.materia||'').replace(/^,/,'').trim(),esAhora});}});});});if(!rows.length){res.innerHTML='<div class="hor-mae-vacio">Este maestro no tiene clases en el turno activo</div>';return;}rows.sort((a,b)=>(ORD[a.diaKey]-ORD[b.diaKey])||a.hora.localeCompare(b.hora));const col=tsColorMaestro(maestro);const hdrStyle=col?`background:${col.bg};border-left:4px solid ${col.border};padding:8px 12px;margin-bottom:8px;border-radius:6px;font-size:.75rem;font-weight:800;color:${col.text};`:'';const hdr=hdrStyle?`<div style="${hdrStyle}">🧑‍🏫 ${maestro} · ${rows.length} clase${rows.length!==1?'s':''}</div>`:'';res.innerHTML=`${hdr}<table class="hor-mae-tabla"><thead><tr><th>Día</th><th>Hora</th><th>Grupo</th><th>Materia</th></tr></thead><tbody>${rows.map(r=>{const bg=col?`background:${col.bg};`:(r.esAhora?'background:#FEFCE8;':'');return`<tr class="${r.esAhora?'mae-ah':''}" style="${bg}"><td>${r.dia}${r.esAhora?' 🟡':''}</td><td style="white-space:nowrap;">${r.hora}<br><span style="font-size:.6rem;color:#94A3B8;">${r.rango}</span></td><td><strong>${r.grupo}</strong></td><td>${r.mat}</td></tr>`;}).join('')}</tbody></table>`;};
 
 window.tsAbrirHorarios=function(){if(!Object.keys(tsHorarios).length&&ID_ESC)tsCargarHorarios();else tsRenderHorarios();};
+
+
+// ══════════════════════════════════════════════
+// MÓDULO REPORTES
+// ══════════════════════════════════════════════
+const TIPOS_REP = {
+  conducta:   {icon:'😤', label:'Conducta',   color:'var(--ruby)'},
+  academico:  {icon:'📚', label:'Académico',  color:'var(--amber)'},
+  asistencia: {icon:'📋', label:'Asistencia', color:'var(--emerald)'},
+  salud:      {icon:'🏥', label:'Salud',      color:'var(--blue)'},
+  familiar:   {icon:'👨‍👩‍👧', label:'Familiar',  color:'#7C3AED'},
+  otro:       {icon:'📌', label:'Otro',       color:'#64748B'},
+};
+let repTipoSel = '';
+let repPadreActivo = false;
+
+// ── Sub-tabs ──
+window.repSubTab = function(tab) {
+  document.querySelectorAll('.rep-sub-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.rep-sub-view').forEach(v => v.classList.remove('active'));
+  document.getElementById('rsub-'+tab).classList.add('active');
+  document.getElementById('rsv-'+tab).classList.add('active');
+  if (tab === 'historial') histBuscar();
+  if (tab === 'pendientes') pendCargar();
+};
+
+// ── Cargar turnos en el formulario ──
+function repCargarTurnos() {
+  const sel = document.getElementById('rep-turno');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">Seleccione turno...</option>';
+  Object.keys(estructura).sort().forEach(t => {
+    const o = document.createElement('option');
+    o.value = t;
+    o.textContent = t.toLowerCase().includes('mat') ? `🌅 ${t}` : `🌆 ${t}`;
+    sel.appendChild(o);
+  });
+  // Preseleccionar turno activo
+  if (turnoFiltro !== 'all') {
+    const match = Object.keys(estructura).find(t =>
+      (turnoFiltro==='mat' && t.toLowerCase().includes('mat')) ||
+      (turnoFiltro==='vesp' && t.toLowerCase().includes('vesp'))
+    );
+    if (match) { sel.value = match; repActualizarGrados(); }
+  }
+  // Llenar filtro historial
+  const hFil = document.getElementById('hist-turno-fil');
+  if (hFil) {
+    hFil.innerHTML = '<option value="">Todos los turnos</option>';
+    Object.keys(estructura).sort().forEach(t => {
+      const o = document.createElement('option');
+      o.value = t; o.textContent = t; hFil.appendChild(o);
+    });
+  }
+}
+
+window.repActualizarGrados = function() {
+  const turno = document.getElementById('rep-turno').value;
+  const sel = document.getElementById('rep-grado');
+  sel.innerHTML = '<option value="">Seleccione grado...</option>';
+  sel.disabled = !turno;
+  if (!turno) { document.getElementById('rep-grupo').innerHTML='<option value="">Grado primero</option>'; document.getElementById('rep-grupo').disabled=true; return; }
+  Object.keys(estructura[turno]||{}).sort((a,b)=>Number(a)-Number(b)).forEach(g => {
+    const o = document.createElement('option'); o.value=g; o.textContent=`${g}° Grado`; sel.appendChild(o);
+  });
+  sel.disabled = false;
+};
+
+window.repActualizarGrupos = function() {
+  const turno = document.getElementById('rep-turno').value;
+  const grado = document.getElementById('rep-grado').value;
+  const sel = document.getElementById('rep-grupo');
+  sel.innerHTML = '<option value="">Seleccione grupo...</option>';
+  sel.disabled = !turno||!grado;
+  if (!turno||!grado) return;
+  (estructura[turno]?.[grado]||[]).slice().sort().forEach(g => {
+    const o = document.createElement('option'); o.value=g; o.textContent=`Grupo "${g}"`; sel.appendChild(o);
+  });
+  sel.disabled = false;
+};
+
+window.repCargarAlumnos = async function() {
+  const turno = document.getElementById('rep-turno').value;
+  const grado = document.getElementById('rep-grado').value;
+  const grupo = document.getElementById('rep-grupo').value;
+  const sel   = document.getElementById('rep-alumno');
+  sel.innerHTML = '<option value="">Cargando...</option>';
+  sel.disabled = true;
+  if (!turno||!grado||!grupo) return;
+  const clave = sanitizar(turno+'-'+grado+'-'+grupo);
+  try {
+    const snap = await dbOnce('escuelas/'+ID_ESC+'/directorio/'+clave);
+    sel.innerHTML = '<option value="">Seleccione alumno...</option>';
+    if (snap.exists()) {
+      const data = snap.val();
+      const lista = Array.isArray(data) ? data : Object.values(data);
+      lista.filter(Boolean).sort().forEach(n => {
+        const o = document.createElement('option'); o.value=n; o.textContent=n; sel.appendChild(o);
+      });
+    }
+  } catch(e) { sel.innerHTML='<option value="">Error de conexión</option>'; }
+  sel.disabled = false;
+};
+
+// ── Tipo de reporte ──
+window.repSelTipo = function(tipo) {
+  repTipoSel = tipo;
+  Object.keys(TIPOS_REP).forEach(t => {
+    const btn = document.getElementById('rtp-'+t);
+    if (btn) btn.className = 'rep-tipo-btn' + (t===tipo ? ' sel-'+t : '');
+  });
+};
+
+// ── Toggle padre ──
+window.repTogglePadre = function() {
+  repPadreActivo = !repPadreActivo;
+  document.getElementById('rep-chk-padre').checked = repPadreActivo;
+  const lbl = document.getElementById('rep-padre-toggle-lbl');
+  if (lbl) lbl.classList.toggle('activo', repPadreActivo);
+  const wrap = document.getElementById('rep-fecha-cita-wrap');
+  if (wrap) wrap.style.display = repPadreActivo ? 'block' : 'none';
+};
+
+// ── Guardar reporte ──
+window.repGuardar = async function() {
+  const turno  = document.getElementById('rep-turno').value;
+  const grado  = document.getElementById('rep-grado').value;
+  const grupo  = document.getElementById('rep-grupo').value;
+  const alumno = document.getElementById('rep-alumno').value;
+  const desc   = document.getElementById('rep-desc').value.trim();
+  const fCita  = document.getElementById('rep-fecha-cita').value;
+
+  if (!turno||!grado||!grupo||!alumno) { toast('⚠️ Selecciona el alumno completo'); return; }
+  if (!repTipoSel) { toast('⚠️ Selecciona el tipo de situación'); return; }
+  if (!desc) { toast('⚠️ Escribe la descripción del reporte'); return; }
+
+  const btn = document.getElementById('btn-guardar-rep');
+  btn.disabled = true; btn.textContent = '⏳ Guardando...';
+
+  const docReporta = document.getElementById('rep-docente')?.value || '';
+  const reporte = {
+    fecha: hoy(),
+    hora: horaActual(),
+    alumno,
+    turno, grado, grupo: `${grado}°${grupo}`,
+    tipo: repTipoSel,
+    descripcion: desc,
+    reportadoPor: docReporta,
+    avisarPadre: repPadreActivo,
+    citatorio: repPadreActivo ? {
+      estado: 'pendiente',
+      fechaCita: fCita || null,
+      acuerdos: null,
+      cerrado: false,
+      fechaResolucion: null,
+    } : null,
+    creadoPor: 'TS',
+    timestamp: Date.now(),
+  };
+
+  try {
+    await dbPush(`escuelas/${ID_ESC}/reportes`, reporte);
+    toast('✅ Reporte guardado correctamente');
+    // Limpiar
+    document.getElementById('rep-alumno').value = ''; document.getElementById('rep-docente').value = '';
+    document.getElementById('rep-desc').value = '';
+    repTipoSel = '';
+    repPadreActivo = false;
+    document.getElementById('rep-chk-padre').checked = false;
+    document.getElementById('rep-padre-toggle-lbl').classList.remove('activo');
+    document.getElementById('rep-fecha-cita-wrap').style.display = 'none';
+    document.getElementById('rep-fecha-cita').value = '';
+    Object.keys(TIPOS_REP).forEach(t => {
+      const btn2 = document.getElementById('rtp-'+t);
+      if (btn2) btn2.className = 'rep-tipo-btn';
+    });
+  } catch(e) { toast('❌ Error: '+e.message); }
+  finally { btn.disabled=false; btn.textContent='💾 Guardar Reporte'; }
+};
+
+// ══════════════════════════════════════════════
+// HISTORIAL
+// ══════════════════════════════════════════════
+let histReportes = [];
+
+window.histBuscar = async function() {
+  const turnoFil = document.getElementById('hist-turno-fil')?.value || '';
+  const texto    = (document.getElementById('hist-buscar-input')?.value || '').trim().toUpperCase();
+  const cont     = document.getElementById('hist-resultados');
+  cont.innerHTML = '<div class="loading-state"><div class="loader"></div></div>';
+
+  try {
+    const snap = await dbOnce(`escuelas/${ID_ESC}/reportes`);
+    histReportes = [];
+    if (snap.exists()) {
+      snap.forEach(child => {
+        const r = { ...child.val(), _key: child.key };
+        if (turnoFil && r.turno !== turnoFil) return;
+        if (texto && !(r.alumno||'').toUpperCase().includes(texto)) return;
+        histReportes.push(r);
+      });
+    }
+    histReportes.sort((a,b) => (b.timestamp||0)-(a.timestamp||0));
+    histRenderLista(cont);
+  } catch(e) {
+    cont.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-txt">Error: ${e.message}</div></div>`;
+  }
+};
+
+// ── PDF historial completo de un alumno ──
+window.histPDFAlumno = async function() {
+  const alumnoNombre = (document.getElementById('hist-buscar-input')?.value || '').trim();
+  if (!alumnoNombre) { toast('⚠️ Escribe el nombre del alumno primero'); return; }
+  if (!histReportes.length) { toast('⚠️ Busca primero al alumno'); return; }
+  const reportesAlumno = histReportes.filter(r => (r.alumno||'').toUpperCase().includes(alumnoNombre.toUpperCase()));
+  if (!reportesAlumno.length) { toast('⚠️ Sin reportes para este alumno'); return; }
+
+  try {
+    if (!window.jspdf?.jsPDF) {
+      await new Promise((res,rej)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';s.onload=()=>setTimeout(res,200);s.onerror=rej;document.head.appendChild(s);});
+    }
+    const {jsPDF} = window.jspdf;
+    const doc = new jsPDF({orientation:'portrait', unit:'mm', format:'letter'});
+    const pw = doc.internal.pageSize.getWidth();
+    const ph = doc.internal.pageSize.getHeight();
+
+    // ── Header institucional ──
+    doc.setFillColor(26,107,58); doc.rect(0,0,pw,28,'F');
+    doc.setTextColor(255,255,255);
+    doc.setFontSize(13); doc.setFont('helvetica','bold');
+    doc.text('HISTORIAL DE REPORTES', pw/2, 9, {align:'center'});
+    doc.setFontSize(9); doc.setFont('helvetica','normal');
+    doc.text((nombreEsc||'').toUpperCase(), pw/2, 15, {align:'center'});
+    if (perfilEsc?.cct || perfilEsc?.claveEscuela) {
+      doc.text(`C.C.T.: ${perfilEsc.cct || perfilEsc.claveEscuela || ''}`, pw/2, 20, {align:'center'});
+    }
+    doc.text(`Generado: ${new Date().toLocaleDateString('es-MX', {weekday:'long',year:'numeric',month:'long',day:'numeric'})}`, pw/2, 25, {align:'center'});
+
+    // ── Datos del alumno ──
+    let y = 36;
+    const primerRep = reportesAlumno[0];
+    doc.setFillColor(240,247,242); doc.rect(10, y-5, pw-20, 14, 'F');
+    doc.setTextColor(26,107,58); doc.setFontSize(12); doc.setFont('helvetica','bold');
+    doc.text(`👤 ${primerRep.alumno}`, 15, y+1);
+    doc.setTextColor(80,80,80); doc.setFontSize(9); doc.setFont('helvetica','normal');
+    doc.text(`Grupo: ${primerRep.grupo||'—'} · Turno: ${primerRep.turno||'—'}`, 15, y+6);
+    doc.text(`Total de reportes: ${reportesAlumno.length}`, pw-15, y+3, {align:'right'});
+    y += 16;
+
+    const tipoLabels = {conducta:'Conducta', academico:'Académico', asistencia:'Asistencia', salud:'Salud', familiar:'Familiar', otro:'Otro'};
+    const tipoColors = {conducta:[239,68,68], academico:[245,158,11], asistencia:[16,185,129], salud:[2,132,199], familiar:[124,58,237], otro:[100,116,139]};
+
+    reportesAlumno.forEach((r, i) => {
+      // Verificar espacio — nueva página si necesario
+      if (y > ph - 45) {
+        doc.addPage();
+        y = 15;
+      }
+
+      const tipo = r.tipo || 'otro';
+      const color = tipoColors[tipo] || tipoColors.otro;
+      const label = tipoLabels[tipo] || 'Otro';
+
+      // Franja de color por tipo
+      doc.setFillColor(...color); doc.rect(10, y-1, 3, 20, 'F');
+      doc.setFillColor(248,250,252); doc.rect(13, y-1, pw-23, 20, 'F');
+
+      // Número y tipo
+      doc.setTextColor(...color); doc.setFontSize(7); doc.setFont('helvetica','bold');
+      doc.text(`#${i+1} · ${label.toUpperCase()}`, 16, y+4);
+
+      // Fecha y docente
+      doc.setTextColor(100,100,100); doc.setFontSize(7); doc.setFont('helvetica','normal');
+      const docInfo = r.reportadoPor ? ` · Reportado por: ${r.reportadoPor}` : '';
+      doc.text(`📅 ${r.fecha||'—'}  🕐 ${r.hora||'—'}${docInfo}`, 16, y+9);
+
+      // Descripción
+      doc.setTextColor(40,40,40); doc.setFontSize(8); doc.setFont('helvetica','normal');
+      const descLines = doc.splitTextToSize(r.descripcion||'—', pw-32);
+      // Si la descripción necesita más espacio, expandir
+      const blockH = Math.max(20, 14 + descLines.length * 4);
+      if (y + blockH > ph - 20) { doc.addPage(); y = 15; }
+      doc.setFillColor(248,250,252); doc.rect(13, y-1, pw-23, blockH, 'F');
+      doc.setFillColor(...color); doc.rect(10, y-1, 3, blockH, 'F');
+      doc.setTextColor(...color); doc.setFontSize(7); doc.setFont('helvetica','bold');
+      doc.text(`#${i+1} · ${label.toUpperCase()}`, 16, y+4);
+      doc.setTextColor(100,100,100); doc.setFontSize(7); doc.setFont('helvetica','normal');
+      doc.text(`📅 ${r.fecha||'—'}  🕐 ${r.hora||'—'}${docInfo}`, 16, y+9);
+      doc.setTextColor(40,40,40); doc.setFontSize(7.5);
+      doc.text(descLines, 16, y+14);
+      y += blockH + 2;
+
+      // Citatorio
+      if (r.avisarPadre && r.citatorio) {
+        if (y > ph - 25) { doc.addPage(); y = 15; }
+        const estLabel = r.citatorio.estado==='pendiente'?'⏳ Pendiente':r.citatorio.estado==='asistio'?'✅ Asistió':'❌ No asistió';
+        doc.setFillColor(255,248,225); doc.rect(14, y, pw-28, r.citatorio.acuerdos?18:10, 'F');
+        doc.setTextColor(146,64,14); doc.setFontSize(7); doc.setFont('helvetica','bold');
+        doc.text(`👨‍👩‍👧 Citatorio — ${estLabel}`, 17, y+5);
+        if (r.citatorio.fechaCita) { doc.setFont('helvetica','normal'); doc.text(`Fecha cita: ${r.citatorio.fechaCita}`, 17, y+9); }
+        if (r.citatorio.acuerdos) {
+          doc.setFont('helvetica','bold'); doc.text('Acuerdos:', 17, y+13);
+          doc.setFont('helvetica','normal');
+          const acLines = doc.splitTextToSize(r.citatorio.acuerdos, pw-36);
+          doc.text(acLines, 17, y+17);
+          y += 10 + acLines.length * 4;
+        }
+        y += 12;
+      }
+
+      y += 3; // separación entre reportes
+    });
+
+    // Footer en cada página
+    const totalPages = doc.internal.getNumberOfPages();
+    for (let p = 1; p <= totalPages; p++) {
+      doc.setPage(p);
+      doc.setFontSize(6.5); doc.setTextColor(150,150,150);
+      doc.text(`LudoAssist · Trabajo Social · ${nombreEsc}`, 10, ph-5);
+      doc.text(`Pág. ${p}/${totalPages}`, pw-10, ph-5, {align:'right'});
+    }
+
+    const nombreArchivo = (primerRep.alumno||'alumno').replace(/\s+/g,'_');
+    doc.save(`historial_reportes_${nombreArchivo}.pdf`);
+    toast('📄 Historial PDF generado');
+  } catch(e) { toast('❌ Error PDF: '+e.message); console.error(e); }
+};
+
+function histRenderLista(cont) {
+  if (!histReportes.length) {
+    cont.innerHTML = '<div class="empty-state"><div class="empty-icon">📂</div><div class="empty-txt">Sin reportes</div><div class="empty-sub">No se encontraron reportes con esos filtros</div></div>';
+    return;
+  }
+  cont.innerHTML = histReportes.map((r,i) => repItemHTML(r,i)).join('');
+}
+
+function repItemHTML(r, idx) {
+  const tipo = TIPOS_REP[r.tipo] || TIPOS_REP.otro;
+  const badgePadre = r.avisarPadre ? '<span class="rep-badge rep-badge-padre">👨‍👩‍👧 Citatorio</span>' : '';
+  let badgeCit = '';
+  if (r.citatorio) {
+    const est = r.citatorio.estado;
+    if (est==='pendiente') badgeCit='<span class="rep-badge rep-badge-citado">⏳ Pendiente</span>';
+    else if (est==='asistio') badgeCit='<span class="rep-badge rep-badge-asistio">✅ Asistió</span>';
+    else if (est==='no_asistio') badgeCit='<span class="rep-badge rep-badge-noasistio">❌ No asistió</span>';
+    if (r.citatorio.acuerdos) badgeCit+='<span class="rep-badge rep-badge-acuerdos">📋 Acuerdos</span>';
+  }
+  const citHTML = r.avisarPadre ? citatorioHTML(r, idx) : '';
+  const acuerdosHTML = (r.citatorio?.acuerdos) ? `
+    <div class="acuerdos-section">
+      <div style="font-size:.72rem;font-weight:900;color:#5B21B6;margin-bottom:.5rem;">📋 ACUERDOS REGISTRADOS</div>
+      <div style="font-size:.82rem;color:#4C1D95;line-height:1.6;white-space:pre-wrap;">${r.citatorio.acuerdos}</div>
+    </div>` : '';
+
+  const msgWA = generarMsgReporte(r);
+
+  return `<div class="rep-item ${r.tipo||'otro'}" id="ritem-${r._key}">
+    <div class="rep-item-hdr" onclick="toggleRepItem('${r._key}')">
+      <div class="rep-item-left">
+        <div class="rep-tipo-icon">${tipo.icon}</div>
+        <div>
+          <div class="rep-item-titulo">${r.alumno||'—'}</div>
+          <div class="rep-item-meta">${tipo.label} · ${r.fecha||'—'} · ${r.grupo||''}${r.reportadoPor?' · 👩‍🏫 '+r.reportadoPor:''}</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:.3rem;">
+        <div class="rep-item-badges">${badgePadre}${badgeCit}</div>
+        <span class="rep-item-chevron">▼</span>
+      </div>
+    </div>
+    <div class="rep-item-body">
+      <div class="rep-desc">${r.descripcion||'—'}</div>
+      ${citHTML}
+      ${acuerdosHTML}
+      <div class="rep-acciones">
+        <button class="btn-rep-wa" onclick="repEnviarWA('${r._key}')">📤 WhatsApp</button>
+        <button class="btn-rep-copy" onclick="repCopiar('${r._key}','${encodeURIComponent(msgWA)}')">📋</button>
+        <button class="btn-rep-pdf" onclick="repPDF('${r._key}')">📄</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function citatorioHTML(r, idx) {
+  if (!r.citatorio || r.citatorio.cerrado) return '';
+  const est = r.citatorio.estado;
+  const estLabel = est==='pendiente'?'⏳ Pendiente':est==='asistio'?'✅ Asistió':est==='no_asistio'?'❌ No asistió':'—';
+  const estClass = `cit-est-${est.replace('_','')}`;
+  const fechaCitaInfo = r.citatorio.fechaCita ? `<div style="font-size:.7rem;color:#92400E;margin-bottom:.5rem;">📅 Fecha cita: ${r.citatorio.fechaCita}</div>` : '';
+  const btns = est==='pendiente' ? `
+    <div class="cit-btns">
+      <button class="cit-btn cit-btn-asistio"  onclick="citActualizar('${r._key}','asistio')">✅ Asistió al llamado</button>
+      <button class="cit-btn cit-btn-noasistio" onclick="citActualizar('${r._key}','no_asistio')">❌ No se presentó</button>
+    </div>` : '';
+  const acuerdosForm = est==='asistio' && !r.citatorio.acuerdos ? `
+    <div class="acuerdos-section" style="margin-top:.65rem;">
+      <div style="font-size:.72rem;font-weight:900;color:#5B21B6;margin-bottom:.5rem;">📋 Registrar acuerdos</div>
+      <textarea id="acuerdos-${r._key}" class="acuerdos-textarea" placeholder="Describe los compromisos y acuerdos alcanzados con el padre/tutor..."></textarea>
+      <button class="btn-guardar-acuerdos" onclick="citGuardarAcuerdos('${r._key}')">💾 Guardar acuerdos</button>
+    </div>` : '';
+  const btnCerrar = (est==='asistio'&&r.citatorio.acuerdos)||(est==='no_asistio') ? `
+    <button class="cit-btn cit-btn-cerrar" style="margin-top:.5rem;" onclick="citCerrar('${r._key}')">🔒 Cerrar citatorio</button>` : '';
+
+  return `<div class="cit-section">
+    <div class="cit-titulo">👨‍👩‍👧 Seguimiento de Citatorio</div>
+    ${fechaCitaInfo}
+    <div class="cit-estado">
+      <span style="font-size:.72rem;color:#92400E;font-weight:700;">Estado:</span>
+      <span class="cit-est-badge ${estClass}">${estLabel}</span>
+    </div>
+    ${btns}${acuerdosForm}${btnCerrar}
+  </div>`;
+}
+
+window.toggleRepItem = function(key) {
+  const el = document.getElementById('ritem-'+key);
+  if (el) el.classList.toggle('open');
+};
+
+// ── Actualizar estado citatorio ──
+window.citActualizar = async function(key, estado) {
+  try {
+    const rSnap = await dbOnce(`escuelas/${ID_ESC}/reportes/${key}`);
+    if (!rSnap.exists()) return;
+    const r = rSnap.val();
+    const citatorio = { ...r.citatorio, estado, fechaResolucion: hoy() };
+    await dbSet(`escuelas/${ID_ESC}/reportes/${key}/citatorio`, citatorio);
+    toast(estado==='asistio' ? '✅ Asistencia registrada' : '❌ No asistencia registrada');
+    histBuscar();
+    pendCargar();
+  } catch(e) { toast('❌ Error: '+e.message); }
+};
+
+// ── Guardar acuerdos ──
+window.citGuardarAcuerdos = async function(key) {
+  const txt = document.getElementById('acuerdos-'+key)?.value.trim();
+  if (!txt) { toast('⚠️ Escribe los acuerdos'); return; }
+  try {
+    await dbSet(`escuelas/${ID_ESC}/reportes/${key}/citatorio/acuerdos`, txt);
+    toast('✅ Acuerdos guardados');
+    histBuscar();
+  } catch(e) { toast('❌ Error: '+e.message); }
+};
+
+// ── Cerrar citatorio ──
+window.citCerrar = async function(key) {
+  if (!confirm('¿Marcar este citatorio como cerrado? Ya no aparecerá en pendientes.')) return;
+  try {
+    await dbSet(`escuelas/${ID_ESC}/reportes/${key}/citatorio/cerrado`, true);
+    toast('🔒 Citatorio cerrado');
+    histBuscar();
+    pendCargar();
+  } catch(e) { toast('❌ Error: '+e.message); }
+};
+
+// ══════════════════════════════════════════════
+// PENDIENTES
+// ══════════════════════════════════════════════
+window.pendCargar = async function() {
+  const cont = document.getElementById('pend-lista');
+  if (!cont) return;
+  cont.innerHTML = '<div class="loading-state"><div class="loader"></div></div>';
+  try {
+    const snap = await dbOnce(`escuelas/${ID_ESC}/reportes`);
+    const pendientes = [];
+    if (snap.exists()) {
+      snap.forEach(child => {
+        const r = { ...child.val(), _key: child.key };
+        if (r.citatorio && !r.citatorio.cerrado && r.citatorio.estado === 'pendiente') {
+          pendientes.push(r);
+        }
+      });
+    }
+    pendientes.sort((a,b) => (a.timestamp||0)-(b.timestamp||0));
+    if (!pendientes.length) {
+      cont.innerHTML = '<div class="empty-state"><div class="empty-icon">✅</div><div class="empty-txt">Sin pendientes</div><div class="empty-sub">Todos los citatorios están resueltos</div></div>';
+      return;
+    }
+    const tipo = TIPOS_REP;
+    cont.innerHTML = `<div class="cit-pendientes-banner">
+      <div class="cit-pend-titulo">⏳ ${pendientes.length} citatorio${pendientes.length!==1?'s':''} pendiente${pendientes.length!==1?'s':''}</div>
+      ${pendientes.map(r => `
+        <div class="cit-pend-item" onclick="repSubTab('historial');setTimeout(()=>{document.getElementById('hist-buscar-input').value='${r.alumno}';histBuscar();},100)">
+          <div>
+            <div class="cit-pend-nombre">${r.alumno||'—'}</div>
+            <div class="cit-pend-meta">${(tipo[r.tipo]||tipo.otro).icon} ${(tipo[r.tipo]||tipo.otro).label} · ${r.fecha||'—'} · ${r.grupo||''}</div>
+          </div>
+          <button class="cit-pend-btn" onclick="event.stopPropagation();repSubTab('historial');setTimeout(()=>{document.getElementById('hist-buscar-input').value='${r.alumno}';histBuscar();},100)">Ver →</button>
+        </div>`).join('')}
+    </div>
+    <div style="font-size:.72rem;color:var(--slate2);text-align:center;padding:.5rem;">Toca un citatorio para ir al historial del alumno</div>`;
+  } catch(e) {
+    cont.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-txt">Error: ${e.message}</div></div>`;
+  }
+};
+
+// ══════════════════════════════════════════════
+// MENSAJES Y EXPORTAR
+// ══════════════════════════════════════════════
+function generarMsgReporte(r) {
+  const tipo = TIPOS_REP[r.tipo] || TIPOS_REP.otro;
+  const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const [y,m,d] = (r.fecha||'').split('-');
+  const fechaLeg = r.fecha ? `${d} de ${meses[m-1]} de ${y}` : '—';
+  let msg = `${tipo.icon} *Reporte ${tipo.label}*\n`;
+  msg += `👤 Alumno: *${r.alumno||'—'}*\n`;
+  msg += `🏫 Grupo: ${r.grupo||'—'} · Turno ${r.turno||'—'}\n`;
+  msg += `📅 Fecha: ${fechaLeg}\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━━\n\n`;
+  msg += `📝 *Descripción:*\n${r.descripcion||'—'}\n\n`;
+  if (r.avisarPadre) {
+    msg += `👨‍👩‍👧 *Se requiere presencia del padre/tutor*\n`;
+    if (r.citatorio?.fechaCita) msg += `📅 Fecha de cita: ${r.citatorio.fechaCita}\n`;
+    if (r.citatorio?.estado==='asistio') msg += `✅ Padre asistió a la cita\n`;
+    if (r.citatorio?.acuerdos) msg += `\n📋 *Acuerdos:*\n${r.citatorio.acuerdos}\n`;
+  }
+  msg += `\n━━━━━━━━━━━━━━━━━━━━\n_LudoAssist · Trabajo Social_`;
+  return msg;
+}
+
+window.repEnviarWA = function(key) {
+  const r = histReportes.find(x => x._key === key);
+  if (!r) return;
+  const msg = generarMsgReporte(r);
+  window.open('whatsapp://send?text='+encodeURIComponent(msg.replace(/\\n/g,'\n')), '_blank');
+  toast('📤 Abriendo WhatsApp...');
+};
+
+window.repCopiar = function(key, msgEnc) {
+  const msg = decodeURIComponent(msgEnc).replace(/\\n/g,'\n');
+  navigator.clipboard.writeText(msg).then(()=>toast('📋 Reporte copiado')).catch(()=>{
+    const ta=document.createElement('textarea');ta.value=msg;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);toast('📋 Copiado');
+  });
+};
+
+window.repPDF = async function(key) {
+  const r = histReportes.find(x => x._key === key);
+  if (!r) return;
+  const tipo = TIPOS_REP[r.tipo] || TIPOS_REP.otro;
+  try {
+    if (!window.jspdf?.jsPDF) {
+      await new Promise((res,rej)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';s.onload=()=>setTimeout(res,200);s.onerror=rej;document.head.appendChild(s);});
+    }
+    const {jsPDF} = window.jspdf;
+    const doc = new jsPDF({orientation:'portrait',unit:'mm',format:'letter'});
+    const pw = doc.internal.pageSize.getWidth();
+    // Header
+    doc.setFillColor(26,107,58); doc.rect(0,0,pw,22,'F');
+    doc.setTextColor(255,255,255); doc.setFontSize(14); doc.setFont('helvetica','bold');
+    doc.text('REPORTE DE TRABAJO SOCIAL', pw/2, 10, {align:'center'});
+    doc.setFontSize(9); doc.setFont('helvetica','normal');
+    doc.text((nombreEsc||'').toUpperCase(), pw/2, 16, {align:'center'});
+    // Datos
+    let y = 32;
+    doc.setTextColor(26,107,58); doc.setFontSize(12); doc.setFont('helvetica','bold');
+    doc.text(`${tipo.label.toUpperCase()}`, 15, y); y+=8;
+    doc.setTextColor(50,50,50); doc.setFontSize(10); doc.setFont('helvetica','normal');
+    doc.text(`Alumno: ${r.alumno||'—'}`, 15, y); y+=6;
+    doc.text(`Grupo: ${r.grupo||'—'} · Turno ${r.turno||'—'}`, 15, y); y+=6;
+    doc.text(`Fecha: ${r.fecha||'—'} · Hora: ${r.hora||'—'}`, 15, y); y+=10;
+    doc.setFont('helvetica','bold'); doc.text('Descripción:', 15, y); y+=6;
+    doc.setFont('helvetica','normal');
+    const lines = doc.splitTextToSize(r.descripcion||'—', pw-30);
+    doc.text(lines, 15, y); y += lines.length*5+8;
+    if (r.avisarPadre) {
+      doc.setFillColor(255,248,225); doc.rect(13, y-4, pw-26, 8+(r.citatorio?.acuerdos?20:0), 'F');
+      doc.setFont('helvetica','bold'); doc.setTextColor(146,64,14);
+      doc.text('👨‍👩‍👧 Citatorio al padre/tutor', 15, y); y+=6;
+      if (r.citatorio?.estado) {
+        doc.setFont('helvetica','normal');
+        const estLabel = r.citatorio.estado==='pendiente'?'Pendiente':r.citatorio.estado==='asistio'?'Asistió':'No asistió';
+        doc.text(`Estado: ${estLabel}`, 15, y); y+=6;
+      }
+      if (r.citatorio?.acuerdos) {
+        doc.setFont('helvetica','bold'); doc.text('Acuerdos:', 15, y); y+=5;
+        doc.setFont('helvetica','normal'); doc.setTextColor(50,50,50);
+        const aLines = doc.splitTextToSize(r.citatorio.acuerdos, pw-30);
+        doc.text(aLines, 15, y); y+=aLines.length*5+6;
+      }
+    }
+    // Footer
+    doc.setFontSize(7); doc.setTextColor(130,130,130);
+    doc.text(`Generado: ${new Date().toLocaleDateString('es-MX')} · LudoAssist · Trabajo Social`, pw/2, 270, {align:'center'});
+    doc.save(`reporte_${r.alumno}_${r.fecha}.pdf`);
+    toast('📄 PDF generado');
+  } catch(e) { toast('❌ Error PDF: '+e.message); }
+};
+
+// ── Inicializar cuando se abre la pestaña ──
+window.abrirReportes = function() {
+  repCargarTurnos();
+  repCargarDocentes();
+};
+
+// Cargar lista de docentes desde Firebase
+async function repCargarDocentes() {
+  const sel = document.getElementById('rep-docente');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">— Ninguno / Sin especificar —</option>';
+  try {
+    const snap = await dbOnce(`escuelas/${ID_ESC}/configuracion/docentes`);
+    if (snap.exists()) {
+      const docs = snap.val();
+      const lista = Array.isArray(docs) ? docs : Object.values(docs);
+      lista.filter(Boolean).sort().forEach(d => {
+        const nombre = typeof d === 'string' ? d : (d.nombre || d.nom || '');
+        if (nombre && nombre.toUpperCase() !== 'SIN DOCENTE') {
+          const o = document.createElement('option');
+          o.value = nombre; o.textContent = nombre; sel.appendChild(o);
+        }
+      });
+    }
+    // Fallback: obtener nombres únicos de docentes del directorio de horarios
+    if (sel.options.length <= 1) {
+      const hSnap = await dbOnce(`escuelas/${ID_ESC}/horarios`);
+      if (hSnap.exists()) {
+        const DIAS=['lunes','martes','miercoles','jueves','viernes'];
+        const maestros = new Set();
+        const hData = hSnap.val();
+        Object.values(hData).forEach(turno => {
+          if (typeof turno !== 'object') return;
+          Object.values(turno).forEach(grupo => {
+            (grupo?.bloques||[]).forEach(b => {
+              DIAS.forEach(d => {
+                const m = (b[d]?.maestro||'').trim();
+                if (m && m.toUpperCase() !== 'SIN DOCENTE') maestros.add(m);
+              });
+            });
+          });
+        });
+        [...maestros].sort().forEach(m => {
+          const o = document.createElement('option');
+          o.value = m; o.textContent = m; sel.appendChild(o);
+        });
+      }
+    }
+  } catch(e) {
+    sel.innerHTML = '<option value="">— Sin docentes cargados —</option>';
+  }
+}
+
 </script>
 </body>
 </html>

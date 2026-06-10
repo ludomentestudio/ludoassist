@@ -649,9 +649,10 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
 
   <!-- Sub-pestañas -->
   <div class="rep-sub-tabs">
-    <button class="rep-sub-tab active" id="rsub-nuevo" onclick="repSubTab('nuevo')">✏️ Nuevo Reporte</button>
+    <button class="rep-sub-tab active" id="rsub-nuevo" onclick="repSubTab('nuevo')">✏️ Nuevo</button>
     <button class="rep-sub-tab" id="rsub-historial" onclick="repSubTab('historial')">📂 Historial</button>
     <button class="rep-sub-tab" id="rsub-pendientes" onclick="repSubTab('pendientes')">⏳ Pendientes</button>
+    <button class="rep-sub-tab" id="rsub-stats" onclick="repSubTab('stats')">📈 Stats</button>
   </div>
 
   <!-- SUB-VISTA: NUEVO REPORTE -->
@@ -717,6 +718,14 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
         <textarea id="rep-desc" class="rep-textarea" placeholder="Describe la situación con detalle: fecha del incidente, personas involucradas, acciones tomadas..."></textarea>
       </div>
 
+      <!-- Nota rápida -->
+      <div style="margin-bottom:.85rem;">
+        <label class="man-label">📝 Nota rápida (opcional — no forma parte del reporte oficial)</label>
+        <input type="text" id="rep-nota" class="man-time-input"
+          placeholder="Ej: Tel. padre: 981-123-4567 · Llamar antes de las 6pm"
+          style="font-size:.85rem;font-weight:600;">
+      </div>
+
       <!-- Avisar al padre -->
       <label class="rep-padre-toggle" id="rep-padre-toggle-lbl" onclick="repTogglePadre()">
         <input type="checkbox" id="rep-chk-padre" class="rep-padre-chk" onclick="event.stopPropagation();repTogglePadre()">
@@ -744,7 +753,7 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
       <select id="hist-turno-fil" class="man-select" style="max-width:110px;" onchange="histBuscar()">
         <option value="">Todos</option>
       </select>
-      <input id="hist-buscar-input" class="hist-input" type="text" placeholder="Buscar alumno...">
+      <input id="hist-buscar-input" class="hist-input" type="text" placeholder="Buscar alumno..." oninput="histBuscarRT()">
       <button class="btn-hist-buscar" onclick="histBuscar()">🔍</button>
       <button class="btn-hist-buscar" style="background:var(--blue);" onclick="histPDFAlumno()" title="PDF historial completo del alumno">📄</button>
     </div>
@@ -772,6 +781,23 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
     </div>
   </div><!-- /rsv-pendientes -->
 
+
+  <!-- SUB-VISTA: ESTADÍSTICAS -->
+  <div class="rep-sub-view" id="rsv-stats">
+    <div class="config-intro">
+      <strong>📈 Estadísticas del mes</strong><br>
+      Resumen de reportes del mes actual. Alumnos con más incidencias, tipos más frecuentes y totales por grupo.
+    </div>
+    <!-- Selector de mes -->
+    <div style="display:flex;gap:.5rem;margin-bottom:1rem;align-items:center;">
+      <select id="stats-mes" class="man-select" style="flex:1;" onchange="statsCargar()"></select>
+      <button class="btn-hist-buscar" style="background:var(--emerald);" onclick="statsExportarExcel()" title="Exportar resumen Excel">📊</button>
+    </div>
+    <div id="stats-contenido">
+      <div class="empty-state"><div class="empty-icon">📈</div><div class="empty-txt">Cargando estadísticas...</div></div>
+    </div>
+  </div><!-- /rsv-stats -->
+
 </div><!-- /view-reportes -->
 
 
@@ -783,7 +809,7 @@ header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);col
   <button class="bnav-btn" onclick="switchView('exportar')"><span>📤</span><div class="bnav-label">Exportar</div></button>
   <button class="bnav-btn" onclick="switchView('manual')"><span>📝</span><div class="bnav-label">Manual</div></button>
   <button class="bnav-btn" onclick="switchView('horarios');window.tsAbrirHorarios()"><span>📅</span><div class="bnav-label">Horarios</div></button>
-  <button class="bnav-btn" onclick="switchView('reportes');window.abrirReportes()"><span>📋</span><div class="bnav-label">Reportes</div></button>
+  <button class="bnav-btn" onclick="switchView('reportes');window.abrirReportes()" id="bnav-reportes" style="position:relative;"><span>📋</span><div class="bnav-label">Reportes</div><span id="badge-pend" style="display:none;position:absolute;top:4px;right:8px;background:var(--ruby);color:white;border-radius:50%;width:16px;height:16px;font-size:.58rem;font-weight:900;display:flex;align-items:center;justify-content:center;line-height:1;" id="badge-pend">0</span></button>
 </nav>
 
 <script type="module">
@@ -814,7 +840,27 @@ let enviados=JSON.parse(localStorage.getItem(SK_ENVIOS)||'{}');
 let estructura={},asistencias={},nombreEsc='',turnoFiltro='all',cfgTurnoFiltro='all',perfilEsc={},expResultados=[];
 let estatusSeleccionado='',diasSeleccionados=new Set(),calMesActual=new Date();
 
-function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2800);}
+// ── Toast robusto para móvil ──
+// Cuando el usuario sale a WA o descarga PDF, el setTimeout se pausa.
+// Al regresar, visibilitychange y pageshow limpian el toast.
+let _toastTimer=null;
+function toast(msg){
+  const el=document.getElementById('toast');
+  if(!el)return;
+  el.textContent=msg;
+  el.classList.add('show');
+  if(_toastTimer)clearTimeout(_toastTimer);
+  _toastTimer=setTimeout(()=>{el.classList.remove('show');_toastTimer=null;},2800);
+}
+function _clearToast(){
+  const el=document.getElementById('toast');
+  if(el)el.classList.remove('show');
+  if(_toastTimer){clearTimeout(_toastTimer);_toastTimer=null;}
+}
+// Limpiar toast cuando el usuario regresa a la app
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')_clearToast();});
+window.addEventListener('pageshow',()=>_clearToast());
+window.addEventListener('focus',()=>_clearToast());
 function hoy(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
 function horaActual(){return new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});}
 function sanitizar(s){return s.replace(/[.#$\[\]/]/g,'_');}
@@ -880,7 +926,7 @@ async function cargarEstructura(){
     if(snap.exists()){const cfg=snap.val();if(cfg.perfil){perfilEsc=cfg.perfil;nombreEsc=cfg.perfil.nombreEscuela||ID_ESC.toUpperCase();document.getElementById('hdr-school').textContent=nombreEsc;}if(cfg.estructura)estructura=cfg.estructura;}
     if(!Object.keys(estructura).length){const dirSnap=await dbOnce(`escuelas/${ID_ESC}/directorio`);if(dirSnap?.exists()){Object.keys(dirSnap.val()).forEach(clave=>{const p=clave.split('-');if(p.length<3)return;const turno=p[0].charAt(0).toUpperCase()+p[0].slice(1),grado=p[1],grupo=p[2].toUpperCase();if(!estructura[turno])estructura[turno]={};if(!estructura[turno][grado])estructura[turno][grado]=[];if(!estructura[turno][grado].includes(grupo))estructura[turno][grado].push(grupo);});}}
   }catch(e){}
-  actualizarTurnoMostrado();cargarAsistencias();
+  actualizarTurnoMostrado();cargarAsistencias();setTimeout(window.pendCargar,2000);
 }
 
 async function cargarAsistencias(){
@@ -992,11 +1038,30 @@ window.copiarMensaje=function(clave){
   navigator.clipboard.writeText(el.textContent).then(()=>toast('📋 Copiado')).catch(()=>{const ta=document.createElement('textarea');ta.value=el.textContent;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);toast('📋 Copiado');});
 };
 
+function detectarTurnoAutomatico() {
+  // Antes de las 13:00 = Matutino; después = Vespertino
+  const hora = new Date().getHours();
+  const turnos = Object.keys(estructura).sort();
+  if (!turnos.length) return '';
+  if (hora < 13) {
+    const mat = turnos.find(t => t.toLowerCase().includes('mat'));
+    if (mat) return mat;
+  } else {
+    const vesp = turnos.find(t => t.toLowerCase().includes('vesp'));
+    if (vesp) return vesp;
+  }
+  return turnos[0] || '';
+}
+
 function cargarTurnosManual(){
   const sel=document.getElementById('man-turno');sel.innerHTML='<option value="">Seleccione turno...</option>';
   const turnos=Object.keys(estructura).sort();
   turnos.forEach(t=>{const opt=document.createElement('option');opt.value=t;opt.textContent=t.toLowerCase().includes('mat')?`🌅 ${t}`:`🌆 ${t}`;sel.appendChild(opt);});
-  if(turnoFiltro!=='all'){const turnoMatch=turnos.find(t=>(turnoFiltro==='mat'&&t.toLowerCase().includes('mat'))||(turnoFiltro==='vesp'&&t.toLowerCase().includes('vesp')));if(turnoMatch){sel.value=turnoMatch;manActualizarGrados();}}
+  // Preseleccionar: primero turnoFiltro activo, si no usar hora automática
+  const turnoAuto = turnoFiltro !== 'all'
+    ? turnos.find(t => (turnoFiltro==='mat'&&t.toLowerCase().includes('mat'))||(turnoFiltro==='vesp'&&t.toLowerCase().includes('vesp')))
+    : detectarTurnoAutomatico();
+  if(turnoAuto){sel.value=turnoAuto;manActualizarGrados();}
   if(!sel.value)resetManual('grado');actualizarChipTurnoManual();
 }
 function actualizarChipTurnoManual(){const chip=document.getElementById('man-turno-chip');if(!chip)return;if(turnoFiltro==='all'){chip.style.display='none';return;}const esMat=turnoFiltro==='mat';chip.style.display='flex';chip.innerHTML=`<span style="font-size:1.4rem;">${esMat?'🌅':'🏙️'}</span><div><div style="font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--slate2);">Turno Activo</div><div style="font-size:.95rem;font-weight:900;color:var(--navy);">${esMat?'Matutino':'Vespertino'}</div></div>`;}
@@ -1133,6 +1198,176 @@ function tsPoblarMaestros(){const sel=document.getElementById('ts-mae-sel');if(!
 
 window.tsConsultarMaestro=function(){const maestro=document.getElementById('ts-mae-sel')?.value;const res=document.getElementById('ts-mae-resultado');if(!maestro){if(res)res.innerHTML='<div class="hor-mae-vacio">Selecciona un maestro</div>';return;}const grupos=tsHorarios[tsTurno]||{};const DIAS=['lunes','martes','miercoles','jueves','viernes'];const DIAS_L=['Lunes','Martes','Miércoles','Jueves','Viernes'];const ORD={lunes:0,martes:1,miercoles:2,jueves:3,viernes:4};const now=tsGetMin();const diaHoy=tsGetDia();const rows=[];Object.entries(grupos).forEach(([ng,datosG])=>{(datosG.bloques||[]).forEach((b,i)=>{if(tsEsReceso(b))return;DIAS.forEach((d,di)=>{const info=b[d]||{};if((info.maestro||'').trim().toUpperCase()===maestro.trim().toUpperCase()){const sig=datosG.bloques[i+1];const ini=tsHhMm(b.hora),fin=sig?tsHhMm(sig.hora):ini+50;const esAhora=now>=ini&&now<fin&&diaHoy===d;const rango=tsRango(datosG.bloques,i);rows.push({dia:DIAS_L[di],diaKey:d,hora:b.hora,rango,grupo:ng,mat:(info.materia||'').replace(/^,/,'').trim(),esAhora});}});});});if(!rows.length){res.innerHTML='<div class="hor-mae-vacio">Este maestro no tiene clases en el turno activo</div>';return;}rows.sort((a,b)=>(ORD[a.diaKey]-ORD[b.diaKey])||a.hora.localeCompare(b.hora));const col=tsColorMaestro(maestro);const hdrStyle=col?`background:${col.bg};border-left:4px solid ${col.border};padding:8px 12px;margin-bottom:8px;border-radius:6px;font-size:.75rem;font-weight:800;color:${col.text};`:'';const hdr=hdrStyle?`<div style="${hdrStyle}">🧑‍🏫 ${maestro} · ${rows.length} clase${rows.length!==1?'s':''}</div>`:'';res.innerHTML=`${hdr}<table class="hor-mae-tabla"><thead><tr><th>Día</th><th>Hora</th><th>Grupo</th><th>Materia</th></tr></thead><tbody>${rows.map(r=>{const bg=col?`background:${col.bg};`:(r.esAhora?'background:#FEFCE8;':'');return`<tr class="${r.esAhora?'mae-ah':''}" style="${bg}"><td>${r.dia}${r.esAhora?' 🟡':''}</td><td style="white-space:nowrap;">${r.hora}<br><span style="font-size:.6rem;color:#94A3B8;">${r.rango}</span></td><td><strong>${r.grupo}</strong></td><td>${r.mat}</td></tr>`;}).join('')}</tbody></table>`;};
 
+// ══════════════════════════════════════════════
+// ESTADÍSTICAS MENSUALES
+// ══════════════════════════════════════════════
+function statsIniciarMes() {
+  const sel = document.getElementById('stats-mes');
+  if (!sel) return;
+  const ahora = new Date();
+  sel.innerHTML = '';
+  const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio',
+                  'Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  // Últimos 6 meses
+  for (let i = 0; i < 6; i++) {
+    const d = new Date(ahora.getFullYear(), ahora.getMonth() - i, 1);
+    const val = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    const lbl = `${meses[d.getMonth()]} ${d.getFullYear()}`;
+    const o = document.createElement('option');
+    o.value = val; o.textContent = lbl;
+    sel.appendChild(o);
+  }
+}
+
+let _statsData = [];
+
+window.statsCargar = async function() {
+  statsIniciarMes();
+  const mes = document.getElementById('stats-mes')?.value;
+  if (!mes) return;
+  const cont = document.getElementById('stats-contenido');
+  cont.innerHTML = '<div class="loading-state"><div class="loader"></div></div>';
+  try {
+    const snap = await dbOnce(`escuelas/${ID_ESC}/reportes`);
+    _statsData = [];
+    if (snap.exists()) {
+      snap.forEach(child => {
+        const r = { ...child.val(), _key: child.key };
+        if ((r.fecha||'').startsWith(mes)) _statsData.push(r);
+      });
+    }
+    statsRenderizar(cont, mes);
+  } catch(e) {
+    cont.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-txt">Error: ${e.message}</div></div>`;
+  }
+};
+
+function statsRenderizar(cont, mes) {
+  if (!_statsData.length) {
+    cont.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-txt">Sin reportes este mes</div></div>';
+    return;
+  }
+  const total = _statsData.length;
+  const porTipo = {}, porAlumno = {}, porGrupo = {};
+  _statsData.forEach(r => {
+    porTipo[r.tipo||'otro'] = (porTipo[r.tipo||'otro']||0)+1;
+    porAlumno[r.alumno||'—'] = (porAlumno[r.alumno||'—']||0)+1;
+    porGrupo[r.grupo||'—'] = (porGrupo[r.grupo||'—']||0)+1;
+  });
+  const topAlumnos = Object.entries(porAlumno).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const topGrupos  = Object.entries(porGrupo).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const citatorios = _statsData.filter(r=>r.avisarPadre).length;
+  const pendCit    = _statsData.filter(r=>r.citatorio&&!r.citatorio.cerrado&&r.citatorio.estado==='pendiente').length;
+
+  // Tarjetas resumen
+  const tarjetas = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1rem;">
+      <div style="background:var(--white);border-radius:10px;padding:.85rem;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.08);">
+        <div style="font-size:1.6rem;font-weight:900;color:var(--navy);">${total}</div>
+        <div style="font-size:.62rem;font-weight:800;color:var(--slate2);text-transform:uppercase;">Total Reportes</div>
+      </div>
+      <div style="background:var(--white);border-radius:10px;padding:.85rem;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.08);">
+        <div style="font-size:1.6rem;font-weight:900;color:var(--amber);">${citatorios}</div>
+        <div style="font-size:.62rem;font-weight:800;color:var(--slate2);text-transform:uppercase;">Con Citatorio</div>
+      </div>
+      <div style="background:var(--white);border-radius:10px;padding:.85rem;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.08);">
+        <div style="font-size:1.6rem;font-weight:900;color:var(--ruby);">${pendCit}</div>
+        <div style="font-size:.62rem;font-weight:800;color:var(--slate2);text-transform:uppercase;">Cit. Pendientes</div>
+      </div>
+      <div style="background:var(--white);border-radius:10px;padding:.85rem;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.08);">
+        <div style="font-size:1.6rem;font-weight:900;color:var(--emerald);">${Object.keys(porAlumno).length}</div>
+        <div style="font-size:.62rem;font-weight:800;color:var(--slate2);text-transform:uppercase;">Alumnos Involucrados</div>
+      </div>
+    </div>`;
+
+  // Por tipo
+  const tipoHTML = Object.entries(porTipo).sort((a,b)=>b[1]-a[1]).map(([tipo,n]) => {
+    const t = TIPOS_REP[tipo]||TIPOS_REP.otro;
+    const pct = Math.round(n/total*100);
+    return `<div style="margin-bottom:.5rem;">
+      <div style="display:flex;justify-content:space-between;font-size:.78rem;font-weight:700;color:var(--navy);margin-bottom:.25rem;">
+        <span>${t.icon} ${t.label}</span><span>${n} (${pct}%)</span>
+      </div>
+      <div style="background:var(--border);border-radius:4px;height:6px;">
+        <div style="background:${t.color||'var(--green)'};width:${pct}%;height:6px;border-radius:4px;"></div>
+      </div></div>`;
+  }).join('');
+
+  // Top alumnos
+  const alumnosHTML = topAlumnos.map(([nombre,n],i) =>
+    `<div style="display:flex;align-items:center;justify-content:space-between;padding:.5rem .75rem;background:${i===0?'var(--ruby-lite, #FEE2E2)':'var(--white)'};border-radius:8px;margin-bottom:.35rem;border:1px solid var(--border);">
+      <span style="font-size:.8rem;font-weight:700;color:var(--navy);">${i===0?'🥇':i===1?'🥈':'🥉'} ${nombre}</span>
+      <span style="font-size:.75rem;font-weight:900;color:var(--ruby);">${n}</span>
+    </div>`
+  ).join('');
+
+  // Top grupos
+  const gruposHTML = topGrupos.map(([grupo,n]) =>
+    `<div style="display:flex;justify-content:space-between;padding:.45rem .75rem;background:var(--white);border-radius:8px;margin-bottom:.3rem;border:1px solid var(--border);">
+      <span style="font-size:.8rem;font-weight:700;color:var(--navy);">${grupo}</span>
+      <span style="font-size:.75rem;font-weight:900;color:var(--amber);">${n} reporte${n!==1?'s':''}</span>
+    </div>`
+  ).join('');
+
+  const card = bg => `background:var(--white);border-radius:12px;padding:1rem;margin-bottom:.85rem;box-shadow:0 2px 6px rgba(0,0,0,.08);`;
+  const tit = t => `<div style="font-size:.72rem;font-weight:900;color:var(--slate2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.65rem;">${t}</div>`;
+
+  cont.innerHTML = tarjetas +
+    `<div style="${card()}"><div>${tit('📊 Distribución por tipo')}</div>${tipoHTML}</div>` +
+    `<div style="${card()}"><div>${tit('⚠️ Alumnos con más reportes')}</div>${alumnosHTML || '<div style="color:var(--slate2);font-size:.8rem;">Sin datos</div>'}</div>` +
+    `<div style="${card()}"><div>${tit('🏫 Grupos con más reportes')}</div>${gruposHTML || '<div style="color:var(--slate2);font-size:.8rem;">Sin datos</div>'}</div>`;
+}
+
+window.statsExportarExcel = function() {
+  if (!_statsData.length) { toast('⚠️ Carga las estadísticas primero'); return; }
+  const mes = document.getElementById('stats-mes')?.value || '';
+  const wb = XLSX.utils.book_new();
+
+  // Hoja detalle
+  const rows = [
+    [`RESUMEN MENSUAL DE REPORTES — ${nombreEsc}`],
+    [`Mes: ${mes}`],
+    [],
+    ['Fecha','Alumno','Grupo','Turno','Tipo','Reportado por','Citatorio','Acuerdos'],
+    ..._statsData.map(r => [
+      r.fecha||'', r.alumno||'', r.grupo||'', r.turno||'',
+      (TIPOS_REP[r.tipo]||TIPOS_REP.otro).label,
+      r.reportadoPor||'',
+      r.citatorio ? (r.citatorio.estado==='asistio'?'Asistió':r.citatorio.estado==='no_asistio'?'No asistió':'Pendiente') : 'N/A',
+      r.citatorio?.acuerdos||''
+    ])
+  ];
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols'] = [{wch:12},{wch:35},{wch:10},{wch:12},{wch:14},{wch:30},{wch:14},{wch:40}];
+  XLSX.utils.book_append_sheet(wb, ws, 'Detalle');
+
+  // Hoja resumen
+  const porTipo = {}, porAlumno = {}, porGrupo = {};
+  _statsData.forEach(r => {
+    porTipo[r.tipo||'otro'] = (porTipo[r.tipo||'otro']||0)+1;
+    porAlumno[r.alumno||'—'] = (porAlumno[r.alumno||'—']||0)+1;
+    porGrupo[r.grupo||'—'] = (porGrupo[r.grupo||'—']||0)+1;
+  });
+  const resRows = [
+    ['RESUMEN ESTADÍSTICO'],
+    [],
+    ['Por Tipo','Cantidad'],
+    ...Object.entries(porTipo).sort((a,b)=>b[1]-a[1]).map(([t,n])=>[(TIPOS_REP[t]||TIPOS_REP.otro).label,n]),
+    [],
+    ['Top Alumnos','Reportes'],
+    ...Object.entries(porAlumno).sort((a,b)=>b[1]-a[1]).slice(0,10).map(([a,n])=>[a,n]),
+    [],
+    ['Por Grupo','Reportes'],
+    ...Object.entries(porGrupo).sort((a,b)=>b[1]-a[1]).map(([g,n])=>[g,n]),
+  ];
+  const ws2 = XLSX.utils.aoa_to_sheet(resRows);
+  ws2['!cols'] = [{wch:30},{wch:12}];
+  XLSX.utils.book_append_sheet(wb, ws2, 'Resumen');
+
+  XLSX.writeFile(wb, `estadisticas_reportes_${mes}.xlsx`);
+  toast('📊 Excel del mes generado');
+};
+
 window.tsAbrirHorarios=function(){if(!Object.keys(tsHorarios).length&&ID_ESC)tsCargarHorarios();else tsRenderHorarios();};
 
 
@@ -1158,6 +1393,7 @@ window.repSubTab = function(tab) {
   document.getElementById('rsv-'+tab).classList.add('active');
   if (tab === 'historial') histBuscar();
   if (tab === 'pendientes') pendCargar();
+  if (tab === 'stats') statsCargar();
 };
 
 // ── Cargar turnos en el formulario ──
@@ -1171,14 +1407,11 @@ function repCargarTurnos() {
     o.textContent = t.toLowerCase().includes('mat') ? `🌅 ${t}` : `🌆 ${t}`;
     sel.appendChild(o);
   });
-  // Preseleccionar turno activo
-  if (turnoFiltro !== 'all') {
-    const match = Object.keys(estructura).find(t =>
-      (turnoFiltro==='mat' && t.toLowerCase().includes('mat')) ||
-      (turnoFiltro==='vesp' && t.toLowerCase().includes('vesp'))
-    );
-    if (match) { sel.value = match; repActualizarGrados(); }
-  }
+  // Preseleccionar turno: filtro activo o automático por hora
+  const turnoPresel = turnoFiltro !== 'all'
+    ? Object.keys(estructura).find(t => (turnoFiltro==='mat'&&t.toLowerCase().includes('mat'))||(turnoFiltro==='vesp'&&t.toLowerCase().includes('vesp')))
+    : detectarTurnoAutomatico();
+  if (turnoPresel) { sel.value = turnoPresel; repActualizarGrados(); }
   // Llenar filtro historial
   const hFil = document.getElementById('hist-turno-fil');
   if (hFil) {
@@ -1282,6 +1515,7 @@ window.repGuardar = async function() {
     tipo: repTipoSel,
     descripcion: desc,
     reportadoPor: docReporta,
+    notaRapida: (document.getElementById('rep-nota')?.value||'').trim(),
     avisarPadre: repPadreActivo,
     citatorio: repPadreActivo ? {
       estado: 'pendiente',
@@ -1298,7 +1532,7 @@ window.repGuardar = async function() {
     await dbPush(`escuelas/${ID_ESC}/reportes`, reporte);
     toast('✅ Reporte guardado correctamente');
     // Limpiar
-    document.getElementById('rep-alumno').value = ''; document.getElementById('rep-docente').value = '';
+    document.getElementById('rep-alumno').value = ''; document.getElementById('rep-docente').value = ''; document.getElementById('rep-nota').value = '';
     document.getElementById('rep-desc').value = '';
     repTipoSel = '';
     repPadreActivo = false;
@@ -1319,6 +1553,13 @@ window.repGuardar = async function() {
 // ══════════════════════════════════════════════
 let histReportes = [];
 
+// Búsqueda en tiempo real con debounce
+let _histDebounce = null;
+window.histBuscarRT = function() {
+  clearTimeout(_histDebounce);
+  _histDebounce = setTimeout(() => histBuscar(), 350);
+};
+
 window.histBuscar = async function() {
   const turnoFil = document.getElementById('hist-turno-fil')?.value || '';
   const texto    = (document.getElementById('hist-buscar-input')?.value || '').trim().toUpperCase();
@@ -1331,7 +1572,9 @@ window.histBuscar = async function() {
     if (snap.exists()) {
       snap.forEach(child => {
         const r = { ...child.val(), _key: child.key };
+        const tipoFil = document.getElementById('hist-tipo-fil')?.value || '';
         if (turnoFil && r.turno !== turnoFil) return;
+        if (tipoFil && r.tipo !== tipoFil) return;
         if (texto && !(r.alumno||'').toUpperCase().includes(texto)) return;
         histReportes.push(r);
       });
@@ -1467,7 +1710,21 @@ function histRenderLista(cont) {
     cont.innerHTML = '<div class="empty-state"><div class="empty-icon">📂</div><div class="empty-txt">Sin reportes</div><div class="empty-sub">No se encontraron reportes con esos filtros</div></div>';
     return;
   }
-  cont.innerHTML = histReportes.map((r,i) => repItemHTML(r,i)).join('');
+  // Contador por tipo
+  const conteo = {};
+  histReportes.forEach(r => { conteo[r.tipo||'otro'] = (conteo[r.tipo||'otro']||0)+1; });
+  const totalRep = histReportes.length;
+  const conteoHTML = Object.entries(conteo).map(([tipo,n]) => {
+    const t = TIPOS_REP[tipo]||TIPOS_REP.otro;
+    return `<span style="font-size:.68rem;font-weight:800;padding:.2rem .5rem;border-radius:20px;background:#F1F5F9;color:#334155;">${t.icon} ${t.label}: ${n}</span>`;
+  }).join('');
+
+  const bannerHTML = `<div style="background:#F8FAFC;border:1px solid var(--border);border-radius:10px;padding:.75rem;margin-bottom:.75rem;">
+    <div style="font-size:.68rem;font-weight:800;color:var(--slate2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.5rem;">📊 ${totalRep} reporte${totalRep!==1?'s':''} encontrado${totalRep!==1?'s':''}</div>
+    <div style="display:flex;flex-wrap:wrap;gap:.3rem;">${conteoHTML}</div>
+  </div>`;
+
+  cont.innerHTML = bannerHTML + histReportes.map((r,i) => repItemHTML(r,i)).join('');
 }
 
 function repItemHTML(r, idx) {
@@ -1491,7 +1748,7 @@ function repItemHTML(r, idx) {
   const msgWA = generarMsgReporte(r);
 
   return `<div class="rep-item ${r.tipo||'otro'}" id="ritem-${r._key}">
-    <div class="rep-item-hdr" onclick="toggleRepItem('${r._key}')">
+    <div class="rep-item-hdr" onclick="toggleRepItem('${r._key}')" style="${r.archivado?'opacity:.55;':''}">
       <div class="rep-item-left">
         <div class="rep-tipo-icon">${tipo.icon}</div>
         <div>
@@ -1506,12 +1763,37 @@ function repItemHTML(r, idx) {
     </div>
     <div class="rep-item-body">
       <div class="rep-desc">${r.descripcion||'—'}</div>
+      ${r.notaRapida?`<div style="font-size:.75rem;color:var(--slate2);background:#F8FAFC;border:1px dashed var(--border);border-radius:6px;padding:.5rem .65rem;margin-bottom:.75rem;">📝 <b>Nota:</b> ${r.notaRapida}</div>`:''}
       ${citHTML}
       ${acuerdosHTML}
       <div class="rep-acciones">
         <button class="btn-rep-wa" onclick="repEnviarWA('${r._key}')">📤 WhatsApp</button>
         <button class="btn-rep-copy" onclick="repCopiar('${r._key}','${encodeURIComponent(msgWA)}')">📋</button>
         <button class="btn-rep-pdf" onclick="repPDF('${r._key}')">📄</button>
+        <button style="background:var(--amber);color:white;border:none;border-radius:8px;padding:.65rem .75rem;font-size:.78rem;font-weight:800;cursor:pointer;" onclick="repEditar('${r._key}')">✏️</button>
+      </div>
+      <!-- Modal edición inline -->
+      <div id="edit-${r._key}" style="display:none;border-top:1px solid var(--border);padding:.85rem;">
+        <div style="font-size:.72rem;font-weight:900;color:var(--amber);text-transform:uppercase;margin-bottom:.65rem;">✏️ Editar reporte</div>
+        <div style="margin-bottom:.65rem;">
+          <label class="man-label">Tipo</label>
+          <select id="edit-tipo-${r._key}" class="man-select">
+            <option value="conducta" ${r.tipo==='conducta'?'selected':''}>😤 Conducta</option>
+            <option value="academico" ${r.tipo==='academico'?'selected':''}>📚 Académico</option>
+            <option value="asistencia" ${r.tipo==='asistencia'?'selected':''}>📋 Asistencia</option>
+            <option value="salud" ${r.tipo==='salud'?'selected':''}>🏥 Salud</option>
+            <option value="familiar" ${r.tipo==='familiar'?'selected':''}>👨‍👩‍👧 Familiar</option>
+            <option value="otro" ${r.tipo==='otro'?'selected':''}>📌 Otro</option>
+          </select>
+        </div>
+        <div style="margin-bottom:.65rem;">
+          <label class="man-label">Descripción</label>
+          <textarea id="edit-desc-${r._key}" class="rep-textarea" style="min-height:80px;">${(r.descripcion||'').replace(/</g,'&lt;')}</textarea>
+        </div>
+        <div style="display:flex;gap:.5rem;">
+          <button style="flex:1;padding:.65rem;background:var(--green);color:white;border:none;border-radius:8px;font-size:.82rem;font-weight:800;cursor:pointer;" onclick="repGuardarEdicion('${r._key}')">💾 Guardar</button>
+          <button style="padding:.65rem .85rem;background:var(--border);color:var(--slate);border:none;border-radius:8px;font-size:.82rem;font-weight:800;cursor:pointer;" onclick="document.getElementById('edit-${r._key}').style.display='none'">✕</button>
+        </div>
       </div>
     </div>
   </div>`;
@@ -1589,6 +1871,25 @@ window.citCerrar = async function(key) {
   } catch(e) { toast('❌ Error: '+e.message); }
 };
 
+// ── Editar reporte ──
+window.repEditar = function(key) {
+  const el = document.getElementById('edit-'+key);
+  if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+};
+
+window.repGuardarEdicion = async function(key) {
+  const tipo = document.getElementById('edit-tipo-'+key)?.value;
+  const desc = document.getElementById('edit-desc-'+key)?.value.trim();
+  if (!desc) { toast('⚠️ La descripción no puede estar vacía'); return; }
+  try {
+    await dbSet(`escuelas/${ID_ESC}/reportes/${key}/tipo`, tipo);
+    await dbSet(`escuelas/${ID_ESC}/reportes/${key}/descripcion`, desc);
+    toast('✅ Reporte actualizado');
+    document.getElementById('edit-'+key).style.display = 'none';
+    histBuscar();
+  } catch(e) { toast('❌ Error: '+e.message); }
+};
+
 // ══════════════════════════════════════════════
 // PENDIENTES
 // ══════════════════════════════════════════════
@@ -1608,6 +1909,16 @@ window.pendCargar = async function() {
       });
     }
     pendientes.sort((a,b) => (a.timestamp||0)-(b.timestamp||0));
+    // Actualizar badge en menú
+    const badge = document.getElementById('badge-pend');
+    if (badge) {
+      if (pendientes.length > 0) {
+        badge.textContent = pendientes.length > 9 ? '9+' : pendientes.length;
+        badge.style.display = 'flex';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
     if (!pendientes.length) {
       cont.innerHTML = '<div class="empty-state"><div class="empty-icon">✅</div><div class="empty-txt">Sin pendientes</div><div class="empty-sub">Todos los citatorios están resueltos</div></div>';
       return;
@@ -1642,6 +1953,7 @@ function generarMsgReporte(r) {
   msg += `👤 Alumno: *${r.alumno||'—'}*\n`;
   msg += `🏫 Grupo: ${r.grupo||'—'} · Turno ${r.turno||'—'}\n`;
   msg += `📅 Fecha: ${fechaLeg}\n`;
+  if (r.reportadoPor) msg += `👩‍🏫 Reportado por: ${r.reportadoPor}\n`;
   msg += `━━━━━━━━━━━━━━━━━━━━\n\n`;
   msg += `📝 *Descripción:*\n${r.descripcion||'—'}\n\n`;
   if (r.avisarPadre) {
@@ -1693,7 +2005,9 @@ window.repPDF = async function(key) {
     doc.setTextColor(50,50,50); doc.setFontSize(10); doc.setFont('helvetica','normal');
     doc.text(`Alumno: ${r.alumno||'—'}`, 15, y); y+=6;
     doc.text(`Grupo: ${r.grupo||'—'} · Turno ${r.turno||'—'}`, 15, y); y+=6;
-    doc.text(`Fecha: ${r.fecha||'—'} · Hora: ${r.hora||'—'}`, 15, y); y+=10;
+    doc.text(`Fecha: ${r.fecha||'—'} · Hora: ${r.hora||'—'}`, 15, y); y+=6;
+    if(r.reportadoPor){doc.text(`Reportado por: ${r.reportadoPor}`, 15, y); y+=6;}
+    y+=4;
     doc.setFont('helvetica','bold'); doc.text('Descripción:', 15, y); y+=6;
     doc.setFont('helvetica','normal');
     const lines = doc.splitTextToSize(r.descripcion||'—', pw-30);
@@ -1726,6 +2040,7 @@ window.repPDF = async function(key) {
 window.abrirReportes = function() {
   repCargarTurnos();
   repCargarDocentes();
+  statsIniciarMes();
 };
 
 // Cargar lista de docentes desde Firebase

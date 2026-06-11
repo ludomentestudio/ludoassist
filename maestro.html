@@ -673,21 +673,200 @@ async function recalcStats(){
   try{const snap=await dbGet(`escuelas/${escAct}/listas-maestro`);if(snap.exists()){snap.forEach(fS=>{fS.forEach(gS=>{gS.forEach(sS=>{const r=sS.val();if(r.maestro!==docNom||r.turno!==gsel.turno||String(r.grado)!==String(gsel.grado)||r.grupo!==gsel.grupo)return;(r.alumnos||[]).forEach(a=>{const nk=san(norm(a.nombre));if(!statsC[nk])statsC[nk]={nombre:a.nombre,P:0,T:0,F:0,J:0,total:0};statsC[nk][a.estatusMaestro]=(statsC[nk][a.estatusMaestro]||0)+1;statsC[nk].total++;});});});});}}catch(e){}
 }
 // ══ MIS LISTAS ══
+// ── MIS LISTAS ── cache ──
+let _mlTodas=[];let _mlGrupos=[];let _mlFVis=false;
+
 async function renderVista_mislistas(){
   const m=document.getElementById('main');
+  m.innerHTML='<div class="ldg"><div class="loader"></div></div>';
   try{
-    const snap=await dbGet(`escuelas/${escAct}/listas-maestro`);const hist=[];
-    if(snap.exists()){snap.forEach(fS=>{fS.forEach(gS=>{gS.forEach(sS=>{const r=sS.val();if(r.maestro===docNom)hist.push(r);});});});}
-    hist.sort((a,b)=>(b.fecha+b.hora).localeCompare(a.fecha+a.hora));
-    if(!hist.length){m.innerHTML='<div class="empty"><div class="eico">📂</div><p>Sin listas guardadas aún</p><small>Guarda una lista desde Lista para verla aquí.</small></div>';return;}
-    const IE={P:'✅',T:'⏰',F:'❌',J:'📝'};const CE={P:'color:#166534',T:'color:#92400E',F:'color:#991B1B',J:'color:#164E63'};const LE={P:'Presente',T:'Retardo',F:'Falta',J:'Justificado'};
-    m.innerHTML=`<div style="font-size:.9rem;font-weight:900;color:var(--navy);margin-bottom:.65rem;">📂 Mis Listas — ${hist.length} sesión${hist.length!==1?'es':''}</div>
-      ${hist.slice(0,50).map((r,i)=>{const P=r.alumnos?.filter(a=>a.estatusMaestro==='P').length||0;const T=r.alumnos?.filter(a=>a.estatusMaestro==='T').length||0;const F=r.alumnos?.filter(a=>a.estatusMaestro==='F').length||0;const J=r.alumnos?.filter(a=>a.estatusMaestro==='J').length||0;const tot=r.alumnos?.length||1;const p=calcPct(P,T,tot);const col=p>=85?'color:var(--emerald)':p>=70?'color:var(--amber)':'color:var(--ruby)';
-      return`<div class="hl-card"><div class="hl-hdr" onclick="toggleHL(${i})"><div><div class="hl-grp">${r.grupoDisplay||''}</div><div class="hl-fec">📅 ${r.fecha} · ⏰ ${r.hora}</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:.28rem;"><div style="display:flex;gap:.28rem;"><span class="bdg bp">✅${P}</span><span class="bdg bt">⏰${T}</span><span class="bdg bf">❌${F}</span>${J>0?`<span class="bdg bj">📝${J}</span>`:''}</div><span style="font-size:.62rem;font-weight:800;${col}">${p}% asistencia</span></div></div>
-      <div class="hl-body" id="hl-${i}">${(r.alumnos||[]).map(a=>`<div class="hl-row"><div class="hl-n">${(a.nombre||'').toUpperCase()}</div><div class="hl-e" style="${CE[a.estatusMaestro]||''}">${IE[a.estatusMaestro]||'—'} ${LE[a.estatusMaestro]||'—'}</div></div>`).join('')}</div></div>`;}).join('')}`;
+    const snap=await dbGet(`escuelas/${escAct}/listas-maestro`);
+    _mlTodas=[];
+    if(snap.exists()){snap.forEach(fS=>{fS.forEach(gS=>{gS.forEach(sS=>{const r=sS.val();if(r.maestro===docNom)_mlTodas.push(r);});});});}
+    _mlTodas.sort((a,b)=>(b.fecha+b.hora).localeCompare(a.fecha+a.hora));
+    const gSet=new Set();_mlTodas.forEach(r=>{if(r.grado&&r.grupo)gSet.add(`${r.grado}°${r.grupo}|${r.turno}`);});
+    _mlGrupos=[...gSet].sort();
+    if(!_mlTodas.length){m.innerHTML='<div class="empty"><div class="eico">📂</div><p>Sin listas guardadas aún</p><small>Guarda listas desde la pestaña Lista.</small></div>';return;}
+    _mlFVis=false;renderMLvista();
   }catch(e){m.innerHTML='<div class="empty"><div class="eico">⚠️</div><p>Error al cargar.</p></div>';}
 }
+
+function renderMLvista(){
+  const m=document.getElementById('main');
+  const hoyS=hoy();
+  const hoyL=_mlTodas.filter(r=>r.fecha===hoyS);
+  const antL=_mlTodas.filter(r=>r.fecha!==hoyS);
+  const fechas=_mlTodas.map(r=>r.fecha).filter(Boolean).sort();
+  const fMin=fechas[0]||hoyS;const fMax=fechas[fechas.length-1]||hoyS;
+  m.innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;">
+      <div style="font-size:.9rem;font-weight:900;color:var(--navy);">📂 Mis Listas</div>
+      <button onclick="toggleMLF()" id="btn-mlf" style="background:var(--green);color:white;border:none;border-radius:20px;padding:.32rem .85rem;font-size:.72rem;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;">🔍 Buscar / Exportar</button>
+    </div>
+    <div id="ml-fp" style="display:none;background:var(--white);border-radius:12px;padding:.9rem 1rem;margin-bottom:.85rem;box-shadow:0 2px 8px rgba(0,0,0,.07);border-top:3px solid var(--green);animation:fadeIn .2s ease;">
+      <div style="font-size:.62rem;color:var(--slate2);text-transform:uppercase;letter-spacing:1.5px;font-weight:800;margin-bottom:.6rem;">Filtros</div>
+      <select class="sel" id="ml-grp" style="width:100%;margin-bottom:.42rem;">
+        <option value="">Todos los grupos</option>
+        ${_mlGrupos.map(g=>{const[gr,t]=g.split('|');return`<option value="${g}">${gr} · ${t}</option>`;}).join('')}
+      </select>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.42rem;margin-bottom:.42rem;">
+        <input type="date" class="sel" id="ml-desde" value="${fMin}" style="font-size:.75rem;">
+        <input type="date" class="sel" id="ml-hasta" value="${fMax}" style="font-size:.75rem;">
+      </div>
+      <div style="position:relative;margin-bottom:.42rem;">
+        <span style="position:absolute;left:.6rem;top:50%;transform:translateY(-50%);font-size:.82rem;pointer-events:none;">👤</span>
+        <input class="sel" id="ml-alumno" placeholder="Alumno específico (opcional)" style="padding-left:2rem;width:100%;">
+      </div>
+      <button onclick="aplicarFML()" style="width:100%;padding:.68rem;background:linear-gradient(135deg,var(--green),var(--green2));color:white;border:none;border-radius:9px;font-size:.85rem;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;">🔍 Buscar</button>
+      <div id="ml-tr" style="margin-top:.85rem;"></div>
+    </div>
+    ${hoyL.length?`<div style="font-size:.65rem;font-weight:900;color:var(--green);text-transform:uppercase;letter-spacing:.8px;margin-bottom:.45rem;">📅 Hoy — ${hoyS}</div>${hoyL.map((r,i)=>htmlMLC(r,'h'+i)).join('')}`:''}
+    ${antL.length?`<div style="font-size:.65rem;font-weight:900;color:var(--slate2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:.45rem;${hoyL.length?'margin-top:.85rem':''}">📁 Sesiones anteriores</div>${antL.slice(0,60).map((r,i)=>htmlMLC(r,'a'+i)).join('')}`:''}`;
+}
+
+function htmlMLC(r,uid){
+  const P=r.alumnos?.filter(a=>a.estatusMaestro==='P').length||0;
+  const T=r.alumnos?.filter(a=>a.estatusMaestro==='T').length||0;
+  const F=r.alumnos?.filter(a=>a.estatusMaestro==='F').length||0;
+  const J=r.alumnos?.filter(a=>a.estatusMaestro==='J').length||0;
+  const tot=r.alumnos?.length||1;const p=calcPct(P,T,tot);
+  const pCol=p>=85?'color:var(--emerald)':p>=70?'color:var(--amber)':'color:var(--ruby)';
+  const CE={P:'color:#166534',T:'color:#92400E',F:'color:#991B1B',J:'color:#164E63'};
+  const LE={P:'Presente',T:'Retardo',F:'Falta',J:'Justificado'};
+  const IE={P:'✅',T:'⏰',F:'❌',J:'📝'};
+  return`<div class="hl-card">
+    <div class="hl-hdr" onclick="toggleML('${uid}')">
+      <div><div class="hl-grp">${r.grupoDisplay||''}</div><div class="hl-fec">📅 ${r.fecha} · ⏰ ${r.hora}</div></div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.28rem;">
+        <div style="display:flex;gap:.3rem;">
+          <span class="bdg bp">✅${P}</span><span class="bdg bt">⏰${T}</span><span class="bdg bf">❌${F}</span>
+          ${J>0?`<span class="bdg bj">📝${J}</span>`:''}
+        </div>
+        <span style="font-size:.62rem;font-weight:800;${pCol}">${p}% asistencia</span>
+      </div>
+    </div>
+    <div class="hl-body" id="hlb-${uid}">
+      ${(r.alumnos||[]).map(a=>`<div class="hl-row"><div class="hl-n">${(a.nombre||'').toUpperCase()}</div><div class="hl-e" style="${CE[a.estatusMaestro]||''}">${IE[a.estatusMaestro]||'—'} ${LE[a.estatusMaestro]||'—'}</div></div>`).join('')}
+    </div>
+  </div>`;
+}
+window.toggleML=function(uid){document.getElementById('hlb-'+uid)?.classList.toggle('open');};
+window.toggleMLF=function(){
+  _mlFVis=!_mlFVis;
+  const p=document.getElementById('ml-fp');const b=document.getElementById('btn-mlf');
+  if(p)p.style.display=_mlFVis?'block':'none';
+  if(b){b.style.background=_mlFVis?'var(--ruby)':'var(--green)';b.textContent=_mlFVis?'✕ Cerrar':'🔍 Buscar / Exportar';}
+};
+
+window.aplicarFML=function(){
+  const grpFil=document.getElementById('ml-grp')?.value||'';
+  const desde=document.getElementById('ml-desde')?.value||'';
+  const hasta=document.getElementById('ml-hasta')?.value||'';
+  const alumFil=(document.getElementById('ml-alumno')?.value||'').toUpperCase().trim();
+  const cont=document.getElementById('ml-tr');if(!cont)return;
+  let seses=_mlTodas.filter(r=>{
+    if(grpFil){const[gr,t]=grpFil.split('|');if(`${r.grado}°${r.grupo}`!==gr||r.turno!==t)return false;}
+    if(desde&&r.fecha<desde)return false;
+    if(hasta&&r.fecha>hasta)return false;
+    return true;
+  });
+  if(alumFil){seses=seses.map(r=>({...r,alumnos:(r.alumnos||[]).filter(a=>norm(a.nombre).includes(alumFil))})).filter(r=>r.alumnos.length);}
+  if(!seses.length){cont.innerHTML='<div class="empty" style="padding:1.2rem 0;"><div class="eico">🔍</div><p>Sin resultados</p></div>';return;}
+  const fSet=new Set();seses.forEach(r=>{if(r.fecha)fSet.add(r.fecha);});
+  const fechas=[...fSet].sort();
+  const aSet=new Set();seses.forEach(r=>{(r.alumnos||[]).forEach(a=>{aSet.add(norm(a.nombre));});});
+  const alumnos=[...aSet].sort();
+  const mapa={};seses.forEach(r=>{if(!r.fecha)return;if(!mapa[r.fecha])mapa[r.fecha]={};(r.alumnos||[]).forEach(a=>{mapa[r.fecha][norm(a.nombre)]=a.estatusMaestro;});});
+  const COL={P:'color:#166534;font-weight:900;',T:'color:#92400E;font-weight:900;',F:'color:#991B1B;font-weight:900;',J:'color:#0E7490;font-weight:900;'};
+  const fC=f=>{const[y,m,dd]=f.split('-');return`${dd}/${MESES_C[parseInt(m)-1]}`;};
+  const thF=fechas.map(f=>`<th style="background:var(--navy);color:white;padding:4px 3px;font-size:.56rem;font-weight:800;text-align:center;min-width:34px;">${fC(f)}</th>`).join('');
+  const rowsHTML=alumnos.map((nombre,ri)=>{
+    const P=fechas.filter(f=>mapa[f]?.[nombre]==='P').length;
+    const T=fechas.filter(f=>mapa[f]?.[nombre]==='T').length;
+    const F2=fechas.filter(f=>mapa[f]?.[nombre]==='F').length;
+    const tot=fechas.filter(f=>mapa[f]?.[nombre]).length;
+    const p=tot>0?Math.round((P+T)/tot*100):0;
+    const pc=p>=85?'#166534':p>=70?'#92400E':'#991B1B';
+    const celdas=fechas.map(f=>{const e=mapa[f]?.[nombre]||'';return e?`<td style="text-align:center;padding:3px 2px;${COL[e]||''}">${e}</td>`:`<td style="text-align:center;padding:3px 2px;color:#CBD5E1;">—</td>`;}).join('');
+    const bg=ri%2===0?'white':'#F8FAFC';
+    return`<tr style="background:${bg};"><td style="padding:3px 5px;font-weight:800;font-size:.68rem;text-transform:uppercase;position:sticky;left:0;background:${bg};z-index:1;">${nombre}</td>${celdas}<td style="text-align:center;font-weight:900;color:#991B1B;font-size:.7rem;">${F2}</td><td style="text-align:center;font-weight:900;color:${pc};font-size:.7rem;">${p}%</td></tr>`;
+  }).join('');
+  cont.innerHTML=`
+    <div style="font-size:.7rem;color:var(--slate2);margin-bottom:.55rem;">${seses.length} sesión${seses.length!==1?'es':''} · ${fechas[0]||''} → ${fechas[fechas.length-1]||''}</div>
+    <div style="overflow-x:auto;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:.75rem;">
+      <table style="width:100%;border-collapse:collapse;font-size:.72rem;min-width:260px;">
+        <thead><tr>
+          <th style="background:var(--navy);color:white;padding:.4rem .5rem;text-align:left;font-size:.6rem;font-weight:800;position:sticky;left:0;z-index:2;min-width:100px;">Alumno</th>
+          ${thF}
+          <th style="background:var(--navy);color:#FCA5A5;padding:4px 3px;font-size:.56rem;font-weight:800;text-align:center;min-width:24px;">F</th>
+          <th style="background:var(--navy);color:#86EFAC;padding:4px 3px;font-size:.56rem;font-weight:800;text-align:center;min-width:32px;">%</th>
+        </tr></thead>
+        <tbody>${rowsHTML}</tbody>
+      </table>
+    </div>
+    <div style="display:flex;gap:.55rem;">
+      <button onclick="exportarMLExcel()" style="flex:1;padding:.7rem;background:linear-gradient(135deg,#166534,#15803D);color:white;border:none;border-radius:10px;font-size:.82rem;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;">📊 Excel</button>
+      <button onclick="exportarMLPDF()" style="flex:1;padding:.7rem;background:linear-gradient(135deg,#991B1B,#DC2626);color:white;border:none;border-radius:10px;font-size:.82rem;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;">📄 PDF</button>
+    </div>`;
+  window._mlED={seses,grpLabel:grpFil||'Todos los grupos',fechas,alumnos,mapa};
+};
+
+window.exportarMLExcel=function(){
+  const d=window._mlED;if(!d){toast('⚠️ Aplica el filtro primero.');return;}
+  const{grpLabel,fechas,alumnos,mapa}=d;
+  const escNom=escuelas.find(e=>e.cod===escAct)?.nombre||escAct.toUpperCase();
+  const fC=f=>{const[y,m,dd]=f.split('-');return`${dd}/${MESES_C[parseInt(m)-1]}`;};
+  const doXLS=()=>{
+    const wb=XLSX.utils.book_new();
+    const ws=XLSX.utils.aoa_to_sheet([
+      ['LudoAssist · Lista Docente'],['Escuela: '+escNom],['Maestro: '+docNom],
+      ['Grupo: '+grpLabel],['Período: '+(fechas[0]||'')+' → '+(fechas[fechas.length-1]||'')],
+      ['Generado: '+hoy()],[],
+      ['Alumno',...fechas.map(fC),'FALTAS','% ASISTENCIA'],
+      ...alumnos.map(n=>{
+        const P=fechas.filter(f=>mapa[f]?.[n]==='P').length;
+        const T=fechas.filter(f=>mapa[f]?.[n]==='T').length;
+        const F=fechas.filter(f=>mapa[f]?.[n]==='F').length;
+        const tot=fechas.filter(f=>mapa[f]?.[n]).length;
+        const p=tot>0?Math.round((P+T)/tot*100):0;
+        return[n,...fechas.map(f=>mapa[f]?.[n]||'—'),F,p+'%'];
+      })
+    ]);
+    ws['!cols']=[{wch:35},...fechas.map(()=>({wch:7})),{wch:8},{wch:12}];
+    XLSX.utils.book_append_sheet(wb,ws,'Asistencias');
+    XLSX.writeFile(wb,'lista_'+docNom.split(' ')[0]+'_'+hoy()+'.xlsx');
+    toast('📊 Excel generado');
+  };
+  if(typeof XLSX!=='undefined')doXLS();
+  else{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';s.onload=doXLS;document.head.appendChild(s);}
+};
+
+window.exportarMLPDF=function(){
+  const d=window._mlED;if(!d){toast('⚠️ Aplica el filtro primero.');return;}
+  const{grpLabel,fechas,alumnos,mapa}=d;
+  const escNom=escuelas.find(e=>e.cod===escAct)?.nombre||escAct.toUpperCase();
+  const fC=f=>{const[y,m,dd]=f.split('-');return`${dd}/${MESES_C[parseInt(m)-1]}`;};
+  const COL={P:'#166534',T:'#92400E',F:'#991B1B',J:'#0E7490'};
+  const thF=fechas.map(f=>`<th style="background:#0A192F;color:white;padding:4px 3px;font-size:7.5px;text-align:center;min-width:26px;">${fC(f)}</th>`).join('');
+  const rows=alumnos.map((n,ri)=>{
+    const P=fechas.filter(f=>mapa[f]?.[n]==='P').length;
+    const T=fechas.filter(f=>mapa[f]?.[n]==='T').length;
+    const F=fechas.filter(f=>mapa[f]?.[n]==='F').length;
+    const tot=fechas.filter(f=>mapa[f]?.[n]).length;
+    const p=tot>0?Math.round((P+T)/tot*100):0;
+    const pc=p>=85?'#166534':p>=70?'#92400E':'#991B1B';
+    const celdas=fechas.map(f=>{const e=mapa[f]?.[n]||'';return e?`<td style="text-align:center;padding:3px 2px;font-weight:900;color:${COL[e]||'#000'};">${e}</td>`:`<td style="text-align:center;padding:3px 2px;color:#CBD5E1;">—</td>`;}).join('');
+    return`<tr style="background:${ri%2===0?'white':'#F8FAFC'};"><td style="padding:3px 6px;font-weight:700;font-size:8px;text-transform:uppercase;">${n}</td>${celdas}<td style="text-align:center;font-weight:900;color:#991B1B;font-size:9px;">${F}</td><td style="text-align:center;font-weight:900;color:${pc};font-size:9px;">${p}%</td></tr>`;
+  }).join('');
+  const html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:Arial,sans-serif;padding:12px;font-size:9px;margin:0;}.hdr{background:#1a6b3a;color:white;padding:10px 14px;border-radius:6px;margin-bottom:10px;}.hdr h1{font-size:13px;margin:0 0 3px;font-weight:900;}.hdr p{margin:1px 0;font-size:8px;opacity:.88;}table{width:100%;border-collapse:collapse;}th{background:#0A192F;color:white;padding:4px 3px;text-align:center;font-size:7.5px;}th.thn{text-align:left;padding-left:6px;min-width:100px;}td{border-bottom:1px solid #F1F5F9;padding:3px 2px;vertical-align:middle;}.ley{display:flex;gap:10px;margin-top:8px;font-size:8px;flex-wrap:wrap;}@media print{body{padding:4px;}}</style></head><body><div class="hdr"><h1>📋 Lista de Asistencia</h1><p>'+escNom+'</p><p>Maestro: '+docNom+' &nbsp;·&nbsp; Grupo: '+grpLabel+'</p><p>Período: '+(fechas[0]||'')+' → '+(fechas[fechas.length-1]||'')+' &nbsp;·&nbsp; Generado: '+hoy()+'</p></div><table><thead><tr><th class="thn">Alumno</th>'+thF+'<th style="background:#7F1D1D;color:white;padding:4px 3px;font-size:7.5px;min-width:22px;">F</th><th style="background:#14532D;color:white;padding:4px 3px;font-size:7.5px;min-width:28px;">%</th></tr></thead><tbody>'+rows+'</tbody></table><div class="ley"><span><b style="color:#166534;">P</b> Presente</span><span><b style="color:#92400E;">T</b> Retardo</span><span><b style="color:#991B1B;">F</b> Falta</span><span><b style="color:#0E7490;">J</b> Justificado</span><span style="color:#888;">% incluye P y T</span></div><script>window.onload=()=>{window.print();}<\/script></body></html>';
+  const w=window.open('','_blank','width=950,height=750');
+  if(w){w.document.write(html);w.document.close();}
+  else toast('⚠️ Permite ventanas emergentes para el PDF.');
+  toast('📄 Abriendo PDF...');
+};
+
 window.toggleHL=function(i){document.getElementById(`hl-${i}`)?.classList.toggle('open');};
+
 </script>
 </body>
 </html>

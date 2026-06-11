@@ -3,601 +3,644 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Crear Invitación Digital — LudoMente Studio</title>
+<title>Invitaciones Digitales — LudoMente Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap');
+:root{
+  --cream:#fdf8ee;--cream2:#f7edda;--cream3:#f0e2c4;
+  --gold:#8a6010;--gold2:#b8860b;--gold3:#d4a017;
+  --text:#1a1206;--text2:#3a2c10;--text3:#5a4820;
+  --muted:#7a6840;--muted2:#a89060;--muted3:#c8b080;
+  --card:rgba(255,253,246,.92);--cardB:rgba(180,140,30,.28);
+  --sh:rgba(160,120,10,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:linear-gradient(160deg,#fdf8ee 0%,#f9efda 40%,#f5e8cc 70%,#fdf8ee 100%);color:var(--text);font-family:'Cormorant Garamond',serif;min-height:100vh;overflow-x:hidden;}
+#bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.65;}
 
-  :root {
-    --gold: #C9A84C;
-    --gold2: #F0D080;
-    --dark: #0f0f1a;
-    --card: #1a1a2e;
-    --border: #2e2e4e;
-    --text: #e8e8f0;
-    --muted: #888aaa;
-  }
+/* HERO */
+.hero{position:relative;z-index:1;text-align:center;padding:50px 20px 34px;}
+.hero-badge{display:inline-block;background:rgba(180,130,10,.1);border:1px solid rgba(180,130,10,.3);border-radius:30px;padding:5px 20px;font-family:'Inter',sans-serif;font-size:.62rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold2);margin-bottom:16px;}
+.hero-title{font-family:'Great Vibes',cursive;font-size:clamp(2.4rem,8vw,4.2rem);color:var(--gold2);line-height:1.2;margin-bottom:8px;text-shadow:0 2px 12px rgba(140,100,10,.2);}
+.hero-title .letter{display:inline-block;opacity:0;animation:lDrop .07s ease forwards;}
+@keyframes lDrop{from{opacity:0;transform:translateY(-16px);}to{opacity:1;transform:translateY(0);}}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-style:italic;color:var(--text3);margin-bottom:5px;opacity:0;animation:fUp .7s ease 1.6s forwards;}
+.hero-studio{font-family:'Inter',sans-serif;font-size:.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted2);opacity:0;animation:fUp .7s ease 1.9s forwards;}
+@keyframes fUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.ornament{display:flex;align-items:center;justify-content:center;gap:10px;margin:16px auto 0;opacity:0;animation:fUp .7s ease 2.1s forwards;}
+.ornament .ol{width:60px;height:1px;background:linear-gradient(90deg,transparent,var(--gold3),transparent);}
+.ornament .od{font-size:.5rem;color:var(--gold3);}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+/* STEPS */
+.steps-wrap{position:relative;z-index:1;max-width:680px;margin:18px auto 0;padding:0 16px;}
+.steps-bar{display:flex;align-items:center;justify-content:center;}
+.snode{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;max-width:68px;cursor:pointer;}
+.scirc{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--muted3);background:rgba(255,253,246,.7);display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;font-size:.75rem;font-weight:600;color:var(--muted2);transition:all .3s;}
+.snode.active .scirc{border-color:var(--gold3);background:linear-gradient(135deg,var(--gold3),var(--gold2));color:#fff;box-shadow:0 3px 12px rgba(180,130,10,.3);}
+.snode.done .scirc{border-color:#6a9a6a;background:#edf7ed;color:#3a7a3a;}
+.snode:not(.active):not(.done){opacity:.4;}
+.slbl{font-size:.55rem;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);font-family:'Inter',sans-serif;text-align:center;}
+.snode.active .slbl{color:var(--gold2);}
+.sline{flex:1;height:1px;background:var(--muted3);margin-top:-17px;max-width:28px;opacity:.4;}
+.sline.done{background:#6a9a6a;opacity:.6;}
 
-  body {
-    background: var(--dark);
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    min-height: 100vh;
-    padding: 0 0 60px;
-  }
+/* CONTAINER */
+.container{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:20px 16px 70px;}
+.panel{display:none;animation:pIn .4s cubic-bezier(.2,.8,.3,1);}
+.panel.active{display:block;}
+@keyframes pIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
 
-  header {
-    background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
-    border-bottom: 1px solid var(--border);
-    padding: 18px 24px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
+/* SECTION */
+.section{background:var(--card);border:1px solid var(--cardB);border-radius:18px;padding:20px 18px;margin-bottom:13px;backdrop-filter:blur(6px);box-shadow:0 2px 18px var(--sh),inset 0 1px 0 rgba(255,255,255,.9);position:relative;overflow:hidden;}
+.section::before{content:'';position:absolute;top:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,rgba(180,140,20,.4),transparent);}
+.stitle{font-family:'Great Vibes',cursive;font-size:1.4rem;color:var(--gold2);margin-bottom:13px;display:flex;align-items:center;gap:8px;text-shadow:0 1px 4px rgba(140,100,10,.15);}
+.sticon{font-size:.9rem;font-family:'Inter',sans-serif;}
+.stitle::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(180,140,20,.22),transparent);}
 
-  header .logo {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.3rem;
-    color: var(--gold);
-    letter-spacing: 1px;
-  }
+/* FORM */
+.field{margin-bottom:12px;}
+.field:last-child{margin-bottom:0;}
+.field label{display:block;font-size:.7rem;color:var(--muted);margin-bottom:4px;font-family:'Inter',sans-serif;letter-spacing:.3px;}
+.field input,.field textarea,.field select{width:100%;background:rgba(253,248,238,.95);border:1px solid rgba(180,140,20,.22);border-radius:10px;color:var(--text);font-family:'Cormorant Garamond',serif;font-size:.96rem;padding:9px 12px;outline:none;transition:border-color .2s,box-shadow .2s;}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--gold3);box-shadow:0 0 0 3px rgba(180,140,20,.1);}
+.field input::placeholder,.field textarea::placeholder{color:var(--muted3);font-style:italic;}
+.field textarea{resize:vertical;min-height:75px;line-height:1.6;}
+.field input[type=color]{height:42px;cursor:pointer;padding:4px 8px;}
+.field input[type=date],.field input[type=time]{color-scheme:light;}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
 
-  header .sub {
-    font-size: 0.75rem;
-    color: var(--muted);
-    margin-top: 2px;
-  }
+/* EVENTO GRID */
+.evento-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+.ecard{border:1.5px solid rgba(180,140,20,.18);border-radius:13px;padding:11px 10px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:all .22s;background:rgba(255,253,244,.55);}
+.ecard:hover{border-color:rgba(180,140,20,.38);background:rgba(250,242,220,.85);transform:translateY(-1px);box-shadow:0 3px 12px var(--sh);}
+.ecard.sel{border-color:var(--gold3);background:linear-gradient(135deg,rgba(250,240,200,.95),rgba(255,250,225,.95));box-shadow:0 3px 14px rgba(180,140,10,.18);}
+.eicon{font-size:1.5rem;flex-shrink:0;}
+.ename{font-family:'Cormorant Garamond',serif;font-size:.92rem;font-weight:600;color:var(--text);}
+.edesc{font-size:.64rem;color:var(--muted);font-family:'Inter',sans-serif;margin-top:1px;}
 
-  .container {
-    max-width: 680px;
-    margin: 0 auto;
-    padding: 24px 16px;
-  }
+/* PLANTILLA GRID */
+.plantilla-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.pcard{border:1.5px solid rgba(180,140,20,.2);border-radius:14px;overflow:hidden;cursor:pointer;transition:all .22s;}
+.pcard:hover{transform:translateY(-3px);box-shadow:0 6px 18px var(--sh);}
+.pcard.sel{border-color:var(--gold3);box-shadow:0 0 0 2px rgba(180,140,20,.2),0 6px 18px var(--sh);}
+.pprev{height:90px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;position:relative;overflow:hidden;}
+.pprev .pt{font-family:'Great Vibes',cursive;font-size:1.15rem;color:#fff;position:relative;z-index:1;text-shadow:0 1px 6px rgba(0,0,0,.5);text-align:center;line-height:1.1;}
+.pprev .pd{font-family:'Inter',sans-serif;font-size:.48rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.65);position:relative;z-index:1;}
+.pprev .pdeco{position:absolute;bottom:7px;left:50%;transform:translateX(-50%);width:28px;height:1px;background:rgba(255,255,255,.3);z-index:1;}
+/* 10 temas visuales */
+.pp-corona{background:linear-gradient(135deg,#3a0818 0%,#6a1030 50%,#2a0610 100%);}
+.pp-alicia{background:linear-gradient(135deg,#0a1a5e 0%,#1e0a50 40%,#3a0a0a 100%);}
+.pp-jardin{background:linear-gradient(135deg,#1a0a20 0%,#2a0e30 40%,#0a1a0a 100%);}
+.pp-noche{background:linear-gradient(135deg,#050520 0%,#0a0a3a 50%,#000010 100%);}
+.pp-boda{background:linear-gradient(135deg,#1a1600 0%,#2e2600 50%,#141200 100%);}
+.pp-minimal{background:linear-gradient(135deg,#111111 0%,#222222 50%,#0a0a0a 100%);}
+.pp-fiesta{background:linear-gradient(135deg,#1a0a3a 0%,#0a1a0a 33%,#1a0a00 66%,#001a1a 100%);}
+.pp-mar{background:linear-gradient(135deg,#001830 0%,#002040 50%,#001020 100%);}
+.pp-sagrado{background:linear-gradient(135deg,#001a2e 0%,#0a1020 50%,#000810 100%);}
+.pp-baby{background:linear-gradient(135deg,#200a20 0%,#0a1020 50%,#001a10 100%);}
+.pname{padding:7px 8px;font-size:.66rem;text-align:center;color:var(--text2);background:rgba(255,253,244,.95);font-family:'Inter',sans-serif;font-weight:500;letter-spacing:.2px;}
+.pcard.sel .pname{color:var(--gold2);font-weight:600;}
+/* badge sugerido */
+.pcard .pbadge{position:absolute;top:6px;right:6px;background:var(--gold3);color:#fff;font-size:.5rem;font-family:'Inter',sans-serif;font-weight:700;padding:2px 6px;border-radius:8px;letter-spacing:.5px;z-index:2;}
 
-  h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.6rem;
-    color: var(--gold);
-    margin-bottom: 6px;
-  }
+/* MÚSICA */
+.musica-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;}
+.mitem{border:1.5px solid rgba(180,140,20,.16);border-radius:11px;padding:9px 11px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:.86rem;font-family:'Cormorant Garamond',serif;transition:all .2s;background:rgba(255,253,244,.55);color:var(--text2);}
+.mitem:hover{background:rgba(250,242,220,.85);border-color:rgba(180,140,20,.3);}
+.mitem.sel{border-color:var(--gold3);background:linear-gradient(135deg,rgba(250,240,200,.95),rgba(255,250,225,.95));color:var(--gold2);}
 
-  .subtitle {
-    color: var(--muted);
-    font-size: 0.85rem;
-    margin-bottom: 28px;
-  }
+/* INDICADORES */
+.indica-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;}
+.iitem{border:1.5px solid rgba(180,140,20,.16);border-radius:11px;padding:9px 11px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:.86rem;font-family:'Cormorant Garamond',serif;transition:all .2s;background:rgba(255,253,244,.55);color:var(--text2);}
+.iitem:hover{background:rgba(250,242,220,.85);border-color:rgba(180,140,20,.3);}
+.iitem.sel{border-color:var(--gold3);background:linear-gradient(135deg,rgba(250,240,200,.95),rgba(255,250,225,.95));color:var(--gold2);}
 
-  .section {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 20px;
-  }
+/* ITINERARIO */
+.itin-list{display:flex;flex-direction:column;gap:7px;}
+.irow{display:flex;align-items:center;gap:7px;}
+.irow input{flex:1;background:rgba(253,248,238,.95);border:1px solid rgba(180,140,20,.2);border-radius:9px;color:var(--text);font-family:'Cormorant Garamond',serif;font-size:.92rem;padding:8px 10px;outline:none;transition:border-color .2s;}
+.irow input:focus{border-color:var(--gold3);}
+.irow .ti{flex:0 0 74px;}
+.btn-add{width:100%;background:transparent;border:1px dashed rgba(180,140,20,.28);border-radius:10px;color:var(--muted);padding:8px;font-size:.8rem;cursor:pointer;margin-top:6px;transition:all .2s;font-family:'Cormorant Garamond',serif;}
+.btn-add:hover{border-color:var(--gold3);color:var(--gold2);}
+.btn-del{background:transparent;border:none;color:#bb5555;font-size:.82rem;cursor:pointer;padding:5px;opacity:.6;transition:opacity .2s;}
+.btn-del:hover{opacity:1;}
 
-  .section-title {
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: var(--gold);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-bottom: 16px;
-  }
+/* CHECKBOX */
+.crow{display:flex;align-items:center;gap:10px;padding:9px 0;cursor:pointer;font-size:.88rem;font-family:'Cormorant Garamond',serif;color:var(--text2);}
+.crow input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--gold3);}
+.crow+.crow{border-top:1px solid rgba(180,140,20,.1);}
 
-  label {
-    display: block;
-    font-size: 0.8rem;
-    color: var(--muted);
-    margin-bottom: 6px;
-    margin-top: 14px;
-  }
+/* SUGERENCIA BADGE */
+.sugerencia-banner{background:linear-gradient(135deg,rgba(250,240,200,.9),rgba(255,250,225,.9));border:1px solid rgba(180,140,20,.3);border-radius:12px;padding:12px 14px;margin-bottom:12px;display:flex;align-items:center;gap:10px;font-size:.82rem;color:var(--text2);font-family:'Cormorant Garamond',serif;}
+.sugerencia-banner .sbi{font-size:1.1rem;}
+.sugerencia-banner strong{color:var(--gold2);}
 
-  label:first-of-type { margin-top: 0; }
+/* NAV */
+.nav-row{display:flex;gap:10px;margin-top:16px;}
+.btn-prev{flex:1;background:transparent;border:1px solid rgba(180,140,20,.22);border-radius:12px;color:var(--muted);padding:11px;font-family:'Cormorant Garamond',serif;font-size:.92rem;cursor:pointer;transition:all .2s;}
+.btn-prev:hover{border-color:var(--gold3);color:var(--gold2);}
+.btn-next{flex:2;background:linear-gradient(135deg,#d4a017,#a07010);border:none;border-radius:12px;color:#fff;padding:11px;font-family:'Great Vibes',cursive;font-size:1.25rem;cursor:pointer;transition:all .22s;box-shadow:0 4px 16px rgba(160,110,10,.28);position:relative;overflow:hidden;}
+.btn-next::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);transition:left .5s ease;}
+.btn-next:hover::before{left:100%;}
+.btn-next:hover{box-shadow:0 5px 22px rgba(160,110,10,.4);transform:translateY(-1px);}
 
-  input, textarea, select {
-    width: 100%;
-    background: #0f0f1a;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    font-size: 0.9rem;
-    padding: 10px 14px;
-    outline: none;
-    transition: border-color 0.2s;
-  }
+/* PREVIEW */
+.prev-card{background:var(--card);border:1px solid var(--cardB);border-radius:17px;overflow:hidden;margin-bottom:13px;box-shadow:0 2px 18px var(--sh);}
+.ph{padding:14px 17px;background:linear-gradient(135deg,rgba(180,140,10,.08),rgba(180,140,10,.03));border-bottom:1px solid rgba(180,140,20,.15);display:flex;align-items:center;gap:10px;}
+.phicon{font-size:1.4rem;}
+.phtitle{font-family:'Great Vibes',cursive;color:var(--gold2);font-size:1.35rem;}
+.phsub{font-size:.66rem;color:var(--muted);font-family:'Inter',sans-serif;}
+.pbody{padding:3px 0;}
+.prow{display:flex;justify-content:space-between;align-items:center;padding:8px 17px;border-bottom:1px solid rgba(180,140,20,.07);}
+.prow:last-child{border-bottom:none;}
+.plbl{font-size:.66rem;color:var(--muted);font-family:'Inter',sans-serif;letter-spacing:.3px;}
+.pval{font-size:.86rem;color:var(--text);text-align:right;max-width:55%;font-family:'Cormorant Garamond',serif;font-weight:600;}
 
-  input:focus, textarea:focus, select:focus {
-    border-color: var(--gold);
-  }
+/* BTN GENERAR */
+.btn-gen{width:100%;background:linear-gradient(135deg,#d4a017 0%,#b8860b 60%,#a07010 100%);border:none;border-radius:14px;color:#fff;padding:16px;font-family:'Great Vibes',cursive;font-size:1.5rem;cursor:pointer;transition:all .25s;box-shadow:0 5px 22px rgba(160,110,10,.3);position:relative;overflow:hidden;}
+.btn-gen::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);transition:left .6s ease;}
+.btn-gen:hover::before{left:100%;}
+.btn-gen:hover{box-shadow:0 7px 30px rgba(160,110,10,.45);transform:translateY(-2px);}
+.btn-gen:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none;}
 
-  textarea { resize: vertical; min-height: 80px; }
+/* LOADING / ERROR */
+.loading{display:none;text-align:center;padding:12px;color:var(--gold2);font-size:.88rem;font-family:'Cormorant Garamond',serif;}
+.loading.visible{display:block;}
+.spinner{display:inline-block;width:15px;height:15px;border:2px solid rgba(180,140,10,.2);border-top-color:var(--gold3);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.errmsg{display:none;color:#994422;font-size:.82rem;text-align:center;margin-top:8px;padding:10px;background:rgba(200,80,40,.06);border-radius:10px;border:1px solid rgba(200,80,40,.16);font-family:'Cormorant Garamond',serif;}
+.errmsg.visible{display:block;}
 
-  /* Temas */
-  .temas-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-  }
+/* RESULTADO */
+#resultado{display:none;background:linear-gradient(135deg,rgba(238,252,238,.95),rgba(228,248,228,.95));border:1px solid rgba(80,180,80,.22);border-radius:17px;padding:20px 17px;margin-top:13px;text-align:center;box-shadow:0 3px 18px rgba(40,140,40,.07);}
+#resultado.visible{display:block;animation:pIn .5s ease;}
+#resultado h3{font-family:'Great Vibes',cursive;color:#2a7a2a;font-size:2rem;margin-bottom:5px;}
+#resultado p{font-size:.86rem;color:var(--muted);margin-bottom:13px;font-family:'Cormorant Garamond',serif;}
+.urlbox{background:rgba(253,248,238,.95);border:1px solid rgba(180,140,20,.22);border-radius:10px;padding:11px;font-size:.7rem;color:var(--gold2);word-break:break-all;text-align:left;margin-bottom:11px;font-family:monospace;line-height:1.6;}
+.btn-row{display:flex;gap:8px;}
+.bcopy,.bwa{flex:1;border:none;border-radius:10px;padding:11px;cursor:pointer;transition:all .2s;font-size:.84rem;}
+.bcopy{background:rgba(255,253,244,.95);color:var(--text2);border:1px solid rgba(180,140,20,.22);font-family:'Cormorant Garamond',serif;}
+.bcopy:hover{border-color:var(--gold3);color:var(--gold2);}
+.bwa{background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;font-family:'Inter',sans-serif;font-weight:600;box-shadow:0 3px 12px rgba(37,211,102,.22);}
+.bwa:hover{box-shadow:0 5px 18px rgba(37,211,102,.38);}
+.bnueva{display:block;width:100%;background:transparent;border:1px solid rgba(180,140,20,.22);border-radius:10px;color:var(--muted);padding:10px;font-family:'Cormorant Garamond',serif;font-size:.88rem;cursor:pointer;margin-top:8px;transition:all .2s;}
+.bnueva:hover{border-color:var(--gold3);color:var(--gold2);}
 
-  .tema-card {
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: border-color 0.2s, transform 0.2s;
-    position: relative;
-  }
-
-  .tema-card:hover { transform: translateY(-2px); }
-
-  .tema-card.selected {
-    border-color: var(--gold);
-  }
-
-  .tema-card.selected::after {
-    content: '✓';
-    position: absolute;
-    top: 6px; right: 8px;
-    background: var(--gold);
-    color: #000;
-    font-size: 0.7rem;
-    font-weight: 700;
-    width: 20px; height: 20px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .tema-preview {
-    height: 70px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.4rem;
-  }
-
-  .tema-preview.romantico {
-    background: linear-gradient(135deg, #2d1b2e, #4a1942);
-  }
-  .tema-preview.elegante {
-    background: linear-gradient(135deg, #0a0a0a, #1a1400);
-  }
-  .tema-preview.festivo {
-    background: linear-gradient(135deg, #0a1a3e, #1a0a2e);
-  }
-  .tema-preview.naturaleza {
-    background: linear-gradient(135deg, #0a1a0a, #0a2e1a);
-  }
-  .tema-preview.marino {
-    background: linear-gradient(135deg, #0a1030, #0a2040);
-  }
-  .tema-preview.moderno {
-    background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
-  }
-
-  .tema-name {
-    padding: 6px 8px;
-    font-size: 0.72rem;
-    text-align: center;
-    color: var(--muted);
-    background: var(--card);
-  }
-
-  /* Música */
-  .musica-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-  }
-
-  .musica-item {
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 10px 12px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: border-color 0.2s, background 0.2s;
-    font-size: 0.82rem;
-  }
-
-  .musica-item:hover { background: #0f0f1a; }
-
-  .musica-item.selected {
-    border-color: var(--gold);
-    background: #1a1400;
-    color: var(--gold);
-  }
-
-  .musica-item .icon { font-size: 1.2rem; flex-shrink: 0; }
-
-  /* Botón generar */
-  .btn-generar {
-    width: 100%;
-    background: linear-gradient(135deg, var(--gold), #a07830);
-    color: #000;
-    border: none;
-    border-radius: 14px;
-    padding: 16px;
-    font-family: 'Inter', sans-serif;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    letter-spacing: 0.5px;
-    transition: opacity 0.2s, transform 0.1s;
-    margin-top: 8px;
-  }
-
-  .btn-generar:hover { opacity: 0.9; }
-  .btn-generar:active { transform: scale(0.98); }
-  .btn-generar:disabled { opacity: 0.5; cursor: not-allowed; }
-
-  /* Resultado */
-  #resultado {
-    display: none;
-    background: #0a1a0a;
-    border: 1px solid #2a4a2a;
-    border-radius: 16px;
-    padding: 20px;
-    margin-top: 20px;
-    text-align: center;
-  }
-
-  #resultado.visible { display: block; }
-
-  #resultado h3 {
-    font-family: 'Playfair Display', serif;
-    color: #4CAF50;
-    font-size: 1.2rem;
-    margin-bottom: 8px;
-  }
-
-  #resultado p {
-    font-size: 0.82rem;
-    color: var(--muted);
-    margin-bottom: 16px;
-  }
-
-  .url-box {
-    background: #0f0f1a;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px 14px;
-    font-size: 0.78rem;
-    color: var(--gold2);
-    word-break: break-all;
-    text-align: left;
-    margin-bottom: 12px;
-    font-family: monospace;
-  }
-
-  .btn-row {
-    display: flex;
-    gap: 10px;
-  }
-
-  .btn-copy, .btn-whatsapp {
-    flex: 1;
-    border: none;
-    border-radius: 10px;
-    padding: 12px;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.82rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: opacity 0.2s;
-  }
-
-  .btn-copy {
-    background: var(--border);
-    color: var(--text);
-  }
-
-  .btn-whatsapp {
-    background: #25D366;
-    color: #fff;
-  }
-
-  .btn-copy:hover, .btn-whatsapp:hover { opacity: 0.85; }
-
-  .loading {
-    display: none;
-    text-align: center;
-    padding: 10px;
-    color: var(--gold);
-    font-size: 0.85rem;
-  }
-
-  .loading.visible { display: block; }
-
-  .spinner {
-    display: inline-block;
-    width: 18px; height: 18px;
-    border: 2px solid var(--border);
-    border-top-color: var(--gold);
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    vertical-align: middle;
-    margin-right: 8px;
-  }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .error-msg {
-    display: none;
-    color: #ff6b6b;
-    font-size: 0.8rem;
-    text-align: center;
-    margin-top: 10px;
-    padding: 10px;
-    background: #1a0a0a;
-    border-radius: 10px;
-    border: 1px solid #3a1a1a;
-  }
-
-  .error-msg.visible { display: block; }
-
-  footer {
-    text-align: center;
-    color: var(--muted);
-    font-size: 0.7rem;
-    margin-top: 40px;
-    padding: 0 16px;
-  }
+footer{text-align:center;color:var(--muted2);font-size:.68rem;margin-top:44px;position:relative;z-index:1;padding:0 20px;font-family:'Great Vibes',cursive;font-size:1rem;color:var(--gold2);opacity:.5;}
 </style>
 </head>
 <body>
+<canvas id="bg-canvas"></canvas>
 
-<header>
-  <div>
-    <div class="logo">✉ Invitaciones Digitales</div>
-    <div class="sub">LudoMente Studio — Campeche, México</div>
-  </div>
+<header class="hero">
+  <div class="hero-badge">LudoMente Studio &nbsp;·&nbsp; Invitaciones Digitales</div>
+  <h1 class="hero-title" id="heroTitle"></h1>
+  <p class="hero-sub">Crea invitaciones elegantes en minutos</p>
+  <div class="hero-studio">Diseño &nbsp;·&nbsp; Elegancia &nbsp;·&nbsp; Emoción</div>
+  <div class="ornament"><div class="ol"></div><div class="od">✦</div><div class="ol"></div></div>
 </header>
 
+<div class="steps-wrap"><div class="steps-bar" id="stepsBar"></div></div>
+
 <div class="container">
-  <h2>Crear invitación</h2>
-  <p class="subtitle">Configura tu invitación y obtén un enlace listo para compartir por WhatsApp.</p>
 
-  <!-- TEMA -->
-  <div class="section">
-    <div class="section-title">🎨 Tema visual</div>
-    <div class="temas-grid">
-      <div class="tema-card selected" data-tema="romantico" onclick="selectTema(this)">
-        <div class="tema-preview romantico">🌹</div>
-        <div class="tema-name">Romántico</div>
+  <!-- PANEL 0: EVENTO -->
+  <div class="panel active" id="panel0">
+    <div class="section">
+      <div class="stitle"><span class="sticon">🎉</span> Tipo de Evento</div>
+      <div class="evento-grid" id="eventoGrid"></div>
+    </div>
+    <div class="section">
+      <div class="stitle"><span class="sticon">✍</span> Datos Principales</div>
+      <div class="field"><label>Nombre del festejado(a) *</label><input type="text" id="nombre" placeholder="Ej: María González" maxlength="60"></div>
+      <div class="field-row">
+        <div class="field"><label>Fecha *</label><input type="date" id="fecha"></div>
+        <div class="field"><label>Hora *</label><input type="time" id="hora"></div>
       </div>
-      <div class="tema-card" data-tema="elegante" onclick="selectTema(this)">
-        <div class="tema-preview elegante">✨</div>
-        <div class="tema-name">Elegante</div>
+      <div class="field"><label>Lugar / Salón *</label><input type="text" id="lugar" placeholder="Ej: Salón Imperial, Campeche" maxlength="100"></div>
+      <div class="field"><label>Dirección completa (para mapa)</label><input type="text" id="direccion" placeholder="Ej: Av. Resurgimiento 123, Campeche" maxlength="150"></div>
+      <div class="field"><label>Mensaje de invitación</label><textarea id="mensaje" placeholder="Se llenará automáticamente según el tema..."></textarea></div>
+      <div class="field"><label>Anfitrión / Familia</label><input type="text" id="anfitrion" placeholder="Ej: Familia González Martínez" maxlength="80"></div>
+    </div>
+    <div class="nav-row"><button class="btn-next" onclick="nextStep(0)">Siguiente ›</button></div>
+  </div>
+
+  <!-- PANEL 1: PLANTILLA -->
+  <div class="panel" id="panel1">
+    <div class="section">
+      <div class="stitle"><span class="sticon">🎨</span> Elige tu Plantilla</div>
+      <div class="sugerencia-banner" id="sugerenciaBanner" style="display:none">
+        <span class="sbi">✨</span>
+        <span>Sugerimos <strong id="sugerenciaNombre"></strong> para este tipo de evento</span>
       </div>
-      <div class="tema-card" data-tema="festivo" onclick="selectTema(this)">
-        <div class="tema-preview festivo">🎉</div>
-        <div class="tema-name">Festivo</div>
-      </div>
-      <div class="tema-card" data-tema="naturaleza" onclick="selectTema(this)">
-        <div class="tema-preview naturaleza">🌿</div>
-        <div class="tema-name">Naturaleza</div>
-      </div>
-      <div class="tema-card" data-tema="marino" onclick="selectTema(this)">
-        <div class="tema-preview marino">🌊</div>
-        <div class="tema-name">Marino</div>
-      </div>
-      <div class="tema-card" data-tema="moderno" onclick="selectTema(this)">
-        <div class="tema-preview moderno">⚡</div>
-        <div class="tema-name">Moderno</div>
-      </div>
+      <div class="plantilla-grid" id="plantillaGrid"></div>
+    </div>
+    <div class="section">
+      <div class="stitle"><span class="sticon">🎵</span> Música de Fondo</div>
+      <div class="musica-grid" id="musicaGrid"></div>
+    </div>
+    <div class="section">
+      <div class="stitle"><span class="sticon">🎨</span> Color Personalizado</div>
+      <div class="field"><label>Modifica el color principal de acento</label><input type="color" id="colorAccento" value="#C9A84C"></div>
+    </div>
+    <div class="nav-row">
+      <button class="btn-prev" onclick="prevStep(1)">‹ Atrás</button>
+      <button class="btn-next" onclick="nextStep(1)">Siguiente ›</button>
     </div>
   </div>
 
-  <!-- MÚSICA -->
-  <div class="section">
-    <div class="section-title">🎵 Música de fondo</div>
-    <div class="musica-grid">
-      <div class="musica-item selected" data-musica="ninguna" onclick="selectMusica(this)">
-        <span class="icon">🔇</span> Sin música
+  <!-- PANEL 2: DETALLES -->
+  <div class="panel" id="panel2">
+    <div class="section">
+      <div class="stitle"><span class="sticon">✨</span> Indicadores Especiales</div>
+      <div class="indica-grid" id="indicaGrid"></div>
+      <div id="colorTemaRow" style="display:none;margin-top:11px;">
+        <div class="field"><label>Colores del tema</label><input type="text" id="colorTema" placeholder="Ej: Blanco y Dorado" maxlength="40"></div>
       </div>
-      <div class="musica-item" data-musica="vals" onclick="selectMusica(this)">
-        <span class="icon">🎻</span> Vals clásico
-      </div>
-      <div class="musica-item" data-musica="piano" onclick="selectMusica(this)">
-        <span class="icon">🎹</span> Piano suave
-      </div>
-      <div class="musica-item" data-musica="acustica" onclick="selectMusica(this)">
-        <span class="icon">🎸</span> Guitarra acústica
-      </div>
-      <div class="musica-item" data-musica="jazz" onclick="selectMusica(this)">
-        <span class="icon">🎷</span> Jazz romántico
-      </div>
-      <div class="musica-item" data-musica="electronica" onclick="selectMusica(this)">
-        <span class="icon">🎧</span> Electrónica suave
-      </div>
+    </div>
+    <div class="section">
+      <div class="stitle"><span class="sticon">📋</span> Programa del Evento</div>
+      <p style="font-size:.82rem;color:var(--muted);margin-bottom:11px;font-style:italic;" id="itinHint">Agrega los momentos en orden cronológico.</p>
+      <div class="itin-list" id="itinList"></div>
+      <button class="btn-add" onclick="addItin()">+ Agregar momento</button>
+    </div>
+    <div class="section">
+      <div class="stitle"><span class="sticon">🎁</span> Mesa de Regalos</div>
+      <div class="field"><label>Tienda / Banco</label><input type="text" id="mesaTienda" placeholder="Ej: Liverpool, BBVA, Amazon" maxlength="60"></div>
+      <div class="field"><label>Número de cuenta o código</label><input type="text" id="mesaCodigo" placeholder="Ej: 4152 3130 1234 5678" maxlength="80"></div>
+      <div class="field"><label>Nota</label><input type="text" id="mesaNota" placeholder="Ej: A nombre de María González" maxlength="80"></div>
+    </div>
+    <div class="nav-row">
+      <button class="btn-prev" onclick="prevStep(2)">‹ Atrás</button>
+      <button class="btn-next" onclick="nextStep(2)">Siguiente ›</button>
     </div>
   </div>
 
-  <!-- DATOS DEL EVENTO -->
-  <div class="section">
-    <div class="section-title">📝 Datos del evento</div>
-
-    <label>Tipo de evento</label>
-    <select id="tipo">
-      <option value="XV Años">XV Años</option>
-      <option value="Boda">Boda</option>
-      <option value="Cumpleaños">Cumpleaños</option>
-      <option value="Graduación">Graduación</option>
-      <option value="Bautizo">Bautizo</option>
-      <option value="Fiesta">Fiesta / Reunión</option>
-      <option value="Evento">Otro evento</option>
-    </select>
-
-    <label>Nombre del festejado(a)</label>
-    <input type="text" id="nombre" placeholder="Ej: María González" maxlength="60">
-
-    <label>Fecha y hora del evento</label>
-    <input type="datetime-local" id="fecha">
-
-    <label>Lugar / Salón</label>
-    <input type="text" id="lugar" placeholder="Ej: Salón Imperial, Campeche" maxlength="80">
-
-    <label>Mensaje de invitación</label>
-    <textarea id="mensaje" placeholder="Ej: Con alegría te invitamos a celebrar este momento especial..."></textarea>
-  </div>
-
-  <!-- PERSONALIZACIÓN -->
-  <div class="section">
-    <div class="section-title">⚙️ Personalización</div>
-
-    <label>Color principal (acento)</label>
-    <input type="color" id="colorAccento" value="#C9A84C" style="height:44px; cursor:pointer;">
-
-    <label>Nombre del anfitrión / familia</label>
-    <input type="text" id="anfitrion" placeholder="Ej: Familia González Martínez" maxlength="60">
-  </div>
-
-  <button class="btn-generar" id="btnGenerar" onclick="generarInvitacion()">
-    ✉ Generar invitación
-  </button>
-
-  <div class="loading" id="loading">
-    <span class="spinner"></span> Guardando invitación...
-  </div>
-
-  <div class="error-msg" id="errorMsg"></div>
-
-  <!-- RESULTADO -->
-  <div id="resultado">
-    <h3>🎉 ¡Invitación creada!</h3>
-    <p>Comparte este enlace con tus invitados:</p>
-    <div class="url-box" id="urlGenerada"></div>
-    <div class="btn-row">
-      <button class="btn-copy" onclick="copiarURL()">📋 Copiar enlace</button>
-      <button class="btn-whatsapp" onclick="compartirWhatsApp()">📲 WhatsApp</button>
+  <!-- PANEL 3: EXTRAS -->
+  <div class="panel" id="panel3">
+    <div class="section">
+      <div class="stitle"><span class="sticon">📲</span> Confirmación WhatsApp</div>
+      <div class="field"><label>Número del anfitrión (con código de país)</label><input type="tel" id="waNum" placeholder="Ej: 5219811234567" maxlength="20"></div>
+      <div class="field"><label>Mensaje de confirmación</label><textarea id="waMsg" placeholder="Se llenará automáticamente..."></textarea></div>
+    </div>
+    <div class="section">
+      <div class="stitle"><span class="sticon">⚙️</span> Opciones</div>
+      <label class="crow"><input type="checkbox" id="optMapa" checked> Mostrar mapa de ubicación</label>
+      <label class="crow"><input type="checkbox" id="optCountdown" checked> Mostrar cuenta regresiva</label>
+      <label class="crow"><input type="checkbox" id="optSobre" checked> Animación de sobre al abrir</label>
+    </div>
+    <div class="nav-row">
+      <button class="btn-prev" onclick="prevStep(3)">‹ Atrás</button>
+      <button class="btn-next" onclick="nextStep(3)">Siguiente ›</button>
     </div>
   </div>
 
-  <footer>
-    <p>LudoMente Studio • Jesús Rodríguez García</p>
-    <p>Secundaria Técnica #17, Campeche, México</p>
-  </footer>
+  <!-- PANEL 4: CONFIRMAR -->
+  <div class="panel" id="panel4">
+    <div class="prev-card" id="prevCard"></div>
+    <button class="btn-gen" id="btnGen" onclick="generar()">✉ Generar Invitación</button>
+    <div class="loading" id="loading"><span class="spinner"></span> Guardando tu invitación...</div>
+    <div class="errmsg" id="errmsg"></div>
+    <div id="resultado">
+      <h3>¡Invitación Lista!</h3>
+      <p>Comparte este enlace con tus invitados</p>
+      <div class="urlbox" id="urlbox"></div>
+      <div class="btn-row">
+        <button class="bcopy" onclick="copiar()">📋 Copiar enlace</button>
+        <button class="bwa" onclick="wa()">📲 WhatsApp</button>
+      </div>
+      <button class="bnueva" onclick="location.reload()">✉ Crear otra invitación</button>
+    </div>
+    <div class="nav-row" style="margin-top:11px;">
+      <button class="btn-prev" onclick="prevStep(4)">‹ Atrás</button>
+    </div>
+  </div>
+
+  <footer>LudoMente Studio</footer>
 </div>
 
-<!-- Firebase -->
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+const FB={apiKey:"AIzaSyACwTF_diw5R9bPkrriIRUtZ77XRD9XUM4",authDomain:"invitaciones-digitales-d93b0.firebaseapp.com",databaseURL:"https://invitaciones-digitales-d93b0-default-rtdb.firebaseio.com",projectId:"invitaciones-digitales-d93b0",storageBucket:"invitaciones-digitales-d93b0.firebasestorage.app",messagingSenderId:"841840313438",appId:"1:841840313438:web:0a527186038ab7740660cf"};
+const db=getDatabase(initializeApp(FB));
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyACwTF_diw5R9bPkrriIRUtZ77XRD9XUM4",
-    authDomain: "invitaciones-digitales-d93b0.firebaseapp.com",
-    databaseURL: "https://invitaciones-digitales-d93b0-default-rtdb.firebaseio.com",
-    projectId: "invitaciones-digitales-d93b0",
-    storageBucket: "invitaciones-digitales-d93b0.firebasestorage.app",
-    messagingSenderId: "841840313438",
-    appId: "1:841840313438:web:0a527186038ab7740660cf"
-  };
+/* ===== 10 PLANTILLAS TEMÁTICAS COMPLETAS ===== */
+const PLANTILLAS=[
+  {
+    id:'corona',name:'Corona Dorada',sub:'Borgoña & Oro',cls:'pp-corona',
+    eventos:['xv'],
+    color:'#C9A84C',musica:'vals',
+    textoDefault:'Con inmensa alegría, mis padres y yo te invitan a compartir la magia de mis XV años, un sueño hecho realidad.',
+    waDefault:'¡Hola! Con mucho cariño te confirmo mi asistencia a los XV años de',
+    itinerarioDefault:[{hora:'18:00',texto:'Recepción de invitados'},{hora:'19:00',texto:'Ceremonia religiosa'},{hora:'20:00',texto:'Vals de honor'},{hora:'20:30',texto:'Cena y brindis'},{hora:'22:00',texto:'Fiesta y baile'}],
+    indicadoresDefault:['formal'],
+  },
+  {
+    id:'alicia',name:'Alicia en el País',sub:'Fantasía & Magia',cls:'pp-alicia',
+    eventos:['xv','infantil'],
+    color:'#6666cc',musica:'piano',
+    textoDefault:'¡Curioso y curioso! Te invito a seguir al conejo blanco y unirte a mi fiesta en el País de las Maravillas.',
+    waDefault:'¡Hola! Acepto la invitación al País de las Maravillas para celebrar a',
+    itinerarioDefault:[{hora:'16:00',texto:'Llegada al País de las Maravillas'},{hora:'16:30',texto:'Juegos temáticos'},{hora:'18:00',texto:'La merienda del Sombrerero'},{hora:'19:00',texto:'Baile y sorpresas'}],
+    indicadoresDefault:['casual'],
+  },
+  {
+    id:'jardin',name:'Jardín de Rosas',sub:'Floral & Romántico',cls:'pp-jardin',
+    eventos:['xv','boda','aniversario'],
+    color:'#d4608a',musica:'acustica',
+    textoDefault:'Entre flores y pétalos, te invitamos a ser parte de este momento tan especial lleno de amor y alegría.',
+    waDefault:'Con mucho gusto confirmo mi asistencia a esta hermosa celebración de',
+    itinerarioDefault:[{hora:'17:00',texto:'Bienvenida entre flores'},{hora:'18:00',texto:'Ceremonia principal'},{hora:'19:30',texto:'Brindis y cena'},{hora:'21:00',texto:'Baile y celebración'}],
+    indicadoresDefault:['semiformal'],
+  },
+  {
+    id:'noche',name:'Noche Estelar',sub:'Mística & Plateada',cls:'pp-noche',
+    eventos:['xv','aniversario','cumple_adulto'],
+    color:'#8888ee',musica:'electronica',
+    textoDefault:'Bajo un cielo de estrellas, te invitamos a brillar junto a nosotros en esta noche mágica e inolvidable.',
+    waDefault:'¡Confirmo mi asistencia a esta noche estelar para celebrar a',
+    itinerarioDefault:[{hora:'20:00',texto:'Recepción estelar'},{hora:'21:00',texto:'Cena bajo las estrellas'},{hora:'22:00',texto:'Brindis y baile'},{hora:'00:00',texto:'Sorpresa de medianoche'}],
+    indicadoresDefault:['formal'],
+  },
+  {
+    id:'boda',name:'Boda Clásica',sub:'Nupcial & Eterno',cls:'pp-boda',
+    eventos:['boda'],
+    color:'#C9A84C',musica:'marcha',
+    textoDefault:'Con la bendición de Dios y nuestras familias, tenemos el honor de invitarte a la celebración de nuestra unión.',
+    waDefault:'Con mucho gusto confirmamos nuestra asistencia a su boda,',
+    itinerarioDefault:[{hora:'11:00',texto:'Ceremonia religiosa'},{hora:'13:00',texto:'Recepción de novios'},{hora:'14:00',texto:'Comida y brindis'},{hora:'16:00',texto:'Vals nupcial'},{hora:'17:00',texto:'Fiesta y baile'}],
+    indicadoresDefault:['formal'],
+  },
+  {
+    id:'minimal',name:'Minimalista',sub:'Moderno & Sofisticado',cls:'pp-minimal',
+    eventos:['graduacion','cumple_adulto','boda'],
+    color:'#aaaaaa',musica:'jazz',
+    textoDefault:'Te invitamos a celebrar este logro con nosotros. Tu presencia hará este momento aún más especial.',
+    waDefault:'Con gusto confirmo mi asistencia a la celebración de',
+    itinerarioDefault:[{hora:'19:00',texto:'Recepción'},{hora:'20:00',texto:'Ceremonia / Brindis'},{hora:'21:00',texto:'Cena'},{hora:'22:00',texto:'Celebración'}],
+    indicadoresDefault:['semiformal'],
+  },
+  {
+    id:'fiesta',name:'Fiesta Loca',sub:'Colorida & Divertida',cls:'pp-fiesta',
+    eventos:['infantil','cumple_adulto'],
+    color:'#ff6b9d',musica:'electronica',
+    textoDefault:'¡Llegó la hora de la fiesta! Te invitamos a divertirte, reír y crear recuerdos increíbles juntos.',
+    waDefault:'¡Claro que voy! Confirmo mi asistencia a la fiesta de',
+    itinerarioDefault:[{hora:'16:00',texto:'Llegada y bienvenida'},{hora:'16:30',texto:'Juegos y actividades'},{hora:'18:00',texto:'Pastel y merienda'},{hora:'19:00',texto:'Baile y sorpresas'}],
+    indicadoresDefault:['casual'],
+  },
+  {
+    id:'mar',name:'Bajo el Mar',sub:'Acuático & Mágico',cls:'pp-mar',
+    eventos:['infantil','babyshower'],
+    color:'#40b4ff',musica:'chill',
+    textoDefault:'¡Sumérgete en la diversión! Te invitamos a explorar las profundidades del mar en esta celebración mágica.',
+    waDefault:'¡Me uno a la aventura! Confirmo mi asistencia a la fiesta de',
+    itinerarioDefault:[{hora:'15:00',texto:'Bienvenida al océano'},{hora:'15:30',texto:'Juegos acuáticos'},{hora:'17:00',texto:'Merienda submarina'},{hora:'18:00',texto:'Sorpresas y regalos'}],
+    indicadoresDefault:['alberca','casual'],
+  },
+  {
+    id:'sagrado',name:'Momento Sagrado',sub:'Espiritual & Puro',cls:'pp-sagrado',
+    eventos:['bautizo','confirmacion','comunion'],
+    color:'#7ab8e8',musica:'vals',
+    textoDefault:'Con fe y alegría te invitamos a compartir este momento sagrado, un día especial lleno de gracia y bendiciones.',
+    waDefault:'Con mucho gusto confirmo mi asistencia a este momento sagrado de',
+    itinerarioDefault:[{hora:'11:00',texto:'Ceremonia religiosa'},{hora:'12:30',texto:'Sesión de fotos'},{hora:'13:00',texto:'Recepción familiar'},{hora:'14:00',texto:'Comida y celebración'}],
+    indicadoresDefault:['semiformal'],
+  },
+  {
+    id:'baby',name:'Baby Shower',sub:'Dulce & Tierno',cls:'pp-baby',
+    eventos:['babyshower'],
+    color:'#ff99cc',musica:'piano',
+    textoDefault:'Un nuevo corazón está por llegar. Te invitamos a celebrar con nosotros este hermoso milagro de amor.',
+    waDefault:'¡Con mucha ternura confirmo mi asistencia al baby shower de',
+    itinerarioDefault:[{hora:'12:00',texto:'Bienvenida y recepción'},{hora:'12:30',texto:'Juegos y dinámica'},{hora:'13:30',texto:'Comida y pastel'},{hora:'14:30',texto:'Apertura de regalos'}],
+    indicadoresDefault:['casual'],
+  },
+];
 
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
+const EVENTOS=[
+  {id:'xv',icon:'👑',name:'XV Años',desc:'Quinceañera'},
+  {id:'boda',icon:'💍',name:'Boda',desc:'Ceremonia nupcial'},
+  {id:'cumple_adulto',icon:'🥂',name:'Cumpleaños adulto',desc:'Fiesta adultos'},
+  {id:'infantil',icon:'🎈',name:'Fiesta infantil',desc:'Cumpleaños niños'},
+  {id:'graduacion',icon:'🎓',name:'Graduación',desc:'Ceremonia académica'},
+  {id:'bautizo',icon:'🕊️',name:'Bautizo',desc:'Sacramento'},
+  {id:'confirmacion',icon:'✝️',name:'Confirmación',desc:'Sacramento'},
+  {id:'babyshower',icon:'🍼',name:'Baby Shower',desc:'Espera del bebé'},
+  {id:'comunion',icon:'🌸',name:'Primera Comunión',desc:'Sacramento'},
+  {id:'aniversario',icon:'💑',name:'Aniversario',desc:'Celebración de amor'},
+];
 
-  // Estado
-  let temaSeleccionado = 'romantico';
-  let musicaSeleccionada = 'ninguna';
-  let urlGenerada = '';
+const MUSICAS=[
+  {id:'ninguna',icon:'🔇',name:'Sin música'},
+  {id:'vals',icon:'🎻',name:'Vals clásico'},
+  {id:'piano',icon:'🎹',name:'Piano suave'},
+  {id:'acustica',icon:'🎸',name:'Guitarra acústica'},
+  {id:'jazz',icon:'🎷',name:'Jazz romántico'},
+  {id:'electronica',icon:'🎧',name:'Electrónica'},
+  {id:'chill',icon:'🌊',name:'Chill ambiental'},
+  {id:'marcha',icon:'🎺',name:'Marcha nupcial'},
+];
 
-  window.selectTema = function(el) {
-    document.querySelectorAll('.tema-card').forEach(c => c.classList.remove('selected'));
-    el.classList.add('selected');
-    temaSeleccionado = el.dataset.tema;
-  };
+const INDICA=[
+  {id:'formal',icon:'🎩',name:'Vestimenta formal'},
+  {id:'semiformal',icon:'👔',name:'Vestimenta semiformal'},
+  {id:'casual',icon:'👕',name:'Vestimenta casual'},
+  {id:'alberca',icon:'🏊',name:'Alberca / Traje de baño'},
+  {id:'color_tema',icon:'🎨',name:'Tema de color'},
+];
 
-  window.selectMusica = function(el) {
-    document.querySelectorAll('.musica-item').forEach(c => c.classList.remove('selected'));
-    el.classList.add('selected');
-    musicaSeleccionada = el.dataset.musica;
-  };
+const STEPS=[{l:'Evento'},{l:'Plantilla'},{l:'Detalles'},{l:'Extras'},{l:'Confirmar'}];
 
-  function generarID() {
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
-    let id = '';
-    for (let i = 0; i < 8; i++) id += chars[Math.floor(Math.random() * chars.length)];
-    return id;
-  }
+let S={tipoEvento:'xv',plantilla:'corona',musica:'vals',indicadores:['formal'],itinerario:[],paso:0};
+let urlFinal='';
 
-  window.generarInvitacion = async function() {
-    const nombre = document.getElementById('nombre').value.trim();
-    const fecha = document.getElementById('fecha').value;
-    const lugar = document.getElementById('lugar').value.trim();
-    const mensaje = document.getElementById('mensaje').value.trim();
-    const tipo = document.getElementById('tipo').value;
-    const color = document.getElementById('colorAccento').value;
-    const anfitrion = document.getElementById('anfitrion').value.trim();
+// TÍTULO CASCADA
+const T='Invitaciones Digitales';
+document.getElementById('heroTitle').innerHTML=T.split('').map((c,i)=>
+  c===' '?'<span style="display:inline-block;width:.28em"> </span>'
+  :`<span class="letter" style="animation-delay:${(i*.065+.3).toFixed(2)}s">${c}</span>`
+).join('');
 
-    if (!nombre) { mostrarError('Por favor escribe el nombre del festejado.'); return; }
-    if (!fecha) { mostrarError('Por favor selecciona la fecha del evento.'); return; }
-    if (!lugar) { mostrarError('Por favor escribe el lugar del evento.'); return; }
-
-    ocultarError();
-    mostrarLoading(true);
-    document.getElementById('btnGenerar').disabled = true;
-    document.getElementById('resultado').classList.remove('visible');
-
-    const id = generarID();
-    const datos = {
-      tema: temaSeleccionado,
-      musica: musicaSeleccionada,
-      nombre, fecha, lugar, tipo, color, anfitrion,
-      mensaje: mensaje || `Con gusto te invitamos a celebrar este momento especial.`,
-      creadoEn: Date.now()
-    };
-
-    try {
-      await set(ref(db, 'invitaciones/' + id), datos);
-
-      const base = window.location.href.replace('editor.html', 'invitacion.html');
-      urlGenerada = `${base}?id=${id}`;
-      document.getElementById('urlGenerada').textContent = urlGenerada;
-      document.getElementById('resultado').classList.add('visible');
-      document.getElementById('resultado').scrollIntoView({ behavior: 'smooth', block: 'center' });
-    } catch (e) {
-      mostrarError('Error al guardar. Verifica tu conexión e intenta de nuevo.\n' + e.message);
-    }
-
-    mostrarLoading(false);
-    document.getElementById('btnGenerar').disabled = false;
-  };
-
-  window.copiarURL = function() {
-    navigator.clipboard.writeText(urlGenerada).then(() => {
-      const btn = document.querySelector('.btn-copy');
-      btn.textContent = '✅ ¡Copiado!';
-      setTimeout(() => btn.textContent = '📋 Copiar enlace', 2000);
+// CANVAS BURBUJAS
+(()=>{
+  const cv=document.getElementById('bg-canvas');
+  const cx=cv.getContext('2d');
+  let W,H,B;
+  const mk=()=>({x:Math.random()*(W||800),y:(H||900)+Math.random()*80,r:Math.random()*4+1,vy:-(Math.random()*.9+.25),vx:(Math.random()-.5)*.25,a:Math.random()*.28+.07,w:Math.random()*Math.PI*2,ws:Math.random()*.018+.004});
+  const init=()=>{W=cv.width=window.innerWidth;H=cv.height=window.innerHeight;B=Array.from({length:40},mk);};
+  const draw=()=>{
+    cx.clearRect(0,0,W,H);
+    B.forEach(b=>{
+      b.w+=b.ws;b.x+=Math.sin(b.w)*.4+b.vx;b.y+=b.vy;
+      if(b.y<-15)Object.assign(b,mk(),{y:H+10,x:Math.random()*W});
+      const g=cx.createRadialGradient(b.x-b.r*.3,b.y-b.r*.3,b.r*.05,b.x,b.y,b.r);
+      g.addColorStop(0,`rgba(255,245,210,${b.a*1.6})`);
+      g.addColorStop(.5,`rgba(200,160,30,${b.a*.8})`);
+      g.addColorStop(1,`rgba(160,110,10,${b.a*.12})`);
+      cx.beginPath();cx.arc(b.x,b.y,b.r,0,Math.PI*2);cx.fillStyle=g;cx.fill();
+      cx.beginPath();cx.arc(b.x,b.y,b.r,0,Math.PI*2);cx.strokeStyle=`rgba(200,160,20,${b.a*.3})`;cx.lineWidth=.4;cx.stroke();
     });
+    requestAnimationFrame(draw);
   };
+  init();draw();window.addEventListener('resize',init);
+})();
 
-  window.compartirWhatsApp = function() {
-    const msg = encodeURIComponent(`¡Te invitamos! 🎉 Abre tu invitación digital aquí:\n${urlGenerada}`);
-    window.open(`https://wa.me/?text=${msg}`, '_blank');
+// STEPS
+function bSteps(){
+  const p=S.paso;
+  document.getElementById('stepsBar').innerHTML=STEPS.map((s,i)=>`
+    ${i>0?`<div class="sline ${i<=p?'done':''}"></div>`:''}
+    <div class="snode ${i===p?'active':i<p?'done':''}" onclick="goStep(${i})">
+      <div class="scirc">${i<p?'✓':i+1}</div>
+      <div class="slbl">${s.l}</div>
+    </div>`).join('');
+}
+
+// RENDER EVENTOS
+function rEv(){
+  document.getElementById('eventoGrid').innerHTML=EVENTOS.map(e=>`
+    <div class="ecard ${S.tipoEvento===e.id?'sel':''}" onclick="selEv('${e.id}')">
+      <span class="eicon">${e.icon}</span>
+      <div><div class="ename">${e.name}</div><div class="edesc">${e.desc}</div></div>
+    </div>`).join('');
+}
+
+// SUGERIR PLANTILLA según evento
+function sugerirPlantilla(eventoId){
+  const sugerida=PLANTILLAS.find(p=>p.eventos.includes(eventoId));
+  if(!sugerida)return;
+  S.plantilla=sugerida.id;
+  S.musica=sugerida.musica;
+  S.indicadores=[...sugerida.indicadoresDefault];
+  // pre-llenar itinerario
+  S.itinerario=sugerida.itinerarioDefault.map(i=>({...i}));
+  // pre-llenar mensaje si está vacío
+  const msgEl=document.getElementById('mensaje');
+  if(!msgEl.value.trim())msgEl.value=sugerida.textoDefault;
+  // pre-llenar WA si está vacío
+  const waEl=document.getElementById('waMsg');
+  if(!waEl.value.trim()){
+    const nombre=document.getElementById('nombre').value.trim();
+    waEl.value=sugerida.waDefault+(nombre?' '+nombre:'')+'!';
+  }
+  // mostrar banner
+  document.getElementById('sugerenciaBanner').style.display='flex';
+  document.getElementById('sugerenciaNombre').textContent=sugerida.name;
+}
+
+window.selEv=id=>{
+  S.tipoEvento=id;
+  rEv();
+  sugerirPlantilla(id);
+};
+
+// RENDER PLANTILLAS
+function rPl(){
+  document.getElementById('plantillaGrid').innerHTML=PLANTILLAS.map(p=>{
+    const esSugerida=p.eventos.includes(S.tipoEvento);
+    return `
+    <div class="pcard ${S.plantilla===p.id?'sel':''}" onclick="selPl('${p.id}')" style="position:relative">
+      ${esSugerida?'<div class="pbadge">★ IDEAL</div>':''}
+      <div class="pprev ${p.cls}">
+        <div class="pt">${p.name}</div>
+        <div class="pd">${p.sub}</div>
+        <div class="pdeco"></div>
+      </div>
+      <div class="pname">${p.name}</div>
+    </div>`;
+  }).join('');
+}
+
+window.selPl=id=>{
+  S.plantilla=id;
+  const pl=PLANTILLAS.find(p=>p.id===id);
+  if(pl){
+    S.musica=pl.musica;
+    document.getElementById('colorAccento').value=pl.color;
+  }
+  rPl();rMu();
+};
+
+function rMu(){document.getElementById('musicaGrid').innerHTML=MUSICAS.map(m=>`<div class="mitem ${S.musica===m.id?'sel':''}" onclick="s('m','${m.id}')"><span class="mi">${m.icon}</span>${m.name}</div>`).join('');}
+function rIn(){document.getElementById('indicaGrid').innerHTML=INDICA.map(i=>`<div class="iitem ${S.indicadores.includes(i.id)?'sel':''}" onclick="togI('${i.id}')"><span>${i.icon}</span>${i.name}</div>`).join('');}
+function rIt(){document.getElementById('itinList').innerHTML=S.itinerario.map((it,i)=>`<div class="irow"><input class="ti" type="time" value="${it.hora}" oninput="upIt(${i},'hora',this.value)"><input type="text" value="${it.texto}" oninput="upIt(${i},'texto',this.value)" placeholder="Ej: Recepción de invitados" maxlength="60"><button class="btn-del" onclick="dIt(${i})">✕</button></div>`).join('');}
+
+function rPrev(){
+  const ev=EVENTOS.find(e=>e.id===S.tipoEvento),pl=PLANTILLAS.find(p=>p.id===S.plantilla),mu=MUSICAS.find(m=>m.id===S.musica);
+  const rows=[['Evento',`${ev?.icon} ${ev?.name}`],['Festejado',v('nombre')||'—'],['Fecha',v('fecha')||'—'],['Hora',v('hora')||'—'],['Lugar',v('lugar')||'—'],['Plantilla',pl?.name||'—'],['Música',`${mu?.icon} ${mu?.name}`],['Programa',S.itinerario.filter(i=>i.texto).length?`${S.itinerario.filter(i=>i.texto).length} momentos`:'Sin programa'],['Indicadores',S.indicadores.length?S.indicadores.map(x=>INDICA.find(i=>i.id===x)?.name).join(', '):'Ninguno']];
+  document.getElementById('prevCard').innerHTML=`<div class="ph"><span class="phicon">${ev?.icon||'✉'}</span><div><div class="phtitle">${ev?.name} · ${v('nombre')||'Sin nombre'}</div><div class="phsub">Revisa los datos antes de generar</div></div></div><div class="pbody">${rows.map(([l,val])=>`<div class="prow"><span class="plbl">${l}</span><span class="pval">${val||'—'}</span></div>`).join('')}</div>`;
+}
+
+window.s=(t,id)=>{if(t==='m'){S.musica=id;rMu();}};
+window.togI=id=>{const i=S.indicadores.indexOf(id);if(i>=0)S.indicadores.splice(i,1);else S.indicadores.push(id);rIn();document.getElementById('colorTemaRow').style.display=S.indicadores.includes('color_tema')?'block':'none';};
+window.addItin=()=>{S.itinerario.push({hora:'',texto:''});rIt();};
+window.dIt=i=>{S.itinerario.splice(i,1);rIt();};
+window.upIt=(i,k,val)=>{S.itinerario[i][k]=val;};
+const v=id=>document.getElementById(id)?.value?.trim();
+
+window.goStep=p=>{
+  document.querySelectorAll('.panel').forEach((el,i)=>el.classList.toggle('active',i===p));
+  S.paso=p;bSteps();
+  if(p===1){rPl();rMu();}
+  if(p===2){rIn();rIt();}
+  if(p===4)rPrev();
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+window.nextStep=p=>goStep(p+1);
+window.prevStep=p=>goStep(p-1);
+
+function uid(){const c='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';return Array.from({length:8},()=>c[~~(Math.random()*c.length)]).join('');}
+
+window.generar=async()=>{
+  if(!v('nombre')){er('Escribe el nombre del festejado.');return;}
+  if(!v('fecha')){er('Selecciona la fecha.');return;}
+  if(!v('lugar')){er('Escribe el lugar del evento.');return;}
+  clEr();
+  document.getElementById('loading').classList.add('visible');
+  document.getElementById('btnGen').disabled=true;
+  document.getElementById('resultado').classList.remove('visible');
+  const id=uid();
+  const pl=PLANTILLAS.find(p=>p.id===S.plantilla);
+  const nombre=v('nombre');
+  const d={
+    tipoEvento:S.tipoEvento,plantilla:S.plantilla,musica:S.musica,
+    indicadores:S.indicadores,itinerario:S.itinerario.filter(i=>i.texto),
+    color:v('colorAccento')||pl?.color||'#C9A84C',
+    colorTema:v('colorTema'),nombre,fecha:v('fecha'),hora:v('hora'),lugar:v('lugar'),
+    direccion:v('direccion'),
+    mensaje:v('mensaje')||pl?.textoDefault||'Con alegría te invitamos a celebrar este momento especial.',
+    anfitrion:v('anfitrion'),
+    mesaTienda:v('mesaTienda'),mesaCodigo:v('mesaCodigo'),mesaNota:v('mesaNota'),
+    waNumero:v('waNum'),
+    waMensaje:v('waMsg')||(pl?.waDefault+' '+nombre+'!'),
+    mostrarMapa:document.getElementById('optMapa').checked,
+    mostrarCountdown:document.getElementById('optCountdown').checked,
+    mostrarSobre:document.getElementById('optSobre').checked,
+    creadoEn:Date.now()
   };
+  try{
+    await set(ref(db,'invitaciones/'+id),d);
+    const base=window.location.href.replace('editor.html','invitacion.html');
+    urlFinal=`${base}?id=${id}`;
+    document.getElementById('urlbox').textContent=urlFinal;
+    document.getElementById('resultado').classList.add('visible');
+    document.getElementById('resultado').scrollIntoView({behavior:'smooth',block:'center'});
+  }catch(e){er('Error al guardar: '+e.message);}
+  document.getElementById('loading').classList.remove('visible');
+  document.getElementById('btnGen').disabled=false;
+};
 
-  function mostrarLoading(v) {
-    document.getElementById('loading').classList.toggle('visible', v);
-  }
+window.copiar=()=>{navigator.clipboard.writeText(urlFinal).then(()=>{const b=document.querySelector('.bcopy');b.textContent='✅ ¡Copiado!';setTimeout(()=>b.textContent='📋 Copiar enlace',2000);});};
+window.wa=()=>window.open(`https://wa.me/?text=${encodeURIComponent('¡Tienes una invitación! 🎉\n'+urlFinal)}`,'_blank');
+function er(m){const e=document.getElementById('errmsg');e.textContent=m;e.classList.add('visible');}
+function clEr(){document.getElementById('errmsg').classList.remove('visible');}
 
-  function mostrarError(msg) {
-    const el = document.getElementById('errorMsg');
-    el.textContent = msg;
-    el.classList.add('visible');
-    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-
-  function ocultarError() {
-    document.getElementById('errorMsg').classList.remove('visible');
-  }
+// INIT — sugerir plantilla para XV por default
+bSteps();rEv();rPl();rMu();rIn();rIt();
 </script>
-
 </body>
 </html>
